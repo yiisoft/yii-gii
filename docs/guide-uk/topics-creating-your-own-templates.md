@@ -38,11 +38,11 @@
 // ...
 if (YII_ENV_DEV) {    
     $config['modules']['gii'] = [
-        'class' => 'yii\gii\Module',      
+        '__class' => yii\gii\Module::class,      
         'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'],  
         'generators' => [ // тут
             'crud' => [ // ім’я генератора
-                'class' => 'yii\gii\generators\crud\Generator', // клас генератора
+                '__class' => yii\gii\generators\crud\Generator::class, // клас генератора
                 'templates' => [ // налаштування сторонніх шаблонів
                     'myCrud' => '@app/myTemplates/crud/default', // ім’я шаблону => шлях до шаблону
                 ]

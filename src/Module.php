@@ -21,7 +21,7 @@ use yii\web\ForbiddenHttpException;
  * return [
  *     'bootstrap' => ['gii'],
  *     'modules' => [
- *         'gii' => ['class' => 'yii\gii\Module'],
+ *         'gii' => ['__class' => yii\gii\Module::class],
  *     ],
  * ]
  * ~~~
@@ -87,13 +87,13 @@ class Module extends \yii\base\Module implements BootstrapInterface
     {
         if ($app instanceof \yii\web\Application) {
             $app->getUrlManager()->addRules([
-                ['class' => 'yii\web\UrlRule', 'pattern' => $this->id, 'route' => $this->id . '/default/index'],
-                ['class' => 'yii\web\UrlRule', 'pattern' => $this->id . '/<id:\w+>', 'route' => $this->id . '/default/view'],
-                ['class' => 'yii\web\UrlRule', 'pattern' => $this->id . '/<controller:[\w\-]+>/<action:[\w\-]+>', 'route' => $this->id . '/<controller>/<action>'],
+                ['__class' => \yii\web\UrlRule::class, 'pattern' => $this->id, 'route' => $this->id . '/default/index'],
+                ['__class' => \yii\web\UrlRule::class, 'pattern' => $this->id . '/<id:\w+>', 'route' => $this->id . '/default/view'],
+                ['__class' => \yii\web\UrlRule::class, 'pattern' => $this->id . '/<controller:[\w\-]+>/<action:[\w\-]+>', 'route' => $this->id . '/<controller>/<action>'],
             ], false);
         } elseif ($app instanceof \yii\console\Application) {
             $app->controllerMap[$this->id] = [
-                'class' => 'yii\gii\console\GenerateController',
+                '__class' => \yii\gii\console\GenerateController::class,
                 'generators' => array_merge($this->coreGenerators(), $this->generators),
                 'module' => $this,
             ];
@@ -159,12 +159,12 @@ class Module extends \yii\base\Module implements BootstrapInterface
     protected function coreGenerators()
     {
         return [
-            'model' => ['class' => 'yii\gii\generators\model\Generator'],
-            'crud' => ['class' => 'yii\gii\generators\crud\Generator'],
-            'controller' => ['class' => 'yii\gii\generators\controller\Generator'],
-            'form' => ['class' => 'yii\gii\generators\form\Generator'],
-            'module' => ['class' => 'yii\gii\generators\module\Generator'],
-            'extension' => ['class' => 'yii\gii\generators\extension\Generator'],
+            'model' => ['__class' => \yii\gii\generators\model\Generator::class],
+            'crud' => ['__class' => \yii\gii\generators\crud\Generator::class],
+            'controller' => ['__class' => \yii\gii\generators\controller\Generator::class],
+            'form' => ['__class' => \yii\gii\generators\form\Generator::class],
+            'module' => ['__class' => \yii\gii\generators\module\Generator::class],
+            'extension' => ['__class' => \yii\gii\generators\extension\Generator::class],
         ];
     }
 

@@ -1,6 +1,12 @@
 Yii Framework 2 gii extension Change Log
 ========================================
 
+2.1.0 under development
+-----------------------
+
+- Chg: Required Yii framework version has been raised to '2.1.0' (klimov-paul)
+
+
 2.0.7 under development
 -----------------------
 

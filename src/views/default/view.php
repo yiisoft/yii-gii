@@ -28,7 +28,7 @@ foreach ($generator->templates as $name => $path) {
     <?php $form = ActiveForm::begin([
         'id' => "$id-generator",
         'successCssClass' => '',
-        'fieldConfig' => ['class' => ActiveField::class],
+        'fieldConfig' => ['__class' => ActiveField::class],
     ]); ?>
         <div class="row">
             <div class="col-lg-8 col-md-10" id="form-fields">

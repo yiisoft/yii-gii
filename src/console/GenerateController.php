@@ -96,7 +96,7 @@ class GenerateController extends Controller
         $actions = [];
         foreach ($this->generators as $name => $generator) {
             $actions[$name] = [
-                'class' => 'yii\gii\console\GenerateAction',
+                '__class' => \yii\gii\console\GenerateAction::class,
                 'generator' => $generator,
             ];
         }

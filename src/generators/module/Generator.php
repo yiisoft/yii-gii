@@ -99,7 +99,7 @@ EOD;
     ......
     'modules' => [
         '{$this->moduleID}' => [
-            'class' => '{$this->moduleClass}',
+            '__class' => '{$this->moduleClass}',
         ],
     ],
     ......

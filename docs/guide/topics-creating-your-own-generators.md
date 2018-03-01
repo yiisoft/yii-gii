@@ -10,11 +10,11 @@ override these classes in any folder. Again as in the previous section customize
 //..
 if (YII_ENV_DEV) {    
     $config['modules']['gii'] = [
-        'class' => yii\gii\Module::class,
+        '__class' => yii\gii\Module::class,
         'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'],  
          'generators' => [
             'myCrud' => [
-                'class' => app\myTemplates\crud\Generator::class,
+                '__class' => app\myTemplates\crud\Generator::class,
                 'templates' => [
                     'my' => '@app/myTemplates/crud/default',
                 ]

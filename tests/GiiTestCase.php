@@ -31,7 +31,7 @@ class GiiTestCase extends TestCase
         $this->mockApplication([
             'components' => [
                 'db' => [
-                    'class' => isset($config['class']) ? $config['class'] : 'yii\db\Connection',
+                    '__class' => isset($config['__class']) ? $config['__class'] : \yii\db\Connection::class,
                     'dsn' => $config['dsn'],
                     'username' => isset($config['username']) ? $config['username'] : null,
                     'password' => isset($config['password']) ? $config['password'] : null,
