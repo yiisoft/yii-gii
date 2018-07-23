@@ -9,7 +9,7 @@ namespace yii\gii;
 
 use Yii;
 use ReflectionClass;
-use yii\base\InvalidConfigException;
+use yii\exceptions\InvalidConfigException;
 use yii\base\Model;
 use yii\helpers\VarDumper;
 use yii\web\View;
