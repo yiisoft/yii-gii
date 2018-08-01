@@ -1,0 +1,51 @@
+{
+    "name": "yiisoft/yii-gii",
+    "description": "The Gii extension for the Yii framework",
+    "keywords": ["yii", "gii", "code generator"],
+    "license": "BSD-3-Clause",
+    "support": {
+        "issues": "https://github.com/yiisoft/yii-gii/issues",
+        "forum": "http://www.yiiframework.com/forum/",
+        "wiki": "http://www.yiiframework.com/wiki/",
+        "irc": "irc://irc.freenode.net/yii",
+        "source": "https://github.com/yiisoft/yii-gii"
+    },
+    "authors": [
+        {
+            "name": "Qiang Xue",
+            "email": "qiang.xue@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "yiisoft/core": "^3.0",
+        "yiisoft/yii-bootstrap": "^1.0",
+        "phpspec/php-diff": ">=1.0.2",
+        "npm-asset/typeahead.js": "0.10.* | ~0.11.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "yii\\gii\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "yiiunit\\gii\\": "tests"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "^1.0"
+        },
+        "asset-installer-paths": {
+            "npm-asset-library": "vendor/npm",
+            "bower-asset-library": "vendor/bower"
+        }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ]
+}
