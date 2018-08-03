@@ -1,15 +1,14 @@
 {
-    "name": "yiisoft/yii2-gii",
+    "name": "yiisoft/yii-gii",
     "description": "The Gii extension for the Yii framework",
-    "keywords": ["yii2", "gii", "code generator"],
-    "type": "yii2-extension",
+    "keywords": ["yii", "gii", "code generator"],
     "license": "BSD-3-Clause",
     "support": {
-        "issues": "https://github.com/yiisoft/yii2-gii/issues",
+        "issues": "https://github.com/yiisoft/yii-gii/issues",
         "forum": "http://www.yiiframework.com/forum/",
         "wiki": "http://www.yiiframework.com/wiki/",
         "irc": "irc://irc.freenode.net/yii",
-        "source": "https://github.com/yiisoft/yii2-gii"
+        "source": "https://github.com/yiisoft/yii-gii"
     },
     "authors": [
         {
@@ -19,8 +18,8 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "yiisoft/yii2": "3.0.x-dev",
-        "yiisoft/yii2-bootstrap": "2.2.x-dev",
+        "yiisoft/core": "^3.0",
+        "yiisoft/yii-bootstrap": "^1.0",
         "phpspec/php-diff": ">=1.0.2",
         "npm-asset/typeahead.js": "0.10.* | ~0.11.0"
     },
@@ -36,7 +35,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.0.x-dev"
+            "dev-master": "^1.0"
         },
         "asset-installer-paths": {
             "npm-asset-library": "vendor/npm",
