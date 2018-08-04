@@ -11,5 +11,4 @@ for both A and B.
 Upgrade from yii2-gii 2.0.7
 ---------------------------
 
-* Version constraint for "yiisoft/yii2" package has been raised to "~2.1.0". Make sure your code
-  matches this version of the Yii framework. 
+No changes needed.
