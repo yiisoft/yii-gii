@@ -19,7 +19,7 @@
     "minimum-stability": "dev",
     "require": {
         "yiisoft/core": "^3.0",
-        "yiisoft/yii-bootstrap": "^1.0",
+        "yiisoft/yii-bootstrap4": "^1.0",
         "phpspec/php-diff": ">=1.0.2",
         "npm-asset/typeahead.js": "0.10.* | ~0.11.0"
     },
@@ -35,7 +35,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.0-dev"
+            "dev-master": "1.0.x-dev"
         },
         "asset-installer-paths": {
             "npm-asset-library": "vendor/npm",
