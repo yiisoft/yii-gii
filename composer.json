@@ -1,14 +1,15 @@
 {
     "name": "yiisoft/yii-gii",
-    "description": "The Gii extension for the Yii framework",
+    "type": "library",
+    "description": "Yii framework Gii Extension",
     "keywords": ["yii", "gii", "code generator"],
     "license": "BSD-3-Clause",
     "support": {
+        "source": "https://github.com/yiisoft/yii-gii",
         "issues": "https://github.com/yiisoft/yii-gii/issues",
         "forum": "http://www.yiiframework.com/forum/",
         "wiki": "http://www.yiiframework.com/wiki/",
-        "irc": "irc://irc.freenode.net/yii",
-        "source": "https://github.com/yiisoft/yii-gii"
+        "irc": "irc://irc.freenode.net/yii"
     },
     "authors": [
         {
@@ -18,15 +19,15 @@
     ],
     "require": {
         "yiisoft/core": "^3.0@dev",
-        "yiisoft/yii-bootstrap-implementation": "^1.0",
+        "yiisoft/yii-bootstrap-implementation": "^3.0@dev",
         "phpspec/php-diff": ">=1.0.2",
         "npm-asset/typeahead.js": "0.10.* | ~0.11.0"
     },
     "require-dev": {
-        "yiisoft/di": "dev-master",
-        "yiisoft/log": "dev-master",
-        "yiisoft/cache": "dev-master",
-        "yiisoft/yii-bootstrap4": "^1.0@dev",
+        "yiisoft/di": "^3.0@dev",
+        "yiisoft/log": "^3.0@dev",
+        "yiisoft/cache": "^3.0@dev",
+        "yiisoft/yii-bootstrap4": "^3.0@dev",
         "phpunit/phpunit": "^7.3"
     },
     "autoload": {
@@ -41,7 +42,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.0.x-dev"
+            "dev-master": "3.0.x-dev"
         },
         "asset-installer-paths": {
             "npm-asset-library": "vendor/npm",
