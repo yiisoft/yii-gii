@@ -1,7 +1,7 @@
 {
     "name": "yiisoft/yii-gii",
     "type": "library",
-    "description": "Yii framework Gii Extension",
+    "description": "Yii Framework Code Generator Extension",
     "keywords": ["yii", "gii", "code generator"],
     "license": "BSD-3-Clause",
     "support": {
@@ -18,7 +18,7 @@
         }
     ],
     "require": {
-        "yiisoft/core": "^3.0@dev",
+        "yiisoft/yii-core": "^3.0@dev",
         "yiisoft/yii-bootstrap-implementation": "^3.0@dev",
         "phpspec/php-diff": ">=1.0.2",
         "npm-asset/typeahead.js": "0.10.* | ~0.11.0"
