@@ -11,11 +11,11 @@
 //..
 if (YII_ENV_DEV) {    
     $config['modules']['gii'] = [
-        'class' => 'yii\gii\Module',      
+        '__class' => yii\gii\Module::class,      
         'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'],  
          'generators' => [
             'myCrud' => [
-                'class' => 'app\myTemplates\crud\Generator',
+                '__class' => app\myTemplates\crud\Generator::class,
                 'templates' => [
                     'my' => '@app/myTemplates/crud/default',
                 ]
@@ -26,8 +26,9 @@ if (YII_ENV_DEV) {
 ```
 
 ```php
-// @app/myTemplates/crud/Generator.php
 <?php
+// @app/myTemplates/crud/Generator.php
+
 namespace app\myTemplates\crud;
 
 class Generator extends \yii\gii\Generator
