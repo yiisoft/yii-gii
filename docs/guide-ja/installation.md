@@ -11,11 +11,14 @@
 php composer.phar require --dev --prefer-dist yiisoft/yii2-gii
 ```
 
-または、あなたの `composer.json` ファイルの `require` セクションに、下記を追加してください。
+または、あなたの `composer.json` ファイルの `require` セクションに、
 
 ```
-"yiisoft/yii2-gii": "~2.0.0"
+"yiisoft/yii2-gii": "~2.1.0"
 ```
+
+を追加してください。
+
 
 ## アプリケーションを構成する
 
@@ -26,7 +29,7 @@ return [
     'bootstrap' => ['gii'],
     'modules' => [
         'gii' => [
-            'class' => 'yii\gii\Module',
+            '__class' => yii\gii\Module::class,
         },
         // ...
     ],
@@ -51,12 +54,13 @@ http://localhost/path/to/index.php/gii
 >
 ```php
 'gii' => [
-    'class' => 'yii\gii\Module',
+    '__class' => yii\gii\Module::class,
     'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'] // 必要に応じて修正
 ],
 ```
 
-コンソールアプリケーションの構成情報において同じように Gii を構成すると、次のようにして、コマンドウィンドウから Gii にアクセスすることが出来ます。
+コンソール・アプリケーションの構成情報において同じように Gii を構成すると、次のようにして、コマンド・ウィンドウから
+Gii にアクセスすることが出来ます。
 
 ```
 # パスをアプリケーションのベースパスに変更
@@ -72,20 +76,20 @@ yii help gii/model
 yii gii/model --tableName=city --modelClass=City
 ```
 
+### ベーシック・アプリケーション
 
-### ベーシックアプリケーション
-
-ベーシックプロジェクトテンプレートの構成情報の構造は少し違っており、Gii は `config/web.php` の中で構成しなければなりません。
+ベーシック・プロジェクト・テンプレートの構成情報の構造は少し違っており、
+Gii は `config/web.php` の中で構成しなければなりません。
 
 ```php
 // ...
 if (YII_ENV_DEV) {
     // 'dev' 環境のための構成の修正
     $config['bootstrap'][] = 'debug';
-    $config['modules']['debug'] = 'yii\debug\Module';
+    $config['modules']['debug'] = yii\debug\Module::class;
 
     $config['bootstrap'][] = 'gii';
-    $config['modules']['gii'] = 'yii\gii\Module'; // <--- ここ
+    $config['modules']['gii'] = yii\gii\Module::class; // <--- ここ
 }
 ```
 
@@ -95,11 +99,11 @@ if (YII_ENV_DEV) {
 if (YII_ENV_DEV) {
     // 'dev' 環境のための構成の修正
     $config['bootstrap'][] = 'debug';
-    $config['modules']['debug'] = 'yii\debug\Module';
+    $config['modules']['debug'] = yii\debug\Module::class;
 
     $config['bootstrap'][] = 'gii';
     $config['modules']['gii'] = [
-        'class' => 'yii\gii\Module',
+        '__class' => yii\gii\Module::class,
         'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'],
     ];
 }
