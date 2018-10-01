@@ -7,7 +7,8 @@
 
 namespace yii\gii;
 
-use Yii;
+use yii\helpers\Yii;
+use yii\base\Action;
 use yii\base\BootstrapInterface;
 use yii\helpers\Json;
 use yii\web\ForbiddenHttpException;
@@ -103,13 +104,13 @@ class Module extends \yii\base\Module implements BootstrapInterface
     /**
      * {@inheritdoc}
      */
-    public function beforeAction($action)
+    public function beforeAction(Action $action)
     {
         if (!parent::beforeAction($action)) {
             return false;
         }
 
-        if (Yii::$app instanceof \yii\web\Application && !$this->checkAccess()) {
+        if ($this->app instanceof \yii\web\Application && !$this->checkAccess()) {
             throw new ForbiddenHttpException('You are not allowed to access this page.');
         }
 
@@ -131,8 +132,8 @@ class Module extends \yii\base\Module implements BootstrapInterface
      */
     protected function resetGlobalSettings()
     {
-        if (Yii::$app instanceof \yii\web\Application) {
-            Yii::$app->assetManager->bundles = [];
+        if ($this->app instanceof \yii\web\Application) {
+            $this->app->assetManager->bundles = [];
         }
     }
 
@@ -141,7 +142,7 @@ class Module extends \yii\base\Module implements BootstrapInterface
      */
     protected function checkAccess()
     {
-        $ip = Yii::$app->getRequest()->getUserIP();
+        $ip = $this->app->getRequest()->getUserIP();
         foreach ($this->allowedIPs as $filter) {
             if ($filter === '*' || $filter === $ip || (($pos = strpos($filter, '*')) !== false && !strncmp($ip, $filter, $pos))) {
                 return true;
@@ -174,10 +175,10 @@ class Module extends \yii\base\Module implements BootstrapInterface
      */
     protected function defaultVersion()
     {
-        $packageInfo = Json::decode(file_get_contents(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'composer.json'));
+        $packageInfo = Json::decode(file_get_contents(\dirname(__DIR__) . DIRECTORY_SEPARATOR . 'composer.json'));
         $extensionName = $packageInfo['name'];
-        if (isset(Yii::$app->extensions[$extensionName])) {
-            return Yii::$app->extensions[$extensionName]['version'];
+        if (isset($this->app->extensions[$extensionName])) {
+            return $this->app->extensions[$extensionName]['version'];
         }
         return parent::defaultVersion();
     }

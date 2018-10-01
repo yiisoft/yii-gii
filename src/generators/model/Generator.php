@@ -8,8 +8,8 @@
 namespace yii\gii\generators\model;
 
 use Yii;
-use yii\db\ActiveQuery;
-use yii\db\ActiveRecord;
+use yii\activerecord\ActiveQuery;
+use yii\activerecord\ActiveRecord;
 use yii\db\Connection;
 use yii\db\Schema;
 use yii\db\TableSchema;
