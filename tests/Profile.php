@@ -2,7 +2,7 @@
 
 namespace yiiunit\gii;
 
-use yii\db\ActiveRecord;
+use yii\activerecord\ActiveRecord;
 
 class Profile extends ActiveRecord
 {
@@ -35,4 +35,4 @@ class Profile extends ActiveRecord
             'description' => 'Description',
         ];
     }
-} 
+}

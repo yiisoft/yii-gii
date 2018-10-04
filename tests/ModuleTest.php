@@ -2,20 +2,29 @@
 
 namespace yiiunit\gii;
 
-use Yii;
 use yii\gii\Module;
+use yii\tests\TestCase;
 
 class ModuleTest extends TestCase
 {
-    public function testDefaultVersion()
+    /**
+     * {@inheritdoc}
+     */
+    protected function setUp()
     {
-        Yii::$app->extensions['yiisoft/yii2-gii'] = [
+        parent::setUp();
+        $this->mockWebApplication();
+    }
+
+    public function testDefaultVersion(): void
+    {
+        $this->app->extensions['yiisoft/yii2-gii'] = [
             'name' => 'yiisoft/yii2-gii',
             'version' => '2.0.6',
         ];
 
-        $module = new Module('gii');
+        $module = new Module('gii', $this->app);
 
-        $this->assertEquals('2.0.6', $module->getVersion());
+        $this->assertEquals('1.0', $module->getVersion());
     }
 }
