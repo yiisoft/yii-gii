@@ -4,6 +4,7 @@ namespace yiiunit\gii;
 
 use Yii;
 use yii\helpers\FileHelper;
+use yii\tests\TestCase;
 
 /**
  * GiiTestCase is the base class for all gii related test cases
@@ -24,27 +25,26 @@ class GiiTestCase extends TestCase
         $config = $allConfigs['databases'][$this->driverName];
         $pdo_database = 'pdo_' . $this->driverName;
 
-        if (!extension_loaded('pdo') || !extension_loaded($pdo_database)) {
+        if (!\extension_loaded('pdo') || !\extension_loaded($pdo_database)) {
             $this->markTestSkipped('pdo and ' . $pdo_database . ' extension are required.');
         }
 
-        $this->mockApplication([
-            'components' => [
-                'db' => [
-                    '__class' => isset($config['__class']) ? $config['__class'] : \yii\db\Connection::class,
-                    'dsn' => $config['dsn'],
-                    'username' => isset($config['username']) ? $config['username'] : null,
-                    'password' => isset($config['password']) ? $config['password'] : null,
-                ],
-            ],
+        $this->mockWebApplication();
+
+        $this->container->set('db', [
+            '__class' => isset($config['__class']) ? $config['__class'] : \yii\db\Connection::class,
+            'dsn' => $config['dsn'],
+            'username' => isset($config['username']) ? $config['username'] : null,
+            'password' => isset($config['password']) ? $config['password'] : null,
         ]);
 
+
         if (isset($config['fixture'])) {
-            Yii::$app->db->open();
+            $this->app->db->open();
             $lines = explode(';', file_get_contents($config['fixture']));
             foreach ($lines as $line) {
                 if (trim($line) !== '') {
-                    Yii::$app->db->pdo->exec($line);
+                    $this->app->db->pdo->exec($line);
                 }
             }
         }

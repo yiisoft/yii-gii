@@ -7,9 +7,9 @@
 
 namespace yii\gii\generators\crud;
 
-use Yii;
-use yii\db\ActiveRecord;
-use yii\db\BaseActiveRecord;
+use yii\helpers\Yii;
+use yii\activerecord\ActiveRecord;
+use yii\activerecord\BaseActiveRecord;
 use yii\db\Schema;
 use yii\gii\CodeFile;
 use yii\helpers\Inflector;

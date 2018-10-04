@@ -16,7 +16,7 @@ use yii\gii\generators\module\Generator as ModuleGenerator;
  */
 class GeneratorsTest extends GiiTestCase
 {
-    public function testControllerGenerator()
+    public function testControllerGenerator(): void
     {
         $generator = new ControllerGenerator();
         $generator->template = 'default';
@@ -113,7 +113,7 @@ class GeneratorsTest extends GiiTestCase
         $this->assertTrue($generator->validate(['template']));
 
         // Validate custom template
-        \Yii::setAlias('@customTemplate', __DIR__ . '/data/templates');
+        $this->app->setAlias('@customTemplate', __DIR__ . '/data/templates');
         $generator->templates = [
             'custom' => '@customTemplate/custom'
         ];
