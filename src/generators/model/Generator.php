@@ -7,7 +7,6 @@
 
 namespace yii\gii\generators\model;
 
-use Yii;
 use yii\activerecord\ActiveQuery;
 use yii\activerecord\ActiveRecord;
 use yii\db\Connection;
@@ -15,6 +14,7 @@ use yii\db\Schema;
 use yii\db\TableSchema;
 use yii\gii\CodeFile;
 use yii\helpers\Inflector;
+use yii\helpers\Yii;
 use yii\exceptions\NotSupportedException;
 
 /**
@@ -717,9 +717,9 @@ class Generator extends \yii\gii\Generator
      */
     public function validateDb()
     {
-        if (!Yii::$app->has($this->db)) {
+        if (!Yii::getApp()->has($this->db)) {
             $this->addError('db', 'There is no application component named "db".');
-        } elseif (!Yii::$app->get($this->db) instanceof Connection) {
+        } elseif (!Yii::getApp()->get($this->db) instanceof Connection) {
             $this->addError('db', 'The "db" application component must be a DB connection instance.');
         }
     }
@@ -897,7 +897,7 @@ class Generator extends \yii\gii\Generator
      */
     protected function getDbConnection()
     {
-        return Yii::$app->get($this->db, false);
+        return Yii::getApp()->get($this->db, false);
     }
 
     /**

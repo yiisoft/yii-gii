@@ -7,7 +7,7 @@
 
 namespace yii\gii\generators\extension;
 
-use Yii;
+use yii\helpers\Yii;
 use yii\gii\CodeFile;
 
 /**

@@ -2,7 +2,7 @@
 
 namespace yiiunit\gii;
 
-use Yii;
+use yii\helpers\Yii;
 use yii\helpers\FileHelper;
 use yii\tests\TestCase;
 

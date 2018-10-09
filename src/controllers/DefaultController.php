@@ -7,7 +7,7 @@
 
 namespace yii\gii\controllers;
 
-use Yii;
+use yii\helpers\Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -34,7 +34,7 @@ class DefaultController extends Controller
      */
     public function beforeAction($action)
     {
-        Yii::$app->response->format = Response::FORMAT_HTML;
+        Yii::getApp()->response->format = Response::FORMAT_HTML;
         return parent::beforeAction($action);
     }
 
@@ -51,9 +51,9 @@ class DefaultController extends Controller
         $generator = $this->loadGenerator($id);
         $params = ['generator' => $generator, 'id' => $id];
 
-        $preview = Yii::$app->request->post('preview');
-        $generate = Yii::$app->request->post('generate');
-        $answers = Yii::$app->request->post('answers');
+        $preview = Yii::getApp()->request->post('preview');
+        $generate = Yii::getApp()->request->post('generate');
+        $answers = Yii::getApp()->request->post('answers');
 
         if ($preview !== null || $generate !== null) {
             if ($generator->validate()) {
@@ -136,7 +136,7 @@ class DefaultController extends Controller
         if (isset($this->module->generators[$id])) {
             $this->generator = $this->module->generators[$id];
             $this->generator->loadStickyAttributes();
-            $this->generator->load(Yii::$app->request->post());
+            $this->generator->load(Yii::getApp()->request->post());
 
             return $this->generator;
         } else {

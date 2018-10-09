@@ -15,7 +15,7 @@ public function action<?= Inflector::id2camel(trim(basename($generator->viewName
 {
     $model = new \<?= ltrim($generator->modelClass, '\\') ?><?= empty($generator->scenarioName) ? "()" : "(['scenario' => '{$generator->scenarioName}'])" ?>;
 
-    if ($model->load(Yii::$app->request->post())) {
+    if ($model->load(Yii::getApp()->request->post())) {
         if ($model->validate()) {
             // form inputs are valid, do something here
             return;

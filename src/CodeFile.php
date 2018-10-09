@@ -7,7 +7,7 @@
 
 namespace yii\gii;
 
-use Yii;
+use yii\helpers\Yii;
 use yii\base\BaseObject;
 use yii\gii\components\DiffRendererHtmlInline;
 use yii\helpers\Html;
@@ -81,7 +81,7 @@ class CodeFile extends BaseObject
      */
     public function save()
     {
-        $module = Yii::$app->controller->module;
+        $module = Yii::getApp()->controller->module;
         if ($this->operation === self::OP_CREATE) {
             $dir = dirname($this->path);
             if (!is_dir($dir)) {
@@ -109,8 +109,8 @@ class CodeFile extends BaseObject
      */
     public function getRelativePath()
     {
-        if (strpos($this->path, Yii::$app->basePath) === 0) {
-            return substr($this->path, strlen(Yii::$app->basePath) + 1);
+        if (strpos($this->path, Yii::getApp()->basePath) === 0) {
+            return substr($this->path, strlen(Yii::getApp()->basePath) + 1);
         } else {
             return $this->path;
         }

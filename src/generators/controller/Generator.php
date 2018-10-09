@@ -7,7 +7,7 @@
 
 namespace yii\gii\generators\controller;
 
-use Yii;
+use yii\helpers\Yii;
 use yii\gii\CodeFile;
 use yii\helpers\Html;
 use yii\helpers\Inflector;
@@ -149,7 +149,7 @@ class Generator extends \yii\gii\Generator
      */
     private function getLinkToTry()
     {
-        if (strpos($this->controllerNamespace, Yii::$app->controllerNamespace) !== 0) {
+        if (strpos($this->controllerNamespace, Yii::getApp()->controllerNamespace) !== 0) {
             return '';
         }
 
@@ -159,7 +159,7 @@ class Generator extends \yii\gii\Generator
         } else {
             $route = $this->getControllerSubPath() . $this->getControllerID() . '/' . reset($actions);
         }
-        return ' You may ' . Html::a('try it now', Yii::$app->getUrlManager()->createUrl($route), ['target' => '_blank', 'rel' => 'noopener noreferrer']) . '.';
+        return ' You may ' . Html::a('try it now', Yii::getApp()->getUrlManager()->createUrl($route), ['target' => '_blank', 'rel' => 'noopener noreferrer']) . '.';
     }
 
     /**
@@ -224,8 +224,8 @@ class Generator extends \yii\gii\Generator
     {
         $subPath = '';
         $controllerNamespace = $this->getControllerNamespace();
-        if (strpos($controllerNamespace, Yii::$app->controllerNamespace) === 0) {
-            $subPath = substr($controllerNamespace, strlen(Yii::$app->controllerNamespace));
+        if (strpos($controllerNamespace, Yii::getApp()->controllerNamespace) === 0) {
+            $subPath = substr($controllerNamespace, strlen(Yii::getApp()->controllerNamespace));
             $subPath = ($subPath !== '') ? str_replace('\\', '/', substr($subPath, 1)) . '/' : '';
         }
         return $subPath;

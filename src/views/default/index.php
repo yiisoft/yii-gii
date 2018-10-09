@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $generators \yii\gii\Generator[] */
 /* @var $content string */
 
-$generators = Yii::$app->controller->module->generators;
+$generators = Yii::getApp()->controller->module->generators;
 $this->title = 'Welcome to Gii';
 ?>
 <div class="default-index">
