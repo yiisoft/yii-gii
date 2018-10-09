@@ -19,7 +19,7 @@ echo "<?php\n";
 
 namespace <?= $generator->ns ?>;
 
-use Yii;
+use yii\helpers\Yii;
 
 /**
  * This is the model class for table "<?= $generator->generateTableName($tableName) ?>".
@@ -50,7 +50,7 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
      */
     public static function getDb()
     {
-        return Yii::$app->get('<?= $generator->db ?>');
+        return Yii::getApp()->get('<?= $generator->db ?>');
     }
 <?php endif; ?>
 

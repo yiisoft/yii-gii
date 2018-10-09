@@ -9,7 +9,7 @@ namespace yii\gii\generators\module;
 
 use yii\gii\CodeFile;
 use yii\helpers\Html;
-use Yii;
+use yii\helpers\Yii;
 use yii\helpers\StringHelper;
 
 /**
@@ -84,8 +84,8 @@ class Generator extends \yii\gii\Generator
      */
     public function successMessage()
     {
-        if (Yii::$app->hasModule($this->moduleID)) {
-            $link = Html::a('try it now', Yii::$app->getUrlManager()->createUrl($this->moduleID), ['target' => '_blank']);
+        if (Yii::getApp()->hasModule($this->moduleID)) {
+            $link = Html::a('try it now', Yii::getApp()->getUrlManager()->createUrl($this->moduleID), ['target' => '_blank']);
 
             return "The module has been generated successfully. You may $link.";
         }

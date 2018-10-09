@@ -7,7 +7,7 @@
 
 namespace yii\gii\generators\form;
 
-use Yii;
+use yii\helpers\Yii;
 use yii\base\Model;
 use yii\gii\CodeFile;
 

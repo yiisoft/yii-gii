@@ -3,7 +3,7 @@
 namespace yiiunit\gii;
 
 use yii\gii\generators\model\Generator as ModelGenerator;
-use Yii;
+use yii\helpers\Yii;
 
 /**
  * SchemaTest checks that Gii model generator supports multiple schemas

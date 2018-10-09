@@ -6,8 +6,8 @@ use yii\helpers\Html;
 /* @var $activeGenerator \yii\gii\Generator */
 /* @var $content string */
 
-$generators = Yii::$app->controller->module->generators;
-$activeGenerator = Yii::$app->controller->generator;
+$generators = Yii::getApp()->controller->module->generators;
+$activeGenerator = Yii::getApp()->controller->generator;
 ?>
 <?php $this->beginContent('@yii/gii/views/layouts/main.php'); ?>
 <div class="row">

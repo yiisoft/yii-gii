@@ -7,7 +7,7 @@
 
 namespace yii\gii\console;
 
-use Yii;
+use yii\helpers\Yii;
 use yii\base\InlineAction;
 use yii\console\Controller;
 

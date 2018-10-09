@@ -7,11 +7,11 @@
 
 namespace yii\gii;
 
-use Yii;
 use ReflectionClass;
 use yii\exceptions\InvalidConfigException;
 use yii\base\Model;
 use yii\helpers\VarDumper;
+use yii\helpers\Yii;
 use yii\web\View;
 
 /**
@@ -253,7 +253,7 @@ abstract class Generator extends Model
      */
     public function getStickyDataFile()
     {
-        return Yii::$app->getRuntimePath() . '/gii-' . Yii::getVersion() . '/' . str_replace('\\', '-', get_class($this)) . '.json';
+        return Yii::getApp()->getRuntimePath() . '/gii-' . Yii::getVersion() . '/' . str_replace('\\', '-', get_class($this)) . '.json';
     }
 
     /**

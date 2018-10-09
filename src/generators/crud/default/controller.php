@@ -29,7 +29,7 @@ echo "<?php\n";
 
 namespace <?= StringHelper::dirname(ltrim($generator->controllerClass, '\\')) ?>;
 
-use Yii;
+use yii\helpers\Yii;
 use <?= ltrim($generator->modelClass, '\\') ?>;
 <?php if (!empty($generator->searchModelClass)): ?>
 use <?= ltrim($generator->searchModelClass, '\\') . (isset($searchModelAlias) ? " as $searchModelAlias" : "") ?>;
@@ -68,7 +68,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     {
 <?php if (!empty($generator->searchModelClass)): ?>
         $searchModel = new <?= isset($searchModelAlias) ? $searchModelAlias : $searchModelClass ?>();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->search(Yii::getApp()->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -107,7 +107,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     {
         $model = new <?= $modelClass ?>();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::getApp()->request->post()) && $model->save()) {
             return $this->redirect(['view', <?= $urlParams ?>]);
         }
 
@@ -127,7 +127,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     {
         $model = $this->findModel(<?= $actionParams ?>);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::getApp()->request->post()) && $model->save()) {
             return $this->redirect(['view', <?= $urlParams ?>]);
         }
 
