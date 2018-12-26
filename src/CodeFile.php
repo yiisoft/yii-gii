@@ -63,8 +63,6 @@ class CodeFile extends BaseObject
      */
     public function __construct($path, $content, $config = [])
     {
-        parent::__construct($config);
-
         $this->path = strtr($path, '/\\', DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR);
         $this->content = $content;
         $this->id = md5($this->path);

@@ -1,0 +1,5 @@
+{
+    "require": {
+	"npm-asset/typeahead.js": "0.10.* | ~0.11.0"
+    }
+}
