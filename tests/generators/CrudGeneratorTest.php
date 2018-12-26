@@ -1,6 +1,6 @@
 <?php
 
-namespace yiiunit\gii\generators;
+namespace yii\gii\tests\generators;
 
 use yii\db\ColumnSchema;
 use yii\gii\generators\crud\Generator;

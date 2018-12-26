@@ -1,6 +1,6 @@
 <?= $generator->title ?>
 
-<?= str_repeat('=', mb_strlen($generator->title, \Yii::getApp()->charset)) ?>
+<?= str_repeat('=', mb_strlen($generator->title, \yii\helpers\Yii::getApp()->encoding)) ?>
 
 <?= $generator->description ?>
 

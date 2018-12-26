@@ -1,6 +1,6 @@
 <?php
 
-namespace yiiunit\gii;
+namespace yii\gii\tests;
 
 use yii\gii\CodeFile;
 use yii\gii\generators\controller\Generator as ControllerGenerator;
@@ -81,7 +81,7 @@ class GeneratorsTest extends GiiTestCase
     {
         $generator = new FormGenerator();
         $generator->template = 'default';
-        $generator->modelClass = 'yiiunit\gii\Profile';
+        $generator->modelClass = 'yii\gii\tests\Profile';
         $generator->viewName = 'profile';
         $generator->viewPath = '@app/runtime';
 
@@ -95,7 +95,7 @@ class GeneratorsTest extends GiiTestCase
     {
         $generator = new CRUDGenerator();
         $generator->template = 'default';
-        $generator->modelClass = 'yiiunit\gii\Profile';
+        $generator->modelClass = 'yii\gii\tests\Profile';
         $generator->controllerClass = 'app\TestController';
 
         $valid = $generator->validate();

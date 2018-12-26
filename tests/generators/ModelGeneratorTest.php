@@ -1,8 +1,8 @@
 <?php
-namespace yiiunit\gii\generators;
+namespace yii\gii\tests\generators;
 
 use yii\gii\generators\model\Generator as ModelGenerator;
-use yiiunit\gii\GiiTestCase;
+use yii\gii\tests\GiiTestCase;
 
 /**
  * ModelGeneratorTest checks that Gii model generator produces valid results
@@ -160,9 +160,10 @@ class ModelGeneratorTest extends GiiTestCase
         }
     }
 
+    /*
     public function testSchemas()
     {
-    }
+    }*/
 
     /**
      * @return array

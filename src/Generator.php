@@ -13,6 +13,7 @@ use yii\base\Model;
 use yii\helpers\VarDumper;
 use yii\helpers\Yii;
 use yii\web\View;
+use yii\view\Theme;
 
 /**
  * This is the base class for all generator classes.
@@ -75,9 +76,10 @@ abstract class Generator extends Model
     /**
      * {@inheritdoc}
      */
-    public function init()
+    public function __construct()
     {
-        parent::init();
+
+        //parent::__construct();
         if (!isset($this->templates['default'])) {
             $this->templates['default'] = $this->defaultTemplate();
         }
@@ -311,7 +313,7 @@ abstract class Generator extends Model
      */
     public function render($template, $params = [])
     {
-        $view = new View();
+        $view = new View(Yii::getApp(), new Theme());
         $params['generator'] = $this;
 
         return $view->renderFile($this->getTemplatePath() . '/' . $template, $params, $this);
@@ -325,6 +327,7 @@ abstract class Generator extends Model
     public function validateTemplate()
     {
         $templates = $this->templates;
+
         if (!isset($templates[$this->template])) {
             $this->addError('template', 'Invalid template selection.');
         } else {
