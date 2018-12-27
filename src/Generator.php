@@ -14,6 +14,7 @@ use yii\helpers\VarDumper;
 use yii\helpers\Yii;
 use yii\web\View;
 use yii\view\Theme;
+use yii\di\Initiable;
 
 /**
  * This is the base class for all generator classes.
@@ -37,7 +38,7 @@ use yii\view\Theme;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-abstract class Generator extends Model
+abstract class Generator extends Model implements Initiable
 {
     /**
      * @var array a list of available code templates. The array keys are the template names,
@@ -76,10 +77,8 @@ abstract class Generator extends Model
     /**
      * {@inheritdoc}
      */
-    public function __construct()
+    public function init() : void
     {
-
-        //parent::__construct();
         if (!isset($this->templates['default'])) {
             $this->templates['default'] = $this->defaultTemplate();
         }
