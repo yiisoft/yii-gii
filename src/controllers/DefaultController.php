@@ -32,7 +32,7 @@ class DefaultController extends Controller
     /**
      * {@inheritdoc}
      */
-    public function beforeAction($action)
+    public function beforeAction($action): bool
     {
         Yii::getApp()->response->format = Response::FORMAT_HTML;
         return parent::beforeAction($action);
