@@ -4,12 +4,13 @@ namespace yii\gii\tests\generators;
 
 use yii\db\ColumnSchema;
 use yii\gii\generators\crud\Generator;
+use yii\gii\tests\GiiTestCase;
 
-class CrudGeneratorTest extends \yii\tests\TestCase
+class CrudGeneratorTest extends GiiTestCase
 {
     public function testGenerateColumnFormat()
     {
-        $g = new Generator();
+        $g = new Generator($this->app);
 
         $c = new ColumnSchema();
         $c->phpType = 'boolean';

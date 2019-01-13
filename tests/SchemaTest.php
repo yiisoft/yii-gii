@@ -16,7 +16,7 @@ class SchemaTest extends GiiTestCase
 
     public function testPrefixesGenerator()
     {
-        $generator = new ModelGenerator();
+        $generator = new ModelGenerator($this->app);
         $generator->template = 'default';
         $generator->tableName = 'schema1.*';
         $generator->generateRelationsFromCurrentSchema = false;
@@ -63,7 +63,7 @@ class SchemaTest extends GiiTestCase
      */
     public function testRelationsGenerator($template, $tableName, $filesCount, $relationSets)
     {
-        $generator = new ModelGenerator();
+        $generator = new ModelGenerator($this->app);
         $generator->template = $template;
         $generator->tableName = $tableName;
         $generator->generateRelationsFromCurrentSchema = false;

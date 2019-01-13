@@ -12,7 +12,7 @@ class ModelGeneratorTest extends GiiTestCase
 {
     public function testAll()
     {
-        $generator = new ModelGenerator();
+        $generator = new ModelGenerator($this->app);
         $generator->template = 'default';
         $generator->tableName = '*';
 
@@ -133,7 +133,7 @@ class ModelGeneratorTest extends GiiTestCase
      */
     public function testRelations($tableName, $fileName, $relations)
     {
-        $generator = new ModelGenerator();
+        $generator = new ModelGenerator($this->app);
         $generator->template = 'default';
         $generator->generateRelationsFromCurrentSchema = false;
         $generator->tableName = $tableName;
@@ -194,7 +194,7 @@ class ModelGeneratorTest extends GiiTestCase
      */
     public function testRules($tableName, $fileName, $rules)
     {
-        $generator = new ModelGenerator();
+        $generator = new ModelGenerator($this->app);
         $generator->template = 'default';
         $generator->tableName = $tableName;
 
