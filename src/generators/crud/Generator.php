@@ -35,7 +35,7 @@ class Generator extends \yii\gii\Generator
     public $modelClass;
     public $controllerClass;
     public $viewPath;
-    public $baseControllerClass = 'yii\web\Controller';
+    public $baseControllerClass = \yii\web\Controller::class;
     public $indexWidgetType = 'grid';
     public $searchModelClass = '';
     /**
@@ -472,7 +472,7 @@ class Generator extends \yii\gii\Generator
         $class = $this->modelClass;
         $pks = $class::primaryKey();
         if (count($pks) === 1) {
-            if (is_subclass_of($class, 'yii\mongodb\ActiveRecord')) {
+            if (is_subclass_of($class, \yii\mongodb\ActiveRecord::class)) {
                 return "'id' => (string)\$model->{$pks[0]}";
             }
 
@@ -481,7 +481,7 @@ class Generator extends \yii\gii\Generator
 
         $params = [];
         foreach ($pks as $pk) {
-            if (is_subclass_of($class, 'yii\mongodb\ActiveRecord')) {
+            if (is_subclass_of($class, \yii\mongodb\ActiveRecord::class)) {
                 $params[] = "'$pk' => (string)\$model->$pk";
             } else {
                 $params[] = "'$pk' => \$model->$pk";
@@ -544,7 +544,7 @@ class Generator extends \yii\gii\Generator
     {
         /* @var $class ActiveRecord */
         $class = $this->modelClass;
-        if (is_subclass_of($class, 'yii\db\ActiveRecord')) {
+        if (is_subclass_of($class, \yii\db\ActiveRecord::class)) {
             return $class::getTableSchema();
         } else {
             return false;
@@ -558,7 +558,7 @@ class Generator extends \yii\gii\Generator
     {
         /* @var $class ActiveRecord */
         $class = $this->modelClass;
-        if (is_subclass_of($class, 'yii\db\ActiveRecord')) {
+        if (is_subclass_of($class, \yii\db\ActiveRecord::class)) {
             return $class::getTableSchema()->getColumnNames();
         }
 

@@ -46,7 +46,7 @@ class Module extends \yii\base\Module implements BootstrapInterface
     /**
      * {@inheritdoc}
      */
-    public $controllerNamespace = 'yii\gii\controllers';
+    public $controllerNamespace = \yii\gii\controllers::class;
     /**
      * @var array the list of IPs that are allowed to access this module.
      * Each array element represents a single IP filter which can be either an IP address

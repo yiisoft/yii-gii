@@ -39,13 +39,13 @@ Agora você precisa informar ao Gii sobre nosso modelo (template). A configuraç
 ```php
 // config/web.php for basic app
 // ...
-if (YII_ENV_DEV) {    
+if (YII_ENV_DEV) {
     $config['modules']['gii'] = [
-        'class' => 'yii\gii\Module',      
-        'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'],  
+        '__class' => \yii\gii\Module::class,
+        'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'],
         'generators' => [ //here
             'crud' => [ // generator name
-                'class' => 'yii\gii\generators\crud\Generator', // generator class
+                '__class' => \yii\gii\generators\crud\Generator::class, // generator class
                 'templates' => [ //setting for out templates
                     'myCrud' => '@app/myTemplates/crud/default', // template name => path to template
                 ]

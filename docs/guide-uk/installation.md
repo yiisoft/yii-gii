@@ -28,7 +28,7 @@ php composer.phar require --dev --prefer-dist yiisoft/yii2-gii
 return [
     'bootstrap' => ['gii'],
     'modules' => [
-        'gii' => 'yii\gii\Module',
+        'gii' => \yii\gii\Module::class,
         // ...
     ],
     // ...
@@ -52,7 +52,7 @@ http://localhost/path/to/index.php/gii
 >
 ```php
 'gii' => [
-    '__class' => 'yii\gii\Module',
+    '__class' => \yii\gii\Module::class,
     'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'] // налаштувати для ваших потреб
 ],
 ```
@@ -83,10 +83,10 @@ yii gii/model --tableName=city --modelClass=City
 if (YII_ENV_DEV) {
     // налаштування конфігурації для середовища розробки
     $config['bootstrap'][] = 'debug';
-    $config['modules']['debug'] = 'yii\debug\Module';
+    $config['modules']['debug'] = \yii\debug\Module::class;
 
     $config['bootstrap'][] = 'gii';
-    $config['modules']['gii'] = 'yii\gii\Module'; // <--- тут
+    $config['modules']['gii'] = \yii\gii\Module::class; // <--- тут
 }
 ```
 
@@ -96,11 +96,11 @@ if (YII_ENV_DEV) {
 if (YII_ENV_DEV) {
     // налаштування конфігурації для середовища розробки
     $config['bootstrap'][] = 'debug';
-    $config['modules']['debug'] = 'yii\debug\Module';
+    $config['modules']['debug'] = \yii\debug\Module::class;
 
     $config['bootstrap'][] = 'gii';
     $config['modules']['gii'] = [
-        '__class' => 'yii\gii\Module',
+        '__class' => \yii\gii\Module::class,
         'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'],
     ];
 }

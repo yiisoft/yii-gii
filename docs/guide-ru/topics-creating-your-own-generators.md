@@ -9,13 +9,13 @@
 ```php
 //config/web.php для basic-приложения
 //..
-if (YII_ENV_DEV) {    
+if (YII_ENV_DEV) {
     $config['modules']['gii'] = [
-        'class' => 'yii\gii\Module',      
-        'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'],  
+        '__class' => \yii\gii\Module::class,
+        'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'],
          'generators' => [
             'myCrud' => [
-                'class' => 'app\myTemplates\crud\Generator',
+                '__class' => \app\myTemplates\crud\Generator::class,
                 'templates' => [
                     'my' => '@app/myTemplates/crud/default',
                 ]
@@ -41,7 +41,7 @@ class Generator extends \yii\gii\Generator
     {
         return 'Мой crud-генератор. Такой же как и дефолтный, но зато мой...';
     }
-    
+
     // ...
 }
 ```

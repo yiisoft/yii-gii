@@ -33,7 +33,7 @@ class Generator extends \yii\gii\Generator
     public $ns = 'app\models';
     public $tableName;
     public $modelClass;
-    public $baseClass = 'yii\activerecord\ActiveRecord';
+    public $baseClass = \yii\activerecord\ActiveRecord::class;
     public $generateRelations = self::RELATIONS_ALL;
     public $generateRelationsFromCurrentSchema = true;
     public $generateLabelsFromComments = false;
@@ -42,7 +42,7 @@ class Generator extends \yii\gii\Generator
     public $generateQuery = false;
     public $queryNs = 'app\models';
     public $queryClass;
-    public $queryBaseClass = 'yii\activerecord\ActiveQuery';
+    public $queryBaseClass = \yii\activerecord\ActiveQuery::class;
 
 
     /**

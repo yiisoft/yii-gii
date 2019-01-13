@@ -9,6 +9,7 @@ use yii\gii\generators\extension\Generator as ExtensionGenerator;
 use yii\gii\generators\form\Generator as FormGenerator;
 use yii\gii\generators\model\Generator as ModelGenerator;
 use yii\gii\generators\module\Generator as ModuleGenerator;
+use yii\gii\tests\Profile;
 
 /**
  * GeneratorsTest checks that Gii generators aren't throwing any errors during generation
@@ -81,7 +82,7 @@ class GeneratorsTest extends GiiTestCase
     {
         $generator = new FormGenerator($this->app);
         $generator->template = 'default';
-        $generator->modelClass = 'yii\gii\tests\Profile';
+        $generator->modelClass = Profile::class;
         $generator->viewName = 'profile';
         $generator->viewPath = '@app/runtime';
 
@@ -95,7 +96,7 @@ class GeneratorsTest extends GiiTestCase
     {
         $generator = new CRUDGenerator($this->app);
         $generator->template = 'default';
-        $generator->modelClass = 'yii\gii\tests\Profile';
+        $generator->modelClass = Profile::class;
         $generator->controllerClass = 'app\TestController';
 
         $valid = $generator->validate();
