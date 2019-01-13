@@ -10,9 +10,11 @@ namespace yii\gii;
 use ReflectionClass;
 use yii\exceptions\InvalidConfigException;
 use yii\base\Model;
+use yii\base\Application;
 use yii\helpers\VarDumper;
 use yii\helpers\Yii;
 use yii\web\View;
+use yii\view\Theme;
 
 /**
  * This is the base class for all generator classes.
@@ -58,6 +60,10 @@ abstract class Generator extends Model
      */
     public $messageCategory = 'app';
 
+    /**
+     * @var Application
+     */
+    protected $app;
 
     /**
      * @return string name of the code generator
@@ -72,16 +78,14 @@ abstract class Generator extends Model
      */
     abstract public function generate();
 
-    /**
-     * {@inheritdoc}
-     */
-    public function init()
+    public function __construct(Application $app, $templates = [])
     {
-        parent::init();
-        if (!isset($this->templates['default'])) {
+        $this->app = $app;
+
+        if (!isset($templates['default'])) {
             $this->templates['default'] = $this->defaultTemplate();
         }
-        foreach ($this->templates as $i => $template) {
+        foreach ($templates as $i => $template) {
             $this->templates[$i] = Yii::getAlias($template);
         }
     }
@@ -253,7 +257,7 @@ abstract class Generator extends Model
      */
     public function getStickyDataFile()
     {
-        return Yii::getApp()->getRuntimePath() . '/gii-' . Yii::getVersion() . '/' . str_replace('\\', '-', get_class($this)) . '.json';
+        return $this->app->getRuntimePath() . '/gii-' . Yii::getVersion() . '/' . str_replace('\\', '-', get_class($this)) . '.json';
     }
 
     /**
@@ -311,7 +315,7 @@ abstract class Generator extends Model
      */
     public function render($template, $params = [])
     {
-        $view = new View();
+        $view = new View($this->app, new Theme());
         $params['generator'] = $this;
 
         return $view->renderFile($this->getTemplatePath() . '/' . $template, $params, $this);
@@ -325,6 +329,7 @@ abstract class Generator extends Model
     public function validateTemplate()
     {
         $templates = $this->templates;
+
         if (!isset($templates[$this->template])) {
             $this->addError('template', 'Invalid template selection.');
         } else {

@@ -1,6 +1,6 @@
 <?php
 
-namespace yiiunit\gii;
+namespace yii\gii\tests;
 
 use yii\gii\generators\model\Generator as ModelGenerator;
 use yii\helpers\Yii;
@@ -16,16 +16,12 @@ class SchemaTest extends GiiTestCase
 
     public function testPrefixesGenerator()
     {
-        $generator = new ModelGenerator();
+        $generator = new ModelGenerator($this->app);
         $generator->template = 'default';
         $generator->tableName = 'schema1.*';
         $generator->generateRelationsFromCurrentSchema = false;
 
         $files = $generator->generate();
-
-        if (version_compare(str_replace('-dev', '', Yii::getVersion()), '2.0.4', '<')) {
-            $this->markTestSkipped('This feature is only available since Yii 2.0.4.');
-        }
 
         $this->assertEquals(5, count($files));
         $this->assertEquals("Schema1Table1", basename($files[3]->path, '.php'));
@@ -67,7 +63,7 @@ class SchemaTest extends GiiTestCase
      */
     public function testRelationsGenerator($template, $tableName, $filesCount, $relationSets)
     {
-        $generator = new ModelGenerator();
+        $generator = new ModelGenerator($this->app);
         $generator->template = $template;
         $generator->tableName = $tableName;
         $generator->generateRelationsFromCurrentSchema = false;
@@ -78,10 +74,6 @@ class SchemaTest extends GiiTestCase
         foreach ($relationSets as $index => $relations) {
             $modelCode = $files[$index]->content;
             $modelClass = basename($files[$index]->path, '.php');
-
-            if (version_compare(str_replace('-dev', '', Yii::getVersion()), '2.0.4', '<')) {
-                $this->markTestSkipped('This feature is only available since Yii 2.0.4.');
-            }
 
             foreach ($relations as $relation) {
                 $this->assertTrue(strpos($modelCode, $relation) !== false,

@@ -1,6 +1,6 @@
 <?php
 
-namespace yiiunit\gii;
+namespace yii\gii\tests;
 
 use yii\activerecord\ActiveRecord;
 

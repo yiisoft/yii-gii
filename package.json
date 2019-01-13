@@ -1,0 +1,25 @@
+{
+  "name": "yii-gii",
+  "description": "Gii Extension for Yii",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yiisoft/yii-gii.git"
+  },
+  "author": "",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/yiisoft/yii-gii/issues"
+  },
+  "homepage": "https://github.com/yiisoft/yii-gii#readme",
+  "dependencies": {
+    "typeahead.js": "^0.11.1"
+  }
+}

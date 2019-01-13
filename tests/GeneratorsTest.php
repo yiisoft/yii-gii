@@ -1,6 +1,6 @@
 <?php
 
-namespace yiiunit\gii;
+namespace yii\gii\tests;
 
 use yii\gii\CodeFile;
 use yii\gii\generators\controller\Generator as ControllerGenerator;
@@ -18,7 +18,7 @@ class GeneratorsTest extends GiiTestCase
 {
     public function testControllerGenerator(): void
     {
-        $generator = new ControllerGenerator();
+        $generator = new ControllerGenerator($this->app);
         $generator->template = 'default';
         $generator->controllerClass = 'app\runtime\TestController';
 
@@ -30,7 +30,7 @@ class GeneratorsTest extends GiiTestCase
 
     public function testExtensionGenerator()
     {
-        $generator = new ExtensionGenerator();
+        $generator = new ExtensionGenerator($this->app);
         $generator->template = 'default';
         $generator->vendorName = 'samdark';
         $generator->namespace = 'samdark\\';
@@ -48,7 +48,7 @@ class GeneratorsTest extends GiiTestCase
 
     public function testModelGenerator()
     {
-        $generator = new ModelGenerator();
+        $generator = new ModelGenerator($this->app);
         $generator->template = 'default';
         $generator->tableName = 'profile';
         $generator->modelClass = 'Profile';
@@ -65,7 +65,7 @@ class GeneratorsTest extends GiiTestCase
 
     public function testModuleGenerator()
     {
-        $generator = new ModuleGenerator();
+        $generator = new ModuleGenerator($this->app);
         $generator->template = 'default';
         $generator->moduleID = 'test';
         $generator->moduleClass = 'app\modules\test\Module';
@@ -79,9 +79,9 @@ class GeneratorsTest extends GiiTestCase
 
     public function testFormGenerator()
     {
-        $generator = new FormGenerator();
+        $generator = new FormGenerator($this->app);
         $generator->template = 'default';
-        $generator->modelClass = 'yiiunit\gii\Profile';
+        $generator->modelClass = 'yii\gii\tests\Profile';
         $generator->viewName = 'profile';
         $generator->viewPath = '@app/runtime';
 
@@ -93,9 +93,9 @@ class GeneratorsTest extends GiiTestCase
 
     public function testCRUDGenerator()
     {
-        $generator = new CRUDGenerator();
+        $generator = new CRUDGenerator($this->app);
         $generator->template = 'default';
-        $generator->modelClass = 'yiiunit\gii\Profile';
+        $generator->modelClass = 'yii\gii\tests\Profile';
         $generator->controllerClass = 'app\TestController';
 
         $valid = $generator->validate();
@@ -106,7 +106,7 @@ class GeneratorsTest extends GiiTestCase
 
     public function testTemplateValidation()
     {
-        $generator = new ModelGenerator();
+        $generator = new ModelGenerator($this->app);
 
         // Validate default template
         $generator->template = 'default';

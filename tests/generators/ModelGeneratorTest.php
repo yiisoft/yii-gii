@@ -1,8 +1,8 @@
 <?php
-namespace yiiunit\gii\generators;
+namespace yii\gii\tests\generators;
 
 use yii\gii\generators\model\Generator as ModelGenerator;
-use yiiunit\gii\GiiTestCase;
+use yii\gii\tests\GiiTestCase;
 
 /**
  * ModelGeneratorTest checks that Gii model generator produces valid results
@@ -12,7 +12,7 @@ class ModelGeneratorTest extends GiiTestCase
 {
     public function testAll()
     {
-        $generator = new ModelGenerator();
+        $generator = new ModelGenerator($this->app);
         $generator->template = 'default';
         $generator->tableName = '*';
 
@@ -133,7 +133,7 @@ class ModelGeneratorTest extends GiiTestCase
      */
     public function testRelations($tableName, $fileName, $relations)
     {
-        $generator = new ModelGenerator();
+        $generator = new ModelGenerator($this->app);
         $generator->template = 'default';
         $generator->generateRelationsFromCurrentSchema = false;
         $generator->tableName = $tableName;
@@ -158,10 +158,6 @@ class ModelGeneratorTest extends GiiTestCase
                 . ($relation['expected'] ? '' : ' not')." be there:\n" . $code
             );
         }
-    }
-
-    public function testSchemas()
-    {
     }
 
     /**
@@ -198,7 +194,7 @@ class ModelGeneratorTest extends GiiTestCase
      */
     public function testRules($tableName, $fileName, $rules)
     {
-        $generator = new ModelGenerator();
+        $generator = new ModelGenerator($this->app);
         $generator->template = 'default';
         $generator->tableName = $tableName;
 
