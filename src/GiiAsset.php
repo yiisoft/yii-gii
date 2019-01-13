@@ -25,9 +25,9 @@ class GiiAsset extends AssetBundle
         'gii.js',
     ];
     public $depends = [
-        'yii\web\YiiAsset',
-        'yii\bootstrap\BootstrapAsset',
-        'yii\bootstrap\BootstrapPluginAsset',
-        'yii\gii\TypeAheadAsset',
+        \yii\web\YiiAsset::class,
+        \yii\bootstrap\BootstrapAsset::class,
+        \yii\bootstrap\BootstrapPluginAsset::class,
+        \yii\gii\TypeAheadAsset::class,
     ];
 }

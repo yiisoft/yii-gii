@@ -36,13 +36,13 @@
 ```php
 // config/web.php для basic-приложения
 // ...
-if (YII_ENV_DEV) {    
+if (YII_ENV_DEV) {
     $config['modules']['gii'] = [
-        'class' => 'yii\gii\Module',      
-        'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'],  
+        '__class' => \yii\gii\Module::class,
+        'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'],
         'generators' => [ // здесь
             'crud' => [ // название генератора
-                'class' => 'yii\gii\generators\crud\Generator', // класс генератора
+                '__class' => \yii\gii\generators\crud\Generator::class, // класс генератора
                 'templates' => [ // настройки сторонних шаблонов
                     'myCrud' => '@app/myTemplates/crud/default', // имя_шаблона => путь_к_шаблону
                 ]

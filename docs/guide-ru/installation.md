@@ -29,7 +29,7 @@ return [
     'bootstrap' => ['gii'],
     'modules' => [
         'gii' => [
-            'class' => 'yii\gii\Module',
+            '__class' => \yii\gii\Module::class,
         ],
         // ...
     ],
@@ -54,7 +54,7 @@ http://localhost/path/to/index.php/gii
 >
 ```php
 'gii' => [
-    'class' => 'yii\gii\Module',
+    '__class' => \yii\gii\Module::class,
     'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'] // настройте, как Вам нужно здесь
 ],
 ```
@@ -86,10 +86,10 @@ if (YII_ENV_DEV) {
     // configuration adjustments for 'dev' environment
     // настройка конфигурации для разработки
     $config['bootstrap'][] = 'debug';
-    $config['modules']['debug'] = 'yii\debug\Module';
+    $config['modules']['debug'] = \yii\debug\Module::class;
 
     $config['bootstrap'][] = 'gii';
-    $config['modules']['gii'] = 'yii\gii\Module'; // <--- здесь
+    $config['modules']['gii'] = \yii\gii\Module::class; // <--- здесь
 }
 ```
 
@@ -100,11 +100,11 @@ if (YII_ENV_DEV) {
     // configuration adjustments for 'dev' environment
     // настройка конфигурации для разработки
     $config['bootstrap'][] = 'debug';
-    $config['modules']['debug'] = 'yii\debug\Module';
+    $config['modules']['debug'] = \yii\debug\Module::class;
 
     $config['bootstrap'][] = 'gii';
     $config['modules']['gii'] = [
-        'class' => 'yii\gii\Module',
+        '__class' => \yii\gii\Module::class,
         'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'],
     ];
 }

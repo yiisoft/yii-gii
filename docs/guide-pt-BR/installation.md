@@ -23,12 +23,12 @@ para ser requerido na sessão dev (desenvolvimento) do seu  arquivo `composer.js
 ## Configurando a Aplicação
 
 Assim que a extensão Gii for instalada, você habilitá-la adicionando estas linhas no seu arquivo de configuração da aplicação:
-	
+
 ```php
 return [
     'bootstrap' => ['gii'],
     'modules' => [
-        'gii' => 'yii\gii\Module',
+        'gii' => \yii\gii\Module::class,
         // ...
     ],
     // ...
@@ -53,7 +53,7 @@ http://localhost/path/to/index.php/gii
 
 ```php
 'gii' => [
-    'class' => 'yii\gii\Module',
+    '__class' => \yii\gii\Module::class,
     'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'] // adjust this to your needs
 ],
 ```
@@ -85,10 +85,10 @@ Na estrutura de configuração de uma aplicação básica é um pouco diferente,
 if (YII_ENV_DEV) {
     // configuration adjustments for 'dev' environment
     $config['bootstrap'][] = 'debug';
-    $config['modules']['debug'] = 'yii\debug\Module';
+    $config['modules']['debug'] = \yii\debug\Module::class;
 
     $config['bootstrap'][] = 'gii';
-    $config['modules']['gii'] = 'yii\gii\Module'; // <--- here
+    $config['modules']['gii'] = \yii\gii\Module::class; // <--- here
 }
 ```
 
@@ -98,11 +98,11 @@ Portanto, a fim de ajustar o endereço IP que você precisa fazer o seguinte:
 if (YII_ENV_DEV) {
     // configuration adjustments for 'dev' environment
     $config['bootstrap'][] = 'debug';
-    $config['modules']['debug'] = 'yii\debug\Module';
+    $config['modules']['debug'] = \yii\debug\Module::class;
 
     $config['bootstrap'][] = 'gii';
     $config['modules']['gii'] = [
-        'class' => 'yii\gii\Module',
+        '__class' => \yii\gii\Module::class,
         'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'],
     ];
 }

@@ -36,13 +36,13 @@
 ```php
 // config/web.php 基于 基础模版应用（ basic app ）
 // ...
-if (YII_ENV_DEV) {    
+if (YII_ENV_DEV) {
     $config['modules']['gii'] = [
-        'class' => 'yii\gii\Module',      
-        'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'],  
+        '__class' => \yii\gii\Module::class,
+        'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'],
         'generators' => [ //这里配置生成器
             'crud' => [ // 生成器名称
-                'class' => 'yii\gii\generators\crud\Generator', // 生成器类
+                '__class' => \yii\gii\generators\crud\Generator::class, // 生成器类
                 'templates' => [ //配置模版文件
                     'myCrud' => '@app/myTemplates/crud/default', // 模版名称 => 模版路径
                 ]

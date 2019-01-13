@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= "<?= " ?>GridView::widget([
         'dataProvider' => $dataProvider,
         <?= !empty($generator->searchModelClass) ? "'filterModel' => \$searchModel,\n        'columns' => [\n" : "'columns' => [\n"; ?>
-            ['__class' => 'yii\grid\SerialColumn'],
+            ['__class' => \yii\grid\SerialColumn::class],
 
 <?php
 $count = 0;
@@ -63,7 +63,7 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
 }
 ?>
 
-            ['__class' => 'yii\grid\ActionColumn'],
+            ['__class' => \yii\grid\ActionColumn::class],
         ],
     ]); ?>
 <?php else: ?>
