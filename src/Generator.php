@@ -10,6 +10,7 @@ namespace yii\gii;
 use ReflectionClass;
 use yii\exceptions\InvalidConfigException;
 use yii\base\Model;
+use yii\base\Application;
 use yii\helpers\VarDumper;
 use yii\helpers\Yii;
 use yii\web\View;
@@ -59,6 +60,10 @@ abstract class Generator extends Model
      */
     public $messageCategory = 'app';
 
+    /**
+     * @var Application
+     */
+    protected $app;
 
     /**
      * @return string name of the code generator
@@ -73,11 +78,10 @@ abstract class Generator extends Model
      */
     abstract public function generate();
 
-    /**
-     * {@inheritdoc}
-     */
-    public function __construct($templates = [])
+    public function __construct(Application $app, $templates = [])
     {
+        $this->app = $app;
+
         if (!isset($templates['default'])) {
             $this->templates['default'] = $this->defaultTemplate();
         }
@@ -253,7 +257,7 @@ abstract class Generator extends Model
      */
     public function getStickyDataFile()
     {
-        return Yii::getApp()->getRuntimePath() . '/gii-' . Yii::getVersion() . '/' . str_replace('\\', '-', get_class($this)) . '.json';
+        return $this->app->getRuntimePath() . '/gii-' . Yii::getVersion() . '/' . str_replace('\\', '-', get_class($this)) . '.json';
     }
 
     /**
@@ -311,7 +315,7 @@ abstract class Generator extends Model
      */
     public function render($template, $params = [])
     {
-        $view = new View(Yii::getApp(), new Theme());
+        $view = new View($this->app, new Theme());
         $params['generator'] = $this;
 
         return $view->renderFile($this->getTemplatePath() . '/' . $template, $params, $this);
