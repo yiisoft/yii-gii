@@ -26,7 +26,7 @@ namespace <?= StringHelper::dirname(ltrim($generator->searchModelClass, '\\')) ?
 
 use yii\helpers\Yii;
 use yii\base\Model;
-use yii\data\ActiveDataProvider;
+use yii\activerecord\data\ActiveDataProvider;
 use <?= ltrim($generator->modelClass, '\\') . (isset($modelAlias) ? " as $modelAlias" : "") ?>;
 
 /**
@@ -67,9 +67,10 @@ class <?= $searchModelClass ?> extends <?= isset($modelAlias) ? $modelAlias : $m
 
         // add conditions that should always apply here
 
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
+        $dataProvider = new ActiveDataProvider(
+            Yii::get('db'),
+            'query' => $query
+        );
 
         $this->load($params);
 
