@@ -511,7 +511,7 @@ abstract class Generator extends Model
         } else {
             // No I18N, replace placeholders by real words, if any
             if (!empty($placeholders)) {
-                $phKeys = array_map(function($word) {
+                $phKeys = array_map(function ($word) {
                     return '{' . $word . '}';
                 }, array_keys($placeholders));
                 $phValues = array_values($placeholders);
