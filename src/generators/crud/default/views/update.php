@@ -1,7 +1,7 @@
 <?php
 
-use yii\helpers\Inflector;
-use yii\helpers\StringHelper;
+use Yiisoft\Helpers\InflectorHelper;
+use Yiisoft\Strings\StringHelper;
 
 /* @var $this yii\web\View */
 /* @var $generator yii\gii\generators\crud\Generator */
@@ -17,15 +17,15 @@ use yii\helpers\Html;
 /* @var $model <?= ltrim($generator->modelClass, '\\') ?> */
 
 $this->title = <?= strtr($generator->generateString('Update ' .
-    Inflector::camel2words(StringHelper::basename($generator->modelClass)) .
+    InflectorHelper::camel2words(StringHelper::basename($generator->modelClass)) .
     ': {nameAttribute}', ['nameAttribute' => '{nameAttribute}']), [
     '{nameAttribute}\'' => '\' . $model->' . $generator->getNameAttribute()
 ]) ?>;
-$this->params['breadcrumbs'][] = ['label' => <?= $generator->generateString(Inflector::pluralize(Inflector::camel2words(StringHelper::basename($generator->modelClass)))) ?>, 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => <?= $generator->generateString(InflectorHelper::pluralize(InflectorHelper::camel2words(StringHelper::basename($generator->modelClass)))) ?>, 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model-><?= $generator->getNameAttribute() ?>, 'url' => ['view', <?= $urlParams ?>]];
 $this->params['breadcrumbs'][] = <?= $generator->generateString('Update') ?>;
 ?>
-<div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-update">
+<div class="<?= InflectorHelper::camel2id(StringHelper::basename($generator->modelClass)) ?>-update">
 
     <h1><?= '<?= ' ?>Html::encode($this->title) ?></h1>
 

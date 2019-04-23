@@ -1,7 +1,6 @@
 language: php
 
 php:
-  - 7.1
   - 7.2
   - 7.3
 
@@ -24,7 +23,7 @@ before_script:
   - echo "<?php unset(\$config['databases']['pgsql']['fixture']);" > tests/data/config.local.php
 
   - |
-    if [ $TRAVIS_PHP_VERSION = '7.1' ]; then
+    if [ $TRAVIS_PHP_VERSION = '7.3' ]; then
       PHPUNIT_FLAGS="--coverage-clover=coverage.clover"
     fi
 
@@ -33,7 +32,7 @@ script:
 
 after_script:
   - |
-    if [ $TRAVIS_PHP_VERSION = '7.1' ]; then
+    if [ $TRAVIS_PHP_VERSION = '7.3' ]; then
       travis_retry wget https://scrutinizer-ci.com/ocular.phar
       php ocular.phar code-coverage:upload --format=php-clover coverage.clover
     fi

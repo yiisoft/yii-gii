@@ -13,7 +13,7 @@ use yii\db\Connection;
 use yii\db\Schema;
 use yii\db\TableSchema;
 use yii\gii\CodeFile;
-use yii\helpers\Inflector;
+use Yiisoft\Helpers\InflectorHelper;
 use yii\helpers\Yii;
 use yii\exceptions\NotSupportedException;
 
@@ -286,7 +286,7 @@ class Generator extends \yii\gii\Generator
             } elseif (!strcasecmp($column->name, 'id')) {
                 $labels[$column->name] = 'ID';
             } else {
-                $label = Inflector::camel2words($column->name);
+                $label = InflectorHelper::camel2words($column->name);
                 if (!empty($label) && substr_compare($label, ' id', -3, 3, true) === 0) {
                     $label = substr($label, 0, -3) . ' ID';
                 }
@@ -697,9 +697,9 @@ class Generator extends \yii\gii\Generator
             }
         }
         if ($multiple) {
-            $key = Inflector::pluralize($key);
+            $key = InflectorHelper::pluralize($key);
         }
-        $name = $rawName = Inflector::id2camel($key, '_');
+        $name = $rawName = InflectorHelper::id2camel($key, '_');
         $i = 0;
         while ($baseModel->hasProperty(lcfirst($name))) {
             $name = $rawName . ($i++);
@@ -877,7 +877,7 @@ class Generator extends \yii\gii\Generator
             }
         }
 
-        return $this->classNames[$fullTableName] = Inflector::id2camel($schemaName.$className, '_');
+        return $this->classNames[$fullTableName] = InflectorHelper::id2camel($schemaName.$className, '_');
     }
 
     /**

@@ -3,7 +3,7 @@
  * This is the template for generating an action view file.
  */
 
-use yii\helpers\Inflector;
+use Yiisoft\Helpers\InflectorHelper;
 
 /* @var $this yii\web\View */
 /* @var $generator yii\gii\generators\form\Generator */
@@ -11,7 +11,7 @@ use yii\helpers\Inflector;
 echo "<?php\n";
 ?>
 
-public function action<?= Inflector::id2camel(trim(basename($generator->viewName), '_')) ?>()
+public function action<?= InflectorHelper::id2camel(trim(basename($generator->viewName), '_')) ?>()
 {
     $model = new \<?= ltrim($generator->modelClass, '\\') ?><?= empty($generator->scenarioName) ? "()" : "(['scenario' => '{$generator->scenarioName}'])" ?>;
 
