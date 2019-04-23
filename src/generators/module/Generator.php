@@ -10,7 +10,7 @@ namespace yii\gii\generators\module;
 use yii\gii\CodeFile;
 use yii\helpers\Html;
 use yii\helpers\Yii;
-use yii\helpers\StringHelper;
+use Yiisoft\Strings\StringHelper;
 
 /**
  * This generator will generate the skeleton code needed by a module.
