@@ -10,8 +10,8 @@ namespace yii\gii\generators\controller;
 use yii\helpers\Yii;
 use yii\gii\CodeFile;
 use yii\helpers\Html;
-use yii\helpers\Inflector;
-use yii\helpers\StringHelper;
+use Yiisoft\Helpers\InflectorHelper;
+use Yiisoft\Strings\StringHelper;
 
 /**
  * This generator will generate a controller and one or a few action view files.
@@ -210,7 +210,7 @@ class Generator extends \yii\gii\Generator
     public function getControllerID()
     {
         $name = StringHelper::basename($this->controllerClass);
-        return Inflector::camel2id(substr($name, 0, strlen($name) - 10));
+        return InflectorHelper::camel2id(substr($name, 0, strlen($name) - 10));
     }
 
     /**
