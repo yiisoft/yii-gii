@@ -92,7 +92,7 @@ class Module extends \yii\base\Module implements BootstrapInterface
                 ['__class' => \yii\web\UrlRule::class, 'pattern' => $this->id . '/<id:\w+>', 'route' => $this->id . '/default/view'],
                 ['__class' => \yii\web\UrlRule::class, 'pattern' => $this->id . '/<controller:[\w\-]+>/<action:[\w\-]+>', 'route' => $this->id . '/<controller>/<action>'],
             ], false);
-        } elseif ($app instanceof \yii\console\Application) {
+        } elseif ($app instanceof \Yiisoft\Yii\Console\Application) {
             $app->controllerMap[$this->id] = [
                 '__class' => \yii\gii\console\GenerateController::class,
                 'generators' => array_merge($this->coreGenerators(), $this->generators),

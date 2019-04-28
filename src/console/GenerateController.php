@@ -9,7 +9,7 @@ namespace yii\gii\console;
 
 use yii\helpers\Yii;
 use yii\base\InlineAction;
-use yii\console\Controller;
+use Yiisoft\Yii\Console\Controller;
 
 /**
  * This is the command line version of Gii - a code generator.
