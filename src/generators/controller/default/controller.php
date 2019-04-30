@@ -3,7 +3,7 @@
  * This is the template for generating a controller class file.
  */
 
-use Yiisoft\Helpers\InflectorHelper;
+use Yiisoft\Inflector\InflectorHelper;
 use Yiisoft\Strings\StringHelper;
 
 /* @var $this yii\web\View */

@@ -13,7 +13,7 @@ use yii\db\Connection;
 use yii\db\Schema;
 use yii\db\TableSchema;
 use yii\gii\CodeFile;
-use Yiisoft\Helpers\InflectorHelper;
+use Yiisoft\Inflector\InflectorHelper;
 use yii\helpers\Yii;
 use yii\exceptions\NotSupportedException;
 
