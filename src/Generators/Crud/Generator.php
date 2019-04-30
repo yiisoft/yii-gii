@@ -43,6 +43,10 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
      * @since 2.0.5
      */
     public $enablePjax = false;
+    /**
+     * @var bool whether to use strict inflection for controller IDs (insert a separator between two consecutive uppercase chars)
+     */
+    public $strictInflector = true;
 
 
     /**
@@ -195,7 +199,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
         $pos = strrpos($this->controllerClass, '\\');
         $class = substr(substr($this->controllerClass, $pos + 1), 0, -10);
 
-        return InflectorHelper::camel2id($class);
+        return InflectorHelper::camel2id($class, '-', $this->strictInflector);
     }
 
     /**
