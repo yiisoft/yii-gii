@@ -20,6 +20,7 @@ use yii\widgets\DetailView;
 $this->title = $model-><?= $generator->getNameAttribute() ?>;
 $this->params['breadcrumbs'][] = ['label' => <?= $generator->generateString(InflectorHelper::pluralize(InflectorHelper::camel2words(StringHelper::basename($generator->modelClass)))) ?>, 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+\Yiisoft\Yii\JQuery\YiiAsset::register($this);
 ?>
 <div class="<?= InflectorHelper::camel2id(StringHelper::basename($generator->modelClass)) ?>-view">
 
