@@ -19,15 +19,13 @@ class GiiAsset extends AssetBundle
 {
     public $sourcePath = '@Yiisoft/Yii/Gii/assets';
     public $css = [
-        'main.css',
+        'css/main.css',
     ];
     public $js = [
-        'gii.js',
+        'js/bs4-native.min.js',
+        'js/gii.js',
     ];
     public $depends = [
         \Yiisoft\Yii\JQuery\YiiAsset::class,
-        \Yiisoft\Yii\Bootstrap4\BootstrapAsset::class,
-        \Yiisoft\Yii\Bootstrap4\BootstrapPluginAsset::class,
-        \Yiisoft\Yii\Gii\TypeAheadAsset::class,
     ];
 }
