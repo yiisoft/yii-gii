@@ -882,7 +882,10 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
             }
         }
 
-        return $this->classNames[$fullTableName] = InflectorHelper::id2camel($schemaName.$className, '_');
+        $schemaName = ctype_upper(strtr($schemaName, ['_' => '', '-' => ''])) ? strtolower($schemaName) : $schemaName;
+        $className = ctype_upper(strtr($className, ['_' => '', '-' => ''])) ? strtolower($className) : $className;
+        return $this->classNames[$fullTableName] = strtr(ucwords(implode(' ', explode('_', strtolower(strtr(InflectorHelper::camel2words($schemaName.$className), [' ' => '_']))))), [' ' => '']);
+
     }
 
     /**
