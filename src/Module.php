@@ -160,12 +160,12 @@ class Module extends \yii\base\Module implements BootstrapInterface
     protected function coreGenerators()
     {
         return [
-            'model' => ['__class' => \Yiisoft\Yii\Gii\Generators\model\Generator::class],
-            'crud' => ['__class' => \Yiisoft\Yii\Gii\Generators\crud\Generator::class],
-            'controller' => ['__class' => \Yiisoft\Yii\Gii\Generators\controller\Generator::class],
-            'form' => ['__class' => \Yiisoft\Yii\Gii\Generators\form\Generator::class],
-            'module' => ['__class' => \Yiisoft\Yii\Gii\Generators\module\Generator::class],
-            'extension' => ['__class' => \Yiisoft\Yii\Gii\Generators\extension\Generator::class],
+            'model' => ['__class' => \Yiisoft\Yii\Gii\Generators\Model\Generator::class],
+            'crud' => ['__class' => \Yiisoft\Yii\Gii\Generators\Crud\Generator::class],
+            'controller' => ['__class' => \Yiisoft\Yii\Gii\Generators\Controller\Generator::class],
+            'form' => ['__class' => \Yiisoft\Yii\Gii\Generators\Form\Generator::class],
+            'module' => ['__class' => \Yiisoft\Yii\Gii\Generators\Module\Generator::class],
+            'extension' => ['__class' => \Yiisoft\Yii\Gii\Generators\Extension\Generator::class],
         ];
     }
 

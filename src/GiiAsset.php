@@ -17,7 +17,7 @@ use yii\web\AssetBundle;
  */
 class GiiAsset extends AssetBundle
 {
-    public $sourcePath = '@yii/gii/assets';
+    public $sourcePath = '@Yiisoft/Yii/Gii/assets';
     public $css = [
         'main.css',
     ];
@@ -25,9 +25,9 @@ class GiiAsset extends AssetBundle
         'gii.js',
     ];
     public $depends = [
-        \yii\web\YiiAsset::class,
-        \yii\bootstrap\BootstrapAsset::class,
-        \yii\bootstrap\BootstrapPluginAsset::class,
+        \Yiisoft\Yii\JQuery\YiiAsset::class,
+        \Yiisoft\Yii\Bootstrap4\BootstrapAsset::class,
+        \Yiisoft\Yii\Bootstrap4\BootstrapPluginAsset::class,
         \Yiisoft\Yii\Gii\TypeAheadAsset::class,
     ];
 }

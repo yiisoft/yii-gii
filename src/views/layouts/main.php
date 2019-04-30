@@ -1,7 +1,8 @@
 <?php
-use yii\bootstrap\NavBar;
-use yii\bootstrap\Nav;
+use Yiisoft\Yii\Bootstrap4\NavBar;
+use Yiisoft\Yii\Bootstrap4\Nav;
 use yii\helpers\Html;
+use yii\helpers\Yii;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
@@ -46,7 +47,7 @@ $asset = Yiisoft\Yii\Gii\GiiAsset::register($this);
     <footer class="footer">
         <div class="container">
             <p class="pull-left">A Product of <a href="http://www.yiisoft.com/">Yii Software LLC</a></p>
-            <p class="pull-right"><?= Yii::powered() ?></p>
+            <p class="pull-right">Powered by Yii</p>
         </div>
     </footer>
 <?php $this->endBody() ?>

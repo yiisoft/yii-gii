@@ -1,5 +1,6 @@
 <?php
 use yii\helpers\Html;
+use yii\helpers\Yii;
 
 /* @var $this \yii\web\View */
 /* @var $generators \Yiisoft\Yii\Gii\Generator[] */
@@ -9,7 +10,7 @@ use yii\helpers\Html;
 $generators = Yii::getApp()->controller->module->generators;
 $activeGenerator = Yii::getApp()->controller->generator;
 ?>
-<?php $this->beginContent('@yii/gii/views/layouts/main.php'); ?>
+<?php $this->beginContent('@Yiisoft/Yii/Gii/views/layouts/main.php'); ?>
 <div class="row">
     <div class="col-md-3 col-sm-4">
         <div class="list-group">
