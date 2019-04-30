@@ -1,6 +1,6 @@
 <?php
-use Yiisoft\Yii\Bootstrap4\NavBar;
-use Yiisoft\Yii\Bootstrap4\Nav;
+
+use yii\widgets\Menu;
 use yii\helpers\Html;
 use yii\helpers\Yii;
 
@@ -21,33 +21,52 @@ $asset = Yiisoft\Yii\Gii\GiiAsset::register($this);
     <?php $this->head() ?>
 </head>
 <body>
-    <div class="container-fluid page-container">
+    <div class="page-container">
         <?php $this->beginBody() ?>
-        <?php
-        NavBar::begin([
-            'brandLabel' => Html::img($asset->baseUrl . '/logo.png'),
-            'brandUrl' => ['default/index'],
-            'options' => ['class' => 'navbar-inverse navbar-fixed-top'],
-        ]);
-        echo Nav::widget([
-            'options' => ['class' => 'nav navbar-nav navbar-right'],
-            'items' => [
-                ['label' => 'Home', 'url' => ['default/index']],
-                ['label' => 'Help', 'url' => 'http://www.yiiframework.com/doc-2.0/ext-gii-index.html'],
-                ['label' => 'Application', 'url' => Yii::getApp()->homeUrl],
-            ],
-        ]);
-        NavBar::end();
-        ?>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+            <div class="container">
+                <?php echo Html::a(Html::img($asset->baseUrl . '/logo.png'), ['default/index'], [
+                    'class' => ['navbar-brand']
+                ]); ?>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#gii-nav"
+                        aria-controls="gii-nav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="gii-nav">
+                    <?php
+                    echo Menu::widget([
+                        'options' => ['class' => ['navbar-nav', 'ml-auto']],
+                        'activateItems' => true,
+                        'itemOptions' => [
+                            'class' => ['nav-item']
+                        ],
+                        'linkTemplate' => '<a class="nav-link" href="{url}">{label}</a>',
+                        'items' => [
+                            ['label' => 'Home', 'url' => ['default/index']],
+                            ['label' => 'Help', 'url' => 'http://www.yiiframework.com/doc-2.0/ext-gii-index.html'],
+                            ['label' => 'Application', 'url' => Yii::getApp()->homeUrl],
+                        ]
+                    ]);
+                    ?>
+                </div>
+            </div>
+        </nav>
         <div class="container content-container">
             <?= $content ?>
         </div>
         <div class="footer-fix"></div>
     </div>
-    <footer class="footer">
+    <footer class="footer border-top">
         <div class="container">
-            <p class="pull-left">A Product of <a href="http://www.yiisoft.com/">Yii Software LLC</a></p>
-            <p class="pull-right">Powered by Yii</p>
+            <div class="row">
+                <div class="col-6">
+                    <p>A Product of <a href="http://www.yiisoft.com/">Yii Software LLC</a></p>
+                </div>
+                <div class="col-6">
+                    <p class="text-right">Powered by Yii</p>
+                </div>
+            </div>
         </div>
     </footer>
 <?php $this->endBody() ?>
