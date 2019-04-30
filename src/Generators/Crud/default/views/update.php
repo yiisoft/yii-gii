@@ -7,7 +7,7 @@ use Yiisoft\Strings\StringHelper;
 /* @var $generator Yiisoft\Yii\Gii\Generators\Crud\Generator */
 
 $urlParams = $generator->generateUrlParams();
-$modelClassName = Inflector::camel2words(StringHelper::basename($generator->modelClass));
+$modelClassName = InflectorHelper::camel2words(StringHelper::basename($generator->modelClass));
 $nameAttributeTemplate = '$model->' . $generator->getNameAttribute();
 $titleTemplate = $generator->generateString('Update ' . $modelClassName . ': {name}', ['name' => '{nameAttribute}']);
 if ($generator->enableI18N) {
