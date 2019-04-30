@@ -7,4 +7,5 @@ return [
             '@app/runtime' => '@yii/gii/tests'
         ]
     ],
+    'session' => yii\gii\tests\data\Session::class
 ];
