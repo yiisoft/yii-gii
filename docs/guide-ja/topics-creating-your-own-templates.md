@@ -42,11 +42,11 @@
 // ...
 if (YII_ENV_DEV) {    
     $config['modules']['gii'] = [
-        '__class' => yii\gii\Module::class,      
+        '__class' => Yiisoft\Yii\Gii\Module::class,      
         'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'],  
         'generators' => [ // ここ
             'crud' => [ // ジェネレータの名前
-                '__class' => yii\gii\generators\crud\Generator, // ジェネレータクラス
+                '__class' => Yiisoft\Yii\Gii\Generators\Crud\Generator, // ジェネレータクラス
                 'templates' => [ //setting for out templates
                     'myCrud' => '@app/myTemplates/crud/default', // テンプレート名 => テンプレートへのパス
                 ]

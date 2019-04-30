@@ -37,7 +37,7 @@ return [
     'bootstrap' => ['gii'],
     'modules' => [
         'gii' => [
-            '__class' => yii\gii\Module::class,
+            '__class' => Yiisoft\Yii\Gii\Module::class,
         ],
         // ...
     ],
