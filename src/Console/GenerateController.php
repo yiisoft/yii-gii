@@ -5,7 +5,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\gii\console;
+namespace Yiisoft\Yii\Gii\Console;
 
 use yii\helpers\Yii;
 use yii\base\InlineAction;
@@ -28,7 +28,7 @@ use Yiisoft\Yii\Console\Controller;
 class GenerateController extends Controller
 {
     /**
-     * @var \yii\gii\Module
+     * @var \Yiisoft\Yii\Gii\Module
      */
     public $module;
     /**
@@ -96,7 +96,7 @@ class GenerateController extends Controller
         $actions = [];
         foreach ($this->generators as $name => $generator) {
             $actions[$name] = [
-                '__class' => \yii\gii\console\GenerateAction::class,
+                '__class' => \Yiisoft\Yii\Gii\Console\GenerateAction::class,
                 'generator' => $generator,
             ];
         }

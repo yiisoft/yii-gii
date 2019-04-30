@@ -5,13 +5,13 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\gii\generators\crud;
+namespace Yiisoft\Yii\Gii\Generators\Crud;
 
 use yii\helpers\Yii;
 use yii\activerecord\ActiveRecord;
 use yii\activerecord\BaseActiveRecord;
 use yii\db\Schema;
-use yii\gii\CodeFile;
+use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Inflector\InflectorHelper;
 use yii\helpers\VarDumper;
 use yii\web\Controller;
@@ -30,7 +30,7 @@ use yii\web\Controller;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class Generator extends \yii\gii\Generator
+class Generator extends \Yiisoft\Yii\Gii\Generator
 {
     public $modelClass;
     public $controllerClass;

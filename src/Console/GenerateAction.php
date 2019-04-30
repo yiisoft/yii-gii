@@ -5,7 +5,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\gii\console;
+namespace Yiisoft\Yii\Gii\Console;
 
 use yii\helpers\Console;
 
@@ -16,7 +16,7 @@ use yii\helpers\Console;
 class GenerateAction extends \yii\base\Action
 {
     /**
-     * @var \yii\gii\Generator
+     * @var \Yiisoft\Yii\Gii\Generator
      */
     public $generator;
     /**

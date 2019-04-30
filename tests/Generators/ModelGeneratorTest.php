@@ -1,8 +1,8 @@
 <?php
-namespace yii\gii\tests\generators;
+namespace Yiisoft\Yii\Gii\Tests\Generators;
 
-use yii\gii\generators\model\Generator as ModelGenerator;
-use yii\gii\tests\GiiTestCase;
+use Yiisoft\Yii\Gii\Generators\Model\Generator as ModelGenerator;
+use Yiisoft\Yii\Gii\Tests\GiiTestCase;
 
 /**
  * ModelGeneratorTest checks that Gii model generator produces valid results

@@ -5,7 +5,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\gii\tests\data;
+namespace Yiisoft\Yii\Gii\Tests\Data;
 
 /**
  * Web session class mock.

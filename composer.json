@@ -42,12 +42,12 @@
     },
     "autoload": {
         "psr-4": {
-            "yii\\gii\\": "src"
+            "Yiisoft\\Yii\\Gii\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "yii\\gii\\tests\\": "tests"
+            "Yiisoft\\Yii\\Gii\\Tests\\": "tests"
         }
     },
     "extra": {

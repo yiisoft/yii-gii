@@ -5,7 +5,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\gii\components;
+namespace Yiisoft\Yii\Gii\Components;
 
 /**
  * Renders diff to HTML. Output adjusted to be copy-paste friendly.

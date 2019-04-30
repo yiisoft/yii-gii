@@ -1,10 +1,10 @@
 <?php
 
-namespace yii\gii\tests\generators;
+namespace Yiisoft\Yii\Gii\Tests\Generators;
 
 use yii\db\ColumnSchema;
-use yii\gii\generators\crud\Generator;
-use yii\gii\tests\GiiTestCase;
+use Yiisoft\Yii\Gii\Generators\Crud\Generator;
+use Yiisoft\Yii\Gii\Tests\GiiTestCase;
 
 class CrudGeneratorTest extends GiiTestCase
 {

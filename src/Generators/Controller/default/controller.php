@@ -7,7 +7,7 @@ use Yiisoft\Inflector\InflectorHelper;
 use Yiisoft\Strings\StringHelper;
 
 /* @var $this yii\web\View */
-/* @var $generator yii\gii\generators\controller\Generator */
+/* @var $generator Yiisoft\Yii\Gii\Generators\Controller\Generator */
 
 echo "<?php\n";
 ?>

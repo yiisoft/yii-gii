@@ -1,8 +1,7 @@
 <?php
 
-namespace yii\gii\tests;
+namespace Yiisoft\Yii\Gii\Tests;
 
-use yii\helpers\Yii;
 use yii\helpers\FileHelper;
 use yii\tests\TestCase;
 

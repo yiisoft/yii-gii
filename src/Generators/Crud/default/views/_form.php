@@ -4,9 +4,9 @@ use Yiisoft\Inflector\InflectorHelper;
 use Yiisoft\Strings\StringHelper;
 
 /* @var $this yii\web\View */
-/* @var $generator yii\gii\generators\crud\Generator */
+/* @var $generator Yiisoft\Yii\Gii\Generators\Crud\Generator */
 
-/* @var $model \yii\db\ActiveRecord */
+/* @var $model \yii\activerecord\ActiveRecord */
 $model = new $generator->modelClass();
 $safeAttributes = $model->safeAttributes();
 if (empty($safeAttributes)) {

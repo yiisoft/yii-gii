@@ -5,14 +5,14 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\gii\generators\model;
+namespace Yiisoft\Yii\Gii\Generators\Model;
 
 use yii\activerecord\ActiveQuery;
 use yii\activerecord\ActiveRecord;
 use yii\db\Connection;
 use yii\db\Schema;
 use yii\db\TableSchema;
-use yii\gii\CodeFile;
+use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Inflector\InflectorHelper;
 use yii\helpers\Yii;
 use yii\exceptions\NotSupportedException;
@@ -23,7 +23,7 @@ use yii\exceptions\NotSupportedException;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class Generator extends \yii\gii\Generator
+class Generator extends \Yiisoft\Yii\Gii\Generator
 {
     const RELATIONS_NONE = 'none';
     const RELATIONS_ALL = 'all';

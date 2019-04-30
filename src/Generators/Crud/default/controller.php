@@ -3,11 +3,11 @@
  * This is the template for generating a CRUD controller class file.
  */
 
-use yii\db\ActiveRecordInterface;
+use yii\activerecord\ActiveRecordInterface;
 use Yiisoft\Strings\StringHelper;
 
 /* @var $this yii\web\View */
-/* @var $generator yii\gii\generators\crud\Generator */
+/* @var $generator Yiisoft\Yii\Gii\Generators\Crud\Generator */
 
 $controllerClass = StringHelper::basename($generator->controllerClass);
 $modelClass = StringHelper::basename($generator->modelClass);

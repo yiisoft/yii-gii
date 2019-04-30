@@ -3,9 +3,9 @@
 return [
     'app' => [
         'aliases' => [
-            '@app' => '@yii/gii/tests',
-            '@app/runtime' => '@yii/gii/tests'
+            '@app' => '@Yiisoft/Yii/Gii/Tests',
+            '@app/runtime' => '@Yiisoft/Yii/Gii/Tests'
         ]
     ],
-    'session' => yii\gii\tests\data\Session::class
+    'session' => Yiisoft\Yii\Gii\Tests\Data\Session::class
 ];

@@ -5,10 +5,10 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\gii\generators\extension;
+namespace Yiisoft\Yii\Gii\Generators\Extension;
 
 use yii\helpers\Yii;
-use yii\gii\CodeFile;
+use Yiisoft\Yii\Gii\CodeFile;
 
 /**
  * This generator will generate the skeleton files needed by an extension.
@@ -20,7 +20,7 @@ use yii\gii\CodeFile;
  * @author Tobias Munk <schmunk@usrbin.de>
  * @since 2.0
  */
-class Generator extends \yii\gii\Generator
+class Generator extends \Yiisoft\Yii\Gii\Generator
 {
     public $vendorName;
     public $packageName = "yii2-";
