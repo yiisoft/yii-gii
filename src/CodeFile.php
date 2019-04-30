@@ -78,13 +78,17 @@ class CodeFile extends BaseObject
      */
     public function save()
     {
-        $module = Yii::getApp()->controller->module;
+        $module = isset(Yii::getApp()->controller) ? Yii::getApp()->controller->module : null;
         if ($this->operation === self::OP_CREATE) {
             $dir = dirname($this->path);
             if (!is_dir($dir)) {
-                $mask = @umask(0);
-                $result = @mkdir($dir, $module->newDirMode, true);
-                @umask($mask);
+                if ($module instanceof \Yiisoft\Yii\Gii\Module) {
+                    $mask = @umask(0);
+                    $result = @mkdir($dir, $module->newDirMode, true);
+                    @umask($mask);
+                } else {
+                    $result = @mkdir($dir, 0777, true);
+                }
                 if (!$result) {
                     return "Unable to create the directory '$dir'.";
                 }
@@ -92,7 +96,9 @@ class CodeFile extends BaseObject
         }
         if (@file_put_contents($this->path, $this->content) === false) {
             return "Unable to write the file '{$this->path}'.";
-        } else {
+        }
+
+        if ($module instanceof \Yiisoft\Yii\Gii\Module) {
             $mask = @umask(0);
             @chmod($this->path, $module->newFileMode);
             @umask($mask);
@@ -108,9 +114,9 @@ class CodeFile extends BaseObject
     {
         if (strpos($this->path, Yii::getApp()->basePath) === 0) {
             return substr($this->path, strlen(Yii::getApp()->basePath) + 1);
-        } else {
-            return $this->path;
         }
+
+        return $this->path;
     }
 
     /**
@@ -120,9 +126,9 @@ class CodeFile extends BaseObject
     {
         if (($pos = strrpos($this->path, '.')) !== false) {
             return substr($this->path, $pos + 1);
-        } else {
-            return 'unknown';
         }
+
+        return 'unknown';
     }
 
     /**
@@ -140,11 +146,13 @@ class CodeFile extends BaseObject
 
         if ($type === 'php') {
             return highlight_string($this->content, true);
-        } elseif (!in_array($type, ['jpg', 'gif', 'png', 'exe'])) {
-            return nl2br(Html::encode($this->content));
-        } else {
-            return false;
         }
+
+        if (!in_array($type, ['jpg', 'gif', 'png', 'exe'])) {
+            return nl2br(Html::encode($this->content));
+        }
+
+        return false;
     }
 
     /**
@@ -157,11 +165,13 @@ class CodeFile extends BaseObject
         $type = strtolower($this->getType());
         if (in_array($type, ['jpg', 'gif', 'png', 'exe'])) {
             return false;
-        } elseif ($this->operation === self::OP_OVERWRITE) {
-            return $this->renderDiff(file($this->path), $this->content);
-        } else {
-            return '';
         }
+
+        if ($this->operation === self::OP_OVERWRITE) {
+            return $this->renderDiff(file($this->path), $this->content);
+        }
+
+        return '';
     }
 
     /**

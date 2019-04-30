@@ -43,6 +43,10 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
      * @since 2.0.5
      */
     public $enablePjax = false;
+    /**
+     * @var bool whether to use strict inflection for controller IDs (insert a separator between two consecutive uppercase chars)
+     */
+    public $strictInflector = true;
 
 
     /**
@@ -195,7 +199,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
         $pos = strrpos($this->controllerClass, '\\');
         $class = substr(substr($this->controllerClass, $pos + 1), 0, -10);
 
-        return InflectorHelper::camel2id($class);
+        return InflectorHelper::camel2id($class, '-', $this->strictInflector);
     }
 
     /**
@@ -335,6 +339,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
         $types = [];
         foreach ($table->columns as $column) {
             switch ($column->type) {
+                case Schema::TYPE_TINYINT:
                 case Schema::TYPE_SMALLINT:
                 case Schema::TYPE_INTEGER:
                 case Schema::TYPE_BIGINT:
@@ -428,6 +433,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
         $hashConditions = [];
         foreach ($columns as $column => $type) {
             switch ($type) {
+                case Schema::TYPE_TINYINT:
                 case Schema::TYPE_SMALLINT:
                 case Schema::TYPE_INTEGER:
                 case Schema::TYPE_BIGINT:
@@ -546,9 +552,9 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
         $class = $this->modelClass;
         if (is_subclass_of($class, \yii\db\ActiveRecord::class)) {
             return $class::getTableSchema();
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**

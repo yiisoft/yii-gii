@@ -38,6 +38,8 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
     public $generateRelationsFromCurrentSchema = true;
     public $generateLabelsFromComments = false;
     public $useTablePrefix = false;
+    public $standardizeCapitals = false;
+    public $singularize = false;
     public $useSchemaName = true;
     public $generateQuery = false;
     public $queryNs = 'app\models';
@@ -84,7 +86,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
             [['queryBaseClass'], 'validateClass', 'params' => ['extends' => ActiveQuery::class]],
             [['generateRelations'], 'in', 'range' => [self::RELATIONS_NONE, self::RELATIONS_ALL, self::RELATIONS_ALL_INVERSE]],
             [['generateLabelsFromComments', 'useTablePrefix', 'useSchemaName', 'generateQuery', 'generateRelationsFromCurrentSchema'], 'boolean'],
-            [['enableI18N'], 'boolean'],
+            [['enableI18N', 'standardizeCapitals', 'singularize'], 'boolean'],
             [['messageCategory'], 'validateMessageCategory', 'skipOnEmpty' => false],
         ]);
     }
@@ -99,6 +101,8 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
             'db' => 'Database Connection ID',
             'tableName' => 'Table Name',
             'modelClass' => 'Model Class Name',
+            'standardizeCapitals' => 'Standardize Capitals',
+            'singularize' => 'Singularize',
             'baseClass' => 'Base Class',
             'generateRelations' => 'Generate Relations',
             'generateRelationsFromCurrentSchema' => 'Generate Relations from Current Schema',
@@ -129,6 +133,12 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
             'modelClass' => 'This is the name of the ActiveRecord class to be generated. The class name should not contain
                 the namespace part as it is specified in "Namespace". You do not need to specify the class name
                 if "Table Name" ends with asterisk, in which case multiple ActiveRecord classes will be generated.',
+            'standardizeCapitals' => 'This indicates whether the generated class names should have standardized capitals. For example,
+                table names like <code>SOME_TABLE</code> or <code>Other_Table</code> will have class names <code>SomeTable</code>
+                and <code>OtherTable</code>, respectively. If not checked, the same tables will have class names <code>SOMETABLE</code>
+                and <code>OtherTable</code> instead.',
+            'singularize' => 'This indicates whether the generated class names should be singularized. For example,
+                table names like <code>some_tables</code> will have class names <code>SomeTable</code>.',
             'baseClass' => 'This is the base class of the new ActiveRecord class. It should be a fully qualified namespaced class name.',
             'generateRelations' => 'This indicates whether the generator should generate relations based on
                 foreign key constraints it detects in the database. Note that if your database contains too many tables,
@@ -333,6 +343,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
                 case Schema::TYPE_TIME:
                 case Schema::TYPE_DATETIME:
                 case Schema::TYPE_TIMESTAMP:
+                case Schema::TYPE_JSON:
                     $types['safe'][] = $column->name;
                     break;
                 default: // strings
@@ -564,6 +575,10 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
                 foreach ($table->foreignKeys as $refs) {
                     $refTable = $refs[0];
                     $refTableSchema = $db->getTableSchema($refTable);
+                    if ($refTableSchema === null) {
+                        // Foreign key could point to non-existing table: https://github.com/yiisoft/yii2-gii/issues/34
+                        continue;
+                    }
                     unset($refs[0]);
                     $fks = array_keys($refs);
 
@@ -686,9 +701,23 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
         /* @var $baseModel \yii\db\ActiveRecord */
         if ($baseModel === null) {
             $baseClass = $this->baseClass;
-            $baseModel = new $baseClass();
+            $baseClassReflector = new \ReflectionClass($baseClass);
+            if ($baseClassReflector->isAbstract()) {
+                $baseClassWrapper =
+                    'namespace ' . __NAMESPACE__ . ';'.
+                    'class GiiBaseClassWrapper extends \\' . $baseClass . ' {' .
+                        'public static function tableName(){' .
+                            'return "' . addslashes($table->fullName) . '";' .
+                        '}' .
+                    '};' .
+                    'return new GiiBaseClassWrapper();';
+                $baseModel = eval($baseClassWrapper);
+            } else {
+                $baseModel = new $baseClass();
+            }
             $baseModel->setAttributes([]);
         }
+
         if (!empty($key) && strcasecmp($key, 'id')) {
             if (substr_compare($key, 'id', -2, 2, true) === 0) {
                 $key = rtrim(substr($key, 0, -2), '_');
@@ -877,7 +906,20 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
             }
         }
 
-        return $this->classNames[$fullTableName] = InflectorHelper::id2camel($schemaName.$className, '_');
+        if ($this->standardizeCapitals) {
+            $schemaName = ctype_upper(preg_replace('/[_-]/', '', $schemaName)) ? strtolower($schemaName) : $schemaName;
+            $className = ctype_upper(preg_replace('/[_-]/', '', $className)) ? strtolower($className) : $className;
+
+            $this->classNames[$fullTableName] = InflectorHelper::camelize(InflectorHelper::camel2words($schemaName.$className));
+        } else {
+            $this->classNames[$fullTableName] = InflectorHelper::id2camel($schemaName.$className, '_');
+        }
+
+        if ($this->singularize) {
+            $this->classNames[$fullTableName] = InflectorHelper::singularize($this->classNames[$fullTableName]);
+        }
+
+        return $this->classNames[$fullTableName];
     }
 
     /**

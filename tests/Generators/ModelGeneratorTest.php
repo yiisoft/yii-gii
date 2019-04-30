@@ -210,4 +210,88 @@ class ModelGeneratorTest extends GiiTestCase
             );
         }
     }
+
+    public function testGenerateStandardizedCapitalsForClassNames()
+    {
+        $modelGenerator = new ModelGeneratorMock($this->app);
+        $modelGenerator->standardizeCapitals = true;
+        $tableNames = [
+            'lower_underline_name' => 'LowerUnderlineName',
+            'Ucwords_Underline_Name' => 'UcwordsUnderlineName',
+            'UPPER_UNDERLINE_NAME' => 'UpperUnderlineName',
+            'lower-hyphen-name' => 'LowerHyphenName',
+            'Ucwords-Hyphen-Name' => 'UcwordsHyphenName',
+            'UPPER-HYPHEN-NAME' => 'UpperHyphenName',
+            'CamelCaseName' => 'CamelCaseName',
+            'lowerUcwordsName' => 'LowerUcwordsName',
+            'lowername' => 'Lowername',
+            'UPPERNAME' => 'Uppername',
+        ];
+        foreach ($tableNames as $tableName => $expectedClassName) {
+            $generatedClassName = $modelGenerator->publicGenerateClassName($tableName);
+            $this->assertEquals($expectedClassName, $generatedClassName);
+        }
+    }
+    public function testGenerateNotStandardizedCapitalsForClassNames()
+    {
+        $modelGenerator = new ModelGeneratorMock($this->app);
+        $modelGenerator->standardizeCapitals = false;
+        $tableNames = [
+            'lower_underline_name' => 'LowerUnderlineName',
+            'Ucwords_Underline_Name' => 'UcwordsUnderlineName',
+            'UPPER_UNDERLINE_NAME' => 'UPPERUNDERLINENAME',
+            'ABBRMyTable' => 'ABBRMyTable',
+            'lower-hyphen-name' => 'Lower-hyphen-name',
+            'Ucwords-Hyphen-Name' => 'Ucwords-Hyphen-Name',
+            'UPPER-HYPHEN-NAME' => 'UPPER-HYPHEN-NAME',
+            'CamelCaseName' => 'CamelCaseName',
+            'lowerUcwordsName' => 'LowerUcwordsName',
+            'lowername' => 'Lowername',
+            'UPPERNAME' => 'UPPERNAME',
+            'PARTIALUpperName' => 'PARTIALUpperName',
+        ];
+        foreach ($tableNames as $tableName => $expectedClassName) {
+            $generatedClassName = $modelGenerator->publicGenerateClassName($tableName);
+            $this->assertEquals($expectedClassName, $generatedClassName);
+        }
+    }
+
+    public function testGenerateSingularizedClassNames()
+    {
+        $modelGenerator = new ModelGeneratorMock($this->app);
+        $modelGenerator->singularize = true;
+        $tableNames = [
+            'clients' => 'Client',
+            'client_programs' => 'ClientProgram',
+            'noneexistingwords' => 'Noneexistingword',
+            'noneexistingword' => 'Noneexistingword',
+            'children' => 'Child',
+            'good_children' => 'GoodChild',
+            'user' => 'User',
+        ];
+
+        foreach ($tableNames as $tableName => $expectedClassName) {
+            $generatedClassName = $modelGenerator->publicGenerateClassName($tableName);
+            $this->assertEquals($expectedClassName, $generatedClassName);
+        }
+    }
+
+    public function testGenerateNotSingularizedClassNames()
+    {
+        $modelGenerator = new ModelGeneratorMock($this->app);
+        $tableNames = [
+            'clients' => 'Clients',
+            'client_programs' => 'ClientPrograms',
+            'noneexistingwords' => 'Noneexistingwords',
+            'noneexistingword' => 'Noneexistingword',
+            'children' => 'Children',
+            'good_children' => 'GoodChildren',
+            'user' => 'User',
+        ];
+
+        foreach ($tableNames as $tableName => $expectedClassName) {
+            $generatedClassName = $modelGenerator->publicGenerateClassName($tableName);
+            $this->assertEquals($expectedClassName, $generatedClassName);
+        }
+    }
 }

@@ -17,17 +17,15 @@ use yii\web\AssetBundle;
  */
 class GiiAsset extends AssetBundle
 {
-    public $sourcePath = '@yii/gii/assets';
+    public $sourcePath = '@Yiisoft/Yii/Gii/assets';
     public $css = [
-        'main.css',
+        'css/main.css',
     ];
     public $js = [
-        'gii.js',
+        'js/bs4-native.min.js',
+        'js/gii.js',
     ];
     public $depends = [
-        \yii\web\YiiAsset::class,
-        \yii\bootstrap\BootstrapAsset::class,
-        \yii\bootstrap\BootstrapPluginAsset::class,
-        \Yiisoft\Yii\Gii\TypeAheadAsset::class,
+        \Yiisoft\Yii\JQuery\YiiAsset::class,
     ];
 }
