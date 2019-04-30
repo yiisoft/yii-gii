@@ -19,7 +19,7 @@ class GiiTestCase extends TestCase
 
         FileHelper::createDirectory(__DIR__ . '/runtime');
 
-        $allConfigs = require(__DIR__ . '/data/config.php');
+        $allConfigs = require(__DIR__ . '/Data/config.php');
 
         $config = $allConfigs['databases'][$this->driverName];
         $pdo_database = 'pdo_' . $this->driverName;

@@ -114,7 +114,7 @@ class GeneratorsTest extends GiiTestCase
         $this->assertTrue($generator->validate(['template']));
 
         // Validate custom template
-        $this->app->setAlias('@customTemplate', __DIR__ . '/data/templates');
+        $this->app->setAlias('@customTemplate', __DIR__ . '/Data/templates');
         $generator->templates = [
             'custom' => '@customTemplate/custom'
         ];
