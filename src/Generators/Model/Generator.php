@@ -39,6 +39,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
     public $generateLabelsFromComments = false;
     public $useTablePrefix = false;
     public $standardizeCapitals = false;
+    public $singularize = false;
     public $useSchemaName = true;
     public $generateQuery = false;
     public $queryNs = 'app\models';
@@ -85,7 +86,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
             [['queryBaseClass'], 'validateClass', 'params' => ['extends' => ActiveQuery::class]],
             [['generateRelations'], 'in', 'range' => [self::RELATIONS_NONE, self::RELATIONS_ALL, self::RELATIONS_ALL_INVERSE]],
             [['generateLabelsFromComments', 'useTablePrefix', 'useSchemaName', 'generateQuery', 'generateRelationsFromCurrentSchema'], 'boolean'],
-            [['enableI18N', 'standardizeCapitals'], 'boolean'],
+            [['enableI18N', 'standardizeCapitals', 'singularize'], 'boolean'],
             [['messageCategory'], 'validateMessageCategory', 'skipOnEmpty' => false],
         ]);
     }
@@ -101,6 +102,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
             'tableName' => 'Table Name',
             'modelClass' => 'Model Class Name',
             'standardizeCapitals' => 'Standardize Capitals',
+            'singularize' => 'Singularize',
             'baseClass' => 'Base Class',
             'generateRelations' => 'Generate Relations',
             'generateRelationsFromCurrentSchema' => 'Generate Relations from Current Schema',
@@ -135,6 +137,8 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
                 table names like <code>SOME_TABLE</code> or <code>Other_Table</code> will have class names <code>SomeTable</code>
                 and <code>OtherTable</code>, respectively. If not checked, the same tables will have class names <code>SOMETABLE</code>
                 and <code>OtherTable</code> instead.',
+            'singularize' => 'This indicates whether the generated class names should be singularized. For example,
+                table names like <code>some_tables</code> will have class names <code>SomeTable</code>.',
             'baseClass' => 'This is the base class of the new ActiveRecord class. It should be a fully qualified namespaced class name.',
             'generateRelations' => 'This indicates whether the generator should generate relations based on
                 foreign key constraints it detects in the database. Note that if your database contains too many tables,
@@ -906,10 +910,16 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
             $schemaName = ctype_upper(preg_replace('/[_-]/', '', $schemaName)) ? strtolower($schemaName) : $schemaName;
             $className = ctype_upper(preg_replace('/[_-]/', '', $className)) ? strtolower($className) : $className;
 
-            return $this->classNames[$fullTableName] = InflectorHelper::camelize(InflectorHelper::camel2words($schemaName.$className));
+            $this->classNames[$fullTableName] = InflectorHelper::camelize(InflectorHelper::camel2words($schemaName.$className));
+        } else {
+            $this->classNames[$fullTableName] = InflectorHelper::id2camel($schemaName.$className, '_');
         }
 
-        return $this->classNames[$fullTableName] = InflectorHelper::id2camel($schemaName.$className, '_');
+        if ($this->singularize) {
+            $this->classNames[$fullTableName] = InflectorHelper::singularize($this->classNames[$fullTableName]);
+        }
+
+        return $this->classNames[$fullTableName];
     }
 
     /**

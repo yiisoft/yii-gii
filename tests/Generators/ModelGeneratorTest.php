@@ -255,4 +255,43 @@ class ModelGeneratorTest extends GiiTestCase
             $this->assertEquals($expectedClassName, $generatedClassName);
         }
     }
+
+    public function testGenerateSingularizedClassNames()
+    {
+        $modelGenerator = new ModelGeneratorMock($this->app);
+        $modelGenerator->singularize = true;
+        $tableNames = [
+            'clients' => 'Client',
+            'client_programs' => 'ClientProgram',
+            'noneexistingwords' => 'Noneexistingword',
+            'noneexistingword' => 'Noneexistingword',
+            'children' => 'Child',
+            'good_children' => 'GoodChild',
+            'user' => 'User',
+        ];
+
+        foreach ($tableNames as $tableName => $expectedClassName) {
+            $generatedClassName = $modelGenerator->publicGenerateClassName($tableName);
+            $this->assertEquals($expectedClassName, $generatedClassName);
+        }
+    }
+
+    public function testGenerateNotSingularizedClassNames()
+    {
+        $modelGenerator = new ModelGeneratorMock($this->app);
+        $tableNames = [
+            'clients' => 'Clients',
+            'client_programs' => 'ClientPrograms',
+            'noneexistingwords' => 'Noneexistingwords',
+            'noneexistingword' => 'Noneexistingword',
+            'children' => 'Children',
+            'good_children' => 'GoodChildren',
+            'user' => 'User',
+        ];
+
+        foreach ($tableNames as $tableName => $expectedClassName) {
+            $generatedClassName = $modelGenerator->publicGenerateClassName($tableName);
+            $this->assertEquals($expectedClassName, $generatedClassName);
+        }
+    }
 }
