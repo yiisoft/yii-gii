@@ -333,6 +333,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
                 case Schema::TYPE_TIME:
                 case Schema::TYPE_DATETIME:
                 case Schema::TYPE_TIMESTAMP:
+                case Schema::TYPE_JSON:
                     $types['safe'][] = $column->name;
                     break;
                 default: // strings
