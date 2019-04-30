@@ -3,7 +3,7 @@
  * This is the template for generating an action view file.
  */
 
-use Yiisoft\Helpers\InflectorHelper;
+use Yiisoft\Inflector\InflectorHelper;
 
 /* @var $this yii\web\View */
 /* @var $generator yii\gii\generators\form\Generator */

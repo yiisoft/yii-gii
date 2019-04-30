@@ -10,7 +10,7 @@ namespace yii\gii\generators\controller;
 use yii\helpers\Yii;
 use yii\gii\CodeFile;
 use yii\helpers\Html;
-use Yiisoft\Helpers\InflectorHelper;
+use Yiisoft\Inflector\InflectorHelper;
 use Yiisoft\Strings\StringHelper;
 
 /**
