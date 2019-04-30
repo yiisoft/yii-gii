@@ -1,8 +1,9 @@
 <?php
 use yii\helpers\Html;
+use yii\helpers\Yii;
 
 /* @var $this \yii\web\View */
-/* @var $generators \yii\gii\Generator[] */
+/* @var $generators \Yiisoft\Yii\Gii\Generator[] */
 /* @var $content string */
 
 $generators = Yii::getApp()->controller->module->generators;

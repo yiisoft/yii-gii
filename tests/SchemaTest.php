@@ -1,9 +1,8 @@
 <?php
 
-namespace yii\gii\tests;
+namespace Yiisoft\Yii\Gii\Tests;
 
-use yii\gii\generators\model\Generator as ModelGenerator;
-use yii\helpers\Yii;
+use Yiisoft\Yii\Gii\Generators\Model\Generator as ModelGenerator;
 
 /**
  * SchemaTest checks that Gii model generator supports multiple schemas

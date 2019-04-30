@@ -5,7 +5,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\gii;
+namespace Yiisoft\Yii\Gii;
 
 use yii\helpers\Yii;
 use yii\base\Action;
@@ -22,7 +22,7 @@ use yii\web\ForbiddenHttpException;
  * return [
  *     'bootstrap' => ['gii'],
  *     'modules' => [
- *         'gii' => ['__class' => yii\gii\Module::class],
+ *         'gii' => ['__class' => Yiisoft\Yii\Gii\Module::class],
  *     ],
  * ]
  * ~~~
@@ -46,7 +46,7 @@ class Module extends \yii\base\Module implements BootstrapInterface
     /**
      * {@inheritdoc}
      */
-    public $controllerNamespace = \yii\gii\controllers::class;
+    public $controllerNamespace = \Yiisoft\Yii\Gii\Controllers::class;
     /**
      * @var array the list of IPs that are allowed to access this module.
      * Each array element represents a single IP filter which can be either an IP address
@@ -94,7 +94,7 @@ class Module extends \yii\base\Module implements BootstrapInterface
             ], false);
         } elseif ($app instanceof \Yiisoft\Yii\Console\Application) {
             $app->controllerMap[$this->id] = [
-                '__class' => \yii\gii\console\GenerateController::class,
+                '__class' => \Yiisoft\Yii\Gii\Console\GenerateController::class,
                 'generators' => array_merge($this->coreGenerators(), $this->generators),
                 'module' => $this,
             ];
@@ -160,12 +160,12 @@ class Module extends \yii\base\Module implements BootstrapInterface
     protected function coreGenerators()
     {
         return [
-            'model' => ['__class' => \yii\gii\generators\model\Generator::class],
-            'crud' => ['__class' => \yii\gii\generators\crud\Generator::class],
-            'controller' => ['__class' => \yii\gii\generators\controller\Generator::class],
-            'form' => ['__class' => \yii\gii\generators\form\Generator::class],
-            'module' => ['__class' => \yii\gii\generators\module\Generator::class],
-            'extension' => ['__class' => \yii\gii\generators\extension\Generator::class],
+            'model' => ['__class' => \Yiisoft\Yii\Gii\Generators\model\Generator::class],
+            'crud' => ['__class' => \Yiisoft\Yii\Gii\Generators\crud\Generator::class],
+            'controller' => ['__class' => \Yiisoft\Yii\Gii\Generators\controller\Generator::class],
+            'form' => ['__class' => \Yiisoft\Yii\Gii\Generators\form\Generator::class],
+            'module' => ['__class' => \Yiisoft\Yii\Gii\Generators\module\Generator::class],
+            'extension' => ['__class' => \Yiisoft\Yii\Gii\Generators\extension\Generator::class],
         ];
     }
 

@@ -1,15 +1,15 @@
 <?php
 
-namespace yii\gii\tests;
+namespace Yiisoft\Yii\Gii\Tests;
 
-use yii\gii\CodeFile;
-use yii\gii\generators\controller\Generator as ControllerGenerator;
-use yii\gii\generators\crud\Generator as CRUDGenerator;
-use yii\gii\generators\extension\Generator as ExtensionGenerator;
-use yii\gii\generators\form\Generator as FormGenerator;
-use yii\gii\generators\model\Generator as ModelGenerator;
-use yii\gii\generators\module\Generator as ModuleGenerator;
-use yii\gii\tests\Profile;
+use Yiisoft\Yii\Gii\CodeFile;
+use Yiisoft\Yii\Gii\Generators\Controller\Generator as ControllerGenerator;
+use Yiisoft\Yii\Gii\Generators\Crud\Generator as CRUDGenerator;
+use Yiisoft\Yii\Gii\Generators\Extension\Generator as ExtensionGenerator;
+use Yiisoft\Yii\Gii\Generators\Form\Generator as FormGenerator;
+use Yiisoft\Yii\Gii\Generators\Model\Generator as ModelGenerator;
+use Yiisoft\Yii\Gii\Generators\Module\Generator as ModuleGenerator;
+use Yiisoft\Yii\Gii\Tests\Profile;
 
 /**
  * GeneratorsTest checks that Gii generators aren't throwing any errors during generation
@@ -114,7 +114,7 @@ class GeneratorsTest extends GiiTestCase
         $this->assertTrue($generator->validate(['template']));
 
         // Validate custom template
-        $this->app->setAlias('@customTemplate', __DIR__ . '/data/templates');
+        $this->app->setAlias('@customTemplate', __DIR__ . '/Data/templates');
         $generator->templates = [
             'custom' => '@customTemplate/custom'
         ];
