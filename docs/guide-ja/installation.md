@@ -11,14 +11,11 @@
 php composer.phar require --dev --prefer-dist yiisoft/yii2-gii
 ```
 
-または、あなたの `composer.json` ファイルの `require` セクションに、
+または、あなたの `composer.json` ファイルの `require` セクションに、下記を追加してください。
 
 ```
-"yiisoft/yii2-gii": "~2.1.0"
+"yiisoft/yii2-gii": "~2.0.0"
 ```
-
-を追加してください。
-
 
 ## アプリケーションを構成する
 
@@ -29,7 +26,7 @@ return [
     'bootstrap' => ['gii'],
     'modules' => [
         'gii' => [
-            '__class' => Yiisoft\Yii\Gii\Module::class,
+            '__class' => \Yiisoft\Yii\Gii\Module::class,
         },
         // ...
     ],
@@ -49,47 +46,46 @@ http://localhost/path/to/index.php?r=gii
 http://localhost/path/to/index.php/gii
 ```
 
-> Note: ローカルホスト以外の IP から Gii にアクセスしようとすると、デフォルトでは、アクセスが拒否されます。
+> Note: ローカル・ホスト以外の IP から Gii にアクセスしようとすると、デフォルトでは、アクセスが拒否されます。
 > このデフォルトを回避するためには、許可される IP アドレスを構成情報に追加してください。
 >
 ```php
 'gii' => [
-    '__class' => Yiisoft\Yii\Gii\Module::class,
+    '__class' => 'Yiisoft\Yii\Gii\Module',
     'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'] // 必要に応じて修正
 ],
 ```
 
-コンソール・アプリケーションの構成情報において同じように Gii を構成すると、次のようにして、コマンド・ウィンドウから
-Gii にアクセスすることが出来ます。
+コンソールアプリケーションの構成情報において同じように Gii を構成すると、次のようにして、コマンド・ウィンドウから Gii にアクセスすることが出来ます。
 
 ```
-# パスをアプリケーションのベースパスに変更
+# パスをアプリケーションのベース・パスに変更
 cd path/to/AppBasePath
 
 # Gii に関するヘルプ情報を表示
 yii help gii
 
-# Gii のモデルジェネレータに関するヘルプ情報を表示
+# Gii のモデル・ジェネレータに関するヘルプ情報を表示
 yii help gii/model
 
 # city テーブルから City モデルを生成
 yii gii/model --tableName=city --modelClass=City
 ```
 
+
 ### ベーシック・アプリケーション
 
-ベーシック・プロジェクト・テンプレートの構成情報の構造は少し違っており、
-Gii は `config/web.php` の中で構成しなければなりません。
+ベーシック・プロジェクト・テンプレートの構成情報の構造は少し違っており、Gii は `config/web.php` の中で構成しなければなりません。
 
 ```php
 // ...
 if (YII_ENV_DEV) {
     // 'dev' 環境のための構成の修正
     $config['bootstrap'][] = 'debug';
-    $config['modules']['debug'] = yii\debug\Module::class;
+    $config['modules']['debug'] = \Yiisoft\Debug\Module::class;
 
     $config['bootstrap'][] = 'gii';
-    $config['modules']['gii'] = Yiisoft\Yii\Gii\Module::class; // <--- ここ
+    $config['modules']['gii'] = \Yiisoft\Yii\Gii\Module::class; // <--- ここ
 }
 ```
 
@@ -99,7 +95,7 @@ if (YII_ENV_DEV) {
 if (YII_ENV_DEV) {
     // 'dev' 環境のための構成の修正
     $config['bootstrap'][] = 'debug';
-    $config['modules']['debug'] = yii\debug\Module::class;
+    $config['modules']['debug'] = Yiisoft\Debug\Module::class;
 
     $config['bootstrap'][] = 'gii';
     $config['modules']['gii'] = [
