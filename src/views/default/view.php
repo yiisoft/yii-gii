@@ -2,11 +2,11 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use yii\gii\components\ActiveField;
-use yii\gii\CodeFile;
+use Yiisoft\Yii\Gii\Components\ActiveField;
+use Yiisoft\Yii\Gii\CodeFile;
 
 /* @var $this yii\web\View */
-/* @var $generator yii\gii\Generator */
+/* @var $generator Yiisoft\Yii\Gii\Generator */
 /* @var $id string panel ID */
 /* @var $form yii\widgets\ActiveForm */
 /* @var $results string */

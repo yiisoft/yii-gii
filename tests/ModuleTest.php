@@ -1,8 +1,8 @@
 <?php
 
-namespace yii\gii\tests;
+namespace Yiisoft\Yii\Gii\Tests;
 
-use yii\gii\Module;
+use Yiisoft\Yii\Gii\Module;
 use yii\tests\TestCase;
 
 class ModuleTest extends TestCase
