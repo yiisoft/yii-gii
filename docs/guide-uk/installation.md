@@ -28,7 +28,7 @@ php composer.phar require --dev --prefer-dist yiisoft/yii2-gii
 return [
     'bootstrap' => ['gii'],
     'modules' => [
-        'gii' => \yii\gii\Module::class,
+        'gii' => \Yiisoft\Yii\Gii\Module::class,
         // ...
     ],
     // ...
@@ -52,7 +52,7 @@ http://localhost/path/to/index.php/gii
 >
 ```php
 'gii' => [
-    '__class' => \yii\gii\Module::class,
+    '__class' => \Yiisoft\Yii\Gii\Module::class,
     'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'] // налаштувати для ваших потреб
 ],
 ```
@@ -86,7 +86,7 @@ if (YII_ENV_DEV) {
     $config['modules']['debug'] = \yii\debug\Module::class;
 
     $config['bootstrap'][] = 'gii';
-    $config['modules']['gii'] = \yii\gii\Module::class; // <--- тут
+    $config['modules']['gii'] = \Yiisoft\Yii\Gii\Module::class; // <--- тут
 }
 ```
 
@@ -100,7 +100,7 @@ if (YII_ENV_DEV) {
 
     $config['bootstrap'][] = 'gii';
     $config['modules']['gii'] = [
-        '__class' => \yii\gii\Module::class,
+        '__class' => \Yiisoft\Yii\Gii\Module::class,
         'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'],
     ];
 }

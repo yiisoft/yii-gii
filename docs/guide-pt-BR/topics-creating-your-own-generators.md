@@ -10,7 +10,7 @@ sobrescrever essas classes em qualquer pasta. Novamente personalizar a configura
 //..
 if (YII_ENV_DEV) {
     $config['modules']['gii'] = [
-        '__class' => \yii\gii\Module::class,
+        '__class' => \Yiisoft\Yii\Gii\Module::class,
         'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'],
          'generators' => [
             'myCrud' => [
@@ -29,7 +29,7 @@ if (YII_ENV_DEV) {
 <?php
 namespace app\myTemplates\crud;
 
-class Generator extends \yii\gii\Generator
+class Generator extends \Yiisoft\Yii\Gii\Generator
 {
     public function getName()
     {
