@@ -134,7 +134,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
      */
     public function successMessage()
     {
-        $outputPath = realpath(\Yii::getAlias($this->outputPath));
+        $outputPath = realpath(Yii::getAlias($this->outputPath));
         $output1 = <<<EOD
 <p><em>The extension has been generated successfully.</em></p>
 <p>To enable it in your application, you need to create a git repository
