@@ -82,7 +82,7 @@ yii gii/model --tableName=city --modelClass=City
 if (YII_ENV_DEV) {
     // 'dev' 環境のための構成の修正
     $config['bootstrap'][] = 'debug';
-    $config['modules']['debug'] = \Yiisoft\Debug\Module::class;
+    $config['modules']['debug'] = \Yiisoft\Yii\Debug\Module::class;
 
     $config['bootstrap'][] = 'gii';
     $config['modules']['gii'] = \Yiisoft\Yii\Gii\Module::class; // <--- ここ
@@ -95,7 +95,7 @@ if (YII_ENV_DEV) {
 if (YII_ENV_DEV) {
     // 'dev' 環境のための構成の修正
     $config['bootstrap'][] = 'debug';
-    $config['modules']['debug'] = Yiisoft\Debug\Module::class;
+    $config['modules']['debug'] = Yiisoft\Yii\Debug\Module::class;
 
     $config['bootstrap'][] = 'gii';
     $config['modules']['gii'] = [
