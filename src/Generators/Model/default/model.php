@@ -8,7 +8,7 @@
 /* @var $tableName string full table name */
 /* @var $className string class name */
 /* @var $queryClassName string query class name */
-/* @var $tableSchema yii\db\TableSchema */
+/* @var $tableSchema Yiisoft\Db\TableSchema */
 /* @var $properties array list of properties (property => [type, name. comment]) */
 /* @var $labels string[] list of attribute labels (name => label) */
 /* @var $rules string[] list of validation rules */
@@ -46,7 +46,7 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
 <?php if ($generator->db !== 'db'): ?>
 
     /**
-     * @return \yii\db\Connection the database connection used by this AR class.
+     * @return \Yiisoft\Db\Connection the database connection used by this AR class.
      */
     public static function getDb()
     {
@@ -76,7 +76,7 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
 <?php foreach ($relations as $name => $relation): ?>
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return \Yiisoft\Db\ActiveQuery
      */
     public function get<?= $name ?>()
     {
