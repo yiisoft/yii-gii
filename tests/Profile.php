@@ -2,7 +2,7 @@
 
 namespace Yiisoft\Yii\Gii\Tests;
 
-use yii\activerecord\ActiveRecord;
+use Yiisoft\ActiveRecord\ActiveRecord;
 
 class Profile extends ActiveRecord
 {
