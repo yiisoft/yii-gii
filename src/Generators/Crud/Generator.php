@@ -10,7 +10,7 @@ namespace Yiisoft\Yii\Gii\Generators\Crud;
 use yii\helpers\Yii;
 use Yiisoft\ActiveRecord\ActiveRecord;
 use Yiisoft\ActiveRecord\BaseActiveRecord;
-use yii\db\Schema;
+use Yiisoft\Db\Schema;
 use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Inflector\InflectorHelper;
 use yii\helpers\VarDumper;
@@ -24,7 +24,7 @@ use yii\web\Controller;
  * read-only.
  * @property string $nameAttribute This property is read-only.
  * @property array $searchAttributes Searchable attributes. This property is read-only.
- * @property bool|\yii\db\TableSchema $tableSchema This property is read-only.
+ * @property bool|\Yiisoft\Db\TableSchema $tableSchema This property is read-only.
  * @property string $viewPath The controller view path. This property is read-only.
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
@@ -224,7 +224,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
                 return $name;
             }
         }
-        /* @var $class \yii\db\ActiveRecord */
+        /* @var $class \Yiisoft\Db\ActiveRecord */
         $class = $this->modelClass;
         $pk = $class::primaryKey();
 
@@ -299,7 +299,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
 
     /**
      * Generates column format
-     * @param \yii\db\ColumnSchema $column
+     * @param \Yiisoft\Db\ColumnSchema $column
      * @return string
      */
     public function generateColumnFormat($column)
@@ -544,13 +544,13 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
 
     /**
      * Returns table schema for current model class or false if it is not an active record
-     * @return bool|\yii\db\TableSchema
+     * @return bool|\Yiisoft\Db\TableSchema
      */
     public function getTableSchema()
     {
         /* @var $class ActiveRecord */
         $class = $this->modelClass;
-        if (is_subclass_of($class, \yii\db\ActiveRecord::class)) {
+        if (is_subclass_of($class, \Yiisoft\Db\ActiveRecord::class)) {
             return $class::getTableSchema();
         }
 
@@ -564,7 +564,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
     {
         /* @var $class ActiveRecord */
         $class = $this->modelClass;
-        if (is_subclass_of($class, \yii\db\ActiveRecord::class)) {
+        if (is_subclass_of($class, \Yiisoft\Db\ActiveRecord::class)) {
             return $class::getTableSchema()->getColumnNames();
         }
 
@@ -576,7 +576,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
 
     /**
      * @return string|null driver name of modelClass db connection.
-     * In case db is not instance of \yii\db\Connection null will be returned.
+     * In case db is not instance of \Yiisoft\Db\Connection null will be returned.
      * @since 2.0.6
      */
     protected function getClassDbDriverName()
@@ -584,6 +584,6 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
         /* @var $class ActiveRecord */
         $class = $this->modelClass;
         $db = $class::getDb();
-        return $db instanceof \yii\db\Connection ? $db->driverName : null;
+        return $db instanceof \Yiisoft\Db\Connection ? $db->driverName : null;
     }
 }

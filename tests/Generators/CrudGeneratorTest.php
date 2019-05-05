@@ -2,7 +2,7 @@
 
 namespace Yiisoft\Yii\Gii\Tests\Generators;
 
-use yii\db\ColumnSchema;
+use Yiisoft\Db\ColumnSchema;
 use Yiisoft\Yii\Gii\Generators\Crud\Generator;
 use Yiisoft\Yii\Gii\Tests\GiiTestCase;
 
