@@ -3,7 +3,7 @@
  * This is the template for generating a CRUD controller class file.
  */
 
-use yii\activerecord\ActiveRecordInterface;
+use Yiisoft\ActiveRecord\ActiveRecordInterface;
 use Yiisoft\Strings\StringHelper;
 
 /* @var $this yii\web\View */

@@ -7,8 +7,8 @@
 
 namespace Yiisoft\Yii\Gii\Generators\Model;
 
-use yii\activerecord\ActiveQuery;
-use yii\activerecord\ActiveRecord;
+use Yiisoft\ActiveRecord\ActiveQuery;
+use Yiisoft\ActiveRecord\ActiveRecord;
 use yii\db\Connection;
 use yii\db\Schema;
 use yii\db\TableSchema;
@@ -33,7 +33,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
     public $ns = 'app\models';
     public $tableName;
     public $modelClass;
-    public $baseClass = \yii\activerecord\ActiveRecord::class;
+    public $baseClass = \Yiisoft\ActiveRecord\ActiveRecord::class;
     public $generateRelations = self::RELATIONS_ALL;
     public $generateRelationsFromCurrentSchema = true;
     public $generateLabelsFromComments = false;
@@ -44,7 +44,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
     public $generateQuery = false;
     public $queryNs = 'app\models';
     public $queryClass;
-    public $queryBaseClass = \yii\activerecord\ActiveQuery::class;
+    public $queryBaseClass = \Yiisoft\ActiveRecord\ActiveQuery::class;
 
 
     /**

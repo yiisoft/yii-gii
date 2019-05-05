@@ -8,8 +8,8 @@
 namespace Yiisoft\Yii\Gii\Generators\Crud;
 
 use yii\helpers\Yii;
-use yii\activerecord\ActiveRecord;
-use yii\activerecord\BaseActiveRecord;
+use Yiisoft\ActiveRecord\ActiveRecord;
+use Yiisoft\ActiveRecord\BaseActiveRecord;
 use yii\db\Schema;
 use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Inflector\InflectorHelper;

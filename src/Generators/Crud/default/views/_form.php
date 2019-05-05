@@ -6,7 +6,7 @@ use Yiisoft\Strings\StringHelper;
 /* @var $this yii\web\View */
 /* @var $generator Yiisoft\Yii\Gii\Generators\Crud\Generator */
 
-/* @var $model \yii\activerecord\ActiveRecord */
+/* @var $model \Yiisoft\ActiveRecord\ActiveRecord */
 $model = new $generator->modelClass();
 $safeAttributes = $model->safeAttributes();
 if (empty($safeAttributes)) {
