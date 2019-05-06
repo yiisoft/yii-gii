@@ -11,7 +11,7 @@ use ReflectionClass;
 use yii\exceptions\InvalidConfigException;
 use yii\base\Model;
 use yii\base\Application;
-use yii\helpers\VarDumper;
+use Yiisoft\VarDumper\VarDumper;
 use yii\helpers\Yii;
 use yii\web\View;
 use yii\view\Theme;

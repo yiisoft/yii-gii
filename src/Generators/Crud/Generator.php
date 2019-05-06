@@ -13,7 +13,7 @@ use Yiisoft\ActiveRecord\BaseActiveRecord;
 use Yiisoft\Db\Schema;
 use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Inflector\InflectorHelper;
-use yii\helpers\VarDumper;
+use Yiisoft\VarDumper\VarDumper;
 use yii\web\Controller;
 
 /**
