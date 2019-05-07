@@ -12,7 +12,7 @@ use Yiisoft\ActiveRecord\ActiveRecord;
 use Yiisoft\ActiveRecord\BaseActiveRecord;
 use Yiisoft\Db\Schema;
 use Yiisoft\Yii\Gii\CodeFile;
-use Yiisoft\Inflector\InflectorHelper;
+use Yiisoft\Strings\Inflector;
 use Yiisoft\VarDumper\VarDumper;
 use yii\web\Controller;
 
@@ -199,7 +199,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
         $pos = strrpos($this->controllerClass, '\\');
         $class = substr(substr($this->controllerClass, $pos + 1), 0, -10);
 
-        return InflectorHelper::camel2id($class, '-', $this->strictInflector);
+        return Inflector::camel2id($class, '-', $this->strictInflector);
     }
 
     /**
@@ -264,7 +264,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
         if (is_array($column->enumValues) && count($column->enumValues) > 0) {
             $dropDownOptions = [];
             foreach ($column->enumValues as $enumValue) {
-                $dropDownOptions[$enumValue] = InflectorHelper::humanize($enumValue);
+                $dropDownOptions[$enumValue] = Inflector::humanize($enumValue);
             }
             return "\$form->field(\$model, '$attribute')->dropDownList("
                 . preg_replace("/\n\s*/", ' ', VarDumper::export($dropDownOptions)).", ['prompt' => ''])";
@@ -397,7 +397,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
                 if (!strcasecmp($name, 'id')) {
                     $labels[$name] = 'ID';
                 } else {
-                    $label = InflectorHelper::camel2words($name);
+                    $label = Inflector::camel2words($name);
                     if (!empty($label) && substr_compare($label, ' id', -3, 3, true) === 0) {
                         $label = substr($label, 0, -3) . ' ID';
                     }

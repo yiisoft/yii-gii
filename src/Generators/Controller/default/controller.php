@@ -3,7 +3,7 @@
  * This is the template for generating a controller class file.
  */
 
-use Yiisoft\Inflector\InflectorHelper;
+use Yiisoft\Strings\Inflector;
 use Yiisoft\Strings\StringHelper;
 
 /* @var $this yii\web\View */
@@ -17,7 +17,7 @@ namespace <?= $generator->getControllerNamespace() ?>;
 class <?= StringHelper::basename($generator->controllerClass) ?> extends <?= '\\' . trim($generator->baseClass, '\\') . "\n" ?>
 {
 <?php foreach ($generator->getActionIDs() as $action): ?>
-    public function action<?= InflectorHelper::id2camel($action) ?>()
+    public function action<?= Inflector::id2camel($action) ?>()
     {
         return $this->render('<?= $action ?>');
     }

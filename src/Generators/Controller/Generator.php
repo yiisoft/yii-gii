@@ -10,7 +10,7 @@ namespace Yiisoft\Yii\Gii\Generators\Controller;
 use yii\helpers\Yii;
 use Yiisoft\Yii\Gii\CodeFile;
 use yii\helpers\Html;
-use Yiisoft\Inflector\InflectorHelper;
+use Yiisoft\Strings\Inflector;
 use Yiisoft\Strings\StringHelper;
 
 /**
@@ -210,7 +210,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
     public function getControllerID()
     {
         $name = StringHelper::basename($this->controllerClass);
-        return InflectorHelper::camel2id(substr($name, 0, strlen($name) - 10));
+        return Inflector::camel2id(substr($name, 0, strlen($name) - 10));
     }
 
     /**
