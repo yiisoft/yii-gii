@@ -1,6 +1,6 @@
 <?php
 
-use Yiisoft\Inflector\InflectorHelper;
+use Yiisoft\Strings\Inflector;
 use Yiisoft\Strings\StringHelper;
 
 /* @var $this yii\web\View */
@@ -20,15 +20,15 @@ use <?= $generator->indexWidgetType === 'grid' ? "yii\\grid\\GridView" : "yii\\w
 <?= !empty($generator->searchModelClass) ? "/* @var \$searchModel " . ltrim($generator->searchModelClass, '\\') . " */\n" : '' ?>
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = <?= $generator->generateString(InflectorHelper::pluralize(InflectorHelper::camel2words(StringHelper::basename($generator->modelClass)))) ?>;
+$this->title = <?= $generator->generateString(Inflector::pluralize(Inflector::camel2words(StringHelper::basename($generator->modelClass)))) ?>;
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="<?= InflectorHelper::camel2id(StringHelper::basename($generator->modelClass)) ?>-index">
+<div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-index">
 
     <h1><?= "<?= " ?>Html::encode($this->title) ?></h1>
 
     <p>
-        <?= "<?= " ?>Html::a(<?= $generator->generateString('Create ' . InflectorHelper::camel2words(StringHelper::basename($generator->modelClass))) ?>, ['create'], ['class' => 'btn btn-success']) ?>
+        <?= "<?= " ?>Html::a(<?= $generator->generateString('Create ' . Inflector::camel2words(StringHelper::basename($generator->modelClass))) ?>, ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
 <?= $generator->enablePjax ? "    <?php Pjax::begin(); ?>\n" : '' ?>

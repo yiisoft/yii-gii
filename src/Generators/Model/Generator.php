@@ -13,7 +13,7 @@ use Yiisoft\Db\Connection;
 use Yiisoft\Db\Schema;
 use Yiisoft\Db\TableSchema;
 use Yiisoft\Yii\Gii\CodeFile;
-use Yiisoft\Inflector\InflectorHelper;
+use Yiisoft\Strings\Inflector;
 use yii\helpers\Yii;
 use yii\exceptions\NotSupportedException;
 
@@ -296,7 +296,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
             } elseif (!strcasecmp($column->name, 'id')) {
                 $labels[$column->name] = 'ID';
             } else {
-                $label = InflectorHelper::camel2words($column->name);
+                $label = Inflector::camel2words($column->name);
                 if (!empty($label) && substr_compare($label, ' id', -3, 3, true) === 0) {
                     $label = substr($label, 0, -3) . ' ID';
                 }
@@ -726,9 +726,9 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
             }
         }
         if ($multiple) {
-            $key = InflectorHelper::pluralize($key);
+            $key = Inflector::pluralize($key);
         }
-        $name = $rawName = InflectorHelper::id2camel($key, '_');
+        $name = $rawName = Inflector::id2camel($key, '_');
         $i = 0;
         while ($baseModel->hasProperty(lcfirst($name))) {
             $name = $rawName . ($i++);
@@ -910,13 +910,13 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
             $schemaName = ctype_upper(preg_replace('/[_-]/', '', $schemaName)) ? strtolower($schemaName) : $schemaName;
             $className = ctype_upper(preg_replace('/[_-]/', '', $className)) ? strtolower($className) : $className;
 
-            $this->classNames[$fullTableName] = InflectorHelper::camelize(InflectorHelper::camel2words($schemaName.$className));
+            $this->classNames[$fullTableName] = Inflector::camelize(Inflector::camel2words($schemaName.$className));
         } else {
-            $this->classNames[$fullTableName] = InflectorHelper::id2camel($schemaName.$className, '_');
+            $this->classNames[$fullTableName] = Inflector::id2camel($schemaName.$className, '_');
         }
 
         if ($this->singularize) {
-            $this->classNames[$fullTableName] = InflectorHelper::singularize($this->classNames[$fullTableName]);
+            $this->classNames[$fullTableName] = Inflector::singularize($this->classNames[$fullTableName]);
         }
 
         return $this->classNames[$fullTableName];
