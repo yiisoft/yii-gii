@@ -20,7 +20,6 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "yiisoft/yii-core": "^3.0@dev",
         "phpspec/php-diff": "^1.1.0",
         "yiisoft/strings": "^3.0@dev",
         "yiisoft/var-dumper": "^3.0@dev"
@@ -31,10 +30,6 @@
         "yiisoft/cache": "^3.0@dev",
         "phpunit/phpunit": "^7.3",
         "hiqdev/composer-config-plugin": "^1.0@dev",
-        "yiisoft/db": "^3.0@dev",
-        "yiisoft/db-sqlite": "^3.0@dev",
-        "yiisoft/db-pgsql": "^3.0@dev",
-        "yiisoft/active-record": "^3.0@dev",
         "yiisoft/view": "^3.0@dev",
         "yiisoft/yii-web": "^3.0@dev"
     },
