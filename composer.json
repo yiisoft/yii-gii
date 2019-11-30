@@ -2,7 +2,11 @@
     "name": "yiisoft/yii-gii",
     "type": "library",
     "description": "Yii Framework Code Generator Extension",
-    "keywords": ["yii", "gii", "code generator"],
+    "keywords": [
+        "yii",
+        "gii",
+        "code generator"
+    ],
     "license": "BSD-3-Clause",
     "support": {
         "source": "https://github.com/yiisoft/yii-gii",
@@ -56,5 +60,8 @@
             "type": "composer",
             "url": "https://asset-packagist.org"
         }
-    ]
+    ],
+    "config": {
+        "sort-packages": true
+    }
 }
