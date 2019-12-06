@@ -15,7 +15,7 @@ Documentation is at [docs/guide/README.md](docs/guide/README.md).
 
 [![Latest Stable Version](https://poser.pugx.org/yiisoft/yii-gii/v/stable.png)](https://packagist.org/packages/yiisoft/yii-gii)
 [![Total Downloads](https://poser.pugx.org/yiisoft/yii-gii/downloads.png)](https://packagist.org/packages/yiisoft/yii-gii)
-[![Build Status](https://travis-ci.org/yiisoft/yii-gii.svg?branch=master)](https://travis-ci.org/yiisoft/yii-gii)
+[![Build Status](https://travis-ci.com/yiisoft/yii-gii.svg?branch=master)](https://travis-ci.com/yiisoft/yii-gii)
 
 
 Installation
