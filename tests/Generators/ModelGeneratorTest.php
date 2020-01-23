@@ -1,4 +1,5 @@
 <?php
+
 namespace Yiisoft\Yii\Gii\Tests\Generators;
 
 use Yiisoft\Yii\Gii\Generators\Model\Generator as ModelGenerator;
