@@ -26,7 +26,7 @@ return [
     'bootstrap' => ['gii'],
     'modules' => [
         'gii' => [
-            '__class' => \Yiisoft\Yii\Gii\Module::class,
+            '__class' => \Yiisoft\Yii\Gii\Gii::class,
         },
         // ...
     ],
@@ -51,7 +51,7 @@ http://localhost/path/to/index.php/gii
 >
 ```php
 'gii' => [
-    '__class' => 'Yiisoft\Yii\Gii\Module',
+    '__class' => 'Yiisoft\Yii\Gii\Gii',
     'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'] // 必要に応じて修正
 ],
 ```
@@ -85,7 +85,7 @@ if (YII_ENV_DEV) {
     $config['modules']['debug'] = \Yiisoft\Yii\Debug\Module::class;
 
     $config['bootstrap'][] = 'gii';
-    $config['modules']['gii'] = \Yiisoft\Yii\Gii\Module::class; // <--- ここ
+    $config['modules']['gii'] = \Yiisoft\Yii\Gii\Gii::class; // <--- ここ
 }
 ```
 
@@ -99,7 +99,7 @@ if (YII_ENV_DEV) {
 
     $config['bootstrap'][] = 'gii';
     $config['modules']['gii'] = [
-        '__class' => Yiisoft\Yii\Gii\Module::class,
+        '__class' => Yiisoft\Yii\Gii\Gii::class,
         'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'],
     ];
 }

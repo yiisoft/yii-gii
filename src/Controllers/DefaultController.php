@@ -20,7 +20,7 @@ class DefaultController extends Controller
 {
     public $layout = 'generator';
     /**
-     * @var \Yiisoft\Yii\Gii\Module
+     * @var \Yiisoft\Yii\Gii\Gii
      */
     public $module;
     /**

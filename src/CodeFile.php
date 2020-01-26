@@ -7,22 +7,13 @@
 
 namespace Yiisoft\Yii\Gii;
 
-use yii\helpers\Yii;
-use yii\base\BaseObject;
+use Yiisoft\Html\Html;
 use Yiisoft\Yii\Gii\Components\DiffRendererHtmlInline;
-use yii\helpers\Html;
 
 /**
  * CodeFile represents a code file to be generated.
- *
- * @property string $relativePath The code file path relative to the application base path. This property is
- * read-only.
- * @property string $type The code file extension (e.g. php, txt). This property is read-only.
- *
- * @author Qiang Xue <qiang.xue@gmail.com>
- * @since 2.0
  */
-class CodeFile extends BaseObject
+class CodeFile
 {
     /**
      * The code file is new.
@@ -54,7 +45,6 @@ class CodeFile extends BaseObject
      */
     public $operation;
 
-
     /**
      * Constructor.
      * @param string $path the file path that the new code should be saved to.
@@ -82,7 +72,7 @@ class CodeFile extends BaseObject
         if ($this->operation === self::OP_CREATE) {
             $dir = dirname($this->path);
             if (!is_dir($dir)) {
-                if ($module instanceof \Yiisoft\Yii\Gii\Module) {
+                if ($module instanceof \Yiisoft\Yii\Gii\Gii) {
                     $mask = @umask(0);
                     $result = @mkdir($dir, $module->newDirMode, true);
                     @umask($mask);
@@ -98,7 +88,7 @@ class CodeFile extends BaseObject
             return "Unable to write the file '{$this->path}'.";
         }
 
-        if ($module instanceof \Yiisoft\Yii\Gii\Module) {
+        if ($module instanceof \Yiisoft\Yii\Gii\Gii) {
             $mask = @umask(0);
             @chmod($this->path, $module->newFileMode);
             @umask($mask);
