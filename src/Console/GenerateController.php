@@ -28,7 +28,7 @@ use Yiisoft\Yii\Console\Controller;
 class GenerateController extends Controller
 {
     /**
-     * @var \Yiisoft\Yii\Gii\Module
+     * @var \Yiisoft\Yii\Gii\Gii
      */
     public $module;
     /**

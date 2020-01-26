@@ -8,13 +8,8 @@
 namespace Yiisoft\Yii\Gii;
 
 use ReflectionClass;
-use yii\exceptions\InvalidConfigException;
-use yii\base\Model;
-use yii\base\Application;
 use Yiisoft\VarDumper\VarDumper;
-use yii\helpers\Yii;
-use yii\web\View;
-use yii\view\Theme;
+use Yiisoft\Yii\Gii\Generators\GeneratorInterface;
 
 /**
  * This is the base class for all generator classes.
@@ -38,7 +33,7 @@ use yii\view\Theme;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-abstract class Generator extends Model
+abstract class Generator implements GeneratorInterface
 {
     /**
      * @var array a list of available code templates. The array keys are the template names,
