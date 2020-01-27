@@ -1,15 +1,16 @@
 <?php
-/**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
- */
 
-namespace Yiisoft\Yii\Gii;
+namespace Yiisoft\Yii\Gii\Generators;
 
+use Psr\Container\ContainerInterface;
 use ReflectionClass;
+use Yiisoft\Aliases\Aliases;
+use Yiisoft\I18n\MessageFormatterInterface;
 use Yiisoft\VarDumper\VarDumper;
-use Yiisoft\Yii\Gii\Generators\GeneratorInterface;
+use Yiisoft\View\View;
+use Yiisoft\Yii\Gii\CodeFile;
+use Yiisoft\Yii\Gii\GeneratorInterface;
+use Yiisoft\Yii\Web\Info;
 
 /**
  * This is the base class for all generator classes.
@@ -30,65 +31,40 @@ use Yiisoft\Yii\Gii\Generators\GeneratorInterface;
  * @property string $templatePath The root path of the template files that are currently being used. This
  * property is read-only.
  *
- * @author Qiang Xue <qiang.xue@gmail.com>
- * @since 2.0
  */
 abstract class Generator implements GeneratorInterface
 {
+    protected View $view;
+    protected Aliases $aliases;
+    protected MessageFormatterInterface $messageFormatter;
     /**
      * @var array a list of available code templates. The array keys are the template names,
      * and the array values are the corresponding template paths or path aliases.
      */
-    public $templates = [];
+    public array $templates = [];
     /**
      * @var string the name of the code template that the user has selected.
      * The value of this property is internally managed by this class.
      */
-    public $template = 'default';
+    public string $template = 'default';
     /**
      * @var bool whether the strings will be generated using `Yii::t()` or normal strings.
      */
-    public $enableI18N = false;
+    public bool $enableI18N = false;
     /**
      * @var string the message category used by `Yii::t()` when `$enableI18N` is `true`.
      * Defaults to `app`.
      */
-    public $messageCategory = 'app';
+    public string $messageCategory = 'app';
 
-    /**
-     * @var Application
-     */
-    protected $app;
-
-    /**
-     * @return string name of the code generator
-     */
-    abstract public function getName();
-    /**
-     * Generates the code based on the current user input and the specified code template files.
-     * This is the main method that child classes should implement.
-     * Please refer to [[\Yiisoft\Yii\Gii\Generators\controller\Generator::generate()]] as an example
-     * on how to implement this method.
-     * @return CodeFile[] a list of code files to be created.
-     */
-    abstract public function generate();
-
-    public function __construct(Application $app, $templates = [])
+    public function __construct(ContainerInterface $container)
     {
-        $this->app = $app;
-
-        if (!isset($templates['default'])) {
-            $this->templates['default'] = $this->defaultTemplate();
-        }
-        foreach ($templates as $i => $template) {
-            $this->templates[$i] = Yii::getAlias($template);
-        }
+        $this->view = $container->get(View::class);
+        $this->aliases = $container->get(Aliases::class);
+        $this->messageFormatter = $container->get(MessageFormatterInterface::class);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'enableI18N' => 'Enable I18N',
@@ -173,25 +149,26 @@ abstract class Generator implements GeneratorInterface
      * The default implementation will return the "templates" subdirectory of the
      * directory containing the generator class file.
      * @return string the root path to the default code template files.
+     * @throws \ReflectionException
      */
-    public function defaultTemplate()
+    private function defaultTemplate()
     {
         $class = new ReflectionClass($this);
 
         return dirname($class->getFileName()) . '/default';
     }
 
-    /**
-     * @return string the detailed description of the generator.
-     */
-    public function getDescription()
+    public function getDescription(): string
     {
         return '';
     }
 
+    public function validate(): bool
+    {
+        return true;
+    }
+
     /**
-     * {@inheritdoc}
-     *
      * Child classes should override this method like the following so that the parent
      * rules are included:
      *
@@ -252,7 +229,11 @@ abstract class Generator implements GeneratorInterface
      */
     public function getStickyDataFile()
     {
-        return $this->app->getRuntimePath() . '/gii-' . Yii::getVersion() . '/' . str_replace('\\', '-', get_class($this)) . '.json';
+        return $this->aliases->get('@runtime') . '/gii-' . Info::frameworkVersion() . '/' . str_replace(
+                '\\',
+                '-',
+                get_class($this)
+            ) . '.json';
     }
 
     /**
@@ -289,15 +270,17 @@ abstract class Generator implements GeneratorInterface
 
     /**
      * @return string the root path of the template files that are currently being used.
-     * @throws InvalidConfigException if [[template]] is invalid
+     * @throws \ReflectionException
      */
     public function getTemplatePath()
     {
-        if (isset($this->templates[$this->template])) {
+        if ($this->template === 'default') {
+            return $this->defaultTemplate();
+        } elseif (isset($this->templates[$this->template])) {
             return $this->templates[$this->template];
         }
 
-        throw new InvalidConfigException("Unknown template: {$this->template}");
+        throw new \RuntimeException("Unknown template: {$this->template}");
     }
 
     /**
@@ -310,10 +293,9 @@ abstract class Generator implements GeneratorInterface
      */
     public function render($template, $params = [])
     {
-        $view = new View($this->app, new Theme());
         $params['generator'] = $this;
 
-        return $view->renderFile($this->getTemplatePath() . '/' . $template, $params, $this);
+        return $this->view->renderFile($this->getTemplatePath() . '/' . $template, $params);
     }
 
     /**
@@ -350,8 +332,14 @@ abstract class Generator implements GeneratorInterface
         try {
             if (class_exists($class)) {
                 if (isset($params['extends'])) {
-                    if (ltrim($class, '\\') !== ltrim($params['extends'], '\\') && !is_subclass_of($class, $params['extends'])) {
-                        $this->addError($attribute, "'$class' must extend from {$params['extends']} or its child class.");
+                    if (ltrim($class, '\\') !== ltrim($params['extends'], '\\') && !is_subclass_of(
+                            $class,
+                            $params['extends']
+                        )) {
+                        $this->addError(
+                            $attribute,
+                            "'$class' must extend from {$params['extends']} or its child class."
+                        );
                     }
                 }
             } else {
@@ -506,9 +494,12 @@ abstract class Generator implements GeneratorInterface
         } else {
             // No I18N, replace placeholders by real words, if any
             if (!empty($placeholders)) {
-                $phKeys = array_map(function ($word) {
-                    return '{' . $word . '}';
-                }, array_keys($placeholders));
+                $phKeys = array_map(
+                    function ($word) {
+                        return '{' . $word . '}';
+                    },
+                    array_keys($placeholders)
+                );
                 $phValues = array_values($placeholders);
                 $str = "'" . str_replace($phKeys, $phValues, $string) . "'";
             } else {

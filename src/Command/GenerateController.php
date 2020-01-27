@@ -80,7 +80,7 @@ class GenerateController extends Controller
      */
     public function createAction($id)
     {
-        /** @var $action GenerateAction */
+        /** @var $action BaseGenerateCommand */
         $action = parent::createAction($id);
         foreach ($this->_options as $name => $value) {
             $action->generator->$name = $value;
@@ -96,7 +96,7 @@ class GenerateController extends Controller
         $actions = [];
         foreach ($this->generators as $name => $generator) {
             $actions[$name] = [
-                '__class' => \Yiisoft\Yii\Gii\Console\GenerateAction::class,
+                '__class' => \Yiisoft\Yii\Gii\Console\BaseGenerateCommand::class,
                 'generator' => $generator,
             ];
         }
@@ -145,7 +145,7 @@ class GenerateController extends Controller
             return parent::getActionHelpSummary($action);
         }
 
-        /** @var $action GenerateAction */
+        /** @var $action BaseGenerateCommand */
         return $action->generator->getName();
     }
 
@@ -158,7 +158,7 @@ class GenerateController extends Controller
             return parent::getActionHelp($action);
         }
 
-        /** @var $action GenerateAction */
+        /** @var $action BaseGenerateCommand */
         $description = $action->generator->getDescription();
         return wordwrap(preg_replace('/\s+/', ' ', $description));
     }
@@ -179,7 +179,7 @@ class GenerateController extends Controller
         if ($action instanceof InlineAction) {
             return parent::getActionOptionsHelp($action);
         }
-        /** @var $action GenerateAction */
+        /** @var $action BaseGenerateCommand */
         $attributes = $action->generator->attributes;
         unset($attributes['templates']);
         $hints = $action->generator->hints();
