@@ -88,26 +88,6 @@ final class Gii implements GiiInterface
     }
 
     /**
-     * @return int whether the module can be accessed by the current user
-     */
-    protected function checkAccess()
-    {
-        $ip = $this->app->getRequest()->getUserIP();
-        foreach ($this->allowedIPs as $filter) {
-            if ($filter === '*' || $filter === $ip || (($pos = strpos($filter, '*')) !== false && !strncmp(
-                        $ip,
-                        $filter,
-                        $pos
-                    ))) {
-                return true;
-            }
-        }
-        Yii::warning('Access to Gii is denied due to IP address restriction. The requested IP is ' . $ip, __METHOD__);
-
-        return false;
-    }
-
-    /**
      * Returns the list of the core code generator configurations.
      * @return array the list of the core code generator configurations.
      */
@@ -123,17 +103,4 @@ final class Gii implements GiiInterface
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     * @since 2.0.6
-     */
-    protected function defaultVersion()
-    {
-        $packageInfo = Json::decode(file_get_contents(\dirname(__DIR__) . DIRECTORY_SEPARATOR . 'composer.json'));
-        $extensionName = $packageInfo['name'];
-        if (isset($this->app->extensions[$extensionName])) {
-            return $this->app->extensions[$extensionName]['version'];
-        }
-        return parent::defaultVersion();
-    }
 }

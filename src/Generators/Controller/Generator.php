@@ -7,11 +7,9 @@
 
 namespace Yiisoft\Yii\Gii\Generators\Controller;
 
-use yii\helpers\Yii;
-use Yiisoft\Yii\Gii\CodeFile;
-use yii\helpers\Html;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Strings\StringHelper;
+use Yiisoft\Yii\Gii\CodeFile;
 
 /**
  * This generator will generate a controller and one or a few action view files.
@@ -25,7 +23,7 @@ use Yiisoft\Strings\StringHelper;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class Generator extends \Yiisoft\Yii\Gii\Generator
+class Generator extends \Yiisoft\Yii\Gii\Generators\Generator
 {
     /**
      * @var string the controller class name
@@ -38,7 +36,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
     /**
      * @var string the base class of the controller
      */
-    public $baseClass = \yii\web\Controller::class;
+    public $baseClass;
     /**
      * @var string list of action IDs separated by commas or spaces
      */
@@ -48,7 +46,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'Controller Generator';
     }
@@ -56,7 +54,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
     /**
      * {@inheritdoc}
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'This generator helps you to quickly generate a new controller class with
             one or several controller actions and their corresponding views.';
@@ -67,21 +65,36 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
      */
     public function rules()
     {
-        return array_merge(parent::rules(), [
-            [['controllerClass', 'actions', 'baseClass'], 'filter', 'filter' => 'trim'],
-            [['controllerClass', 'baseClass'], 'required'],
-            ['controllerClass', 'match', 'pattern' => '/^[\w\\\\]*Controller$/', 'message' => 'Only word characters and backslashes are allowed, and the class name must end with "Controller".'],
-            ['controllerClass', 'validateNewClass'],
-            ['baseClass', 'match', 'pattern' => '/^[\w\\\\]*$/', 'message' => 'Only word characters and backslashes are allowed.'],
-            ['actions', 'match', 'pattern' => '/^[a-z][a-z0-9\\-,\\s]*$/', 'message' => 'Only a-z, 0-9, dashes (-), spaces and commas are allowed.'],
-            ['viewPath', 'safe'],
-        ]);
+        return array_merge(
+            parent::rules(),
+            [
+                [['controllerClass', 'actions', 'baseClass'], 'filter', 'filter' => 'trim'],
+                [['controllerClass', 'baseClass'], 'required'],
+                [
+                    'controllerClass',
+                    'match',
+                    'pattern' => '/^[\w\\\\]*Controller$/',
+                    'message' => 'Only word characters and backslashes are allowed, and the class name must end with "Controller".'
+                ],
+                ['controllerClass', 'validateNewClass'],
+                [
+                    'baseClass',
+                    'match',
+                    'pattern' => '/^[\w\\\\]*$/',
+                    'message' => 'Only word characters and backslashes are allowed.'
+                ],
+                [
+                    'actions',
+                    'match',
+                    'pattern' => '/^[a-z][a-z0-9\\-,\\s]*$/',
+                    'message' => 'Only a-z, 0-9, dashes (-), spaces and commas are allowed.'
+                ],
+                ['viewPath', 'safe'],
+            ]
+        );
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'baseClass' => 'Base Class',
@@ -91,9 +104,6 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function requiredTemplates()
     {
         return [
@@ -102,17 +112,11 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function stickyAttributes()
     {
         return ['baseClass'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hints()
     {
         return [
@@ -133,9 +137,6 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function successMessage()
     {
         return 'The controller has been generated successfully.' . $this->getLinkToTry();
@@ -143,29 +144,14 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
 
     /**
      * This method returns a link to try controller generated
-     * @see https://github.com/yiisoft/yii2-gii/issues/182
      * @return string
-     * @since 2.0.6
      */
     private function getLinkToTry()
     {
-        if (strpos($this->controllerNamespace, Yii::getApp()->controllerNamespace) !== 0) {
-            return '';
-        }
-
-        $actions = $this->getActionIDs();
-        if (in_array('index', $actions, true)) {
-            $route = $this->getControllerSubPath() . $this->getControllerID() . '/index';
-        } else {
-            $route = $this->getControllerSubPath() . $this->getControllerID() . '/' . reset($actions);
-        }
-        return ' You may ' . Html::a('try it now', Yii::getApp()->getUrlManager()->createUrl($route), ['target' => '_blank', 'rel' => 'noopener noreferrer']) . '.';
+        return '';
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function generate()
+    public function generate(): array
     {
         $files = [];
 
@@ -201,7 +187,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
      */
     public function getControllerFile()
     {
-        return Yii::getAlias('@' . str_replace('\\', '/', $this->controllerClass)) . '.php';
+        return $this->aliases->get('@' . str_replace('\\', '/', $this->controllerClass)) . '.php';
     }
 
     /**
@@ -210,7 +196,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
     public function getControllerID()
     {
         $name = StringHelper::basename($this->controllerClass);
-        return Inflector::camel2id(substr($name, 0, strlen($name) - 10));
+        return (new Inflector)->camel2id(substr($name, 0, strlen($name) - 10));
     }
 
     /**
@@ -238,7 +224,9 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
     public function getViewFile($action)
     {
         if (empty($this->viewPath)) {
-            return Yii::getAlias('@app/views/' . $this->getControllerSubPath() . $this->getControllerID() . "/$action.php");
+            return $this->aliases->get(
+                '@app/views/' . $this->getControllerSubPath() . $this->getControllerID() . "/$action.php"
+            );
         }
 
         return Yii::getAlias(str_replace('\\', '/', $this->viewPath) . "/$action.php");
@@ -250,6 +238,6 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
     public function getControllerNamespace()
     {
         $name = StringHelper::basename($this->controllerClass);
-        return ltrim(substr($this->controllerClass, 0, - (strlen($name) + 1)), '\\');
+        return ltrim(substr($this->controllerClass, 0, -(strlen($name) + 1)), '\\');
     }
 }

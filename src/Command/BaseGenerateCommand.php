@@ -1,34 +1,26 @@
 <?php
-/**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
- */
-
 namespace Yiisoft\Yii\Gii\Console;
 
-use yii\helpers\Console;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Yiisoft\Yii\Gii\GiiInterface;
 
-/**
- * @author Qiang Xue <qiang.xue@gmail.com>
- * @since 2.0
- */
-class GenerateAction extends \yii\base\Action
+class BaseGenerateCommand extends Command
 {
-    /**
-     * @var \Yiisoft\Yii\Gii\Generator
-     */
-    public $generator;
-    /**
-     * @var GenerateController
-     */
-    public $controller;
-
+    protected const NAME = '';
 
     /**
-     * {@inheritdoc}
+     * @var \Yiisoft\Yii\Gii\GeneratorInterface
      */
-    public function run()
+    protected $generator;
+    public function __construct(GiiInterface $gii)
+    {
+        parent::__construct();
+        $this->generator = $gii->getGenerator(self::NAME);
+    }
+
+    public function execute(InputInterface $input, OutputInterface $output)
     {
         echo "Running '{$this->generator->getName()}'...\n\n";
 
@@ -57,7 +49,7 @@ class GenerateAction extends \yii\base\Action
             return;
         }
         echo "The following files will be generated:\n";
-        $skipAll = $this->controller->interactive ? null : !$this->controller->overwrite;
+        $skipAll = $this->interactive ? null : !$this->controller->overwrite;
         $answers = [];
         foreach ($files as $file) {
             $path = $file->getRelativePath();
