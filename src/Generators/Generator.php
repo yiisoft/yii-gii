@@ -2,11 +2,16 @@
 
 namespace Yiisoft\Yii\Gii\Generators;
 
+use Exception;
 use Psr\Container\ContainerInterface;
 use ReflectionClass;
+use ReflectionException;
+use RuntimeException;
+use Throwable;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\I18n\MessageFormatterInterface;
 use Yiisoft\VarDumper\VarDumper;
+use Yiisoft\View\Exception\ViewNotFoundException;
 use Yiisoft\View\View;
 use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Yii\Gii\GeneratorInterface;
@@ -34,8 +39,8 @@ use Yiisoft\Yii\Web\Info;
  */
 abstract class Generator implements GeneratorInterface
 {
-    protected View $view;
-    protected Aliases $aliases;
+    protected View                      $view;
+    protected Aliases                   $aliases;
     protected MessageFormatterInterface $messageFormatter;
     /**
      * @var array a list of available code templates. The array keys are the template names,
@@ -59,15 +64,15 @@ abstract class Generator implements GeneratorInterface
 
     public function __construct(ContainerInterface $container)
     {
-        $this->view = $container->get(View::class);
-        $this->aliases = $container->get(Aliases::class);
+        $this->view             = $container->get(View::class);
+        $this->aliases          = $container->get(Aliases::class);
         $this->messageFormatter = $container->get(MessageFormatterInterface::class);
     }
 
     public function attributeLabels(): array
     {
         return [
-            'enableI18N' => 'Enable I18N',
+            'enableI18N'      => 'Enable I18N',
             'messageCategory' => 'Message Category',
         ];
     }
@@ -104,7 +109,7 @@ abstract class Generator implements GeneratorInterface
     public function hints()
     {
         return [
-            'enableI18N' => 'This indicates whether the generator should generate strings using <code>Yii::t()</code> method.
+            'enableI18N'      => 'This indicates whether the generator should generate strings using <code>Yii::t()</code> method.
                 Set this to <code>true</code> if you are planning to make your application translatable.',
             'messageCategory' => 'This is the category used by <code>Yii::t()</code> in case you enable I18N.',
         ];
@@ -141,7 +146,7 @@ abstract class Generator implements GeneratorInterface
     {
         $class = new ReflectionClass($this);
 
-        return dirname($class->getFileName()) . '/form.php';
+        return dirname($class->getFileName()).'/form.php';
     }
 
     /**
@@ -149,13 +154,13 @@ abstract class Generator implements GeneratorInterface
      * The default implementation will return the "templates" subdirectory of the
      * directory containing the generator class file.
      * @return string the root path to the default code template files.
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     private function defaultTemplate()
     {
         $class = new ReflectionClass($this);
 
-        return dirname($class->getFileName()) . '/default';
+        return dirname($class->getFileName()).'/default';
     }
 
     public function getDescription(): string
@@ -193,7 +198,7 @@ abstract class Generator implements GeneratorInterface
     public function loadStickyAttributes()
     {
         $stickyAttributes = $this->stickyAttributes();
-        $path = $this->getStickyDataFile();
+        $path             = $this->getStickyDataFile();
         if (is_file($path)) {
             $result = json_decode(file_get_contents($path), true);
             if (is_array($result)) {
@@ -212,14 +217,16 @@ abstract class Generator implements GeneratorInterface
      */
     public function saveStickyAttributes()
     {
-        $stickyAttributes = $this->stickyAttributes();
+        $stickyAttributes   = $this->stickyAttributes();
         $stickyAttributes[] = 'template';
-        $values = [];
+        $values             = [];
         foreach ($stickyAttributes as $name) {
             $values[$name] = $this->$name;
         }
         $path = $this->getStickyDataFile();
-        @mkdir(dirname($path), 0755, true);
+        if (!mkdir($concurrentDirectory = dirname($path), 0755, true) && !is_dir($concurrentDirectory)) {
+            throw new RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
+        }
         file_put_contents($path, json_encode($values));
     }
 
@@ -229,34 +236,37 @@ abstract class Generator implements GeneratorInterface
      */
     public function getStickyDataFile()
     {
-        return $this->aliases->get('@runtime') . '/gii-' . Info::frameworkVersion() . '/' . str_replace(
+        return $this->aliases->get('@runtime').'/gii-'.Info::frameworkVersion().'/'.str_replace(
                 '\\',
                 '-',
                 get_class($this)
-            ) . '.json';
+            ).'.json';
     }
 
     /**
      * Saves the generated code into files.
-     * @param CodeFile[] $files the code files to be saved
-     * @param array $answers
-     * @param string $results this parameter receives a value from this method indicating the log messages
+     * @param  CodeFile[]  $files  the code files to be saved
+     * @param  array  $answers
+     * @param  string  $results  this parameter receives a value from this method indicating the log messages
      * generated while saving the code files.
      * @return bool whether files are successfully saved without any error.
+     * @throws ReflectionException
      */
-    public function save($files, $answers, &$results)
+    public function save($files, $answers, &$results): bool
     {
-        $lines = ['Generating code using template "' . $this->getTemplatePath() . '"...'];
+        $lines    = ['Generating code using template "'.$this->getTemplatePath().'"...'];
         $hasError = false;
         foreach ($files as $file) {
             $relativePath = $file->getRelativePath();
-            if (isset($answers[$file->id]) && !empty($answers[$file->id]) && $file->operation !== CodeFile::OP_SKIP) {
+            if (isset($answers[$file->getId()]) && !empty($answers[$file->getId()]) && $file->getOperation(
+                ) !== CodeFile::OP_SKIP) {
                 $error = $file->save();
                 if (is_string($error)) {
                     $hasError = true;
-                    $lines[] = "generating $relativePath\n<span class=\"error\">$error</span>";
+                    $lines[]  = "generating $relativePath\n<span class=\"error\">$error</span>";
                 } else {
-                    $lines[] = $file->operation === CodeFile::OP_CREATE ? " generated $relativePath" : " overwrote $relativePath";
+                    $lines[] = $file->getOperation(
+                    ) === CodeFile::OP_CREATE ? " generated $relativePath" : " overwrote $relativePath";
                 }
             } else {
                 $lines[] = "   skipped $relativePath";
@@ -270,32 +280,37 @@ abstract class Generator implements GeneratorInterface
 
     /**
      * @return string the root path of the template files that are currently being used.
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
-    public function getTemplatePath()
+    public function getTemplatePath(): string
     {
         if ($this->template === 'default') {
             return $this->defaultTemplate();
-        } elseif (isset($this->templates[$this->template])) {
+        }
+
+        if (isset($this->templates[$this->template])) {
             return $this->templates[$this->template];
         }
 
-        throw new \RuntimeException("Unknown template: {$this->template}");
+        throw new RuntimeException("Unknown template: {$this->template}");
     }
 
     /**
      * Generates code using the specified code template and parameters.
      * Note that the code template will be used as a PHP file.
-     * @param string $template the code template file. This must be specified as a file path
+     * @param  string  $template  the code template file. This must be specified as a file path
      * relative to [[templatePath]].
-     * @param array $params list of parameters to be passed to the template file.
+     * @param  array  $params  list of parameters to be passed to the template file.
      * @return string the generated code
+     * @throws ReflectionException
+     * @throws Throwable
+     * @throws ViewNotFoundException
      */
     public function render($template, $params = [])
     {
         $params['generator'] = $this;
 
-        return $this->view->renderFile($this->getTemplatePath() . '/' . $template, $params);
+        return $this->view->renderFile($this->getTemplatePath().'/'.$template, $params);
     }
 
     /**
@@ -303,7 +318,7 @@ abstract class Generator implements GeneratorInterface
      * This method validates whether the user selects an existing template
      * and the template contains all required template files as specified in [[requiredTemplates()]].
      */
-    public function validateTemplate()
+    public function validateTemplate(): void
     {
         $templates = $this->templates;
 
@@ -312,7 +327,7 @@ abstract class Generator implements GeneratorInterface
         } else {
             $templatePath = $this->templates[$this->template];
             foreach ($this->requiredTemplates() as $template) {
-                if (!is_file(Yii::getAlias($templatePath . '/' . $template))) {
+                if (!is_file($this->aliases->get($templatePath.'/'.$template))) {
                     $this->addError('template', "Unable to find the required code template file '$template'.");
                 }
             }
@@ -323,8 +338,8 @@ abstract class Generator implements GeneratorInterface
      * An inline validator that checks if the attribute value refers to an existing class name.
      * If the `extends` option is specified, it will also check if the class is a child class
      * of the class represented by the `extends` option.
-     * @param string $attribute the attribute being validated
-     * @param array $params the validation options
+     * @param  string  $attribute  the attribute being validated
+     * @param  array  $params  the validation options
      */
     public function validateClass($attribute, $params)
     {
@@ -345,7 +360,7 @@ abstract class Generator implements GeneratorInterface
             } else {
                 $this->addError($attribute, "Class '$class' does not exist or has syntax error.");
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->addError($attribute, "Class '$class' does not exist or has syntax error.");
         }
     }
@@ -353,8 +368,8 @@ abstract class Generator implements GeneratorInterface
     /**
      * An inline validator that checks if the attribute value refers to a valid namespaced class name.
      * The validator will check if the directory containing the new class file exist or not.
-     * @param string $attribute the attribute being validated
-     * @param array $params the validation options
+     * @param  string  $attribute  the attribute being validated
+     * @param  array  $params  the validation options
      */
     public function validateNewClass($attribute, $params)
     {
@@ -362,8 +377,8 @@ abstract class Generator implements GeneratorInterface
         if (($pos = strrpos($class, '\\')) === false) {
             $this->addError($attribute, "The class name must contain fully qualified namespace name.");
         } else {
-            $ns = substr($class, 0, $pos);
-            $path = Yii::getAlias('@' . str_replace('\\', '/', $ns), false);
+            $ns   = substr($class, 0, $pos);
+            $path = $this->aliases->get('@'.str_replace('\\', '/', $ns), false);
             if ($path === false) {
                 $this->addError($attribute, "The class namespace is invalid: $ns");
             } elseif (!is_dir($path)) {
@@ -383,7 +398,7 @@ abstract class Generator implements GeneratorInterface
     }
 
     /**
-     * @param string $value the attribute to be validated
+     * @param  string  $value  the attribute to be validated
      * @return bool whether the value is a reserved PHP keyword.
      */
     public function isReservedKeyword($value)
@@ -476,8 +491,8 @@ abstract class Generator implements GeneratorInterface
     /**
      * Generates a string depending on enableI18N property
      *
-     * @param string $string the text be generated
-     * @param array $placeholders the placeholders to use by `Yii::t()`
+     * @param  string  $string  the text be generated
+     * @param  array  $placeholders  the placeholders to use by `Yii::t()`
      * @return string
      */
     public function generateString($string = '', $placeholders = [])
@@ -486,26 +501,23 @@ abstract class Generator implements GeneratorInterface
         if ($this->enableI18N) {
             // If there are placeholders, use them
             if (!empty($placeholders)) {
-                $ph = ', ' . VarDumper::export($placeholders);
+                $ph = ', '.VarDumper::export($placeholders);
             } else {
                 $ph = '';
             }
-            $str = "Yii::t('" . $this->messageCategory . "', '" . $string . "'" . $ph . ")";
+            $str = "Yii::t('".$this->messageCategory."', '".$string."'".$ph.")";
+        } elseif (!empty($placeholders)) {
+            $phKeys   = array_map(
+                static function ($word) {
+                    return '{'.$word.'}';
+                },
+                array_keys($placeholders)
+            );
+            $phValues = array_values($placeholders);
+            $str      = "'".str_replace($phKeys, $phValues, $string)."'";
         } else {
-            // No I18N, replace placeholders by real words, if any
-            if (!empty($placeholders)) {
-                $phKeys = array_map(
-                    function ($word) {
-                        return '{' . $word . '}';
-                    },
-                    array_keys($placeholders)
-                );
-                $phValues = array_values($placeholders);
-                $str = "'" . str_replace($phKeys, $phValues, $string) . "'";
-            } else {
-                // No placeholders, just the given string
-                $str = "'" . $string . "'";
-            }
+            // No placeholders, just the given string
+            $str = "'".$string."'";
         }
         return $str;
     }
