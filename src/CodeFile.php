@@ -65,14 +65,14 @@ final class CodeFile
 
     /**
      * Constructor.
-     * @param  string  $path  the file path that the new code should be saved to.
-     * @param  string  $content  the newly generated code content.
+     * @param string $path the file path that the new code should be saved to.
+     * @param string $content the newly generated code content.
      */
     public function __construct(string $path, string $content)
     {
-        $this->path    = strtr($path, '/\\', DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR);
+        $this->path = strtr($path, '/\\', DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR);
         $this->content = $content;
-        $this->id      = md5($this->path);
+        $this->id = md5($this->path);
         if (is_file($path)) {
             $this->operation = file_get_contents($path) === $content ? self::OP_SKIP : self::OP_OVERWRITE;
         } else {
@@ -90,7 +90,7 @@ final class CodeFile
             $dir = dirname($this->path);
             if (!is_dir($dir)) {
                 if ($this->newDirMode !== self::DIR_MODE) {
-                    $mask   = @umask(0);
+                    $mask = @umask(0);
                     $result = @mkdir($dir, $this->newDirMode, true);
                     @umask($mask);
                 } else {
@@ -184,8 +184,8 @@ final class CodeFile
     /**
      * Renders diff between two sets of lines
      *
-     * @param  mixed  $lines1
-     * @param  mixed  $lines2
+     * @param mixed $lines1
+     * @param mixed $lines2
      * @return string
      */
     private function renderDiff($lines1, $lines2): string
@@ -204,7 +204,7 @@ final class CodeFile
         }
 
         $renderer = new DiffRendererHtmlInline();
-        $diff     = new \Diff($lines1, $lines2);
+        $diff = new \Diff($lines1, $lines2);
 
         return $diff->render($renderer);
     }
@@ -217,6 +217,16 @@ final class CodeFile
     public function getOperation(): string
     {
         return $this->operation;
+    }
+
+    public function getPath(): string
+    {
+        return $this->path;
+    }
+
+    public function getContent(): string
+    {
+        return $this->content;
     }
 
     public function withBasePath(string $basePath): CodeFile

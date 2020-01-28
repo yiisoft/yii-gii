@@ -31,16 +31,16 @@ class BaseGenerateCommand extends Command
         }
     }
 
-    protected function displayValidationErrors()
+    protected function displayValidationErrors(OutputInterface $output)
     {
-        $this->controller->stdout("Code not generated. Please fix the following errors:\n\n", Console::FG_RED);
+        $output->writeln("Code not generated. Please fix the following errors:\n\n", Console::FG_RED);
         foreach ($this->generator->errors as $attribute => $errors) {
             echo ' - ' . $this->controller->ansiFormat($attribute, Console::FG_CYAN) . ': ' . implode('; ', $errors) . "\n";
         }
         echo "\n";
     }
 
-    protected function generateCode()
+    protected function generateCode(InputInterface $input, OutputInterface $output)
     {
         $files = $this->generator->generate();
         $n = count($files);
@@ -49,20 +49,20 @@ class BaseGenerateCommand extends Command
             return;
         }
         echo "The following files will be generated:\n";
-        $skipAll = $this->interactive ? null : !$this->controller->overwrite;
+        $skipAll = $input->getArgument('interactive') ? null : !$input->getArgument('overwrite');
         $answers = [];
         foreach ($files as $file) {
             $path = $file->getRelativePath();
-            if (is_file($file->path)) {
-                if (file_get_contents($file->path) === $file->content) {
+            if (is_file($file->getPath())) {
+                if (file_get_contents($file->getPath()) === $file->getContent()) {
                     echo '  ' . $this->controller->ansiFormat('[unchanged]', Console::FG_GREY);
                     echo $this->controller->ansiFormat(" $path\n", Console::FG_CYAN);
-                    $answers[$file->id] = false;
+                    $answers[$file->getId()] = false;
                 } else {
                     echo '    ' . $this->controller->ansiFormat('[changed]', Console::FG_RED);
                     echo $this->controller->ansiFormat(" $path\n", Console::FG_CYAN);
                     if ($skipAll !== null) {
-                        $answers[$file->id] = !$skipAll;
+                        $answers[$file->getId()] = !$skipAll;
                     } else {
                         $answer = $this->controller->select("Do you want to overwrite this file?", [
                             'y' => 'Overwrite this file.',
@@ -70,7 +70,7 @@ class BaseGenerateCommand extends Command
                             'ya' => 'Overwrite this and the rest of the changed files.',
                             'na' => 'Skip this and the rest of the changed files.',
                         ]);
-                        $answers[$file->id] = $answer === 'y' || $answer === 'ya';
+                        $answers[$file->getId()] = $answer === 'y' || $answer === 'ya';
                         if ($answer === 'ya') {
                             $skipAll = false;
                         } elseif ($answer === 'na') {
@@ -81,7 +81,7 @@ class BaseGenerateCommand extends Command
             } else {
                 echo '        ' . $this->controller->ansiFormat('[new]', Console::FG_GREEN);
                 echo $this->controller->ansiFormat(" $path\n", Console::FG_CYAN);
-                $answers[$file->id] = true;
+                $answers[$file->getId()] = true;
             }
         }
 

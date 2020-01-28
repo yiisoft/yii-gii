@@ -3,14 +3,11 @@
 namespace Yiisoft\Yii\Gii;
 
 use Psr\Container\ContainerInterface;
-use Yiisoft\Yii\Gii\GeneratorInterface;
+use Yiisoft\Yii\Gii\Generators;
 
 final class Gii implements GiiInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public $controllerNamespace = \Yiisoft\Yii\Gii\Controllers\DefaultController::class;
+    private ContainerInterface $container;
     /**
      * @var array the list of IPs that are allowed to access this module.
      * Each array element represents a single IP filter which can be either an IP address
@@ -34,6 +31,7 @@ final class Gii implements GiiInterface
 
     public function __construct(ContainerInterface $container)
     {
+        $this->container = $container;
         $this->generators = $this->defaultGenerators();
     }
 
@@ -46,18 +44,16 @@ final class Gii implements GiiInterface
     {
         $generator = $this->generators[$name];
         if (is_string($generator)) {
-            $generator = $this->container->get($generatorDefinition);
-        } elseif (is_object($generatorDefinition) && $generatorDefinition instanceof GeneratorInterface) {
-            $result[] = $generatorDefinition;
-            continue;
-        } elseif (is_object($generatorDefinition) && method_exists($generatorDefinition, '__invoke')) {
-            $generator = $generatorDefinition($this->container);
+            $generator = $this->container->get($generator);
+        } elseif (is_object($generator) && $generator instanceof GeneratorInterface) {
+            return $generator;
+        } elseif (is_object($generator) && method_exists($generator, '__invoke')) {
+            $generator = $generator($this->container);
         }
         if ($generator instanceof GeneratorInterface) {
-            $result[] = $generator;
-            continue;
+            return $generator;
         }
-        throw new BadGeneratorDeclarationException();
+        throw new \RuntimeException();
     }
 
     /**
@@ -67,12 +63,12 @@ final class Gii implements GiiInterface
     private function defaultGenerators()
     {
         return [
-            'model' => \Yiisoft\Yii\Gii\Generators\Model\Generator::class,
-            'crud' => \Yiisoft\Yii\Gii\Generators\Crud\Generator::class,
-            'controller' => \Yiisoft\Yii\Gii\Generators\Controller\Generator::class,
-            'form' => \Yiisoft\Yii\Gii\Generators\Form\Generator::class,
-            'module' => \Yiisoft\Yii\Gii\Generators\Module\Generator::class,
-            'extension' => \Yiisoft\Yii\Gii\Generators\Extension\Generator::class,
+            'model' => Generators\Model\Generator::class,
+            'crud' => Generators\Crud\Generator::class,
+            'controller' => Generators\Controller\Generator::class,
+            'form' => Generators\Form\Generator::class,
+            'module' => Generators\Module\Generator::class,
+            'extension' => Generators\Extension\Generator::class,
         ];
     }
 
