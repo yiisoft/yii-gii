@@ -23,7 +23,7 @@ use yii\exceptions\NotSupportedException;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class Generator extends \Yiisoft\Yii\Gii\Generator
+class Generator extends \Yiisoft\Yii\Gii\Generators\Generator
 {
     const RELATIONS_NONE = 'none';
     const RELATIONS_ALL = 'all';

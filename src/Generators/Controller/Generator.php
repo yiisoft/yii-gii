@@ -196,7 +196,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generators\Generator
     public function getControllerID()
     {
         $name = StringHelper::basename($this->controllerClass);
-        return (new Inflector)->camel2id(substr($name, 0, strlen($name) - 10));
+        return (new Inflector())->camel2id(substr($name, 0, strlen($name) - 10));
     }
 
     /**
@@ -229,7 +229,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generators\Generator
             );
         }
 
-        return Yii::getAlias(str_replace('\\', '/', $this->viewPath) . "/$action.php");
+        return $this->aliases->get(str_replace('\\', '/', $this->viewPath) . "/$action.php");
     }
 
     /**
