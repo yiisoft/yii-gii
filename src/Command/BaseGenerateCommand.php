@@ -1,6 +1,6 @@
 <?php
 
-namespace Yiisoft\Yii\Gii\Console;
+namespace Yiisoft\Yii\Gii\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -11,32 +11,29 @@ use Yiisoft\Yii\Gii\GiiInterface;
 abstract class BaseGenerateCommand extends Command
 {
     protected const NAME = '';
-
-    /**
-     * @var \Yiisoft\Yii\Gii\GeneratorInterface
-     */
-    protected $generator;
+    protected GiiInterface $gii;
 
     public function __construct(GiiInterface $gii)
     {
         parent::__construct();
-        $this->generator = $gii->getGenerator(self::NAME);
+        $this->gii = $gii;
     }
 
     protected function configure(): void
     {
         $this->addArgument('interactive', InputArgument::OPTIONAL, '', true)
-             ->addArgument('overwrite', InputArgument::OPTIONAL, '', false);
+            ->addArgument('overwrite', InputArgument::OPTIONAL, '', false);
     }
 
     /**
-     * @param  InputInterface  $input
-     * @param  OutputInterface  $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return int|void|null
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        echo "Running '{$this->generator->getName()}'...\n\n";
+        $generator = $this->gii->getGenerator(static::NAME);
+        echo "Running '{$generator->getName()}'...\n\n";
         /*if ($this->generator->validate()) {
             $this->generateCode($input, $output);
         } else {
@@ -48,7 +45,10 @@ abstract class BaseGenerateCommand extends Command
     {
         $output->writeln("Code not generated. Please fix the following errors:\n\n", Console::FG_RED);
         foreach ($this->generator->errors as $attribute => $errors) {
-            echo ' - '.$this->controller->ansiFormat($attribute, Console::FG_CYAN).': '.implode('; ', $errors)."\n";
+            echo ' - ' . $this->controller->ansiFormat($attribute, Console::FG_CYAN) . ': ' . implode(
+                    '; ',
+                    $errors
+                ) . "\n";
         }
         echo "\n";
     }
@@ -56,7 +56,7 @@ abstract class BaseGenerateCommand extends Command
     protected function generateCode(InputInterface $input, OutputInterface $output)
     {
         $files = $this->generator->generate();
-        $n     = count($files);
+        $n = count($files);
         if ($n === 0) {
             echo "No code to be generated.\n";
             return;
@@ -68,20 +68,20 @@ abstract class BaseGenerateCommand extends Command
             $path = $file->getRelativePath();
             if (is_file($file->getPath())) {
                 if (file_get_contents($file->getPath()) === $file->getContent()) {
-                    echo '  '.$this->controller->ansiFormat('[unchanged]', Console::FG_GREY);
+                    echo '  ' . $this->controller->ansiFormat('[unchanged]', Console::FG_GREY);
                     echo $this->controller->ansiFormat(" $path\n", Console::FG_CYAN);
                     $answers[$file->getId()] = false;
                 } else {
-                    echo '    '.$this->controller->ansiFormat('[changed]', Console::FG_RED);
+                    echo '    ' . $this->controller->ansiFormat('[changed]', Console::FG_RED);
                     echo $this->controller->ansiFormat(" $path\n", Console::FG_CYAN);
                     if ($skipAll !== null) {
                         $answers[$file->getId()] = !$skipAll;
                     } else {
-                        $answer                  = $this->controller->select(
+                        $answer = $this->controller->select(
                             "Do you want to overwrite this file?",
                             [
-                                'y'  => 'Overwrite this file.',
-                                'n'  => 'Skip this file.',
+                                'y' => 'Overwrite this file.',
+                                'n' => 'Skip this file.',
                                 'ya' => 'Overwrite this and the rest of the changed files.',
                                 'na' => 'Skip this and the rest of the changed files.',
                             ]
@@ -95,7 +95,7 @@ abstract class BaseGenerateCommand extends Command
                     }
                 }
             } else {
-                echo '        '.$this->controller->ansiFormat('[new]', Console::FG_GREEN);
+                echo '        ' . $this->controller->ansiFormat('[new]', Console::FG_GREEN);
                 echo $this->controller->ansiFormat(" $path\n", Console::FG_CYAN);
                 $answers[$file->getId()] = true;
             }
@@ -116,6 +116,6 @@ abstract class BaseGenerateCommand extends Command
         } else {
             $this->controller->stdout("\nSome errors occurred while generating the files.", Console::FG_RED);
         }
-        echo preg_replace('%<span class="error">(.*?)</span>%', '\1', $results)."\n";
+        echo preg_replace('%<span class="error">(.*?)</span>%', '\1', $results) . "\n";
     }
 }
