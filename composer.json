@@ -15,12 +15,6 @@
         "wiki": "http://www.yiiframework.com/wiki/",
         "irc": "irc://irc.freenode.net/yii"
     },
-    "authors": [
-        {
-            "name": "Qiang Xue",
-            "email": "qiang.xue@gmail.com"
-        }
-    ],
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
@@ -51,7 +45,8 @@
             "dev-master": "3.0.x-dev"
         },
         "config-plugin": {
-            "tests": "config/tests.php"
+            "tests": "config/tests.php",
+            "params": "config/params.php"
         }
     },
     "repositories": [

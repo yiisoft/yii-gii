@@ -53,7 +53,7 @@ final class Gii implements GiiInterface
         if ($generator instanceof GeneratorInterface) {
             return $generator;
         }
-        throw new \RuntimeException();
+        throw new \RuntimeException(); // TODO: better exception
     }
 
     /**
