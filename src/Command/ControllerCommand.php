@@ -1,6 +1,6 @@
 <?php
 
-namespace Yiisoft\Yii\Gii\Console;
+namespace Yiisoft\Yii\Gii\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -18,7 +18,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class ControllerCommand extends BaseGenerateCommand
 {
     protected const NAME = 'controller';
-    protected static string $defaultName = 'gii/controller';
+    protected static $defaultName = 'gii/controller';
 
     protected function configure(): void
     {

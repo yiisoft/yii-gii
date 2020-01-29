@@ -1,6 +1,6 @@
 <?php
 
-use Yiisoft\Yii\Gii\Console\ControllerCommand;
+use Yiisoft\Yii\Gii\Command\ControllerCommand;
 
 return [
     'console' => [

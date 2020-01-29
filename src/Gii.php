@@ -3,6 +3,7 @@
 namespace Yiisoft\Yii\Gii;
 
 use Psr\Container\ContainerInterface;
+use Yiisoft\Factory\Exceptions\NotFoundException;
 use Yiisoft\Yii\Gii\Generators;
 
 final class Gii implements GiiInterface
@@ -42,6 +43,9 @@ final class Gii implements GiiInterface
 
     public function getGenerator(string $name): GeneratorInterface
     {
+        if (!isset($this->generators[$name])) {
+            throw new NotFoundException('Generator "' . $name . '" not found');
+        }
         $generator = $this->generators[$name];
         if (is_string($generator)) {
             $generator = $this->container->get($generator);
