@@ -8,4 +8,12 @@ return [
             'gii/controller' => ControllerCommand::class,
         ],
     ],
+    'gii'     => [
+        'basePath'   => '@root',
+        'viewPath'   => '@views',
+        'controller' => [
+            'namespace' => 'App\\Controller',
+            'directory' => '@src/Controller',
+        ],
+    ],
 ];

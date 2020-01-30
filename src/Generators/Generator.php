@@ -12,9 +12,9 @@ use Yiisoft\Aliases\Aliases;
 use Yiisoft\I18n\MessageFormatterInterface;
 use Yiisoft\VarDumper\VarDumper;
 use Yiisoft\View\Exception\ViewNotFoundException;
-use Yiisoft\View\View;
 use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Yii\Gii\GeneratorInterface;
+use Yiisoft\Yii\Gii\Parameters;
 use Yiisoft\Yii\Web\Info;
 
 /**
@@ -30,18 +30,11 @@ use Yiisoft\Yii\Web\Info;
  * - [[generate()]]: generates the code based on the current user input and the specified code template files.
  *   This is the place where main code generation code resides.
  *
- * @property string $description The detailed description of the generator. This property is read-only.
- * @property string $stickyDataFile The file path that stores the sticky attribute values. This property is
- * read-only.
- * @property string $templatePath The root path of the template files that are currently being used. This
- * property is read-only.
- *
  */
 abstract class Generator implements GeneratorInterface
 {
-    protected View $view;
     protected Aliases $aliases;
-    protected MessageFormatterInterface $messageFormatter;
+    protected Parameters $parameters;
     /**
      * @var array a list of available code templates. The array keys are the template names,
      * and the array values are the corresponding template paths or path aliases.
@@ -62,11 +55,11 @@ abstract class Generator implements GeneratorInterface
      */
     public string $messageCategory = 'app';
 
-    public function __construct(ContainerInterface $container)
+    public function __construct(Aliases $aliases, Parameters $parameters)
     {
-        $this->view = $container->get(View::class);
-        $this->aliases = $container->get(Aliases::class);
-        $this->messageFormatter = $container->get(MessageFormatterInterface::class);
+        $this->aliases = $aliases;
+        $this->parameters = $parameters;
+        //$this->messageFormatter = $container->get(MessageFormatterInterface::class);
     }
 
     public function attributeLabels(): array
@@ -157,7 +150,7 @@ abstract class Generator implements GeneratorInterface
      * @return string the root path to the default code template files.
      * @throws ReflectionException
      */
-    private function defaultTemplate()
+    private function defaultTemplate(): string
     {
         $class = new ReflectionClass($this);
 
@@ -307,13 +300,35 @@ abstract class Generator implements GeneratorInterface
      * @throws Throwable
      * @throws ViewNotFoundException
      */
-    public function render($template, $params = [])
+    public function render($template, $params = []): string
     {
         $params['generator'] = $this;
 
-        return $this->view->renderFile($this->getTemplatePath() . '/' . $template, $params);
+        return $this->renderTemplate($this->getTemplatePath() . '/' . $template, $params);
     }
 
+    protected function renderTemplate(string $template, array $params)
+    {
+        $renderer = static function () {
+            extract(func_get_arg(1), EXTR_OVERWRITE);
+            require func_get_arg(0);
+        };
+
+        $obInitialLevel = ob_get_level();
+        ob_start();
+        ob_implicit_flush(0);
+        try {
+            $renderer->bindTo($this)($template, $params);
+            return ob_get_clean();
+        } catch (\Throwable $e) {
+            while (ob_get_level() > $obInitialLevel) {
+                if (!@ob_end_clean()) {
+                    ob_clean();
+                }
+            }
+            throw $e;
+        }
+    }
     /**
      * @param string $value the attribute to be validated
      * @return bool whether the value is a reserved PHP keyword.
