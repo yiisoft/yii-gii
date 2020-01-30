@@ -1,9 +1,4 @@
 <?php
-/**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
- */
 
 namespace Yiisoft\Yii\Gii\Generators\Controller;
 
@@ -36,7 +31,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generators\Generator
     /**
      * @var string the base class of the controller
      */
-    public $baseClass;
+    public $baseClass = 'App\\Controller';
     /**
      * @var string list of action IDs separated by commas or spaces
      */
@@ -69,25 +64,25 @@ class Generator extends \Yiisoft\Yii\Gii\Generators\Generator
             parent::rules(),
             [
                 [['controllerClass', 'actions', 'baseClass'], 'filter', 'filter' => 'trim'],
-                [['controllerClass', 'baseClass'], 'required'],
+                [['controllerClass'], 'required'],
                 [
                     'controllerClass',
                     'match',
                     'pattern' => '/^[\w\\\\]*Controller$/',
-                    'message' => 'Only word characters and backslashes are allowed, and the class name must end with "Controller".'
+                    'message' => 'Only word characters and backslashes are allowed, and the class name must end with "Controller".',
                 ],
                 ['controllerClass', 'validateNewClass'],
                 [
                     'baseClass',
                     'match',
                     'pattern' => '/^[\w\\\\]*$/',
-                    'message' => 'Only word characters and backslashes are allowed.'
+                    'message' => 'Only word characters and backslashes are allowed.',
                 ],
                 [
                     'actions',
                     'match',
                     'pattern' => '/^[a-z][a-z0-9\\-,\\s]*$/',
-                    'message' => 'Only a-z, 0-9, dashes (-), spaces and commas are allowed.'
+                    'message' => 'Only a-z, 0-9, dashes (-), spaces and commas are allowed.',
                 ],
                 ['viewPath', 'safe'],
             ]
@@ -97,10 +92,10 @@ class Generator extends \Yiisoft\Yii\Gii\Generators\Generator
     public function attributeLabels(): array
     {
         return [
-            'baseClass' => 'Base Class',
+            'baseClass'       => 'Base Class',
             'controllerClass' => 'Controller Class',
-            'viewPath' => 'View Path',
-            'actions' => 'Action IDs',
+            'viewPath'        => 'View Path',
+            'actions'         => 'Action IDs',
         ];
     }
 
@@ -124,22 +119,22 @@ class Generator extends \Yiisoft\Yii\Gii\Generators\Generator
                 provide a fully qualified namespaced class (e.g. <code>app\controllers\PostController</code>),
                 and class name should be in CamelCase ending with the word <code>Controller</code>. Make sure the class
                 is using the same namespace as specified by your application\'s controllerNamespace property.',
-            'actions' => 'Provide one or multiple action IDs to generate empty action method(s) in the controller. Separate multiple action IDs with commas or spaces.
+            'actions'         => 'Provide one or multiple action IDs to generate empty action method(s) in the controller. Separate multiple action IDs with commas or spaces.
                 Action IDs should be in lower case. For example:
                 <ul>
                     <li><code>index</code> generates <code>actionIndex()</code></li>
                     <li><code>create-order</code> generates <code>actionCreateOrder()</code></li>
                 </ul>',
-            'viewPath' => 'Specify the directory for storing the view scripts for the controller. You may use path alias here, e.g.,
+            'viewPath'        => 'Specify the directory for storing the view scripts for the controller. You may use path alias here, e.g.,
                 <code>/var/www/basic/controllers/views/order</code>, <code>@app/views/order</code>. If not set, it will default
                 to <code>@app/views/ControllerID</code>',
-            'baseClass' => 'This is the class that the new controller class will extend from. Please make sure the class exists and can be autoloaded.',
+            'baseClass'       => 'This is the class that the new controller class will extend from. Please make sure the class exists and can be autoloaded.',
         ];
     }
 
     public function successMessage()
     {
-        return 'The controller has been generated successfully.' . $this->getLinkToTry();
+        return 'The controller has been generated successfully.'.$this->getLinkToTry();
     }
 
     /**
@@ -187,7 +182,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generators\Generator
      */
     public function getControllerFile()
     {
-        return $this->aliases->get('@' . str_replace('\\', '/', $this->controllerClass)) . '.php';
+        return $this->aliases->get('@'.substr($this->controllerClass, 0, strpos($this->controllerClass, '\\'))).'.php';
     }
 
     /**
@@ -200,36 +195,18 @@ class Generator extends \Yiisoft\Yii\Gii\Generators\Generator
     }
 
     /**
-     * This method will return sub path for controller if it
-     * is located in subdirectory of application controllers dir
-     * @see https://github.com/yiisoft/yii2-gii/issues/182
-     * @since 2.0.6
-     * @return string the controller sub path
-     */
-    public function getControllerSubPath()
-    {
-        $subPath = '';
-        $controllerNamespace = $this->getControllerNamespace();
-        if (strpos($controllerNamespace, Yii::getApp()->controllerNamespace) === 0) {
-            $subPath = substr($controllerNamespace, strlen(Yii::getApp()->controllerNamespace));
-            $subPath = ($subPath !== '') ? str_replace('\\', '/', substr($subPath, 1)) . '/' : '';
-        }
-        return $subPath;
-    }
-
-    /**
-     * @param string $action the action ID
+     * @param  string  $action  the action ID
      * @return string the action view file path
      */
     public function getViewFile($action)
     {
         if (empty($this->viewPath)) {
             return $this->aliases->get(
-                '@app/views/' . $this->getControllerSubPath() . $this->getControllerID() . "/$action.php"
+                '@root/views/'.$this->getControllerID()."/$action.php"
             );
         }
 
-        return $this->aliases->get(str_replace('\\', '/', $this->viewPath) . "/$action.php");
+        return $this->aliases->get(str_replace('\\', '/', $this->viewPath)."/$action.php");
     }
 
     /**

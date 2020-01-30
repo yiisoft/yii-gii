@@ -30,12 +30,12 @@ use yii\web\Controller;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class Generator extends \Yiisoft\Yii\Gii\Generator
+class Generator extends \Yiisoft\Yii\Gii\Generators\Generator
 {
     public $modelClass;
     public $controllerClass;
     public $viewPath;
-    public $baseControllerClass = \yii\web\Controller::class;
+    public $baseControllerClass = '';
     public $indexWidgetType = 'grid';
     public $searchModelClass = '';
     /**

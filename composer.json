@@ -22,6 +22,7 @@
         "phpspec/php-diff": "^1.1.0",
         "hiqdev/composer-config-plugin": "^1.0@dev",
         "yiisoft/strings": "^3.0@dev",
+        "yiisoft/arrays": "^3.0@dev",
         "yiisoft/yii-console": "^3.0@dev",
         "yiisoft/var-dumper": "^3.0@dev"
     },
@@ -46,7 +47,11 @@
         },
         "config-plugin": {
             "params": "config/params.php",
-            "console": "config/console.php",
+            "console": [
+                "$common",
+                "config/console.php"
+            ],
+            "common": "config/common.php",
             "tests": "config/tests.php"
         }
     },

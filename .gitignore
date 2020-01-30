@@ -30,3 +30,5 @@ phpunit.phar
 
 # node js
 /node_modules
+
+.phpunit.result.cache
