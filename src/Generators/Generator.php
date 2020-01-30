@@ -252,15 +252,13 @@ abstract class Generator implements GeneratorInterface
         $hasError = false;
         foreach ($files as $file) {
             $relativePath = $file->getRelativePath();
-            if (isset($answers[$file->getId()]) && !empty($answers[$file->getId()]) && $file->getOperation(
-                ) !== CodeFile::OP_SKIP) {
+            if (isset($answers[$file->getId()]) && !empty($answers[$file->getId()]) && $file->getOperation() !== CodeFile::OP_SKIP) {
                 $error = $file->save();
                 if (is_string($error)) {
                     $hasError = true;
                     $lines[] = "generating $relativePath\n<span class=\"error\">$error</span>";
                 } else {
-                    $lines[] = $file->getOperation(
-                    ) === CodeFile::OP_CREATE ? " generated $relativePath" : " overwrote $relativePath";
+                    $lines[] = $file->getOperation() === CodeFile::OP_CREATE ? " generated $relativePath" : " overwrote $relativePath";
                 }
             } else {
                 $lines[] = "   skipped $relativePath";
@@ -309,7 +307,7 @@ abstract class Generator implements GeneratorInterface
 
     protected function renderTemplate(string $template, array $params)
     {
-        $renderer = static function () {
+        $renderer = function () {
             extract(func_get_arg(1), EXTR_OVERWRITE);
             require func_get_arg(0);
         };

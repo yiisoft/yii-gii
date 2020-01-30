@@ -6,7 +6,6 @@
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Strings\StringHelper;
 
-/* @var $this yii\web\View */
 /* @var $generator Yiisoft\Yii\Gii\Generators\Controller\Generator */
 
 echo "<?php\n";
@@ -19,10 +18,15 @@ class <?= StringHelper::basename($generator->controllerClass) ?> <?= $generator-
         '\\'
     )."\n" : '' ?>
 {
-<?php foreach ($generator->getActionIDs() as $action): ?>
-    public function action<?= (new Inflector())->id2camel($action) ?>()
+    public function getId(): string
     {
-    return $this->render('<?= $action ?>');
+        return '<?= $generator->getControllerID() ?>';
+    }
+
+<?php foreach ($generator->getActionIDs() as $action): ?>
+    public function <?= $action ?>()
+    {
+        return $this->render('<?= $action ?>');
     }
 
 <?php endforeach; ?>

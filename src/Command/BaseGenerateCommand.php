@@ -3,7 +3,6 @@
 namespace Yiisoft\Yii\Gii\Command;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -37,6 +36,7 @@ abstract class BaseGenerateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $generator = $this->gii->getGenerator(static::NAME);
+        $generator->controllerClass = $input->getArgument('className');
         echo "Running '{$generator->getName()}'...\n\n";
         if ($generator->validate()) {
             $this->generateCode($generator, $input, $output);
@@ -67,7 +67,7 @@ abstract class BaseGenerateCommand extends Command
             return;
         }
         echo "The following files will be generated:\n";
-        $skipAll = $input->getArgument('interactive') ? null : !$input->getArgument('overwrite');
+        $skipAll = $input->isInteractive() ? null : !$input->getArgument('overwrite');
         $answers = [];
         foreach ($files as $file) {
             $path = $file->getRelativePath();
@@ -82,15 +82,7 @@ abstract class BaseGenerateCommand extends Command
                     if ($skipAll !== null) {
                         $answers[$file->getId()] = !$skipAll;
                     } else {
-                        $answer                  = $this->getHelper(
-                            "Do you want to overwrite this file?",
-                            [
-                                'y'  => 'Overwrite this file.',
-                                'n'  => 'Skip this file.',
-                                'ya' => 'Overwrite this and the rest of the changed files.',
-                                'na' => 'Skip this and the rest of the changed files.',
-                            ]
-                        );
+                        $answer                  = $this->choice($input, $output);
                         $answers[$file->getId()] = $answer === 'y' || $answer === 'ya';
                         if ($answer === 'ya') {
                             $skipAll = false;
@@ -100,8 +92,9 @@ abstract class BaseGenerateCommand extends Command
                     }
                 }
             } else {
-                echo '        '.$output->writeln('[new]');
-                echo $output->writeln(" $path\n");
+                $output->writeln('[new]');
+                $output->writeln($file->getOperation());
+                $output->writeln(" $path\n");
                 $answers[$file->getId()] = true;
             }
         }
@@ -111,7 +104,7 @@ abstract class BaseGenerateCommand extends Command
             return;
         }
 
-        if (!$output->writeln("\nReady to generate the selected files?", true)) {
+        if (!$this->confirm($input, $output)) {
             $output->writeln("\nNo file was generated.\n");
             return;
         }
@@ -121,12 +114,12 @@ abstract class BaseGenerateCommand extends Command
         } else {
             $output->writeln("\nSome errors occurred while generating the files.");
         }
-        echo preg_replace('%<span class="error">(.*?)</span>%', '\1', $results)."\n";
+        $output->writeln(preg_replace('%<span class="error">(.*?)</span>%', '\1', $results)."\n");
     }
 
     protected function confirm($input, $output)
     {
-        $question = new ConfirmationQuestion("\nReady to generate the selected files?", true);
+        $question = new ConfirmationQuestion("\nReady to generate the selected files? (yes|no) [yes]:", true);
         return $this->getHelper('question')->ask($input, $output, $question);
     }
 

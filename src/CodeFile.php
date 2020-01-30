@@ -43,13 +43,13 @@ final class CodeFile
      */
     private string $content;
     /**
-     * @var string the operation to be performed. This can be [[OP_CREATE]], [[OP_OVERWRITE]] or [[OP_SKIP]].
+     * @var int the operation to be performed. This can be [[OP_CREATE]], [[OP_OVERWRITE]] or [[OP_SKIP]].
      */
-    private string $operation;
+    private int $operation;
     /**
      * @var string the base path
      */
-    private string $basePath;
+    private string $basePath = '';
     /**
      * @var int the permission to be set for newly generated code files.
      * This value will be used by PHP chmod function.
@@ -119,7 +119,7 @@ final class CodeFile
      */
     public function getRelativePath(): string
     {
-        if (strpos($this->path, $this->basePath) === 0) {
+        if (!empty($this->basePath) && strpos($this->path, $this->basePath) === 0) {
             return substr($this->path, strlen($this->basePath) + 1);
         }
 

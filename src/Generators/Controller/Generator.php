@@ -92,10 +92,10 @@ class Generator extends \Yiisoft\Yii\Gii\Generators\Generator
     public function attributeLabels(): array
     {
         return [
-            'baseClass'       => 'Base Class',
+            'baseClass' => 'Base Class',
             'controllerClass' => 'Controller Class',
-            'viewPath'        => 'View Path',
-            'actions'         => 'Action IDs',
+            'viewPath' => 'View Path',
+            'actions' => 'Action IDs',
         ];
     }
 
@@ -119,22 +119,22 @@ class Generator extends \Yiisoft\Yii\Gii\Generators\Generator
                 provide a fully qualified namespaced class (e.g. <code>app\controllers\PostController</code>),
                 and class name should be in CamelCase ending with the word <code>Controller</code>. Make sure the class
                 is using the same namespace as specified by your application\'s controllerNamespace property.',
-            'actions'         => 'Provide one or multiple action IDs to generate empty action method(s) in the controller. Separate multiple action IDs with commas or spaces.
+            'actions' => 'Provide one or multiple action IDs to generate empty action method(s) in the controller. Separate multiple action IDs with commas or spaces.
                 Action IDs should be in lower case. For example:
                 <ul>
                     <li><code>index</code> generates <code>actionIndex()</code></li>
                     <li><code>create-order</code> generates <code>actionCreateOrder()</code></li>
                 </ul>',
-            'viewPath'        => 'Specify the directory for storing the view scripts for the controller. You may use path alias here, e.g.,
+            'viewPath' => 'Specify the directory for storing the view scripts for the controller. You may use path alias here, e.g.,
                 <code>/var/www/basic/controllers/views/order</code>, <code>@app/views/order</code>. If not set, it will default
                 to <code>@app/views/ControllerID</code>',
-            'baseClass'       => 'This is the class that the new controller class will extend from. Please make sure the class exists and can be autoloaded.',
+            'baseClass' => 'This is the class that the new controller class will extend from. Please make sure the class exists and can be autoloaded.',
         ];
     }
 
     public function successMessage()
     {
-        return 'The controller has been generated successfully.'.$this->getLinkToTry();
+        return 'The controller has been generated successfully.' . $this->getLinkToTry();
     }
 
     /**
@@ -182,7 +182,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generators\Generator
      */
     public function getControllerFile()
     {
-        return $this->aliases->get('@'.substr($this->controllerClass, 0, strpos($this->controllerClass, '\\'))).'.php';
+        return $this->aliases->get('@src/Controller/' . $this->controllerClass) . '.php';
     }
 
     /**
@@ -195,18 +195,18 @@ class Generator extends \Yiisoft\Yii\Gii\Generators\Generator
     }
 
     /**
-     * @param  string  $action  the action ID
+     * @param string $action the action ID
      * @return string the action view file path
      */
     public function getViewFile($action)
     {
         if (empty($this->viewPath)) {
             return $this->aliases->get(
-                '@root/views/'.$this->getControllerID()."/$action.php"
+                '@views/' . $this->getControllerID() . "/$action.php"
             );
         }
 
-        return $this->aliases->get(str_replace('\\', '/', $this->viewPath)."/$action.php");
+        return $this->aliases->get(str_replace('\\', '/', $this->viewPath) . "/$action.php");
     }
 
     /**
@@ -215,6 +215,6 @@ class Generator extends \Yiisoft\Yii\Gii\Generators\Generator
     public function getControllerNamespace()
     {
         $name = StringHelper::basename($this->controllerClass);
-        return ltrim(substr($this->controllerClass, 0, -(strlen($name) + 1)), '\\');
+        return $this->parameters->get('gii.controller.namespace');
     }
 }
