@@ -33,7 +33,7 @@ use Yiisoft\Yii\Web\Info;
  */
 abstract class Generator implements GeneratorInterface
 {
-    protected Aliases $aliases;
+    protected Aliases    $aliases;
     protected Parameters $parameters;
     /**
      * @var array a list of available code templates. The array keys are the template names,
@@ -77,7 +77,7 @@ abstract class Generator implements GeneratorInterface
      * @return array list of code template files that are required. They should be file paths
      * relative to [[templatePath]].
      */
-    public function requiredTemplates()
+    public function requiredTemplates(): array
     {
         return [];
     }
@@ -88,7 +88,7 @@ abstract class Generator implements GeneratorInterface
      * when the generator is restarted.
      * @return array list of sticky attributes
      */
-    public function stickyAttributes()
+    public function stickyAttributes(): array
     {
         return ['template', 'enableI18N', 'messageCategory'];
     }
@@ -99,7 +99,7 @@ abstract class Generator implements GeneratorInterface
      * Hint messages will be displayed to end users when they are filling the form for the generator.
      * @return array the list of hint messages
      */
-    public function hints()
+    public function hints(): array
     {
         return [
             'enableI18N' => 'This indicates whether the generator should generate strings using <code>Yii::t()</code> method.
@@ -114,7 +114,7 @@ abstract class Generator implements GeneratorInterface
      * Auto complete values can also be callable typed in order one want to make postponed data generation.
      * @return array the list of auto complete values
      */
-    public function autoCompleteData()
+    public function autoCompleteData(): array
     {
         return [];
     }
@@ -124,7 +124,7 @@ abstract class Generator implements GeneratorInterface
      * Child classes may override this method to customize the message.
      * @return string the message to be displayed when the newly generated code is saved successfully.
      */
-    public function successMessage()
+    public function successMessage(): string
     {
         return 'The code has been generated successfully.';
     }
@@ -136,7 +136,7 @@ abstract class Generator implements GeneratorInterface
      * @return string the view file for the input form of the generator.
      * @throws ReflectionException
      */
-    public function formView()
+    public function formView(): string
     {
         $class = new ReflectionClass($this);
 
@@ -177,7 +177,7 @@ abstract class Generator implements GeneratorInterface
      * ]);
      * ~~~
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['template'], 'required', 'message' => 'A code template must be selected.'],
@@ -189,7 +189,7 @@ abstract class Generator implements GeneratorInterface
      * Loads sticky attributes from an internal file and populates them into the generator.
      * @internal
      */
-    public function loadStickyAttributes()
+    public function loadStickyAttributes(): void
     {
         $stickyAttributes = $this->stickyAttributes();
         $path = $this->getStickyDataFile();
@@ -197,7 +197,7 @@ abstract class Generator implements GeneratorInterface
             $result = json_decode(file_get_contents($path), true);
             if (is_array($result)) {
                 foreach ($stickyAttributes as $name) {
-                    if (isset($result[$name])) {
+                    if (isset($result[$name]) && property_exists($this, $name)) {
                         $this->$name = $result[$name];
                     }
                 }
@@ -206,10 +206,23 @@ abstract class Generator implements GeneratorInterface
     }
 
     /**
+     * Loads sticky attributes from an internal file and populates them into the generator.
+     * @param array $data
+     */
+    public function load(array $data): void
+    {
+        foreach ($data as $name => $value) {
+            if (property_exists($this, $name)) {
+                $this->$name = $value;
+            }
+        }
+    }
+
+    /**
      * Saves sticky attributes into an internal file.
      * @internal
      */
-    public function saveStickyAttributes()
+    public function saveStickyAttributes(): void
     {
         $stickyAttributes = $this->stickyAttributes();
         $stickyAttributes[] = 'template';
@@ -252,13 +265,15 @@ abstract class Generator implements GeneratorInterface
         $hasError = false;
         foreach ($files as $file) {
             $relativePath = $file->getRelativePath();
-            if (isset($answers[$file->getId()]) && !empty($answers[$file->getId()]) && $file->getOperation() !== CodeFile::OP_SKIP) {
+            if (isset($answers[$file->getId()]) && !empty($answers[$file->getId()]) && $file->getOperation(
+                ) !== CodeFile::OP_SKIP) {
                 $error = $file->save();
                 if (is_string($error)) {
                     $hasError = true;
                     $lines[] = "generating $relativePath\n<span class=\"error\">$error</span>";
                 } else {
-                    $lines[] = $file->getOperation() === CodeFile::OP_CREATE ? " generated $relativePath" : " overwrote $relativePath";
+                    $lines[] = $file->getOperation(
+                    ) === CodeFile::OP_CREATE ? " generated $relativePath" : " overwrote $relativePath";
                 }
             } else {
                 $lines[] = "   skipped $relativePath";
@@ -305,11 +320,11 @@ abstract class Generator implements GeneratorInterface
         return $this->renderTemplate($this->getTemplatePath() . '/' . $template, $params);
     }
 
-    protected function renderTemplate(string $template, array $params)
+    protected function renderTemplate(string $template, array $params): string
     {
-        $renderer = function () {
-            extract(func_get_arg(1), EXTR_OVERWRITE);
-            require func_get_arg(0);
+        $renderer = function (...$args) {
+            extract($args[1], EXTR_OVERWRITE);
+            require $args[0];
         };
 
         $obInitialLevel = ob_get_level();
@@ -327,11 +342,12 @@ abstract class Generator implements GeneratorInterface
             throw $e;
         }
     }
+
     /**
      * @param string $value the attribute to be validated
      * @return bool whether the value is a reserved PHP keyword.
      */
-    public function isReservedKeyword($value)
+    public function isReservedKeyword($value): bool
     {
         static $keywords = [
             '__class__',

@@ -23,8 +23,8 @@ class GiiFactory
     private function defaultGenerators()
     {
         return [
-            //'model' => new Generators\Model\Generator($container),
-            //'crud' => new Generators\Crud\Generator($container),
+            //'model' => new Generators\Model\Generator,
+            //'crud' => new Generators\Crud\Generator,
             'controller' => Generators\Controller\Generator::class,
             //'form' => new Generators\Form\Generator(),
             //'module' => new Generators\Module\Generator(),

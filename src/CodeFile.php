@@ -72,7 +72,7 @@ final class CodeFile
     {
         $this->path = strtr($path, '/\\', DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR);
         $this->content = $content;
-        $this->id = md5($this->path);
+        $this->id = sha1($this->path);
         if (is_file($path)) {
             $this->operation = file_get_contents($path) === $content ? self::OP_SKIP : self::OP_OVERWRITE;
         } else {
