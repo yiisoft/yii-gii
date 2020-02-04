@@ -4,19 +4,12 @@ namespace Yiisoft\Yii\Gii;
 
 use Psr\Container\ContainerInterface;
 use Yiisoft\Factory\Exceptions\NotFoundException;
+use Yiisoft\Yii\Gii\Exception\GeneratorNotFoundException;
 use Yiisoft\Yii\Gii\Generators\Controller\Generator;
 
 final class Gii implements GiiInterface
 {
     private ContainerInterface $container;
-    /**
-     * @var array the list of IPs that are allowed to access this module.
-     * Each array element represents a single IP filter which can be either an IP address
-     * or an address with wildcard (e.g. 192.168.0.*) to represent a network segment.
-     * The default value is `['127.0.0.1', '::1']`, which means the module can only be accessed
-     * by localhost.
-     */
-    private array $allowedIPs = ['127.0.0.1', '::1'];
     /**
      * @var GeneratorInterface[] a list of generator configurations or instances. The array keys
      * are the generator IDs (e.g. "crud"), and the array elements are the corresponding generator
@@ -45,11 +38,12 @@ final class Gii implements GiiInterface
      * @param  string  $name
      * @return GeneratorInterface
      * @throws NotFoundException
+     * @throws GeneratorNotFoundException
      */
     public function getGenerator(string $name): GeneratorInterface
     {
         if (!isset($this->generators[$name])) {
-            throw new NotFoundException('Generator "'.$name.'" not found');
+            throw new GeneratorNotFoundException('Generator "'.$name.'" not found');
         }
         $generator = $this->generators[$name];
         if (is_string($generator)) {

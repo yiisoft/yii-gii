@@ -212,9 +212,8 @@ class Generator extends \Yiisoft\Yii\Gii\Generators\Generator
     /**
      * @return string the namespace of the controller class
      */
-    public function getControllerNamespace()
+    public function getControllerNamespace(): string
     {
-        $name = StringHelper::basename($this->controllerClass);
         return $this->parameters->get('gii.controller.namespace');
     }
 }
