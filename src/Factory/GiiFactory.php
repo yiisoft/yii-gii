@@ -3,6 +3,7 @@
 namespace Yiisoft\Yii\Gii\Factory;
 
 
+use InvalidArgumentException;
 use Psr\Container\ContainerInterface;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Yii\Gii\Gii;
@@ -14,13 +15,21 @@ class GiiFactory
     public function __invoke(ContainerInterface $container)
     {
         $generators = [];
-        foreach ($this->defaultGenerators() as $name => $generator) {
+        foreach (
+            array_merge(
+                $this->defaultGenerators(),
+                $container->get(Parameters::class)->get('gii.generators', [])
+            ) as $name => $generator
+        ) {
+            if (!is_string($name)) {
+                throw new InvalidArgumentException();
+            }
             $generators[$name] = new $generator($container->get(Aliases::class), $container->get(Parameters::class));
         }
         return new Gii($generators, $container);
     }
 
-    private function defaultGenerators()
+    private function defaultGenerators(): array
     {
         return [
             //'model' => new Generators\Model\Generator,

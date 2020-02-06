@@ -23,5 +23,5 @@ interface GeneratorInterface
      */
     public function generate(): array;
 
-    public function validate(): bool;
+    public function validate(): object;
 }

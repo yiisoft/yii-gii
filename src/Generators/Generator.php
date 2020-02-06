@@ -10,6 +10,9 @@ use RuntimeException;
 use Throwable;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\I18n\MessageFormatterInterface;
+use Yiisoft\Validator\DataSetInterface;
+use Yiisoft\Validator\ResultSet;
+use Yiisoft\Validator\Validator;
 use Yiisoft\VarDumper\VarDumper;
 use Yiisoft\View\Exception\ViewNotFoundException;
 use Yiisoft\Yii\Gii\CodeFile;
@@ -31,10 +34,11 @@ use Yiisoft\Yii\Web\Info;
  *   This is the place where main code generation code resides.
  *
  */
-abstract class Generator implements GeneratorInterface
+abstract class Generator implements GeneratorInterface, DataSetInterface
 {
     protected Aliases    $aliases;
     protected Parameters $parameters;
+    protected MessageFormatterInterface $messageFormatter;
     /**
      * @var array a list of available code templates. The array keys are the template names,
      * and the array values are the corresponding template paths or path aliases.
@@ -55,11 +59,11 @@ abstract class Generator implements GeneratorInterface
      */
     public string $messageCategory = 'app';
 
-    public function __construct(Aliases $aliases, Parameters $parameters)
+    public function __construct(Aliases $aliases, Parameters $parameters, MessageFormatterInterface $messageFormatter)
     {
         $this->aliases = $aliases;
         $this->parameters = $parameters;
-        //$this->messageFormatter = $container->get(MessageFormatterInterface::class);
+        $this->messageFormatter = $messageFormatter;
     }
 
     public function attributeLabels(): array
@@ -162,9 +166,9 @@ abstract class Generator implements GeneratorInterface
         return '';
     }
 
-    public function validate(): bool
+    public function validate(): ResultSet
     {
-        return true;
+        return (new Validator($this->rules()))->validate($this);
     }
 
     /**
