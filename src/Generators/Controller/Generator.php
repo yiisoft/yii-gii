@@ -23,19 +23,19 @@ class Generator extends \Yiisoft\Yii\Gii\Generators\Generator
     /**
      * @var string the controller class name
      */
-    public $controllerClass;
+    public string $controllerClass;
     /**
      * @var string the controller's view path
      */
-    public $viewPath;
+    public string $viewPath;
     /**
      * @var string the base class of the controller
      */
-    public $baseClass = 'App\\Controller';
+    public string $baseClass = 'App\\Controller';
     /**
      * @var string list of action IDs separated by commas or spaces
      */
-    public $actions = 'index';
+    public string $actions = 'index';
 
 
     /**

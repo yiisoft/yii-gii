@@ -1,13 +1,7 @@
 <?php
-/**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
- */
 
 namespace Yiisoft\Yii\Gii\Generators\Extension;
 
-use yii\helpers\Yii;
 use Yiisoft\Yii\Gii\CodeFile;
 
 /**
@@ -20,13 +14,13 @@ use Yiisoft\Yii\Gii\CodeFile;
  * @author Tobias Munk <schmunk@usrbin.de>
  * @since 2.0
  */
-class Generator extends \Yiisoft\Yii\Gii\Generator
+class Generator extends \Yiisoft\Yii\Gii\Generators\Generator
 {
     public $vendorName;
-    public $packageName = "yii2-";
+    public $packageName = "yii3-";
     public $namespace;
-    public $type = "yii2-extension";
-    public $keywords = "yii2,extension";
+    public $type = "yii3-extension";
+    public $keywords = "yii3,extension";
     public $title;
     public $description;
     public $outputPath = "@app/runtime/tmp-extensions";
@@ -34,27 +28,17 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
     public $authorName;
     public $authorEmail;
 
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
+    public function getName(): string
     {
         return 'Extension Generator';
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'This generator helps you to generate the files needed by a Yii extension.';
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function rules()
+    public function rules(): array
     {
         return array_merge(
             parent::rules(),
@@ -93,46 +77,34 @@ class Generator extends \Yiisoft\Yii\Gii\Generator
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
-            'vendorName'  => 'Vendor Name',
+            'vendorName' => 'Vendor Name',
             'packageName' => 'Package Name',
-            'license'     => 'License',
+            'license' => 'License',
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function hints()
+    public function hints(): string
     {
         return [
-            'vendorName'  => 'This refers to the name of the publisher, your GitHub user name is usually a good choice, eg. <code>myself</code>.',
+            'vendorName' => 'This refers to the name of the publisher, your GitHub user name is usually a good choice, eg. <code>myself</code>.',
             'packageName' => 'This is the name of the extension on packagist, eg. <code>yii2-foobar</code>.',
-            'namespace'   => 'PSR-4, eg. <code>myself\foobar\</code> This will be added to your autoloading by composer. Do not use yii, yii2 or yiisoft in the namespace.',
-            'keywords'    => 'Comma separated keywords for this extension.',
-            'outputPath'  => 'The temporary location of the generated files.',
-            'title'       => 'A more descriptive name of your application for the README file.',
+            'namespace' => 'PSR-4, eg. <code>myself\foobar\</code> This will be added to your autoloading by composer. Do not use yii, yii2 or yiisoft in the namespace.',
+            'keywords' => 'Comma separated keywords for this extension.',
+            'outputPath' => 'The temporary location of the generated files.',
+            'title' => 'A more descriptive name of your application for the README file.',
             'description' => 'A sentence or subline describing the main purpose of the extension.',
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function stickyAttributes()
+    public function stickyAttributes(): array
     {
         return ['vendorName', 'outputPath', 'authorName', 'authorEmail'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function successMessage()
+    public function successMessage(): string
     {
         $outputPath = realpath(Yii::getAlias($this->outputPath));
         $output1 = <<<EOD
@@ -198,7 +170,7 @@ EOD;
     /**
      * {@inheritdoc}
      */
-    public function generate()
+    public function generate(): array
     {
         $files = [];
         $modulePath = $this->getOutputPath();
