@@ -59,20 +59,4 @@ final class Gii implements GiiInterface
         throw new \RuntimeException(); // TODO: better exception
     }
 
-    /**
-     * Returns the list of the core code generator configurations.
-     * @return array the list of the core code generator configurations.
-     */
-    private function defaultGenerators()
-    {
-        return [
-            'model' => Generators\Model\Generator::class,
-            'crud' => Generators\Crud\Generator::class,
-            'controller' => Generators\Controller\Generator::class,
-            'form' => Generators\Form\Generator::class,
-            'module' => Generators\Module\Generator::class,
-            'extension' => Generators\Extension\Generator::class,
-        ];
-    }
-
 }

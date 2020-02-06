@@ -2,8 +2,6 @@
 
 namespace Yiisoft\Yii\Gii\Generators;
 
-use Exception;
-use Psr\Container\ContainerInterface;
 use ReflectionClass;
 use ReflectionException;
 use RuntimeException;
@@ -12,6 +10,7 @@ use Yiisoft\Aliases\Aliases;
 use Yiisoft\I18n\MessageFormatterInterface;
 use Yiisoft\Validator\DataSetInterface;
 use Yiisoft\Validator\ResultSet;
+use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\Validator;
 use Yiisoft\VarDumper\VarDumper;
 use Yiisoft\View\Exception\ViewNotFoundException;
@@ -184,8 +183,9 @@ abstract class Generator implements GeneratorInterface, DataSetInterface
     public function rules(): array
     {
         return [
-            [['template'], 'required', 'message' => 'A code template must be selected.'],
-            [['template'], 'validateTemplate'],
+            'template' => [
+                (new Required())->message('A code template must be selected.')
+            ],
         ];
     }
 
@@ -216,7 +216,7 @@ abstract class Generator implements GeneratorInterface, DataSetInterface
     public function load(array $data): void
     {
         foreach ($data as $name => $value) {
-            if (property_exists($this, $name)) {
+            if ($this->hasAttribute($name)) {
                 $this->$name = $value;
             }
         }
@@ -470,5 +470,19 @@ abstract class Generator implements GeneratorInterface, DataSetInterface
             $str = "'" . $string . "'";
         }
         return $str;
+    }
+
+    public function getAttributeValue(string $attribute)
+    {
+        if (!$this->hasAttribute($attribute)) {
+            throw new \InvalidArgumentException(sprintf('There is no "%s" in %s.', $attribute, $this->getName()));
+        }
+
+        return $this->$attribute;
+    }
+
+    public function hasAttribute(string $attribute): bool
+    {
+        return isset($this->$attribute);
     }
 }

@@ -19,8 +19,12 @@ class DefaultController implements ViewContextInterface
     private WebView $view;
     private Aliases $aliases;
 
-    public function __construct(GiiInterface $gii, WebView $view, Aliases $aliases, ResponseFactoryInterface $responseFactory)
-    {
+    public function __construct(
+        GiiInterface $gii,
+        WebView $view,
+        Aliases $aliases,
+        ResponseFactoryInterface $responseFactory
+    ) {
         $this->gii = $gii;
         $this->responseFactory = $responseFactory;
         $this->view = $view;
