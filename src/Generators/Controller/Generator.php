@@ -114,7 +114,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generators\Generator
                     <li><code>create-order</code> generates <code>actionCreateOrder()</code></li>
                 </ul>',
             'viewPath' => 'Specify the directory for storing the view scripts for the controller. You may use path alias here, e.g.,
-                <code>/var/www/basic/controllers/views/order</code>, <code>@app/views/order</code>. If not set, it will default
+                <code>/var/www/yii-demo/controllers/views/order</code>, <code>@app/views/order</code>. If not set, it will default
                 to <code>@app/views/ControllerID</code>',
             'baseClass' => 'This is the class that the new controller class will extend from. Please make sure the class exists and can be autoloaded.',
         ];
@@ -122,16 +122,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generators\Generator
 
     public function successMessage(): string
     {
-        return 'The controller has been generated successfully.' . $this->getLinkToTry();
-    }
-
-    /**
-     * This method returns a link to try controller generated
-     * @return string
-     */
-    private function getLinkToTry()
-    {
-        return '';
+        return 'The controller has been generated successfully.';
     }
 
     public function generate(): array

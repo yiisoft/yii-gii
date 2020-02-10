@@ -7,6 +7,7 @@ use ReflectionException;
 use RuntimeException;
 use Throwable;
 use Yiisoft\Aliases\Aliases;
+use Yiisoft\Json\Json;
 use Yiisoft\Validator\DataSetInterface;
 use Yiisoft\Validator\ResultSet;
 use Yiisoft\Validator\Rule\Required;
@@ -205,7 +206,7 @@ abstract class Generator implements GeneratorInterface, DataSetInterface
         $stickyAttributes = $this->stickyAttributes();
         $path = $this->getStickyDataFile();
         if (is_file($path)) {
-            $result = json_decode(file_get_contents($path), true);
+            $result = Json::decode(file_get_contents($path), true);
             if (is_array($result)) {
                 foreach ($stickyAttributes as $name) {
                     if (isset($result[$name]) && property_exists($this, $name)) {

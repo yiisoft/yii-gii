@@ -37,7 +37,7 @@ final class Gii implements GiiInterface
         $generator = $this->generators[$name];
         if (is_string($generator)) {
             $generator = $this->container->get($generator);
-        } elseif (is_object($generator) && $generator instanceof GeneratorInterface) {
+        } elseif ($generator instanceof GeneratorInterface) {
             return $generator;
         } elseif (is_object($generator) && method_exists($generator, '__invoke')) {
             $generator = $generator($this->container);

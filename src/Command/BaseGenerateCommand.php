@@ -37,7 +37,7 @@ abstract class BaseGenerateCommand extends Command
     {
         $generator = $this->gii->getGenerator(static::NAME);
         $generator->controllerClass = $input->getArgument('className');
-        echo "Running '{$generator->getName()}'...\n\n";
+        $output->writeln("Running '{$generator->getName()}'...\n\n");
         if ($generator->validate()) {
             $this->generateCode($generator, $input, $output);
         } else {
@@ -63,10 +63,10 @@ abstract class BaseGenerateCommand extends Command
         $files = $generator->generate();
         $n = count($files);
         if ($n === 0) {
-            echo "No code to be generated.\n";
+            $output->writeln("No code to be generated.\n");
             return;
         }
-        echo "The following files will be generated:\n";
+        $output->writeln("The following files will be generated:\n");
         $skipAll = $input->isInteractive() ? null : !$input->getArgument('overwrite');
         $answers = [];
         foreach ($files as $file) {
@@ -77,8 +77,8 @@ abstract class BaseGenerateCommand extends Command
                     $output->writeln(" $path\n");
                     $answers[$file->getId()] = false;
                 } else {
-                    echo '    ' . $output->writeln('[changed]');
-                    echo $output->writeln(" $path\n");
+                    $output->writeln('    [changed]');
+                    $output->writeln(" $path\n");
                     if ($skipAll !== null) {
                         $answers[$file->getId()] = !$skipAll;
                     } else {
