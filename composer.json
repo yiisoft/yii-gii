@@ -24,6 +24,8 @@
         "yiisoft/strings": "^3.0@dev",
         "yiisoft/arrays": "^3.0@dev",
         "yiisoft/validator": "^3.0@dev",
+        "yiisoft/files": "^3.0@dev",
+        "yiisoft/json": "^3.0@dev",
         "yiisoft/yii-console": "^3.0@dev",
         "yiisoft/var-dumper": "^3.0@dev"
     },
