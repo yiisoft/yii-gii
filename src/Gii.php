@@ -10,23 +10,12 @@ use Yiisoft\Yii\Gii\Generators\Controller\Generator;
 final class Gii implements GiiInterface
 {
     private ContainerInterface $container;
-    /**
-     * @var GeneratorInterface[] a list of generator configurations or instances. The array keys
-     * are the generator IDs (e.g. "crud"), and the array elements are the corresponding generator
-     * configurations or the instances.
-     *
-     * After the module is initialized, this property will become an array of generator instances
-     * which are created based on the configurations previously taken by this property.
-     *
-     * Newly assigned generators will be merged with the [[coreGenerators()|core ones]], and the former
-     * takes precedence in case when they have the same generator ID.
-     */
-    private array $generators;
+    private iterable $generators;
 
-    public function __construct(array $generators, ContainerInterface $container)
+    public function __construct(iterable $generators, ContainerInterface $container)
     {
-        $this->container  = $container;
         $this->generators = $generators;
+        $this->container  = $container;
     }
 
     public function addGenerator(string $name, $generator): void

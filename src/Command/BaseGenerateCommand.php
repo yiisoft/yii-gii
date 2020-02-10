@@ -20,7 +20,7 @@ abstract class BaseGenerateCommand extends Command
     public function __construct(GiiInterface $gii)
     {
         parent::__construct();
-        $this->gii      = $gii;
+        $this->gii = $gii;
     }
 
     protected function configure(): void
@@ -29,8 +29,8 @@ abstract class BaseGenerateCommand extends Command
     }
 
     /**
-     * @param  InputInterface  $input
-     * @param  OutputInterface  $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return int|void|null
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -46,22 +46,22 @@ abstract class BaseGenerateCommand extends Command
         return ExitCode::OK;
     }
 
-    protected function displayValidationErrors(GeneratorInterface $generator, OutputInterface $output)
+    protected function displayValidationErrors(GeneratorInterface $generator, OutputInterface $output): void
     {
         $output->writeln("Code not generated. Please fix the following errors:\n\n");
-        foreach ($generator->errors as $attribute => $errors) {
-            echo ' - '.$output->writeln($attribute).': '.implode(
+        foreach ($generator->getErrors() as $attribute => $errors) {
+            echo ' - ' . $output->writeln($attribute) . ': ' . implode(
                     '; ',
                     $errors
-                )."\n";
+                ) . "\n";
         }
         echo "\n";
     }
 
-    protected function generateCode(GeneratorInterface $generator, InputInterface $input, OutputInterface $output)
+    protected function generateCode(GeneratorInterface $generator, InputInterface $input, OutputInterface $output): void
     {
         $files = $generator->generate();
-        $n     = count($files);
+        $n = count($files);
         if ($n === 0) {
             echo "No code to be generated.\n";
             return;
@@ -77,12 +77,12 @@ abstract class BaseGenerateCommand extends Command
                     $output->writeln(" $path\n");
                     $answers[$file->getId()] = false;
                 } else {
-                    echo '    '.$output->writeln('[changed]');
+                    echo '    ' . $output->writeln('[changed]');
                     echo $output->writeln(" $path\n");
                     if ($skipAll !== null) {
                         $answers[$file->getId()] = !$skipAll;
                     } else {
-                        $answer                  = $this->choice($input, $output);
+                        $answer = $this->choice($input, $output);
                         $answers[$file->getId()] = $answer === 'y' || $answer === 'ya';
                         if ($answer === 'ya') {
                             $skipAll = false;
@@ -114,7 +114,7 @@ abstract class BaseGenerateCommand extends Command
         } else {
             $output->writeln("\nSome errors occurred while generating the files.");
         }
-        $output->writeln(preg_replace('%<span class="error">(.*?)</span>%', '\1', $results)."\n");
+        $output->writeln(preg_replace('%<span class="error">(.*?)</span>%', '\1', $results) . "\n");
     }
 
     protected function confirm($input, $output)
@@ -125,12 +125,14 @@ abstract class BaseGenerateCommand extends Command
 
     protected function choice($input, $output)
     {
-        $question = new ChoiceQuestion('Do you want to overwrite this file?', [
+        $question = new ChoiceQuestion(
+            'Do you want to overwrite this file?', [
             'y' => 'Overwrite this file.',
             'n' => 'Skip this file.',
             'ya' => 'Overwrite this and the rest of the changed files.',
             'na' => 'Skip this and the rest of the changed files.',
-        ]);
+        ]
+        );
         return $this->getHelper('question')->ask($input, $output, $question);
     }
 }

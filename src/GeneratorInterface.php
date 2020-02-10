@@ -2,6 +2,8 @@
 
 namespace Yiisoft\Yii\Gii;
 
+use Yiisoft\Validator\ResultSet;
+
 interface GeneratorInterface
 {
     /**
@@ -23,5 +25,8 @@ interface GeneratorInterface
      */
     public function generate(): array;
 
-    public function validate(): object;
+    /**
+     * @return bool|ResultSet
+     */
+    public function validate();
 }
