@@ -4,6 +4,8 @@ namespace Yiisoft\Yii\Gii\Generators\Controller;
 
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Strings\StringHelper;
+use Yiisoft\Validator\Rule\MatchRegularExpression;
+use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Yii\Gii\CodeFile;
 
 /**
@@ -14,9 +16,6 @@ use Yiisoft\Yii\Gii\CodeFile;
  * @property string $controllerID The controller ID. This property is read-only.
  * @property string $controllerNamespace The namespace of the controller class. This property is read-only.
  * @property string $controllerSubPath The controller sub path. This property is read-only.
- *
- * @author Qiang Xue <qiang.xue@gmail.com>
- * @since 2.0
  */
 class Generator extends \Yiisoft\Yii\Gii\Generators\Generator
 {
@@ -55,36 +54,25 @@ class Generator extends \Yiisoft\Yii\Gii\Generators\Generator
             one or several controller actions and their corresponding views.';
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function rules()
+    public function rules(): array
     {
         return array_merge(
             parent::rules(),
             [
-                [['controllerClass', 'actions', 'baseClass'], 'filter', 'filter' => 'trim'],
-                [['controllerClass'], 'required'],
-                [
-                    'controllerClass',
-                    'match',
-                    'pattern' => '/^[\w\\\\]*Controller$/',
-                    'message' => 'Only word characters and backslashes are allowed, and the class name must end with "Controller".',
+                'controllerClass' => [
+                    new Required(),
+                    (new MatchRegularExpression('/^[\w\\\\]*Controller$/'))
+                        ->message('Only word characters and backslashes are allowed, and the class name must end with "Controller".')
                 ],
                 ['controllerClass', 'validateNewClass'],
-                [
-                    'baseClass',
-                    'match',
-                    'pattern' => '/^[\w\\\\]*$/',
-                    'message' => 'Only word characters and backslashes are allowed.',
+                'baseClass' => [
+                    (new MatchRegularExpression('/^[\w\\\\]*$/'))
+                        ->message('Only word characters and backslashes are allowed.')
                 ],
-                [
-                    'actions',
-                    'match',
-                    'pattern' => '/^[a-z][a-z0-9\\-,\\s]*$/',
-                    'message' => 'Only a-z, 0-9, dashes (-), spaces and commas are allowed.',
-                ],
-                ['viewPath', 'safe'],
+                'actions' => [
+                    (new MatchRegularExpression('/^[a-z][a-z0-9\\-,\\s]*$/'))
+                        ->message('Only a-z, 0-9, dashes (-), spaces and commas are allowed.')
+                ]
             ]
         );
     }
@@ -99,7 +87,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generators\Generator
         ];
     }
 
-    public function requiredTemplates()
+    public function requiredTemplates(): array
     {
         return [
             'controller.php',
@@ -107,12 +95,12 @@ class Generator extends \Yiisoft\Yii\Gii\Generators\Generator
         ];
     }
 
-    public function stickyAttributes()
+    public function stickyAttributes(): array
     {
         return ['baseClass'];
     }
 
-    public function hints()
+    public function hints(): array
     {
         return [
             'controllerClass' => 'This is the name of the controller class to be generated. You should
@@ -132,7 +120,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generators\Generator
         ];
     }
 
-    public function successMessage()
+    public function successMessage(): string
     {
         return 'The controller has been generated successfully.' . $this->getLinkToTry();
     }
@@ -169,7 +157,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generators\Generator
      * Normalizes [[actions]] into an array of action IDs.
      * @return array an array of action IDs entered by the user
      */
-    public function getActionIDs()
+    public function getActionIDs(): array
     {
         $actions = array_unique(preg_split('/[\s,]+/', $this->actions, -1, PREG_SPLIT_NO_EMPTY));
         sort($actions);
@@ -180,7 +168,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generators\Generator
     /**
      * @return string the controller class file path
      */
-    public function getControllerFile()
+    public function getControllerFile(): string
     {
         return $this->aliases->get('@src/Controller/' . $this->controllerClass) . '.php';
     }
@@ -188,7 +176,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generators\Generator
     /**
      * @return string the controller ID
      */
-    public function getControllerID()
+    public function getControllerID(): string
     {
         $name = StringHelper::basename($this->controllerClass);
         return (new Inflector())->camel2id(substr($name, 0, strlen($name) - 10));
@@ -198,7 +186,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generators\Generator
      * @param string $action the action ID
      * @return string the action view file path
      */
-    public function getViewFile($action)
+    public function getViewFile($action): string
     {
         if (empty($this->viewPath)) {
             return $this->aliases->get(

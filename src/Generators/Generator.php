@@ -7,7 +7,6 @@ use ReflectionException;
 use RuntimeException;
 use Throwable;
 use Yiisoft\Aliases\Aliases;
-use Yiisoft\I18n\MessageFormatterInterface;
 use Yiisoft\Validator\DataSetInterface;
 use Yiisoft\Validator\ResultSet;
 use Yiisoft\Validator\Rule\Required;
@@ -35,9 +34,9 @@ use Yiisoft\Yii\Web\Info;
  */
 abstract class Generator implements GeneratorInterface, DataSetInterface
 {
+    private array $errors = [];
     protected Aliases    $aliases;
     protected Parameters $parameters;
-    protected MessageFormatterInterface $messageFormatter;
     /**
      * @var array a list of available code templates. The array keys are the template names,
      * and the array values are the corresponding template paths or path aliases.
@@ -58,11 +57,10 @@ abstract class Generator implements GeneratorInterface, DataSetInterface
      */
     public string $messageCategory = 'app';
 
-    public function __construct(Aliases $aliases, Parameters $parameters, MessageFormatterInterface $messageFormatter)
+    public function __construct(Aliases $aliases, Parameters $parameters)
     {
         $this->aliases = $aliases;
         $this->parameters = $parameters;
-        $this->messageFormatter = $messageFormatter;
     }
 
     public function attributeLabels(): array
@@ -165,9 +163,18 @@ abstract class Generator implements GeneratorInterface, DataSetInterface
         return '';
     }
 
-    public function validate(): ResultSet
+    /**
+     * @return bool|ResultSet
+     */
+    final public function validate()
     {
-        return (new Validator($this->rules()))->validate($this);
+        $results = (new Validator($this->rules()))->validate($this);
+        foreach ($results as $attribute => $resultItem) {
+            if (!$resultItem->isValid()) {
+                $this->errors[$attribute] = $resultItem->getErrors();
+            }
+        }
+        return !$this->hasErrors();
     }
 
     /**
@@ -484,5 +491,15 @@ abstract class Generator implements GeneratorInterface, DataSetInterface
     public function hasAttribute(string $attribute): bool
     {
         return isset($this->$attribute);
+    }
+
+    public function getErrors()
+    {
+        return $this->errors;
+    }
+
+    public function hasErrors()
+    {
+        return $this->errors !== [];
     }
 }
