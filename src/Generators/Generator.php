@@ -9,7 +9,6 @@ use Throwable;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Json\Json;
 use Yiisoft\Validator\DataSetInterface;
-use Yiisoft\Validator\ResultSet;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\Validator;
 use Yiisoft\VarDumper\VarDumper;
@@ -164,10 +163,7 @@ abstract class Generator implements GeneratorInterface, DataSetInterface
         return '';
     }
 
-    /**
-     * @return bool|ResultSet
-     */
-    final public function validate()
+    final public function validate(): bool
     {
         $results = (new Validator($this->rules()))->validate($this);
         foreach ($results as $attribute => $resultItem) {
@@ -232,7 +228,6 @@ abstract class Generator implements GeneratorInterface, DataSetInterface
 
     /**
      * Saves sticky attributes into an internal file.
-     * @internal
      */
     public function saveStickyAttributes(): void
     {
@@ -246,14 +241,10 @@ abstract class Generator implements GeneratorInterface, DataSetInterface
         if (!mkdir($concurrentDirectory = dirname($path), 0755, true) && !is_dir($concurrentDirectory)) {
             throw new RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
         }
-        file_put_contents($path, json_encode($values));
+        file_put_contents($path, Json::encode($values));
     }
 
-    /**
-     * @return string the file path that stores the sticky attribute values.
-     * @internal
-     */
-    public function getStickyDataFile()
+    protected function getStickyDataFile(): string
     {
         return $this->aliases->get('@runtime') . '/gii-' . Info::frameworkVersion() . '/' . str_replace(
                 '\\',
@@ -271,7 +262,7 @@ abstract class Generator implements GeneratorInterface, DataSetInterface
      * @return bool whether files are successfully saved without any error.
      * @throws ReflectionException
      */
-    public function save($files, $answers, &$results): bool
+    public function save(array $files, array $answers, &$results): bool
     {
         $lines = ['Generating code using template "' . $this->getTemplatePath() . '"...'];
         $hasError = false;
