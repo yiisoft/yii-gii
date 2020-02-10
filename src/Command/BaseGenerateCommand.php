@@ -109,7 +109,7 @@ abstract class BaseGenerateCommand extends Command
             return;
         }
 
-        if ($generator->save($files, (array)$answers, $results)) {
+        if ($generator->save($files, $answers, $results)) {
             $output->writeln("\nFiles were generated successfully!\n");
         } else {
             $output->writeln("\nSome errors occurred while generating the files.");
