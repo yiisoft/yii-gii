@@ -30,7 +30,7 @@ if (YII_ENV_DEV) {
 <?php
 namespace app\myTemplates\crud;
 
-class Generator extends \Yiisoft\Yii\Gii\Generators\Generator
+class Generator extends \Yiisoft\Yii\Gii\Generators\AbstractGenerator
 {
     public function getName()
     {

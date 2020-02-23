@@ -8,34 +8,16 @@
 Либо запустите
 
 ```
-php composer.phar require --dev --prefer-dist yiisoft/yii2-gii
+php composer.phar require --dev --prefer-dist yiisoft/yii-gii
 ```
 
 либо добавьте
 
 ```
-"yiisoft/yii2-gii": "~2.0.0"
+"yiisoft/yii-gii": "^3.0@dev"
 ```
 
 в require-dev секцию Вашего файла `composer.json`.
-
-
-## Конфигурация приложения
-
-После того, как расширение Gii было установлено, Вы можете пользоваться им, добавив этот код в конфигурационный файл приложения:
-
-```php
-return [
-    'bootstrap' => ['gii'],
-    'modules' => [
-        'gii' => [
-            '__class' => \Yiisoft\Yii\Gii\Gii::class,
-        ],
-        // ...
-    ],
-    // ...
-];
-```
 
 Теперь Gii доступен по адресу:
 
@@ -54,8 +36,8 @@ http://localhost/path/to/index.php/gii
 >
 ```php
 'gii' => [
-    '__class' => \Yiisoft\Yii\Gii\Gii::class,
     'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'] // настройте, как Вам нужно здесь
+    // ...
 ],
 ```
 Если Вы настроили Gii аналогичным образом в консольном приложении, Вы сможете таким образом через консоль запустить Gii:

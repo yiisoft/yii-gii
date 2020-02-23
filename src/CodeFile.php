@@ -229,24 +229,27 @@ final class CodeFile
         return $this->content;
     }
 
-    public function withBasePath(string $basePath): CodeFile
+    public function withBasePath(string $basePath): self
     {
-        $this->basePath = $basePath;
+        $new = clone $this;
+        $new->basePath = $basePath;
 
-        return $this;
+        return $new;
     }
 
-    public function withNewFileMode(int $mode): CodeFile
+    public function withNewFileMode(int $mode): self
     {
-        $this->newFileMode = $mode;
+        $new = clone $this;
+        $new->newFileMode = $mode;
 
-        return $this;
+        return $new;
     }
 
-    public function withNewDirMode(int $mode): CodeFile
+    public function withNewDirMode(int $mode): self
     {
-        $this->newDirMode = $mode;
+        $new = clone $this;
+        $new->newDirMode = $mode;
 
-        return $this;
+        return $new;
     }
 }

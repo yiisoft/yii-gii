@@ -28,8 +28,6 @@ class GiiTestCase extends TestCase
             $this->markTestSkipped('pdo and ' . $pdo_database . ' extension are required.');
         }
 
-        $this->mockWebApplication();
-
         $this->container->set(
             'db',
             [
