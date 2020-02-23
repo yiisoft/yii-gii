@@ -17,7 +17,7 @@ use Yiisoft\Yii\Gii\CodeFile;
  * @property string $controllerNamespace The namespace of the controller class. This property is read-only.
  * @property string $controllerSubPath The controller sub path. This property is read-only.
  */
-class Generator extends \Yiisoft\Yii\Gii\Generators\Generator
+class AbstractGenerator extends \Yiisoft\Yii\Gii\Generators\AbstractGenerator
 {
     /**
      * @var string the controller class name
@@ -177,7 +177,7 @@ class Generator extends \Yiisoft\Yii\Gii\Generators\Generator
      * @param string $action the action ID
      * @return string the action view file path
      */
-    public function getViewFile($action): string
+    public function getViewFile(string $action): string
     {
         if (empty($this->viewPath)) {
             return $this->aliases->get(

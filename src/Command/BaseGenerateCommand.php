@@ -42,27 +42,26 @@ abstract class BaseGenerateCommand extends Command
             $this->generateCode($generator, $input, $output);
         } else {
             $this->displayValidationErrors($generator, $output);
+            return ExitCode::UNSPECIFIED_ERROR;
         }
         return ExitCode::OK;
     }
+
+    abstract protected function getGenerator();
 
     protected function displayValidationErrors(GeneratorInterface $generator, OutputInterface $output): void
     {
         $output->writeln("Code not generated. Please fix the following errors:\n\n");
         foreach ($generator->getErrors() as $attribute => $errors) {
-            echo ' - ' . $output->writeln($attribute) . ': ' . implode(
-                    '; ',
-                    $errors
-                ) . "\n";
+            $output->writeln(sprintf("%s: %s", $attribute, implode('; ', $errors)));
         }
-        echo "\n";
+        $output->writeln("\n");
     }
 
     protected function generateCode(GeneratorInterface $generator, InputInterface $input, OutputInterface $output): void
     {
         $files = $generator->generate();
-        $n = count($files);
-        if ($n === 0) {
+        if (\count($files) === 0) {
             $output->writeln("No code to be generated.\n");
             return;
         }
@@ -127,11 +126,11 @@ abstract class BaseGenerateCommand extends Command
     {
         $question = new ChoiceQuestion(
             'Do you want to overwrite this file?', [
-            'y' => 'Overwrite this file.',
-            'n' => 'Skip this file.',
-            'ya' => 'Overwrite this and the rest of the changed files.',
-            'na' => 'Skip this and the rest of the changed files.',
-        ]
+                                                     'y' => 'Overwrite this file.',
+                                                     'n' => 'Skip this file.',
+                                                     'ya' => 'Overwrite this and the rest of the changed files.',
+                                                     'na' => 'Skip this and the rest of the changed files.',
+                                                 ]
         );
         return $this->getHelper('question')->ask($input, $output, $question);
     }

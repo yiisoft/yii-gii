@@ -5,7 +5,6 @@ namespace Yiisoft\Yii\Gii;
 use Psr\Container\ContainerInterface;
 use Yiisoft\Factory\Exceptions\NotFoundException;
 use Yiisoft\Yii\Gii\Exception\GeneratorNotFoundException;
-use Yiisoft\Yii\Gii\Generators\Controller\Generator;
 
 final class Gii implements GiiInterface
 {
@@ -15,7 +14,7 @@ final class Gii implements GiiInterface
     public function __construct(iterable $generators, ContainerInterface $container)
     {
         $this->generators = $generators;
-        $this->container  = $container;
+        $this->container = $container;
     }
 
     public function addGenerator(string $name, $generator): void
@@ -24,7 +23,7 @@ final class Gii implements GiiInterface
     }
 
     /**
-     * @param  string  $name
+     * @param string $name
      * @return GeneratorInterface
      * @throws NotFoundException
      * @throws GeneratorNotFoundException
@@ -32,7 +31,7 @@ final class Gii implements GiiInterface
     public function getGenerator(string $name): GeneratorInterface
     {
         if (!isset($this->generators[$name])) {
-            throw new GeneratorNotFoundException('Generator "'.$name.'" not found');
+            throw new GeneratorNotFoundException('Generator "' . $name . '" not found');
         }
         $generator = $this->generators[$name];
         if (is_string($generator)) {
@@ -42,10 +41,10 @@ final class Gii implements GiiInterface
         } elseif (is_object($generator) && method_exists($generator, '__invoke')) {
             $generator = $generator($this->container);
         }
-        if ($generator instanceof GeneratorInterface) {
-            return $generator;
+        if (!($generator instanceof GeneratorInterface)) {
+            throw new \RuntimeException();
         }
-        throw new \RuntimeException(); // TODO: better exception
+        return $generator;
     }
 
 }

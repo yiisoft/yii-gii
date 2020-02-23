@@ -8,31 +8,13 @@
 执行
 
 ```
-php composer.phar require --dev --prefer-dist yiisoft/yii2-gii
+php composer.phar require --dev --prefer-dist yiisoft/yii-gii
 ```
 
 或者在项目的 `composer.json` 中的 require-dev 部分添加如下代码
 
 ```
-"yiisoft/yii2-gii": "~2.0.0"
-```
-
-
-## 应用配置
-
-一旦安装了 Gii 扩展，就可以通过将这些代码添加到应用程序配置文件来启用它：
-
-```php
-return [
-    'bootstrap' => ['gii'],
-    'modules' => [
-        'gii' => [
-            '__class' => \Yiisoft\Yii\Gii\Gii::class,
-        ],
-        // ...
-    ],
-    // ...
-];
+"yiisoft/yii-gii": "^3.0@dev"
 ```
 
 然后，可以通过以下 URL 访问 Gii ：
@@ -52,8 +34,8 @@ http://localhost/path/to/index.php/gii
 >
 ```php
 'gii' => [
-    '__class' => \Yiisoft\Yii\Gii\Gii::class,
     'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'] // adjust this to your needs
+    // ...
 ],
 ```
 
@@ -71,36 +53,4 @@ yii help gii/model
 
 # 基于 city 数据表生成 City model
 yii gii/model --tableName=city --modelClass=City
-```
-
-### 基础项目模版（yii2-app-basic）
-
-在基础项目模板中的配置结构有点不同，所以 Gii 应该在 `config/web.php` 文件中进行配置:
-
-```php
-// ...
-if (YII_ENV_DEV) {
-    // configuration adjustments for 'dev' environment
-    $config['bootstrap'][] = 'debug';
-    $config['modules']['debug'] = \yii\debug\Module::class;
-
-    $config['bootstrap'][] = 'gii';
-    $config['modules']['gii'] = \Yiisoft\Yii\Gii\Gii::class; // <--- here
-}
-```
-
-调整可被访问的 IP 地址则通过如下方式:
-
-```php
-if (YII_ENV_DEV) {
-    // configuration adjustments for 'dev' environment
-    $config['bootstrap'][] = 'debug';
-    $config['modules']['debug'] = \yii\debug\Module::class;
-
-    $config['bootstrap'][] = 'gii';
-    $config['modules']['gii'] = [
-        '__class' => \Yiisoft\Yii\Gii\Gii::class,
-        'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'],
-    ];
-}
 ```

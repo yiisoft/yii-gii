@@ -6,7 +6,7 @@
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Strings\StringHelper;
 
-/* @var $generator Yiisoft\Yii\Gii\Generators\Controller\Generator */
+/* @var $generator Yiisoft\Yii\Gii\Generators\Controller\AbstractGenerator */
 
 echo "<?php\n";
 ?>

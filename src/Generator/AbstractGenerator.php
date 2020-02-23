@@ -11,12 +11,11 @@ use Yiisoft\Json\Json;
 use Yiisoft\Validator\DataSetInterface;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\Validator;
-use Yiisoft\VarDumper\VarDumper;
 use Yiisoft\View\Exception\ViewNotFoundException;
+use Yiisoft\View\View;
 use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Yii\Gii\GeneratorInterface;
 use Yiisoft\Yii\Gii\Parameters;
-use Yiisoft\Yii\Web\Info;
 
 /**
  * This is the base class for all generator classes.
@@ -32,11 +31,12 @@ use Yiisoft\Yii\Web\Info;
  *   This is the place where main code generation code resides.
  *
  */
-abstract class Generator implements GeneratorInterface, DataSetInterface
+abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
 {
     private array $errors = [];
     protected Aliases    $aliases;
     protected Parameters $parameters;
+    protected View $view;
     /**
      * @var array a list of available code templates. The array keys are the template names,
      * and the array values are the corresponding template paths or path aliases.
@@ -47,20 +47,12 @@ abstract class Generator implements GeneratorInterface, DataSetInterface
      * The value of this property is internally managed by this class.
      */
     public string $template = 'default';
-    /**
-     * @var bool whether the strings will be generated using `Yii::t()` or normal strings.
-     */
-    public bool $enableI18N = false;
-    /**
-     * @var string the message category used by `Yii::t()` when `$enableI18N` is `true`.
-     * Defaults to `app`.
-     */
-    public string $messageCategory = 'app';
 
-    public function __construct(Aliases $aliases, Parameters $parameters)
+    public function __construct(Aliases $aliases, Parameters $parameters, View $view)
     {
         $this->aliases = $aliases;
         $this->parameters = $parameters;
+        $this->view = $view;
     }
 
     public function attributeLabels(): array
@@ -205,7 +197,7 @@ abstract class Generator implements GeneratorInterface, DataSetInterface
             $result = Json::decode(file_get_contents($path), true);
             if (is_array($result)) {
                 foreach ($stickyAttributes as $name) {
-                    if (isset($result[$name]) && property_exists($this, $name)) {
+                    if (array_key_exists($name, $result) && $this->hasAttribute($name)) {
                         $this->$name = $result[$name];
                     }
                 }
@@ -246,7 +238,7 @@ abstract class Generator implements GeneratorInterface, DataSetInterface
 
     protected function getStickyDataFile(): string
     {
-        return $this->aliases->get('@runtime') . '/gii-' . Info::frameworkVersion() . '/' . str_replace(
+        return $this->aliases->get('@runtime') . '/gii/' . str_replace(
                 '\\',
                 '-',
                 get_class($this)
@@ -268,15 +260,15 @@ abstract class Generator implements GeneratorInterface, DataSetInterface
         $hasError = false;
         foreach ($files as $file) {
             $relativePath = $file->getRelativePath();
-            if (isset($answers[$file->getId()]) && !empty($answers[$file->getId()]) && $file->getOperation(
-                ) !== CodeFile::OP_SKIP) {
+            if (!empty($answers[$file->getId()]) && $file->getOperation() !== CodeFile::OP_SKIP) {
                 $error = $file->save();
                 if (is_string($error)) {
                     $hasError = true;
                     $lines[] = "generating $relativePath\n<span class=\"error\">$error</span>";
                 } else {
-                    $lines[] = $file->getOperation(
-                    ) === CodeFile::OP_CREATE ? " generated $relativePath" : " overwrote $relativePath";
+                    $lines[] = $file->getOperation() === CodeFile::OP_CREATE
+                        ? " generated $relativePath"
+                        : " overwrote $relativePath";
                 }
             } else {
                 $lines[] = "   skipped $relativePath";
@@ -316,34 +308,11 @@ abstract class Generator implements GeneratorInterface, DataSetInterface
      * @throws Throwable
      * @throws ViewNotFoundException
      */
-    public function render($template, $params = []): string
+    public function render(string $template, array $params = []): string
     {
         $params['generator'] = $this;
 
-        return $this->renderTemplate($this->getTemplatePath() . '/' . $template, $params);
-    }
-
-    protected function renderTemplate(string $template, array $params): string
-    {
-        $renderer = function (...$args) {
-            extract($args[1], EXTR_OVERWRITE);
-            require $args[0];
-        };
-
-        $obInitialLevel = ob_get_level();
-        ob_start();
-        ob_implicit_flush(0);
-        try {
-            $renderer->bindTo($this)($template, $params);
-            return ob_get_clean();
-        } catch (\Throwable $e) {
-            while (ob_get_level() > $obInitialLevel) {
-                if (!@ob_end_clean()) {
-                    ob_clean();
-                }
-            }
-            throw $e;
-        }
+        return $this->view->render($this->getTemplatePath() . '/' . $template, $params);
     }
 
     /**
@@ -447,15 +416,7 @@ abstract class Generator implements GeneratorInterface, DataSetInterface
     public function generateString($string = '', $placeholders = [])
     {
         $string = addslashes($string);
-        if ($this->enableI18N) {
-            // If there are placeholders, use them
-            if (!empty($placeholders)) {
-                $ph = ', ' . VarDumper::export($placeholders);
-            } else {
-                $ph = '';
-            }
-            $str = "Yii::t('" . $this->messageCategory . "', '" . $string . "'" . $ph . ")";
-        } elseif (!empty($placeholders)) {
+        if (!empty($placeholders)) {
             $phKeys = array_map(
                 static function ($word) {
                     return '{' . $word . '}';
@@ -485,12 +446,12 @@ abstract class Generator implements GeneratorInterface, DataSetInterface
         return isset($this->$attribute);
     }
 
-    public function getErrors()
+    public function getErrors(): array
     {
         return $this->errors;
     }
 
-    public function hasErrors()
+    public function hasErrors(): bool
     {
         return $this->errors !== [];
     }
