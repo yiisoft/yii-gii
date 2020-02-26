@@ -7,6 +7,7 @@ use Yiisoft\Strings\StringHelper;
 use Yiisoft\Validator\Rule\MatchRegularExpression;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Yii\Gii\CodeFile;
+use Yiisoft\Yii\Gii\Generators\AbstractGenerator;
 
 /**
  * This generator will generate a controller and one or a few action view files.
@@ -17,7 +18,7 @@ use Yiisoft\Yii\Gii\CodeFile;
  * @property string $controllerNamespace The namespace of the controller class. This property is read-only.
  * @property string $controllerSubPath The controller sub path. This property is read-only.
  */
-class AbstractGenerator extends \Yiisoft\Yii\Gii\Generators\AbstractGenerator
+class Generator extends AbstractGenerator
 {
     /**
      * @var string the controller class name

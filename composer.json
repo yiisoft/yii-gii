@@ -20,7 +20,6 @@
     "require": {
         "php": "^7.4",
         "phpspec/php-diff": "^1.1.0",
-        "hiqdev/composer-config-plugin": "^1.0@dev",
         "yiisoft/strings": "^3.0@dev",
         "yiisoft/arrays": "^3.0@dev",
         "yiisoft/aliases": "^3.0@dev",
@@ -33,10 +32,11 @@
         "yiisoft/var-dumper": "^3.0@dev"
     },
     "require-dev": {
+        "hiqdev/composer-config-plugin": "^1.0@dev",
+        "phpunit/phpunit": "^8.4",
         "yiisoft/di": "^3.0@dev",
         "yiisoft/log": "^3.0@dev",
-        "yiisoft/event-dispatcher": "^3.0@dev",
-        "phpunit/phpunit": "^8.4"
+        "yiisoft/event-dispatcher": "^3.0@dev"
     },
     "autoload": {
         "psr-4": {

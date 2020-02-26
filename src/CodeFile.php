@@ -2,6 +2,7 @@
 
 namespace Yiisoft\Yii\Gii;
 
+use \RuntimeException;
 use Yiisoft\Html\Html;
 use Yiisoft\Yii\Gii\Components\DiffRendererHtmlInline;
 
@@ -82,9 +83,9 @@ final class CodeFile
 
     /**
      * Saves the code into the file specified by [[path]].
-     * @return string|bool the error occurred while saving the code file, or true if no error.
+     * @return bool the error occurred while saving the code file, or true if no error.
      */
-    public function save()
+    public function save(): bool
     {
         if ($this->operation === self::OP_CREATE) {
             $dir = dirname($this->path);
@@ -97,12 +98,12 @@ final class CodeFile
                     $result = @mkdir($dir, 0777, true);
                 }
                 if (!$result) {
-                    return "Unable to create the directory '$dir'.";
+                    throw new RuntimeException("Unable to create the directory '$dir'.");
                 }
             }
         }
         if (@file_put_contents($this->path, $this->content) === false) {
-            return "Unable to write the file '{$this->path}'.";
+            throw new RuntimeException("Unable to write the file '{$this->path}'.");
         }
 
         if ($this->newFileMode !== self::FILE_MODE) {

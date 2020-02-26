@@ -3,6 +3,7 @@
 namespace Yiisoft\Yii\Gii\Command;
 
 use Symfony\Component\Console\Input\InputArgument;
+use Yiisoft\Yii\Gii\GeneratorInterface;
 
 /**
  * This is the command line version of Gii - a code generator.
@@ -24,5 +25,10 @@ class ControllerCommand extends BaseGenerateCommand
         $this->setDescription('Gii controller generator')
             ->addArgument('className', InputArgument::REQUIRED, 'Name of the generated controller');
         parent::configure();
+    }
+
+    public function getGenerator(): GeneratorInterface
+    {
+        return $this->gii->getGenerator(self::NAME);
     }
 }
