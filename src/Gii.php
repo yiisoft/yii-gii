@@ -46,5 +46,4 @@ final class Gii implements GiiInterface
         }
         return $generator;
     }
-
 }

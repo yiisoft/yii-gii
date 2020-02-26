@@ -2,7 +2,7 @@
 
 namespace Yiisoft\Yii\Gii;
 
-use \RuntimeException;
+use RuntimeException;
 use Yiisoft\Html\Html;
 use Yiisoft\Yii\Gii\Components\DiffRendererHtmlInline;
 
