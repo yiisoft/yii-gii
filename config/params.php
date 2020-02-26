@@ -9,6 +9,9 @@ return [
         ],
     ],
     'gii'     => [
+        'generators' => [
+            'controller' => \Yiisoft\Yii\Gii\Generators\Controller\Generator::class
+        ],
         'basePath'   => '@root',
         'viewPath'   => '@views',
         'controller' => [

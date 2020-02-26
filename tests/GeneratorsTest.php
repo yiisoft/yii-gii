@@ -3,7 +3,7 @@
 namespace Yiisoft\Yii\Gii\Tests;
 
 use Yiisoft\Yii\Gii\CodeFile;
-use Yiisoft\Yii\Gii\Generators\Controller\AbstractGenerator as ControllerGenerator;
+use Yiisoft\Yii\Gii\Generators\Controller\Generator as ControllerGenerator;
 use Yiisoft\Yii\Gii\Generators\Crud\Generator as CRUDGenerator;
 use Yiisoft\Yii\Gii\Generators\Extension\Generator as ExtensionGenerator;
 use Yiisoft\Yii\Gii\Generators\Form\Generator as FormGenerator;

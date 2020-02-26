@@ -9,11 +9,13 @@ use Throwable;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Json\Json;
 use Yiisoft\Validator\DataSetInterface;
+use Yiisoft\Validator\ResultSet;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\Validator;
 use Yiisoft\View\Exception\ViewNotFoundException;
 use Yiisoft\View\View;
 use Yiisoft\Yii\Gii\CodeFile;
+use Yiisoft\Yii\Gii\Exception\InvalidConfigException;
 use Yiisoft\Yii\Gii\GeneratorInterface;
 use Yiisoft\Yii\Gii\Parameters;
 
@@ -155,7 +157,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
         return '';
     }
 
-    final public function validate(): bool
+    final public function validate(): ResultSet
     {
         $results = (new Validator($this->rules()))->validate($this);
         foreach ($results as $attribute => $resultItem) {
@@ -163,7 +165,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
                 $this->errors[$attribute] = $resultItem->getErrors();
             }
         }
-        return !$this->hasErrors();
+        return $results;
     }
 
     /**
@@ -253,6 +255,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * generated while saving the code files.
      * @return bool whether files are successfully saved without any error.
      * @throws ReflectionException
+     * @throws InvalidConfigException
      */
     public function save(array $files, array $answers, &$results): bool
     {
@@ -261,14 +264,14 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
         foreach ($files as $file) {
             $relativePath = $file->getRelativePath();
             if (!empty($answers[$file->getId()]) && $file->getOperation() !== CodeFile::OP_SKIP) {
-                $error = $file->save();
-                if (is_string($error)) {
-                    $hasError = true;
-                    $lines[] = "generating $relativePath\n<span class=\"error\">$error</span>";
-                } else {
+                try {
+                    $file->save();
                     $lines[] = $file->getOperation() === CodeFile::OP_CREATE
                         ? " generated $relativePath"
                         : " overwrote $relativePath";
+                } catch (\Exception $e) {
+                    $hasError = true;
+                    $lines[] = sprintf("generating %s\n<span class=\"error\">%s</span>", $relativePath, $error);
                 }
             } else {
                 $lines[] = "   skipped $relativePath";
@@ -283,6 +286,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
     /**
      * @return string the root path of the template files that are currently being used.
      * @throws ReflectionException
+     * @throws InvalidConfigException
      */
     public function getTemplatePath(): string
     {
@@ -294,7 +298,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
             return $this->templates[$this->template];
         }
 
-        throw new RuntimeException("Unknown template: {$this->template}");
+        throw new InvalidConfigException("Unknown template: {$this->template}");
     }
 
     /**
@@ -413,14 +417,12 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * @param array $placeholders the placeholders to use by `Yii::t()`
      * @return string
      */
-    public function generateString($string = '', $placeholders = [])
+    public function generateString(string $string = '', array $placeholders = []): string
     {
         $string = addslashes($string);
         if (!empty($placeholders)) {
             $phKeys = array_map(
-                static function ($word) {
-                    return '{' . $word . '}';
-                },
+                fn($word) => '{' . $word . '}',
                 array_keys($placeholders)
             );
             $phValues = array_values($placeholders);
@@ -432,6 +434,10 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
         return $str;
     }
 
+    /**
+     * @param string $attribute
+     * @return mixed
+     */
     public function getAttributeValue(string $attribute)
     {
         if (!$this->hasAttribute($attribute)) {

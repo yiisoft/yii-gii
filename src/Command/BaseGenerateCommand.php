@@ -35,7 +35,7 @@ abstract class BaseGenerateCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $generator = $this->gii->getGenerator(static::NAME);
+        $generator = $this->getGenerator();
         $generator->controllerClass = $input->getArgument('className');
         $output->writeln("Running '{$generator->getName()}'...\n\n");
         if ($generator->validate()) {
@@ -47,7 +47,7 @@ abstract class BaseGenerateCommand extends Command
         return ExitCode::OK;
     }
 
-    abstract protected function getGenerator();
+    abstract protected function getGenerator(): GeneratorInterface;
 
     protected function displayValidationErrors(GeneratorInterface $generator, OutputInterface $output): void
     {

@@ -3,7 +3,7 @@
  * This is the template for generating an action view file.
  */
 
-/* @var $generator Yiisoft\Yii\Gii\Generators\Controller\AbstractGenerator */
+/* @var $generator Yiisoft\Yii\Gii\Generators\Controller\Generator */
 /* @var $action string the action ID */
 
 echo "<?php\n";
