@@ -1,4 +1,5 @@
 <?php
+
 namespace Yiisoft\Yii\Gii;
 
 use Yiisoft\Assets\AssetBundle;

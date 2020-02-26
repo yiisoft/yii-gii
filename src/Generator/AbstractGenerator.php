@@ -428,7 +428,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
         $string = addslashes($string);
         if (!empty($placeholders)) {
             $phKeys = array_map(
-                fn($word) => '{' . $word . '}',
+                fn ($word) => '{' . $word . '}',
                 array_keys($placeholders)
             );
             $phValues = array_values($placeholders);
