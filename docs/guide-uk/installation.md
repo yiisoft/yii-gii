@@ -8,32 +8,16 @@
 Виконайте
 
 ```
-php composer.phar require --dev --prefer-dist yiisoft/yii2-gii
+php composer.phar require --dev --prefer-dist yiisoft/yii-gii
 ```
 
 або додайте
 
 ```
-"yiisoft/yii2-gii": "~2.0.0"
+"yiisoft/yii-gii": "^3.0@dev"
 ```
 
 до секції require-dev вашого файлу `composer.json`.
-
-
-## Конфігурація додатка
-
-Коли розширення Gii встановлено, для його підключення додайте наступні рядки до файлу конфігурації вашого додатка:
-
-```php
-return [
-    'bootstrap' => ['gii'],
-    'modules' => [
-        'gii' => \Yiisoft\Yii\Gii\Module::class,
-        // ...
-    ],
-    // ...
-];
-```
 
 Потім ви можете мати доступ до Gii за наведеною URL-адресою:
 
@@ -52,8 +36,8 @@ http://localhost/path/to/index.php/gii
 >
 ```php
 'gii' => [
-    '__class' => \Yiisoft\Yii\Gii\Module::class,
     'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'] // налаштувати для ваших потреб
+    // ...
 ],
 ```
 Якщо ви так само налаштували Gii у конфігурації вашого консольного додатку, то можете також мати доступ до Gii з
@@ -71,37 +55,4 @@ yii help gii/model
 
 # згенерувати модель City з таблиці city
 yii gii/model --tableName=city --modelClass=City
-```
-
-### Базовий додаток
-
-В базовому шаблоні проекту структура конфігурації трохи інакша, тому Gii потрібно сконфігурувати у
-`config/web.php`:
-
-```php
-// ...
-if (YII_ENV_DEV) {
-    // налаштування конфігурації для середовища розробки
-    $config['bootstrap'][] = 'debug';
-    $config['modules']['debug'] = \yii\debug\Module::class;
-
-    $config['bootstrap'][] = 'gii';
-    $config['modules']['gii'] = \Yiisoft\Yii\Gii\Module::class; // <--- тут
-}
-```
-
-Таким чином, щоб налаштувати IP-адреси, необхідно зробити як показано нижче:
-
-```php
-if (YII_ENV_DEV) {
-    // налаштування конфігурації для середовища розробки
-    $config['bootstrap'][] = 'debug';
-    $config['modules']['debug'] = \yii\debug\Module::class;
-
-    $config['bootstrap'][] = 'gii';
-    $config['modules']['gii'] = [
-        '__class' => \Yiisoft\Yii\Gii\Module::class,
-        'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'],
-    ];
-}
 ```

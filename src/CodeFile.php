@@ -1,70 +1,79 @@
 <?php
-/**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
- */
 
 namespace Yiisoft\Yii\Gii;
 
-use yii\helpers\Yii;
-use yii\base\BaseObject;
+use \RuntimeException;
+use Yiisoft\Html\Html;
 use Yiisoft\Yii\Gii\Components\DiffRendererHtmlInline;
-use yii\helpers\Html;
 
 /**
  * CodeFile represents a code file to be generated.
- *
- * @property string $relativePath The code file path relative to the application base path. This property is
- * read-only.
- * @property string $type The code file extension (e.g. php, txt). This property is read-only.
- *
- * @author Qiang Xue <qiang.xue@gmail.com>
- * @since 2.0
  */
-class CodeFile extends BaseObject
+final class CodeFile
 {
+    /**
+     * The new file mode
+     */
+    private const FILE_MODE = 0666;
+    /**
+     * The new directory mode
+     */
+    private const DIR_MODE = 0777;
     /**
      * The code file is new.
      */
-    const OP_CREATE = 'create';
+    public const OP_CREATE = 0;
     /**
      * The code file already exists, and the new one may need to overwrite it.
      */
-    const OP_OVERWRITE = 'overwrite';
+    public const OP_OVERWRITE = 1;
     /**
      * The new code file and the existing one are identical.
      */
-    const OP_SKIP = 'skip';
-
+    public const OP_SKIP = 2;
     /**
      * @var string an ID that uniquely identifies this code file.
      */
-    public $id;
+    private string $id;
     /**
      * @var string the file path that the new code should be saved to.
      */
-    public $path;
+    private string $path;
     /**
      * @var string the newly generated code content
      */
-    public $content;
+    private string $content;
     /**
-     * @var string the operation to be performed. This can be [[OP_CREATE]], [[OP_OVERWRITE]] or [[OP_SKIP]].
+     * @var int the operation to be performed. This can be [[OP_CREATE]], [[OP_OVERWRITE]] or [[OP_SKIP]].
      */
-    public $operation;
-
+    private int $operation;
+    /**
+     * @var string the base path
+     */
+    private string $basePath = '';
+    /**
+     * @var int the permission to be set for newly generated code files.
+     * This value will be used by PHP chmod function.
+     * Defaults to 0666, meaning the file is read-writable by all users.
+     */
+    private int $newFileMode = self::FILE_MODE;
+    /**
+     * @var int the permission to be set for newly generated directories.
+     * This value will be used by PHP chmod function.
+     * Defaults to 0777, meaning the directory can be read, written and executed by all users.
+     */
+    private int $newDirMode = self::DIR_MODE;
 
     /**
      * Constructor.
      * @param string $path the file path that the new code should be saved to.
      * @param string $content the newly generated code content.
      */
-    public function __construct($path, $content)
+    public function __construct(string $path, string $content)
     {
         $this->path = strtr($path, '/\\', DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR);
         $this->content = $content;
-        $this->id = md5($this->path);
+        $this->id = sha1($this->path);
         if (is_file($path)) {
             $this->operation = file_get_contents($path) === $content ? self::OP_SKIP : self::OP_OVERWRITE;
         } else {
@@ -74,33 +83,32 @@ class CodeFile extends BaseObject
 
     /**
      * Saves the code into the file specified by [[path]].
-     * @return string|bool the error occurred while saving the code file, or true if no error.
+     * @return bool the error occurred while saving the code file, or true if no error.
      */
-    public function save()
+    public function save(): bool
     {
-        $module = isset(Yii::getApp()->controller) ? Yii::getApp()->controller->module : null;
         if ($this->operation === self::OP_CREATE) {
             $dir = dirname($this->path);
             if (!is_dir($dir)) {
-                if ($module instanceof \Yiisoft\Yii\Gii\Module) {
+                if ($this->newDirMode !== self::DIR_MODE) {
                     $mask = @umask(0);
-                    $result = @mkdir($dir, $module->newDirMode, true);
+                    $result = @mkdir($dir, $this->newDirMode, true);
                     @umask($mask);
                 } else {
                     $result = @mkdir($dir, 0777, true);
                 }
                 if (!$result) {
-                    return "Unable to create the directory '$dir'.";
+                    throw new RuntimeException("Unable to create the directory '$dir'.");
                 }
             }
         }
         if (@file_put_contents($this->path, $this->content) === false) {
-            return "Unable to write the file '{$this->path}'.";
+            throw new RuntimeException("Unable to write the file '{$this->path}'.");
         }
 
-        if ($module instanceof \Yiisoft\Yii\Gii\Module) {
+        if ($this->newFileMode !== self::FILE_MODE) {
             $mask = @umask(0);
-            @chmod($this->path, $module->newFileMode);
+            @chmod($this->path, $this->newFileMode);
             @umask($mask);
         }
 
@@ -110,10 +118,10 @@ class CodeFile extends BaseObject
     /**
      * @return string the code file path relative to the application base path.
      */
-    public function getRelativePath()
+    public function getRelativePath(): string
     {
-        if (strpos($this->path, Yii::getApp()->basePath) === 0) {
-            return substr($this->path, strlen(Yii::getApp()->basePath) + 1);
+        if (!empty($this->basePath) && strpos($this->path, $this->basePath) === 0) {
+            return substr($this->path, strlen($this->basePath) + 1);
         }
 
         return $this->path;
@@ -122,7 +130,7 @@ class CodeFile extends BaseObject
     /**
      * @return string the code file extension (e.g. php, txt)
      */
-    public function getType()
+    public function getType(): string
     {
         if (($pos = strrpos($this->path, '.')) !== false) {
             return substr($this->path, $pos + 1);
@@ -181,7 +189,7 @@ class CodeFile extends BaseObject
      * @param mixed $lines2
      * @return string
      */
-    private function renderDiff($lines1, $lines2)
+    private function renderDiff($lines1, $lines2): string
     {
         if (!is_array($lines1)) {
             $lines1 = explode("\n", $lines1);
@@ -200,5 +208,49 @@ class CodeFile extends BaseObject
         $diff = new \Diff($lines1, $lines2);
 
         return $diff->render($renderer);
+    }
+
+    public function getId(): string
+    {
+        return $this->id;
+    }
+
+    public function getOperation(): string
+    {
+        return $this->operation;
+    }
+
+    public function getPath(): string
+    {
+        return $this->path;
+    }
+
+    public function getContent(): string
+    {
+        return $this->content;
+    }
+
+    public function withBasePath(string $basePath): self
+    {
+        $new = clone $this;
+        $new->basePath = $basePath;
+
+        return $new;
+    }
+
+    public function withNewFileMode(int $mode): self
+    {
+        $new = clone $this;
+        $new->newFileMode = $mode;
+
+        return $new;
+    }
+
+    public function withNewDirMode(int $mode): self
+    {
+        $new = clone $this;
+        $new->newDirMode = $mode;
+
+        return $new;
     }
 }

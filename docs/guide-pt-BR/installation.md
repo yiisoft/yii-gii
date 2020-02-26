@@ -28,7 +28,7 @@ Assim que a extensão Gii for instalada, você habilitá-la adicionando estas li
 return [
     'bootstrap' => ['gii'],
     'modules' => [
-        'gii' => \Yiisoft\Yii\Gii\Module::class,
+        'gii' => \Yiisoft\Yii\Gii\Gii::class,
         // ...
     ],
     // ...
@@ -53,7 +53,7 @@ http://localhost/path/to/index.php/gii
 
 ```php
 'gii' => [
-    '__class' => \Yiisoft\Yii\Gii\Module::class,
+    '__class' => \Yiisoft\Yii\Gii\Gii::class,
     'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'] // adjust this to your needs
 ],
 ```
@@ -88,7 +88,7 @@ if (YII_ENV_DEV) {
     $config['modules']['debug'] = \yii\debug\Module::class;
 
     $config['bootstrap'][] = 'gii';
-    $config['modules']['gii'] = \Yiisoft\Yii\Gii\Module::class; // <--- here
+    $config['modules']['gii'] = \Yiisoft\Yii\Gii\Gii::class; // <--- here
 }
 ```
 
@@ -102,7 +102,7 @@ if (YII_ENV_DEV) {
 
     $config['bootstrap'][] = 'gii';
     $config['modules']['gii'] = [
-        '__class' => \Yiisoft\Yii\Gii\Module::class,
+        '__class' => \Yiisoft\Yii\Gii\Gii::class,
         'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'],
     ];
 }

@@ -15,28 +15,28 @@
         "wiki": "http://www.yiiframework.com/wiki/",
         "irc": "irc://irc.freenode.net/yii"
     },
-    "authors": [
-        {
-            "name": "Qiang Xue",
-            "email": "qiang.xue@gmail.com"
-        }
-    ],
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
+        "php": "^7.4",
         "phpspec/php-diff": "^1.1.0",
         "yiisoft/strings": "^3.0@dev",
-        "yiisoft/var-dumper": "^3.0@dev",
-        "php": "^7.4"
+        "yiisoft/arrays": "^3.0@dev",
+        "yiisoft/aliases": "^3.0@dev",
+        "yiisoft/http": "^1.0@dev",
+        "yiisoft/view": "^3.0@dev",
+        "yiisoft/validator": "^3.0@dev",
+        "yiisoft/files": "^3.0@dev",
+        "yiisoft/json": "^3.0@dev",
+        "yiisoft/yii-console": "^3.0@dev",
+        "yiisoft/var-dumper": "^3.0@dev"
     },
     "require-dev": {
+        "hiqdev/composer-config-plugin": "^1.0@dev",
+        "phpunit/phpunit": "^8.4",
         "yiisoft/di": "^3.0@dev",
         "yiisoft/log": "^3.0@dev",
-        "yiisoft/cache": "^3.0@dev",
-        "phpunit/phpunit": "^8.4",
-        "hiqdev/composer-config-plugin": "^1.0@dev",
-        "yiisoft/view": "^3.0@dev",
-        "yiisoft/yii-web": "^3.0@dev"
+        "yiisoft/event-dispatcher": "^3.0@dev"
     },
     "autoload": {
         "psr-4": {
@@ -53,6 +53,12 @@
             "dev-master": "3.0.x-dev"
         },
         "config-plugin": {
+            "params": "config/params.php",
+            "console": [
+                "$common",
+                "config/console.php"
+            ],
+            "common": "config/common.php",
             "tests": "config/tests.php"
         }
     },

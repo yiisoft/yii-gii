@@ -2,8 +2,8 @@
 
 namespace Yiisoft\Yii\Gii\Tests;
 
-use yii\helpers\FileHelper;
-use yii\tests\TestCase;
+use PHPUnit\Framework\TestCase;
+use Yiisoft\Files\FileHelper;
 
 /**
  * GiiTestCase is the base class for all gii related test cases
@@ -13,7 +13,7 @@ class GiiTestCase extends TestCase
 {
     protected $driverName = 'sqlite';
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -28,14 +28,15 @@ class GiiTestCase extends TestCase
             $this->markTestSkipped('pdo and ' . $pdo_database . ' extension are required.');
         }
 
-        $this->mockWebApplication();
-
-        $this->container->set('db', [
-            '__class' => isset($config['__class']) ? $config['__class'] : \Yiisoft\Db\Connection::class,
-            'dsn' => $config['dsn'],
-            'username' => isset($config['username']) ? $config['username'] : null,
-            'password' => isset($config['password']) ? $config['password'] : null,
-        ]);
+        $this->container->set(
+            'db',
+            [
+                '__class' => isset($config['__class']) ? $config['__class'] : \Yiisoft\Db\Connection::class,
+                'dsn' => $config['dsn'],
+                'username' => isset($config['username']) ? $config['username'] : null,
+                'password' => isset($config['password']) ? $config['password'] : null,
+            ]
+        );
 
 
         if (isset($config['fixture'])) {
