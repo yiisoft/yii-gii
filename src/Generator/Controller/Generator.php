@@ -37,18 +37,11 @@ final class Generator extends AbstractGenerator
      */
     public string $actions = 'index';
 
-
-    /**
-     * {@inheritdoc}
-     */
     public function getName(): string
     {
         return 'Controller Generator';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDescription(): string
     {
         return 'This generator helps you to quickly generate a new controller class with
