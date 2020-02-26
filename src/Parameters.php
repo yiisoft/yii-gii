@@ -4,7 +4,7 @@ namespace Yiisoft\Yii\Gii;
 
 use Yiisoft\Arrays\ArrayHelper;
 
-class Parameters
+final class Parameters
 {
     private array $parameters;
 

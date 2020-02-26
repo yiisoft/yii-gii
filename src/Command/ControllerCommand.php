@@ -15,7 +15,7 @@ use Yiisoft\Yii\Gii\GeneratorInterface;
  * $ ./yii gii/model --tableName=city --modelClass=City
  * ```
  */
-class ControllerCommand extends BaseGenerateCommand
+final class ControllerCommand extends BaseGenerateCommand
 {
     protected const NAME = 'controller';
     protected static $defaultName = 'gii/controller';
