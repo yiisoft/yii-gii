@@ -30,13 +30,7 @@ final class GiiFactory
             if (!is_string($name)) {
                 throw new InvalidArgumentException("Generator name must be set.");
             }
-            $generatorsInstances[$name] = $container->get(
-                $generator,
-                [
-                    $container->get(Aliases::class),
-                    $container->get(Parameters::class)
-                ]
-            );
+            $generatorsInstances[$name] = $container->get($generator);
         }
         return new Gii($generatorsInstances, $container);
     }
