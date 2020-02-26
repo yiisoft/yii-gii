@@ -10,7 +10,7 @@ return [
     ],
     'gii'     => [
         'generators' => [
-            'controller' => \Yiisoft\Yii\Gii\Generators\Controller\Generator::class
+            'controller' => \Yiisoft\Yii\Gii\Generator\Controller\Generator::class
         ],
         'basePath'   => '@root',
         'viewPath'   => '@views',

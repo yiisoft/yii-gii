@@ -1,13 +1,13 @@
 <?php
 
-namespace Yiisoft\Yii\Gii\Generators\Controller;
+namespace Yiisoft\Yii\Gii\Generator\Controller;
 
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Strings\StringHelper;
 use Yiisoft\Validator\Rule\MatchRegularExpression;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Yii\Gii\CodeFile;
-use Yiisoft\Yii\Gii\Generators\AbstractGenerator;
+use Yiisoft\Yii\Gii\Generator\AbstractGenerator;
 
 /**
  * This generator will generate a controller and one or a few action view files.
@@ -65,7 +65,7 @@ class Generator extends AbstractGenerator
                     (new MatchRegularExpression('/^[\w\\\\]*Controller$/'))
                         ->message('Only word characters and backslashes are allowed, and the class name must end with "Controller".')
                 ],
-                ['controllerClass', 'validateNewClass'],
+                //['controllerClass', 'validateNewClass'],
                 'baseClass' => [
                     (new MatchRegularExpression('/^[\w\\\\]*$/'))
                         ->message('Only word characters and backslashes are allowed.')
