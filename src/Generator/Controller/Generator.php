@@ -18,7 +18,7 @@ use Yiisoft\Yii\Gii\Generator\AbstractGenerator;
  * @property string $controllerNamespace The namespace of the controller class. This property is read-only.
  * @property string $controllerSubPath The controller sub path. This property is read-only.
  */
-class Generator extends AbstractGenerator
+final class Generator extends AbstractGenerator
 {
     /**
      * @var string the controller class name
