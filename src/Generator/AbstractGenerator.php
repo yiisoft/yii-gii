@@ -1,6 +1,6 @@
 <?php
 
-namespace Yiisoft\Yii\Gii\Generators;
+namespace Yiisoft\Yii\Gii\Generator;
 
 use ReflectionClass;
 use ReflectionException;
@@ -14,6 +14,7 @@ use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\Validator;
 use Yiisoft\View\Exception\ViewNotFoundException;
 use Yiisoft\View\View;
+use Yiisoft\View\ViewContextInterface;
 use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Yii\Gii\Exception\InvalidConfigException;
 use Yiisoft\Yii\Gii\GeneratorInterface;
@@ -33,7 +34,7 @@ use Yiisoft\Yii\Gii\Parameters;
  *   This is the place where main code generation code resides.
  *
  */
-abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
+abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface, ViewContextInterface
 {
     private array $errors = [];
     protected Aliases    $aliases;
@@ -283,6 +284,11 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
         return !$hasError;
     }
 
+    public function getViewPath(): string
+    {
+        return $this->getTemplatePath();
+    }
+
     /**
      * @return string the root path of the template files that are currently being used.
      * @throws ReflectionException
@@ -316,7 +322,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
     {
         $params['generator'] = $this;
 
-        return $this->view->render($this->getTemplatePath() . '/' . $template, $params);
+        return $this->view->render($template, $params, $this);
     }
 
     /**
