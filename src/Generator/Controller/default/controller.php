@@ -6,15 +6,15 @@
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Strings\StringHelper;
 
-/* @var $generator Yiisoft\Yii\Gii\Generators\Controller\Generator */
+/* @var $generator Yiisoft\Yii\Gii\Generator\Controller\Generator */
 
 echo "<?php\n";
 ?>
 
 namespace <?= $generator->getControllerNamespace() ?>;
 
-class <?= StringHelper::basename($generator->controllerClass) ?> <?= $generator->baseClass ? 'extends \\'.trim(
-        $generator->baseClass,
+class <?= StringHelper::basename($generator->getControllerClass()) ?> <?= $generator->getBaseClass() ? 'extends \\'.trim(
+        $generator->getBaseClass(),
         '\\'
     )."\n" : '' ?>
 {

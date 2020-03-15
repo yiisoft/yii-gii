@@ -23,19 +23,19 @@ final class Generator extends AbstractGenerator
     /**
      * @var string the controller class name
      */
-    public string $controllerClass;
+    private string $controllerClass;
     /**
-     * @var string the controller's view path
+     * @var string the controller's views path
      */
-    public string $viewPath;
+    private string $viewsPath;
     /**
      * @var string the base class of the controller
      */
-    public string $baseClass = 'App\\Controller';
+    private string $baseClass = 'App\\Controller';
     /**
      * @var string list of action IDs separated by commas or spaces
      */
-    public string $actions = 'index';
+    private string $actions = 'index';
 
     public function getName(): string
     {
@@ -56,7 +56,9 @@ final class Generator extends AbstractGenerator
                 'controllerClass' => [
                     new Required(),
                     (new MatchRegularExpression('/^[\w\\\\]*Controller$/'))
-                        ->message('Only word characters and backslashes are allowed, and the class name must end with "Controller".')
+                        ->message(
+                            'Only word characters and backslashes are allowed, and the class name must end with "Controller".'
+                        )
                 ],
                 //['controllerClass', 'validateNewClass'],
                 'baseClass' => [
@@ -76,7 +78,7 @@ final class Generator extends AbstractGenerator
         return [
             'baseClass' => 'Base Class',
             'controllerClass' => 'Controller Class',
-            'viewPath' => 'View Path',
+            'viewsPath' => 'Views Path',
             'actions' => 'Action IDs',
         ];
     }
@@ -104,10 +106,10 @@ final class Generator extends AbstractGenerator
             'actions' => 'Provide one or multiple action IDs to generate empty action method(s) in the controller. Separate multiple action IDs with commas or spaces.
                 Action IDs should be in lower case. For example:
                 <ul>
-                    <li><code>index</code> generates <code>actionIndex()</code></li>
-                    <li><code>create-order</code> generates <code>actionCreateOrder()</code></li>
+                    <li><code>index</code> generates <code>index()</code></li>
+                    <li><code>create-order</code> generates <code>createOrder()</code></li>
                 </ul>',
-            'viewPath' => 'Specify the directory for storing the view scripts for the controller. You may use path alias here, e.g.,
+            'viewsPath' => 'Specify the directory for storing the view scripts for the controller. You may use path alias here, e.g.,
                 <code>/var/www/yii-demo/controllers/views/order</code>, <code>@app/views/order</code>. If not set, it will default
                 to <code>@app/views/ControllerID</code>',
             'baseClass' => 'This is the class that the new controller class will extend from. Please make sure the class exists and can be autoloaded.',
@@ -173,13 +175,13 @@ final class Generator extends AbstractGenerator
      */
     public function getViewFile(string $action): string
     {
-        if (empty($this->viewPath)) {
+        if (empty($this->viewsPath)) {
             return $this->aliases->get(
                 '@views/' . $this->getControllerID() . "/$action.php"
             );
         }
 
-        return $this->aliases->get(str_replace('\\', '/', $this->viewPath) . "/$action.php");
+        return $this->aliases->get(str_replace('\\', '/', $this->viewsPath) . "/$action.php");
     }
 
     /**
@@ -188,5 +190,45 @@ final class Generator extends AbstractGenerator
     public function getControllerNamespace(): string
     {
         return $this->parameters->get('gii.controller.namespace');
+    }
+
+    public function getControllerClass()
+    {
+        return $this->controllerClass;
+    }
+
+    public function setControllerClass($controllerClass)
+    {
+        $this->controllerClass = $controllerClass;
+    }
+
+    public function getViewsPath()
+    {
+        return $this->viewsPath;
+    }
+
+    public function setViewsPath($viewsPath)
+    {
+        $this->viewsPath = $viewsPath;
+    }
+
+    public function getBaseClass()
+    {
+        return $this->baseClass;
+    }
+
+    public function setBaseClass($baseClass)
+    {
+        $this->baseClass = $baseClass;
+    }
+
+    public function getActions()
+    {
+        return $this->actions;
+    }
+
+    public function setActions($actions)
+    {
+        $this->actions = $actions;
     }
 }

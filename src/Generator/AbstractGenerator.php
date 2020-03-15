@@ -37,19 +37,19 @@ use Yiisoft\Yii\Gii\Parameters;
 abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface, ViewContextInterface
 {
     private array $errors = [];
-    protected Aliases    $aliases;
-    protected Parameters $parameters;
-    protected View $view;
     /**
      * @var array a list of available code templates. The array keys are the template names,
      * and the array values are the corresponding template paths or path aliases.
      */
-    public array $templates = [];
+    private array $templates = [];
     /**
      * @var string the name of the code template that the user has selected.
      * The value of this property is internally managed by this class.
      */
-    public string $template = 'default';
+    private string $template = 'default';
+    protected Aliases    $aliases;
+    protected Parameters $parameters;
+    protected View $view;
 
     public function __construct(Aliases $aliases, Parameters $parameters, View $view)
     {
@@ -200,8 +200,9 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
             $result = Json::decode(file_get_contents($path), true);
             if (is_array($result)) {
                 foreach ($stickyAttributes as $name) {
-                    if (array_key_exists($name, $result) && $this->hasAttribute($name)) {
-                        $this->$name = $result[$name];
+                    $method = 'set' . $name;
+                    if (array_key_exists($name, $result) && method_exists($this, $method)) {
+                        $this->$method($result[$name]);
                     }
                 }
             }
@@ -215,8 +216,9 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
     public function load(array $data): void
     {
         foreach ($data as $name => $value) {
-            if ($this->hasAttribute($name)) {
-                $this->$name = $value;
+            $method = 'set' . $name;
+            if (method_exists($this, $method)) {
+                $this->$method($value);
             }
         }
     }
@@ -230,7 +232,10 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
         $stickyAttributes[] = 'template';
         $values = [];
         foreach ($stickyAttributes as $name) {
-            $values[$name] = $this->$name;
+            $method = 'get' . $name;
+            if (method_exists($this, $method)) {
+                $values[$name] = $this->$method();
+            }
         }
         $path = $this->getStickyDataFile();
         if (!mkdir($concurrentDirectory = dirname($path), 0755, true) && !is_dir($concurrentDirectory)) {
@@ -272,7 +277,11 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
                         : " overwrote $relativePath";
                 } catch (\Exception $e) {
                     $hasError = true;
-                    $lines[] = sprintf("generating %s\n<span class=\"error\">%s</span>", $relativePath, $error);
+                    $lines[] = sprintf(
+                        "generating %s\n<span class=\"error\">%s</span>",
+                        $relativePath,
+                        $e->getMessage()
+                    );
                 }
             } else {
                 $lines[] = "   skipped $relativePath";
@@ -314,7 +323,6 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * relative to [[templatePath]].
      * @param array $params list of parameters to be passed to the template file.
      * @return string the generated code
-     * @throws ReflectionException
      * @throws Throwable
      * @throws ViewNotFoundException
      */
@@ -428,7 +436,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
         $string = addslashes($string);
         if (!empty($placeholders)) {
             $phKeys = array_map(
-                fn ($word) => '{' . $word . '}',
+                fn($word) => '{' . $word . '}',
                 array_keys($placeholders)
             );
             $phValues = array_values($placeholders);
@@ -449,13 +457,14 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
         if (!$this->hasAttribute($attribute)) {
             throw new \InvalidArgumentException(sprintf('There is no "%s" in %s.', $attribute, $this->getName()));
         }
-
-        return $this->$attribute;
+        $method = 'get' . $attribute;
+        return $this->$method();
     }
 
     public function hasAttribute(string $attribute): bool
     {
-        return isset($this->$attribute);
+        $method = 'get' . $attribute;
+        return method_exists($this, $method);
     }
 
     public function getErrors(): array
@@ -466,5 +475,25 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
     public function hasErrors(): bool
     {
         return $this->errors !== [];
+    }
+
+    public function getTemplates(): array
+    {
+        return $this->templates;
+    }
+
+    public function setTemplates(array $templates): void
+    {
+        $this->templates = $templates;
+    }
+
+    public function getTemplate(): string
+    {
+        return $this->template;
+    }
+
+    public function setTemplate(string $template): void
+    {
+        $this->template = $template;
     }
 }

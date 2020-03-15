@@ -36,7 +36,7 @@ abstract class BaseGenerateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $generator = $this->getGenerator();
-        $generator->controllerClass = $input->getArgument('className');
+        $generator->load(array_merge($input->getOptions(), $input->getArguments()));
         $output->writeln("Running '{$generator->getName()}'...\n\n");
         if ($generator->validate()) {
             $this->generateCode($generator, $input, $output);
