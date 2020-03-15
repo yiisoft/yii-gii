@@ -192,42 +192,42 @@ final class Generator extends AbstractGenerator
         return $this->parameters->get('gii.controller.namespace');
     }
 
-    public function getControllerClass()
+    public function getControllerClass(): string
     {
         return $this->controllerClass;
     }
 
-    public function setControllerClass($controllerClass)
+    public function setControllerClass(string $controllerClass): void
     {
         $this->controllerClass = $controllerClass;
     }
 
-    public function getViewsPath()
+    public function getViewsPath(): string
     {
         return $this->viewsPath;
     }
 
-    public function setViewsPath($viewsPath)
+    public function setViewsPath(string $viewsPath): void
     {
         $this->viewsPath = $viewsPath;
     }
 
-    public function getBaseClass()
+    public function getBaseClass(): string
     {
         return $this->baseClass;
     }
 
-    public function setBaseClass($baseClass)
+    public function setBaseClass(string $baseClass): void
     {
         $this->baseClass = $baseClass;
     }
 
-    public function getActions()
+    public function getActions(): string
     {
         return $this->actions;
     }
 
-    public function setActions($actions)
+    public function setActions(string $actions): void
     {
         $this->actions = $actions;
     }
