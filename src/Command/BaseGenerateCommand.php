@@ -25,7 +25,8 @@ abstract class BaseGenerateCommand extends Command
 
     protected function configure(): void
     {
-        $this->addArgument('overwrite', InputArgument::OPTIONAL, '', false);
+        $this->addOption('overwrite', 'o', InputArgument::OPTIONAL, '')
+        ->addOption('template', 't', InputArgument::OPTIONAL, '');
     }
 
     /**
@@ -36,9 +37,9 @@ abstract class BaseGenerateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $generator = $this->getGenerator();
-        $generator->load(array_merge($input->getOptions(), $input->getArguments()));
+        $generator->load(array_filter(array_merge($input->getOptions(), $input->getArguments())));
         $output->writeln("Running '{$generator->getName()}'...\n\n");
-        if ($generator->validate()) {
+        if ($generator->validate() && !$generator->hasErrors()) {
             $this->generateCode($generator, $input, $output);
         } else {
             $this->displayValidationErrors($generator, $output);

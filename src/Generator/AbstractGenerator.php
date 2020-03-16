@@ -9,7 +9,9 @@ use Throwable;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Json\Json;
 use Yiisoft\Validator\DataSetInterface;
+use Yiisoft\Validator\Result;
 use Yiisoft\Validator\ResultSet;
+use Yiisoft\Validator\Rule\Callback;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\Validator;
 use Yiisoft\View\Exception\ViewNotFoundException;
@@ -30,6 +32,7 @@ use Yiisoft\Yii\Gii\Parameters;
  *
  * - [[getName()]]: returns the name of the generator
  * - [[getDescription()]]: returns the detailed description of the generator
+ * - [[validate()]]: returns generator validation result
  * - [[generate()]]: generates the code based on the current user input and the specified code template files.
  *   This is the place where main code generation code resides.
  *
@@ -47,7 +50,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * The value of this property is internally managed by this class.
      */
     private string $template = 'default';
-    protected Aliases    $aliases;
+    protected Aliases $aliases;
     protected Parameters $parameters;
     protected View $view;
 
@@ -183,7 +186,8 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
     {
         return [
             'template' => [
-                (new Required())->message('A code template must be selected.')
+                (new Required())->message('A code template must be selected.'),
+                (new Callback([$this, 'validateTemplate']))
             ],
         ];
     }
@@ -331,6 +335,76 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
         $params['generator'] = $this;
 
         return $this->view->render($template, $params, $this);
+    }
+
+    /**
+     * Validates the template selection.
+     * This method validates whether the user selects an existing template
+     * and the template contains all required template files as specified in [[requiredTemplates()]].
+     * @param $value
+     * @param DataSetInterface $dataSet
+     * @return Result
+     */
+    public function validateTemplate($value, DataSetInterface $dataSet): Result
+    {
+        $result = new Result();
+        $templates = $dataSet->getTemplates();
+        if ($templates === []) {
+            return $result;
+        } elseif (!isset($templates[$value])) {
+            $result->addError('Invalid template selection.');
+        } else {
+            $templatePath = $templates[$value];
+            foreach ($dataSet->requiredTemplates() as $template) {
+                if (!is_file($dataSet->aliases->get($templatePath . '/' . $template))) {
+                    $result->addError("Unable to find the required code template file '$template'.");
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * An inline validator that checks if the attribute value refers to an existing class name.
+     * @param string $value the attribute being validated
+     * @param DataSetInterface $dataSet
+     * @return Result
+     */
+    public function validateClass(string $value, DataSetInterface $dataSet): Result
+    {
+        $result = new Result();
+        if (!class_exists($value)) {
+            $result->addError("Class '$value' does not exist or has syntax error.");
+        }
+
+        return $result;
+    }
+
+    /**
+     * An inline validator that checks if the attribute value refers to a valid namespaced class name.
+     * The validator will check if the directory containing the new class file exist or not.
+     * @param string $value being validated
+     * @param DataSetInterface $dataSet
+     * @return Result
+     */
+    public function validateNewClass(string $value, DataSetInterface $dataSet): Result
+    {
+        $result = new Result();
+        $class = ltrim($value, '\\');
+        if (($pos = strrpos($class, '\\')) !== false) {
+            $ns = substr($class, 0, $pos);
+            try {
+                $path = $dataSet->aliases->get('@' . str_replace('\\', '/', $ns));
+                if (!is_dir($path)) {
+                    $result->addError("Please make sure the directory containing this class exists: $path");
+                }
+            } catch (\InvalidArgumentException $exception) {
+                $result->addError("The class namespace is invalid: $ns");
+            }
+        }
+
+        return $result;
     }
 
     /**

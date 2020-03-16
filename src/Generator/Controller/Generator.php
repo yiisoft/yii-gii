@@ -4,6 +4,7 @@ namespace Yiisoft\Yii\Gii\Generator\Controller;
 
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Strings\StringHelper;
+use Yiisoft\Validator\Rule\Callback;
 use Yiisoft\Validator\Rule\MatchRegularExpression;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Yii\Gii\CodeFile;
@@ -25,9 +26,9 @@ final class Generator extends AbstractGenerator
      */
     private string $controllerClass;
     /**
-     * @var string the controller's views path
+     * @var null|string the controller's views path
      */
-    private string $viewsPath;
+    private ?string $viewsPath = null;
     /**
      * @var string the base class of the controller
      */
@@ -55,13 +56,14 @@ final class Generator extends AbstractGenerator
             [
                 'controllerClass' => [
                     new Required(),
-                    (new MatchRegularExpression('/^[\w\\\\]*Controller$/'))
+                    (new MatchRegularExpression('/^[\w]*Controller$/'))
                         ->message(
-                            'Only word characters and backslashes are allowed, and the class name must end with "Controller".'
-                        )
+                            'Only word characters are allowed, and the class name must end with "Controller".'
+                        ),
+                    (new Callback([$this, 'validateNewClass']))
                 ],
-                //['controllerClass', 'validateNewClass'],
                 'baseClass' => [
+                    new Required(),
                     (new MatchRegularExpression('/^[\w\\\\]*$/'))
                         ->message('Only word characters and backslashes are allowed.')
                 ],
@@ -125,16 +127,16 @@ final class Generator extends AbstractGenerator
     {
         $files = [];
 
-        $files[] = new CodeFile(
+        $files[] = (new CodeFile(
             $this->getControllerFile(),
             $this->render('controller.php')
-        );
+        ))->withBasePath($this->aliases->get('@root'));
 
         foreach ($this->getActionIDs() as $action) {
-            $files[] = new CodeFile(
+            $files[] = (new CodeFile(
                 $this->getViewFile($action),
                 $this->render('view.php', ['action' => $action])
-            );
+            ))->withBasePath($this->aliases->get('@root'));
         }
 
         return $files;
@@ -157,7 +159,9 @@ final class Generator extends AbstractGenerator
      */
     public function getControllerFile(): string
     {
-        return $this->aliases->get('@src/Controller/' . $this->controllerClass) . '.php';
+        return $this->aliases->get(
+            sprintf('%s/%s.php', $this->parameters->get('gii.controller.directory'), $this->getControllerClass())
+        );
     }
 
     /**
@@ -175,13 +179,13 @@ final class Generator extends AbstractGenerator
      */
     public function getViewFile(string $action): string
     {
-        if (empty($this->viewsPath)) {
+        if (empty($this->getViewsPath())) {
             return $this->aliases->get(
                 '@views/' . $this->getControllerID() . "/$action.php"
             );
         }
 
-        return $this->aliases->get(str_replace('\\', '/', $this->viewsPath) . "/$action.php");
+        return $this->aliases->get(str_replace('\\', '/', $this->getViewsPath()) . "/$action.php");
     }
 
     /**
@@ -202,12 +206,12 @@ final class Generator extends AbstractGenerator
         $this->controllerClass = $controllerClass;
     }
 
-    public function getViewsPath(): string
+    public function getViewsPath(): ?string
     {
         return $this->viewsPath;
     }
 
-    public function setViewsPath(string $viewsPath): void
+    public function setViewsPath(?string $viewsPath): void
     {
         $this->viewsPath = $viewsPath;
     }

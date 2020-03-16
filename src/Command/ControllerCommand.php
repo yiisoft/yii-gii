@@ -24,7 +24,7 @@ final class ControllerCommand extends BaseGenerateCommand
     {
         $this->setDescription('Gii controller generator')
             ->addArgument('controllerClass', InputArgument::REQUIRED, 'Name of the generated controller')
-            ->addOption('viewsPath', null, InputArgument::OPTIONAL, 'Controller views path')
+            ->addOption('viewsPath', 'vp', InputArgument::OPTIONAL, 'Controller views path')
             ->addOption('baseClass', 'b', InputArgument::OPTIONAL, 'Controller base class')
             ->addOption('actions', 'a', InputArgument::OPTIONAL, 'Name of the controller actions');
         parent::configure();
