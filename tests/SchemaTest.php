@@ -75,8 +75,10 @@ class SchemaTest extends GiiTestCase
             $modelClass = basename($files[$index]->path, '.php');
 
             foreach ($relations as $relation) {
-                $this->assertTrue(strpos($modelCode, $relation) !== false,
-                    "Model $modelClass should contain this relation: $relation.\n$modelCode");
+                $this->assertTrue(
+                    strpos($modelCode, $relation) !== false,
+                    "Model $modelClass should contain this relation: $relation.\n$modelCode"
+                );
             }
         }
     }
