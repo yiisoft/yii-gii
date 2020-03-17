@@ -253,10 +253,10 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
     protected function getStickyDataFile(): string
     {
         return $this->aliases->get('@runtime') . '/gii/' . str_replace(
-                '\\',
-                '-',
-                get_class($this)
-            ) . '.json';
+            '\\',
+            '-',
+            get_class($this)
+        ) . '.json';
     }
 
     /**
@@ -513,7 +513,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
         $string = addslashes($string);
         if (!empty($placeholders)) {
             $phKeys = array_map(
-                fn($word) => '{' . $word . '}',
+                fn ($word) => '{' . $word . '}',
                 array_keys($placeholders)
             );
             $phValues = array_values($placeholders);
