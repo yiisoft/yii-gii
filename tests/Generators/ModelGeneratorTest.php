@@ -149,14 +149,14 @@ class ModelGeneratorTest extends GiiTestCase
             $this->assertTrue(
                 $relation['expected'] === $found,
                 "Relation \"{$relation['relation']}\" should"
-                . ($relation['expected'] ? '' : ' not')." be there:\n" . $code
+                . ($relation['expected'] ? '' : ' not') . " be there:\n" . $code
             );
 
             $found = strpos($code, $relation['name']) !== false;
             $this->assertTrue(
                 $relation['expected'] === $found,
                 "Relation Name \"{$relation['name']}\" should"
-                . ($relation['expected'] ? '' : ' not')." be there:\n" . $code
+                . ($relation['expected'] ? '' : ' not') . " be there:\n" . $code
             );
         }
     }
@@ -206,7 +206,8 @@ class ModelGeneratorTest extends GiiTestCase
         $code = $files[0]->content;
         foreach ($rules as $rule) {
             $location = strpos($code, $rule);
-            $this->assertTrue($location !== false,
+            $this->assertTrue(
+                $location !== false,
                 "Rule \"{$rule}\" should be there:\n" . $code
             );
         }
