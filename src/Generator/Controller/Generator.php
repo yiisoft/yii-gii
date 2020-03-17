@@ -56,9 +56,9 @@ final class Generator extends AbstractGenerator
             [
                 'controllerClass' => [
                     new Required(),
-                    (new MatchRegularExpression('/^[\w]*Controller$/'))
+                    (new MatchRegularExpression('/^[A-Z][\w]*Controller$/'))
                         ->message(
-                            'Only word characters are allowed, and the class name must end with "Controller".'
+                            'Only word characters are allowed, and the class name must start with a capital letter and end with "Controller".'
                         ),
                     (new Callback([$this, 'validateNewClass']))
                 ],

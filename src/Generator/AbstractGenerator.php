@@ -351,7 +351,8 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
         $templates = $dataSet->getTemplates();
         if ($templates === []) {
             return $result;
-        } elseif (!isset($templates[$value])) {
+        }
+        if (!isset($templates[$value])) {
             $result->addError('Invalid template selection.');
         } else {
             $templatePath = $templates[$value];
