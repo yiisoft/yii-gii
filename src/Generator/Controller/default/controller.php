@@ -3,20 +3,20 @@
  * This is the template for generating a controller class file.
  */
 
-use Yiisoft\Strings\Inflector;
 use Yiisoft\Strings\StringHelper;
 
-/* @var $generator Yiisoft\Yii\Gii\Generators\Controller\Generator */
+/* @var $generator Yiisoft\Yii\Gii\Generator\Controller\Generator */
 
 echo "<?php\n";
 ?>
 
 namespace <?= $generator->getControllerNamespace() ?>;
 
-class <?= StringHelper::basename($generator->controllerClass) ?> <?= $generator->baseClass ? 'extends \\'.trim(
-        $generator->baseClass,
-        '\\'
-    )."\n" : '' ?>
+class <?= StringHelper::basename($generator->getControllerClass()) ?> <?= $generator->getBaseClass()
+? 'extends \\' . trim(
+    $generator->getBaseClass(),
+    '\\'
+) . "\n" : '' ?>
 {
     public function getId(): string
     {

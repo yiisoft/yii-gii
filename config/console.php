@@ -8,7 +8,7 @@ use Yiisoft\View\Theme;
 use Yiisoft\View\View;
 
 return [
-    EventDispatcherInterface::class => Yiisoft\EventDispatcher\Dispatcher::class,
+    EventDispatcherInterface::class => Yiisoft\EventDispatcher\Dispatcher\Dispatcher::class,
     ListenerProviderInterface::class => Yiisoft\EventDispatcher\Provider\Provider::class,
     View::class => static function ($container) {
         return new View(

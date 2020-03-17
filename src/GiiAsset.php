@@ -3,6 +3,7 @@
 namespace Yiisoft\Yii\Gii;
 
 use Yiisoft\Assets\AssetBundle;
+use Yiisoft\Yii\JQuery\YiiAsset;
 
 /**
  * This declares the asset files required by Gii.
@@ -18,6 +19,6 @@ class GiiAsset extends AssetBundle
         'js/gii.js',
     ];
     public array $depends = [
-        \Yiisoft\Yii\JQuery\YiiAsset::class,
+        YiiAsset::class,
     ];
 }

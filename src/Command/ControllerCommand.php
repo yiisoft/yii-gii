@@ -8,11 +8,11 @@ use Yiisoft\Yii\Gii\GeneratorInterface;
 /**
  * This is the command line version of Gii - a code generator.
  *
- * You can use this command to generate models, controllers, etc. For example,
- * to generate an ActiveRecord model based on a DB table, you can run:
+ * You can use this command to generate controllers, actions, etc. For example,
+ * to generate a controller with some actions, you can run:
  *
  * ```
- * $ ./yii gii/model --tableName=city --modelClass=City
+ * $ ./yii gii/controller OrderController --actions=index,view,edit
  * ```
  */
 final class ControllerCommand extends BaseGenerateCommand
@@ -23,7 +23,10 @@ final class ControllerCommand extends BaseGenerateCommand
     protected function configure(): void
     {
         $this->setDescription('Gii controller generator')
-            ->addArgument('className', InputArgument::REQUIRED, 'Name of the generated controller');
+            ->addArgument('controllerClass', InputArgument::REQUIRED, 'Name of the generated controller')
+            ->addOption('viewsPath', 'vp', InputArgument::OPTIONAL, 'Controller views path')
+            ->addOption('baseClass', 'b', InputArgument::OPTIONAL, 'Controller base class')
+            ->addOption('actions', 'a', InputArgument::OPTIONAL, 'Name of the controller actions');
         parent::configure();
     }
 

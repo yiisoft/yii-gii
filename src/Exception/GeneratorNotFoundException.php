@@ -11,6 +11,7 @@ class GeneratorNotFoundException extends Exception implements FriendlyExceptionI
     {
         return 'Generator not found';
     }
+
     public function getSolution(): ?string
     {
         return "When you add a generator for the Gii Generator you should specify a value that can be:\n\n"

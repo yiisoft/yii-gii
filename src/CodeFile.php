@@ -2,6 +2,7 @@
 
 namespace Yiisoft\Yii\Gii;
 
+use Diff;
 use RuntimeException;
 use Yiisoft\Html\Html;
 use Yiisoft\Yii\Gii\Components\DiffRendererHtmlInline;
@@ -205,7 +206,7 @@ final class CodeFile
         }
 
         $renderer = new DiffRendererHtmlInline();
-        $diff = new \Diff($lines1, $lines2);
+        $diff = new Diff($lines1, $lines2);
 
         return $diff->render($renderer);
     }

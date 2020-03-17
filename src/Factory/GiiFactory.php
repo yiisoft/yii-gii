@@ -4,7 +4,6 @@ namespace Yiisoft\Yii\Gii\Factory;
 
 use InvalidArgumentException;
 use Psr\Container\ContainerInterface;
-use Yiisoft\Aliases\Aliases;
 use Yiisoft\Yii\Gii\Gii;
 use Yiisoft\Yii\Gii\GiiInterface;
 use Yiisoft\Yii\Gii\Parameters;

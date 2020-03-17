@@ -12,6 +12,8 @@ use Yiisoft\Yii\Console\ExitCode;
 use Yiisoft\Yii\Gii\GeneratorInterface;
 use Yiisoft\Yii\Gii\GiiInterface;
 
+use function count;
+
 abstract class BaseGenerateCommand extends Command
 {
     protected const NAME = '';
@@ -25,7 +27,8 @@ abstract class BaseGenerateCommand extends Command
 
     protected function configure(): void
     {
-        $this->addArgument('overwrite', InputArgument::OPTIONAL, '', false);
+        $this->addOption('overwrite', 'o', InputArgument::OPTIONAL, '')
+            ->addOption('template', 't', InputArgument::OPTIONAL, '');
     }
 
     /**
@@ -36,9 +39,9 @@ abstract class BaseGenerateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $generator = $this->getGenerator();
-        $generator->controllerClass = $input->getArgument('className');
+        $generator->load(array_filter(array_merge($input->getOptions(), $input->getArguments())));
         $output->writeln("Running '{$generator->getName()}'...\n\n");
-        if ($generator->validate()) {
+        if ($generator->validate() && !$generator->hasErrors()) {
             $this->generateCode($generator, $input, $output);
         } else {
             $this->displayValidationErrors($generator, $output);
@@ -61,7 +64,7 @@ abstract class BaseGenerateCommand extends Command
     protected function generateCode(GeneratorInterface $generator, InputInterface $input, OutputInterface $output): void
     {
         $files = $generator->generate();
-        if (\count($files) === 0) {
+        if (count($files) === 0) {
             $output->writeln("No code to be generated.\n");
             return;
         }
@@ -125,12 +128,13 @@ abstract class BaseGenerateCommand extends Command
     protected function choice($input, $output)
     {
         $question = new ChoiceQuestion(
-            'Do you want to overwrite this file?', [
-                                                     'y' => 'Overwrite this file.',
-                                                     'n' => 'Skip this file.',
-                                                     'ya' => 'Overwrite this and the rest of the changed files.',
-                                                     'na' => 'Skip this and the rest of the changed files.',
-                                                 ]
+            'Do you want to overwrite this file?',
+            [
+                'y' => 'Overwrite this file.',
+                'n' => 'Skip this file.',
+                'ya' => 'Overwrite this and the rest of the changed files.',
+                'na' => 'Skip this and the rest of the changed files.',
+            ]
         );
         return $this->getHelper('question')->ask($input, $output, $question);
     }
