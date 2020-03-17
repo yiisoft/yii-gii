@@ -2,6 +2,8 @@
 
 namespace Yiisoft\Yii\Gii\Generator;
 
+use Exception;
+use InvalidArgumentException;
 use ReflectionClass;
 use ReflectionException;
 use RuntimeException;
@@ -9,7 +11,9 @@ use Throwable;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Json\Json;
 use Yiisoft\Validator\DataSetInterface;
+use Yiisoft\Validator\Result;
 use Yiisoft\Validator\ResultSet;
+use Yiisoft\Validator\Rule\Callback;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\Validator;
 use Yiisoft\View\Exception\ViewNotFoundException;
@@ -30,6 +34,7 @@ use Yiisoft\Yii\Gii\Parameters;
  *
  * - [[getName()]]: returns the name of the generator
  * - [[getDescription()]]: returns the detailed description of the generator
+ * - [[validate()]]: returns generator validation result
  * - [[generate()]]: generates the code based on the current user input and the specified code template files.
  *   This is the place where main code generation code resides.
  *
@@ -37,19 +42,19 @@ use Yiisoft\Yii\Gii\Parameters;
 abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface, ViewContextInterface
 {
     private array $errors = [];
-    protected Aliases    $aliases;
-    protected Parameters $parameters;
-    protected View $view;
     /**
      * @var array a list of available code templates. The array keys are the template names,
      * and the array values are the corresponding template paths or path aliases.
      */
-    public array $templates = [];
+    private array $templates = [];
     /**
      * @var string the name of the code template that the user has selected.
      * The value of this property is internally managed by this class.
      */
-    public string $template = 'default';
+    private string $template = 'default';
+    protected Aliases $aliases;
+    protected Parameters $parameters;
+    protected View $view;
 
     public function __construct(Aliases $aliases, Parameters $parameters, View $view)
     {
@@ -183,7 +188,8 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
     {
         return [
             'template' => [
-                (new Required())->message('A code template must be selected.')
+                (new Required())->message('A code template must be selected.'),
+                (new Callback([$this, 'validateTemplate']))
             ],
         ];
     }
@@ -200,8 +206,9 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
             $result = Json::decode(file_get_contents($path), true);
             if (is_array($result)) {
                 foreach ($stickyAttributes as $name) {
-                    if (array_key_exists($name, $result) && $this->hasAttribute($name)) {
-                        $this->$name = $result[$name];
+                    $method = 'set' . $name;
+                    if (array_key_exists($name, $result) && method_exists($this, $method)) {
+                        $this->$method($result[$name]);
                     }
                 }
             }
@@ -215,8 +222,9 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
     public function load(array $data): void
     {
         foreach ($data as $name => $value) {
-            if ($this->hasAttribute($name)) {
-                $this->$name = $value;
+            $method = 'set' . $name;
+            if (method_exists($this, $method)) {
+                $this->$method($value);
             }
         }
     }
@@ -230,7 +238,10 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
         $stickyAttributes[] = 'template';
         $values = [];
         foreach ($stickyAttributes as $name) {
-            $values[$name] = $this->$name;
+            $method = 'get' . $name;
+            if (method_exists($this, $method)) {
+                $values[$name] = $this->$method();
+            }
         }
         $path = $this->getStickyDataFile();
         if (!mkdir($concurrentDirectory = dirname($path), 0755, true) && !is_dir($concurrentDirectory)) {
@@ -242,10 +253,10 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
     protected function getStickyDataFile(): string
     {
         return $this->aliases->get('@runtime') . '/gii/' . str_replace(
-                '\\',
-                '-',
-                get_class($this)
-            ) . '.json';
+            '\\',
+            '-',
+            get_class($this)
+        ) . '.json';
     }
 
     /**
@@ -270,9 +281,13 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
                     $lines[] = $file->getOperation() === CodeFile::OP_CREATE
                         ? " generated $relativePath"
                         : " overwrote $relativePath";
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     $hasError = true;
-                    $lines[] = sprintf("generating %s\n<span class=\"error\">%s</span>", $relativePath, $error);
+                    $lines[] = sprintf(
+                        "generating %s\n<span class=\"error\">%s</span>",
+                        $relativePath,
+                        $e->getMessage()
+                    );
                 }
             } else {
                 $lines[] = "   skipped $relativePath";
@@ -314,7 +329,6 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * relative to [[templatePath]].
      * @param array $params list of parameters to be passed to the template file.
      * @return string the generated code
-     * @throws ReflectionException
      * @throws Throwable
      * @throws ViewNotFoundException
      */
@@ -323,6 +337,77 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
         $params['generator'] = $this;
 
         return $this->view->render($template, $params, $this);
+    }
+
+    /**
+     * Validates the template selection.
+     * This method validates whether the user selects an existing template
+     * and the template contains all required template files as specified in [[requiredTemplates()]].
+     * @param $value
+     * @param DataSetInterface $dataSet
+     * @return Result
+     */
+    public function validateTemplate($value, DataSetInterface $dataSet): Result
+    {
+        $result = new Result();
+        $templates = $dataSet->getTemplates();
+        if ($templates === []) {
+            return $result;
+        }
+        if (!isset($templates[$value])) {
+            $result->addError('Invalid template selection.');
+        } else {
+            $templatePath = $templates[$value];
+            foreach ($dataSet->requiredTemplates() as $template) {
+                if (!is_file($dataSet->aliases->get($templatePath . '/' . $template))) {
+                    $result->addError("Unable to find the required code template file '$template'.");
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * An inline validator that checks if the attribute value refers to an existing class name.
+     * @param string $value the attribute being validated
+     * @param DataSetInterface $dataSet
+     * @return Result
+     */
+    public function validateClass(string $value, DataSetInterface $dataSet): Result
+    {
+        $result = new Result();
+        if (!class_exists($value)) {
+            $result->addError("Class '$value' does not exist or has syntax error.");
+        }
+
+        return $result;
+    }
+
+    /**
+     * An inline validator that checks if the attribute value refers to a valid namespaced class name.
+     * The validator will check if the directory containing the new class file exist or not.
+     * @param string $value being validated
+     * @param DataSetInterface $dataSet
+     * @return Result
+     */
+    public function validateNewClass(string $value, DataSetInterface $dataSet): Result
+    {
+        $result = new Result();
+        $class = ltrim($value, '\\');
+        if (($pos = strrpos($class, '\\')) !== false) {
+            $ns = substr($class, 0, $pos);
+            try {
+                $path = $dataSet->aliases->get('@' . str_replace('\\', '/', $ns));
+                if (!is_dir($path)) {
+                    $result->addError("Please make sure the directory containing this class exists: $path");
+                }
+            } catch (InvalidArgumentException $exception) {
+                $result->addError("The class namespace is invalid: $ns");
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -447,15 +532,16 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
     public function getAttributeValue(string $attribute)
     {
         if (!$this->hasAttribute($attribute)) {
-            throw new \InvalidArgumentException(sprintf('There is no "%s" in %s.', $attribute, $this->getName()));
+            throw new InvalidArgumentException(sprintf('There is no "%s" in %s.', $attribute, $this->getName()));
         }
-
-        return $this->$attribute;
+        $method = 'get' . $attribute;
+        return $this->$method();
     }
 
     public function hasAttribute(string $attribute): bool
     {
-        return isset($this->$attribute);
+        $method = 'get' . $attribute;
+        return method_exists($this, $method);
     }
 
     public function getErrors(): array
@@ -466,5 +552,25 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
     public function hasErrors(): bool
     {
         return $this->errors !== [];
+    }
+
+    public function getTemplates(): array
+    {
+        return $this->templates;
+    }
+
+    public function setTemplates(array $templates): void
+    {
+        $this->templates = $templates;
+    }
+
+    public function getTemplate(): string
+    {
+        return $this->template;
+    }
+
+    public function setTemplate(string $template): void
+    {
+        $this->template = $template;
     }
 }

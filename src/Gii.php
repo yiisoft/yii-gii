@@ -3,6 +3,7 @@
 namespace Yiisoft\Yii\Gii;
 
 use Psr\Container\ContainerInterface;
+use RuntimeException;
 use Yiisoft\Factory\Exceptions\NotFoundException;
 use Yiisoft\Yii\Gii\Exception\GeneratorNotFoundException;
 
@@ -42,7 +43,7 @@ final class Gii implements GiiInterface
             $generator = $generator($this->container);
         }
         if (!($generator instanceof GeneratorInterface)) {
-            throw new \RuntimeException();
+            throw new RuntimeException();
         }
         return $generator;
     }
