@@ -2,10 +2,12 @@
 
 namespace Yiisoft\Yii\Gii\Components;
 
+use Diff_Renderer_Html_Array;
+
 /**
  * Renders diff to HTML. Output adjusted to be copy-paste friendly.
  */
-class DiffRendererHtmlInline extends \Diff_Renderer_Html_Array
+class DiffRendererHtmlInline extends Diff_Renderer_Html_Array
 {
     /**
      * Render a and return diff with changes between the two sequences
@@ -63,8 +65,7 @@ HTML;
         </tr>
 HTML;
                     }
-                }
-                // Added lines only on the right side
+                } // Added lines only on the right side
                 elseif ($change['tag'] === 'insert') {
                     foreach ($change['changed']['lines'] as $no => $line) {
                         $toLine = $change['changed']['offset'] + $no + 1;
@@ -76,8 +77,7 @@ HTML;
         </tr>
 HTML;
                     }
-                }
-                // Show deleted lines only on the left side
+                } // Show deleted lines only on the left side
                 elseif ($change['tag'] === 'delete') {
                     foreach ($change['base']['lines'] as $no => $line) {
                         $fromLine = $change['base']['offset'] + $no + 1;
@@ -89,8 +89,7 @@ HTML;
         </tr>
 HTML;
                     }
-                }
-                // Show modified lines on both sides
+                } // Show modified lines on both sides
                 elseif ($change['tag'] === 'replace') {
                     foreach ($change['base']['lines'] as $no => $line) {
                         $fromLine = $change['base']['offset'] + $no + 1;

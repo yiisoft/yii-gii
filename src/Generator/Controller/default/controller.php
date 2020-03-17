@@ -3,7 +3,6 @@
  * This is the template for generating a controller class file.
  */
 
-use Yiisoft\Strings\Inflector;
 use Yiisoft\Strings\StringHelper;
 
 /* @var $generator Yiisoft\Yii\Gii\Generator\Controller\Generator */
@@ -13,10 +12,11 @@ echo "<?php\n";
 
 namespace <?= $generator->getControllerNamespace() ?>;
 
-class <?= StringHelper::basename($generator->getControllerClass()) ?> <?= $generator->getBaseClass() ? 'extends \\'.trim(
+class <?= StringHelper::basename($generator->getControllerClass()) ?> <?= $generator->getBaseClass(
+) ? 'extends \\' . trim(
         $generator->getBaseClass(),
         '\\'
-    )."\n" : '' ?>
+    ) . "\n" : '' ?>
 {
     public function getId(): string
     {

@@ -2,6 +2,8 @@
 
 namespace Yiisoft\Yii\Gii\Generator;
 
+use Exception;
+use InvalidArgumentException;
 use ReflectionClass;
 use ReflectionException;
 use RuntimeException;
@@ -279,7 +281,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
                     $lines[] = $file->getOperation() === CodeFile::OP_CREATE
                         ? " generated $relativePath"
                         : " overwrote $relativePath";
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     $hasError = true;
                     $lines[] = sprintf(
                         "generating %s\n<span class=\"error\">%s</span>",
@@ -400,7 +402,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
                 if (!is_dir($path)) {
                     $result->addError("Please make sure the directory containing this class exists: $path");
                 }
-            } catch (\InvalidArgumentException $exception) {
+            } catch (InvalidArgumentException $exception) {
                 $result->addError("The class namespace is invalid: $ns");
             }
         }
@@ -530,7 +532,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
     public function getAttributeValue(string $attribute)
     {
         if (!$this->hasAttribute($attribute)) {
-            throw new \InvalidArgumentException(sprintf('There is no "%s" in %s.', $attribute, $this->getName()));
+            throw new InvalidArgumentException(sprintf('There is no "%s" in %s.', $attribute, $this->getName()));
         }
         $method = 'get' . $attribute;
         return $this->$method();
