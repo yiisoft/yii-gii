@@ -284,7 +284,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
                 } catch (Exception $e) {
                     $hasError = true;
                     $lines[] = sprintf(
-                        "generating %s\n<span class=\"error\">%s</span>",
+                        "generating %s\n    <span class=\"error\">%s</span>",
                         $relativePath,
                         $e->getMessage()
                     );
@@ -293,7 +293,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
                 $lines[] = "   skipped $relativePath";
             }
         }
-        $lines[] = "done!\n";
+        $lines[] = "done!";
         $results = implode("\n", $lines);
 
         return !$hasError;

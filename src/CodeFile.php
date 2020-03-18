@@ -75,10 +75,9 @@ final class CodeFile
         $this->path = strtr($path, '/\\', DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR);
         $this->content = $content;
         $this->id = sha1($this->path);
+        $this->operation = self::OP_CREATE;
         if (is_file($path)) {
             $this->operation = file_get_contents($path) === $content ? self::OP_SKIP : self::OP_OVERWRITE;
-        } else {
-            $this->operation = self::OP_CREATE;
         }
     }
 
@@ -216,7 +215,7 @@ final class CodeFile
         return $this->id;
     }
 
-    public function getOperation(): string
+    public function getOperation(): int
     {
         return $this->operation;
     }
