@@ -74,7 +74,7 @@ final class CodeFile
     {
         $this->path = strtr($path, '/\\', DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR);
         $this->content = $content;
-        $this->id = sha1($this->path);
+        $this->id = dechex(crc32($this->path));
         $this->operation = self::OP_CREATE;
         if (is_file($path)) {
             $this->operation = file_get_contents($path) === $content ? self::OP_SKIP : self::OP_OVERWRITE;
