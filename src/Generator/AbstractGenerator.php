@@ -263,7 +263,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * Saves the generated code into files.
      * @param CodeFile[] $files the code files to be saved
      * @param array $answers
-     * @param string $results this parameter receives a value from this method indicating the log messages
+     * @param string[] $results this parameter receives a value from this method indicating the log messages
      * generated while saving the code files.
      * @return bool whether files are successfully saved without any error.
      * @throws ReflectionException
@@ -271,30 +271,29 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      */
     public function save(array $files, array $answers, &$results): bool
     {
-        $lines = ['Generating code using template "' . $this->getTemplatePath() . '"...'];
+        $results = ['Generating code using template "' . $this->getTemplatePath() . '"...'];
         $hasError = false;
         foreach ($files as $file) {
             $relativePath = $file->getRelativePath();
             if (!empty($answers[$file->getId()]) && $file->getOperation() !== CodeFile::OP_SKIP) {
                 try {
                     $file->save();
-                    $lines[] = $file->getOperation() === CodeFile::OP_CREATE
-                        ? " generated $relativePath"
-                        : " overwrote $relativePath";
+                    $results[] = $file->getOperation() === CodeFile::OP_CREATE
+                        ? " generated  $relativePath"
+                        : " overwrote  $relativePath";
                 } catch (Exception $e) {
                     $hasError = true;
-                    $lines[] = sprintf(
-                        "generating %s\n    <span class=\"error\">%s</span>",
+                    $results[] = sprintf(
+                        "   generating %s\n    - <span class=\"error\">%s</span>",
                         $relativePath,
                         $e->getMessage()
                     );
                 }
             } else {
-                $lines[] = "   skipped $relativePath";
+                $results[] = "   skipped    $relativePath";
             }
         }
-        $lines[] = "done!";
-        $results = implode("\n", $lines);
+        $results[] = "done!";
 
         return !$hasError;
     }

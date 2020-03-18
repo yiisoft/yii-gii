@@ -75,13 +75,13 @@ abstract class BaseGenerateCommand extends Command
         foreach ($files as $file) {
             $path = $file->getRelativePath();
             if ($file->getOperation() === CodeFile::OP_CREATE) {
-                $output->writeln("    <fg=green>[new]</> <fg=blue>$path</>");
+                $output->writeln("    <fg=green>[new]</>       <fg=blue>$path</>");
                 $answers[$file->getId()] = true;
             } elseif ($file->getOperation() === CodeFile::OP_SKIP) {
                 $output->writeln("    <fg=green>[unchanged]</> <fg=blue>$path</>");
                 $answers[$file->getId()] = false;
             } else {
-                $output->writeln("    <fg=green>[changed]</> <fg=blue>$path</>");
+                $output->writeln("    <fg=green>[changed]</>   <fg=blue>$path</>");
                 if ($skipAll !== null) {
                     $answers[$file->getId()] = !$skipAll;
                 } else {
@@ -106,11 +106,26 @@ abstract class BaseGenerateCommand extends Command
             return;
         }
 
-        if ($generator->save($files, $answers, $results)) {
-            $output->writeln("\n$results");
+        $isSaved = $generator->save($files, $answers, $results);
+        foreach ($results as $n => $result) {
+            if ($n === 0) {
+                $output->writeln("<fg=blue>{$result}</>");
+            } elseif ($n === key(array_slice($results, -1, 1, true))) {
+                $output->writeln("<fg=green>{$result}</>");
+            } else {
+                $output->writeln(
+                    '<fg=yellow>' . preg_replace(
+                        '%<span class="error">(.*?)</span>%',
+                        '<fg=red>\1</>',
+                        $result
+                    ) . '</>'
+                );
+            }
+        }
+
+        if ($isSaved) {
             $output->writeln("\n<fg=green>Files were generated successfully!</>");
         } else {
-            $output->writeln(preg_replace('%(<span class="error">)(.*?)(</span>)%', '<fg=red>\2</>', $results));
             $output->writeln("\n<fg=red>Some errors occurred while generating the files.</>");
         }
     }
