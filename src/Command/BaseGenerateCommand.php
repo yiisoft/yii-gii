@@ -9,6 +9,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Yiisoft\Yii\Console\ExitCode;
+use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Yii\Gii\GeneratorInterface;
 use Yiisoft\Yii\Gii\GiiInterface;
 
@@ -40,7 +41,7 @@ abstract class BaseGenerateCommand extends Command
     {
         $generator = $this->getGenerator();
         $generator->load(array_filter(array_merge($input->getOptions(), $input->getArguments())));
-        $output->writeln("Running '{$generator->getName()}'...\n\n");
+        $output->writeln("Running '{$generator->getName()}'...\n");
         if ($generator->validate() && !$generator->hasErrors()) {
             $this->generateCode($generator, $input, $output);
         } else {
@@ -54,69 +55,79 @@ abstract class BaseGenerateCommand extends Command
 
     protected function displayValidationErrors(GeneratorInterface $generator, OutputInterface $output): void
     {
-        $output->writeln("Code not generated. Please fix the following errors:\n\n");
+        $output->writeln("<fg=red>Code not generated. Please fix the following errors:</>\n");
         foreach ($generator->getErrors() as $attribute => $errors) {
-            $output->writeln(sprintf("%s: %s", $attribute, implode('; ', $errors)));
+            $output->writeln(sprintf(" - <fg=cyan>%s</>: <fg=green>%s</>", $attribute, implode('; ', $errors)));
         }
-        $output->writeln("\n");
+        $output->writeln("");
     }
 
     protected function generateCode(GeneratorInterface $generator, InputInterface $input, OutputInterface $output): void
     {
         $files = $generator->generate();
         if (count($files) === 0) {
-            $output->writeln("No code to be generated.\n");
+            $output->writeln("<fg=cyan>No code to be generated.</>");
             return;
         }
-        $output->writeln("The following files will be generated:\n");
+        $output->writeln("<fg=magenta>The following files will be generated</>:\n");
         $skipAll = $input->isInteractive() ? null : !$input->getArgument('overwrite');
         $answers = [];
         foreach ($files as $file) {
             $path = $file->getRelativePath();
-            if (is_file($file->getPath())) {
-                if (file_get_contents($file->getPath()) === $file->getContent()) {
-                    $output->writeln('  [unchanged]');
-                    $output->writeln(" $path\n");
-                    $answers[$file->getId()] = false;
+            if ($file->getOperation() === CodeFile::OP_CREATE) {
+                $output->writeln("    <fg=green>[new]</>       <fg=blue>$path</>");
+                $answers[$file->getId()] = true;
+            } elseif ($file->getOperation() === CodeFile::OP_SKIP) {
+                $output->writeln("    <fg=green>[unchanged]</> <fg=blue>$path</>");
+                $answers[$file->getId()] = false;
+            } else {
+                $output->writeln("    <fg=green>[changed]</>   <fg=blue>$path</>");
+                if ($skipAll !== null) {
+                    $answers[$file->getId()] = !$skipAll;
                 } else {
-                    $output->writeln('    [changed]');
-                    $output->writeln(" $path\n");
-                    if ($skipAll !== null) {
-                        $answers[$file->getId()] = !$skipAll;
-                    } else {
-                        $answer = $this->choice($input, $output);
-                        $answers[$file->getId()] = $answer === 'y' || $answer === 'ya';
-                        if ($answer === 'ya') {
-                            $skipAll = false;
-                        } elseif ($answer === 'na') {
-                            $skipAll = true;
-                        }
+                    $answer = $this->choice($input, $output);
+                    $answers[$file->getId()] = $answer === 'y' || $answer === 'ya';
+                    if ($answer === 'ya') {
+                        $skipAll = false;
+                    } elseif ($answer === 'na') {
+                        $skipAll = true;
                     }
                 }
-            } else {
-                $output->writeln('[new]');
-                $output->writeln($file->getOperation());
-                $output->writeln(" $path\n");
-                $answers[$file->getId()] = true;
             }
         }
 
         if (!array_sum($answers)) {
-            $output->writeln("\nNo files were chosen to be generated.\n");
+            $output->writeln("\n<fg=cyan>No files were chosen to be generated.</>");
             return;
         }
 
         if (!$this->confirm($input, $output)) {
-            $output->writeln("\nNo file was generated.\n");
+            $output->writeln("\n<fg=cyan>No file was generated.</>");
             return;
         }
 
-        if ($generator->save($files, $answers, $results)) {
-            $output->writeln("\nFiles were generated successfully!\n");
-        } else {
-            $output->writeln("\nSome errors occurred while generating the files.");
+        $isSaved = $generator->save($files, $answers, $results);
+        foreach ($results as $n => $result) {
+            if ($n === 0) {
+                $output->writeln("<fg=blue>{$result}</>");
+            } elseif ($n === key(array_slice($results, -1, 1, true))) {
+                $output->writeln("<fg=green>{$result}</>");
+            } else {
+                $output->writeln(
+                    '<fg=yellow>' . preg_replace(
+                        '%<span class="error">(.*?)</span>%',
+                        '<fg=red>\1</>',
+                        $result
+                    ) . '</>'
+                );
+            }
         }
-        $output->writeln(preg_replace('%<span class="error">(.*?)</span>%', '\1', $results) . "\n");
+
+        if ($isSaved) {
+            $output->writeln("\n<fg=green>Files were generated successfully!</>");
+        } else {
+            $output->writeln("\n<fg=red>Some errors occurred while generating the files.</>");
+        }
     }
 
     protected function confirm($input, $output)
@@ -128,7 +139,7 @@ abstract class BaseGenerateCommand extends Command
     protected function choice($input, $output)
     {
         $question = new ChoiceQuestion(
-            'Do you want to overwrite this file?',
+            "\nDo you want to overwrite this file?",
             [
                 'y' => 'Overwrite this file.',
                 'n' => 'Skip this file.',
