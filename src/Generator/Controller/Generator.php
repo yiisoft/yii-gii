@@ -24,7 +24,7 @@ final class Generator extends AbstractGenerator
     /**
      * @var string the controller class name
      */
-    private string $controllerClass;
+    private string $controllerClass = '';
     /**
      * @var null|string the controller's views path
      */

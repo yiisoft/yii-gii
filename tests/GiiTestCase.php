@@ -3,50 +3,59 @@
 namespace Yiisoft\Yii\Gii\Tests;
 
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
+use Yiisoft\Composer\Config\Builder;
+use Yiisoft\Di\Container;
 use Yiisoft\Files\FileHelper;
+use Yiisoft\Yii\Gii\Exception\GeneratorNotFoundException;
+use Yiisoft\Yii\Gii\Generator\Controller\Generator as ControllerGenerator;
+use Yiisoft\Yii\Gii\GiiInterface;
 
 /**
  * GiiTestCase is the base class for all gii related test cases
- * @group gii
  */
 class GiiTestCase extends TestCase
 {
-    protected $driverName = 'sqlite';
+    private ?ContainerInterface $container;
 
     protected function setUp(): void
     {
         parent::setUp();
-
         FileHelper::createDirectory(__DIR__ . '/runtime');
+        $this->container = new Container(require Builder::path('tests', dirname(__DIR__)));
+    }
 
-        $allConfigs = require(__DIR__ . '/Data/config.php');
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        FileHelper::removeDirectory(__DIR__ . '/runtime');
+        $this->container = null;
+    }
 
-        $config = $allConfigs['databases'][$this->driverName];
-        $pdo_database = 'pdo_' . $this->driverName;
+    protected function getContainer(): ContainerInterface
+    {
+        return $this->container;
+    }
 
-        if (!\extension_loaded('pdo') || !\extension_loaded($pdo_database)) {
-            $this->markTestSkipped('pdo and ' . $pdo_database . ' extension are required.');
-        }
+    public function testGeneratorInstance()
+    {
+        $controllerGenerator = $this->getContainer()->get(GiiInterface::class)->getGenerator('controller');
+        $this->assertInstanceOf(ControllerGenerator::class, $controllerGenerator);
+    }
 
-        $this->container->set(
-            'db',
-            [
-                '__class' => isset($config['__class']) ? $config['__class'] : \Yiisoft\Db\Connection::class,
-                'dsn' => $config['dsn'],
-                'username' => isset($config['username']) ? $config['username'] : null,
-                'password' => isset($config['password']) ? $config['password'] : null,
-            ]
+    public function testUnknownGeneratorInstance()
+    {
+        $this->expectException(GeneratorNotFoundException::class);
+        $this->getContainer()->get(GiiInterface::class)->getGenerator('unknown');
+    }
+
+    public function testWrongGeneratorInstance()
+    {
+        $this->getContainer()->get(GiiInterface::class)->addGenerator('wrong', new \stdClass());
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage(
+            'Generator should be GeneratorInterface instance. "' . get_class(new \stdClass()) . '" given.'
         );
-
-
-        if (isset($config['fixture'])) {
-            $this->app->db->open();
-            $lines = explode(';', file_get_contents($config['fixture']));
-            foreach ($lines as $line) {
-                if (trim($line) !== '') {
-                    $this->app->db->pdo->exec($line);
-                }
-            }
-        }
+        $this->getContainer()->get(GiiInterface::class)->getGenerator('wrong');
     }
 }
