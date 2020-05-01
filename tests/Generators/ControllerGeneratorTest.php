@@ -11,8 +11,7 @@ use Yiisoft\Yii\Gii\Parameters;
 use Yiisoft\Yii\Gii\Tests\GiiTestCase;
 
 /**
- * ModelGeneratorTest checks that Gii model generator produces valid results
- * @group gii
+ * ControllerGeneratorTest checks that Gii controller generator produces valid results
  */
 class ControllerGeneratorTest extends GiiTestCase
 {
