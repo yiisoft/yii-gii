@@ -65,4 +65,32 @@ class ControllerGeneratorTest extends GiiTestCase
         $this->assertNotEmpty($generator->getErrors()['template']);
         $this->assertNotEmpty($generator->getErrors()['controllerClass']);
     }
+
+    public function testCustomTemplate()
+    {
+        $generator = new ControllerGenerator(
+            $this->getContainer()->get(Aliases::class),
+            $this->getContainer()->get(Parameters::class),
+            $this->getContainer()->get(View::class)
+        );
+        $generator->load(
+            [
+                'template' => 'custom',
+                'controllerClass' => 'TestController',
+                'actions' => 'index,edit,view',
+                'templates' => [
+                    'custom' => '@app/templates/custom'
+                ]
+            ]
+        );
+
+        $validationResult = $generator->validate();
+
+        $this->assertInstanceOf(ResultSet::class, $validationResult);
+        $this->assertFalse(
+            $generator->hasErrors(),
+            implode("\n", array_values($validationResult->getResult('template')->getErrors()))
+        );
+        $this->assertContainsOnlyInstancesOf(CodeFile::class, $generator->generate());
+    }
 }

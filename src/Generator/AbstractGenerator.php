@@ -300,7 +300,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
 
     public function getViewPath(): string
     {
-        return $this->getTemplatePath();
+        return $this->aliases->get($this->getTemplatePath());
     }
 
     /**
@@ -495,6 +495,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
             'var',
             'while',
             'xor',
+            'fn'
         ];
 
         return in_array(strtolower($value), $keywords, true);

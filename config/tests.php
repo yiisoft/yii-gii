@@ -22,10 +22,10 @@ return [
     ),
     Yiisoft\Aliases\Aliases::class => new Aliases(
         [
-            '@app' => dirname(__DIR__) . 'tests/runtime',
-            '@views' => dirname(__DIR__) . 'tests/runtime',
-            '@view' => dirname(__DIR__) . 'tests/runtime',
-            '@root' => dirname(__DIR__) . 'tests/runtime'
+            '@app' => dirname(__DIR__) . '/tests',
+            '@views' => dirname(__DIR__) . '/tests/runtime',
+            '@view' => dirname(__DIR__) . '/tests/runtime',
+            '@root' => dirname(__DIR__) . '/tests/runtime'
         ]
     )
 ];
