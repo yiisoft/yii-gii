@@ -3,7 +3,6 @@
 namespace Yiisoft\Yii\Gii\Tests\Generators;
 
 use Yiisoft\Aliases\Aliases;
-use Yiisoft\Validator\ResultSet;
 use Yiisoft\View\View;
 use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Yii\Gii\Generator\Controller\Generator as ControllerGenerator;
@@ -15,7 +14,7 @@ use Yiisoft\Yii\Gii\Tests\GiiTestCase;
  */
 class ControllerGeneratorTest extends GiiTestCase
 {
-    public function testValidGenerator()
+    public function testValidGenerator(): void
     {
         $generator = new ControllerGenerator(
             $this->getContainer()->get(Aliases::class),
@@ -30,9 +29,8 @@ class ControllerGeneratorTest extends GiiTestCase
             ]
         );
 
-        $validationResult = $generator->validate();
+        $generator->validate();
 
-        $this->assertInstanceOf(ResultSet::class, $validationResult);
         $this->assertNotEmpty($generator->generate());
         $this->assertContainsOnlyInstancesOf(CodeFile::class, $generator->generate());
         $this->assertCount(4, $generator->generate());
@@ -40,7 +38,7 @@ class ControllerGeneratorTest extends GiiTestCase
         $this->assertEquals(['edit', 'index', 'view'], $generator->getActionIDs());
     }
 
-    public function testInvalidGenerator()
+    public function testInvalidGenerator(): void
     {
         $generator = new ControllerGenerator(
             $this->getContainer()->get(Aliases::class),
@@ -58,15 +56,14 @@ class ControllerGeneratorTest extends GiiTestCase
             ]
         );
 
-        $validationResult = $generator->validate();
+        $generator->validate();
 
-        $this->assertInstanceOf(ResultSet::class, $validationResult);
         $this->assertTrue($generator->hasErrors());
         $this->assertNotEmpty($generator->getErrors()['template']);
         $this->assertNotEmpty($generator->getErrors()['controllerClass']);
     }
 
-    public function testCustomTemplate()
+    public function testCustomTemplate(): void
     {
         $generator = new ControllerGenerator(
             $this->getContainer()->get(Aliases::class),
@@ -86,7 +83,6 @@ class ControllerGeneratorTest extends GiiTestCase
 
         $validationResult = $generator->validate();
 
-        $this->assertInstanceOf(ResultSet::class, $validationResult);
         $this->assertFalse(
             $generator->hasErrors(),
             implode("\n", array_values($validationResult->getResult('template')->getErrors()))

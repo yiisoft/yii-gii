@@ -37,19 +37,19 @@ class GiiTestCase extends TestCase
         return $this->container;
     }
 
-    public function testGeneratorInstance()
+    public function testGeneratorInstance(): void
     {
         $controllerGenerator = $this->getContainer()->get(GiiInterface::class)->getGenerator('controller');
         $this->assertInstanceOf(ControllerGenerator::class, $controllerGenerator);
     }
 
-    public function testUnknownGeneratorInstance()
+    public function testUnknownGeneratorInstance(): void
     {
         $this->expectException(GeneratorNotFoundException::class);
         $this->getContainer()->get(GiiInterface::class)->getGenerator('unknown');
     }
 
-    public function testWrongGeneratorInstance()
+    public function testWrongGeneratorInstance(): void
     {
         $this->getContainer()->get(GiiInterface::class)->addGenerator('wrong', new \stdClass());
         $this->expectException(\RuntimeException::class);
