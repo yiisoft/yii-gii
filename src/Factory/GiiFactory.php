@@ -20,7 +20,7 @@ final class GiiFactory
     public function __invoke(ContainerInterface $container): GiiInterface
     {
         $generators = array_merge(
-            $container->get(Parameters::class)->get('gii.generators'),
+            $container->get(Parameters::class)->get('gii.generators', []),
             $this->generators
         );
         $generatorsInstances = [];
