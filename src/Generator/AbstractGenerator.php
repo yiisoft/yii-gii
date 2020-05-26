@@ -32,10 +32,10 @@ use Yiisoft\Yii\Gii\Parameters;
  *
  * A generator class typically needs to implement the following methods:
  *
- * - [[getName()]]: returns the name of the generator
- * - [[getDescription()]]: returns the detailed description of the generator
- * - [[validate()]]: returns generator validation result
- * - [[generate()]]: generates the code based on the current user input and the specified code template files.
+ * - {@see GeneratorInterface::getName()}: returns the name of the generator
+ * - {@see GeneratorInterface::getDescription()}: returns the detailed description of the generator
+ * - {@see GeneratorInterface::validate()}: returns generator validation result
+ * - {@see GeneratorInterface::generate()}: generates the code based on the current user input and the specified code template files.
  *   This is the place where main code generation code resides.
  *
  */
@@ -52,14 +52,13 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * The value of this property is internally managed by this class.
      */
     private string $template = 'default';
+    private ?string $directory = null;
     protected Aliases $aliases;
-    protected Parameters $parameters;
     protected View $view;
 
-    public function __construct(Aliases $aliases, Parameters $parameters, View $view)
+    public function __construct(Aliases $aliases, View $view)
     {
         $this->aliases = $aliases;
-        $this->parameters = $parameters;
         $this->view = $view;
     }
 
@@ -76,7 +75,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * Derived classes usually should override this method if they require the existence of
      * certain template files.
      * @return array list of code template files that are required. They should be file paths
-     * relative to [[templatePath]].
+     * relative to {@see templatePath}.
      */
     public function requiredTemplates(): array
     {
@@ -253,10 +252,10 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
     protected function getStickyDataFile(): string
     {
         return $this->aliases->get('@runtime') . '/gii/' . str_replace(
-            '\\',
-            '-',
-            get_class($this)
-        ) . '.json';
+                '\\',
+                '-',
+                get_class($this)
+            ) . '.json';
     }
 
     /**
@@ -513,7 +512,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
         $string = addslashes($string);
         if (!empty($placeholders)) {
             $phKeys = array_map(
-                fn ($word) => '{' . $word . '}',
+                fn($word) => '{' . $word . '}',
                 array_keys($placeholders)
             );
             $phValues = array_values($placeholders);
@@ -572,5 +571,15 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
     public function setTemplate(string $template): void
     {
         $this->template = $template;
+    }
+
+    public function getDirectory(): ?string
+    {
+        return $this->directory;
+    }
+
+    public function setDirectory(string $directory): void
+    {
+        $this->directory = $directory;
     }
 }
