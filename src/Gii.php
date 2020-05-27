@@ -10,11 +10,13 @@ final class Gii implements GiiInterface
 {
     private ContainerInterface $container;
     private iterable $generators;
+    private array $params;
 
-    public function __construct(iterable $generators, ContainerInterface $container)
+    public function __construct(iterable $generators, ContainerInterface $container, array $params = [])
     {
         $this->generators = $generators;
         $this->container = $container;
+        $this->params = $params;
     }
 
     public function addGenerator(string $name, $generator): void

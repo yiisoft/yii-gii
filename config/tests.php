@@ -8,18 +8,6 @@ return [
             'controller' => \Yiisoft\Yii\Gii\Generator\Controller\Generator::class
         ]
     ),
-    \Yiisoft\Yii\Gii\Parameters::class => new \Yiisoft\Yii\Gii\Parameters(
-        [
-            'gii' => [
-                'basePath' => '@root',
-                'viewPath' => '@views',
-                'controller' => [
-                    'namespace' => 'App\\Controller',
-                    'directory' => '@app/Controller',
-                ],
-            ],
-        ]
-    ),
     Yiisoft\Aliases\Aliases::class => new Aliases(
         [
             '@app' => dirname(__DIR__) . '/tests',
