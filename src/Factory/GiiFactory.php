@@ -10,7 +10,7 @@ use Yiisoft\Yii\Gii\GiiInterface;
 final class GiiFactory
 {
     private array $generators;
-    private array $params = [];
+    private array $params;
 
     public function __construct(array $generators = [], array $params = [])
     {
