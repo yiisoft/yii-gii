@@ -47,9 +47,6 @@ final class Gii implements GiiInterface
                 'Generator should be GeneratorInterface instance. "' . get_class($generator) . '" given.'
             );
         }
-        if (array_key_exists($name, $this->params) && is_array($this->params[$name])) {
-            $generator->load($this->params[$name]);
-        }
         return $generator;
     }
 }
