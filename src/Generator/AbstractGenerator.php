@@ -22,7 +22,6 @@ use Yiisoft\View\ViewContextInterface;
 use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Yii\Gii\Exception\InvalidConfigException;
 use Yiisoft\Yii\Gii\GeneratorInterface;
-use Yiisoft\Yii\Gii\Parameters;
 
 /**
  * This is the base class for all generator classes.
