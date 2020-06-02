@@ -18,7 +18,6 @@ class ControllerGeneratorTest extends GiiTestCase
     {
         $generator = new ControllerGenerator(
             $this->getContainer()->get(Aliases::class),
-            $this->getContainer()->get(Parameters::class),
             $this->getContainer()->get(View::class)
         );
         $generator->load(
@@ -42,7 +41,6 @@ class ControllerGeneratorTest extends GiiTestCase
     {
         $generator = new ControllerGenerator(
             $this->getContainer()->get(Aliases::class),
-            $this->getContainer()->get(Parameters::class),
             $this->getContainer()->get(View::class)
         );
         $generator->load(
@@ -67,7 +65,6 @@ class ControllerGeneratorTest extends GiiTestCase
     {
         $generator = new ControllerGenerator(
             $this->getContainer()->get(Aliases::class),
-            $this->getContainer()->get(Parameters::class),
             $this->getContainer()->get(View::class)
         );
         $generator->load(

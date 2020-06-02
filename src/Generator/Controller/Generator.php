@@ -12,15 +12,10 @@ use Yiisoft\Yii\Gii\Generator\AbstractGenerator;
 
 /**
  * This generator will generate a controller and one or a few action view files.
- *
- * @property array $actionIDs An array of action IDs entered by the user. This property is read-only.
- * @property string $controllerFile The controller class file path. This property is read-only.
- * @property string $controllerID The controller ID. This property is read-only.
- * @property string $controllerNamespace The namespace of the controller class. This property is read-only.
- * @property string $controllerSubPath The controller sub path. This property is read-only.
  */
 final class Generator extends AbstractGenerator
 {
+    private string $controllerNamespace = 'App\\Controller';
     /**
      * @var string the controller class name
      */
@@ -160,7 +155,7 @@ final class Generator extends AbstractGenerator
     public function getControllerFile(): string
     {
         return $this->aliases->get(
-            sprintf('%s/%s.php', $this->parameters->get('gii.controller.directory'), $this->getControllerClass())
+            sprintf('%s/%s.php', $this->getDirectory(), $this->getControllerClass())
         );
     }
 
@@ -193,7 +188,15 @@ final class Generator extends AbstractGenerator
      */
     public function getControllerNamespace(): string
     {
-        return $this->parameters->get('gii.controller.namespace');
+        return $this->controllerNamespace;
+    }
+
+    /**
+     * @param string $controllerNamespace
+     */
+    public function setControllerNamespace(string $controllerNamespace): void
+    {
+        $this->controllerNamespace = $controllerNamespace;
     }
 
     public function getControllerClass(): string
