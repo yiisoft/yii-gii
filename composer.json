@@ -22,7 +22,7 @@
         "phpspec/php-diff": "^1.1.0",
         "yiisoft/strings": "^3.0@dev",
         "yiisoft/arrays": "^3.0@dev",
-        "yiisoft/aliases": "^3.0@dev",
+        "yiisoft/aliases": "^1.0",
         "yiisoft/http": "^1.0@dev",
         "yiisoft/view": "^3.0@dev",
         "yiisoft/validator": "^3.0@dev",
