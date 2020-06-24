@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
 use Psr\Log\LoggerInterface;

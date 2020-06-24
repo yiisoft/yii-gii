@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Yiisoft\Yii\Gii\Command\ControllerCommand;
 
 return [
@@ -7,6 +9,9 @@ return [
         'commands' => [
             'gii/controller' => ControllerCommand::class,
         ],
+    ],
+    'aliases' => [
+        '@yiisoft/gii' => dirname(__DIR__)
     ],
     'gii'     => [
         'generators' => [

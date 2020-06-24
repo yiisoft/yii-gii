@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yiisoft\Yii\Gii\Generator;
 
 use Exception;
@@ -74,7 +76,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * Derived classes usually should override this method if they require the existence of
      * certain template files.
      * @return array list of code template files that are required. They should be file paths
-     * relative to {@see templatePath}.
+     * relative to {@see getTemplatePath()}.
      */
     public function requiredTemplates(): array
     {
@@ -319,7 +321,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * Generates code using the specified code template and parameters.
      * Note that the code template will be used as a PHP file.
      * @param string $template the code template file. This must be specified as a file path
-     * relative to [[templatePath]].
+     * relative to {@see getTemplatePath()}.
      * @param array $params list of parameters to be passed to the template file.
      * @return string the generated code
      * @throws Throwable
@@ -335,12 +337,12 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
     /**
      * Validates the template selection.
      * This method validates whether the user selects an existing template
-     * and the template contains all required template files as specified in [[requiredTemplates()]].
-     * @param $value
-     * @param DataSetInterface $dataSet
+     * and the template contains all required template files as specified in {@see requiredTemplates()}.
+     * @param string $value
+     * @param self $dataSet
      * @return Result
      */
-    public function validateTemplate($value, DataSetInterface $dataSet): Result
+    public function validateTemplate(string $value, self $dataSet): Result
     {
         $result = new Result();
         $templates = $dataSet->getTemplates();
@@ -364,10 +366,9 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
     /**
      * An inline validator that checks if the attribute value refers to an existing class name.
      * @param string $value the attribute being validated
-     * @param DataSetInterface $dataSet
      * @return Result
      */
-    public function validateClass(string $value, DataSetInterface $dataSet): Result
+    public function validateClass(string $value): Result
     {
         $result = new Result();
         if (!class_exists($value)) {
@@ -381,10 +382,10 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * An inline validator that checks if the attribute value refers to a valid namespaced class name.
      * The validator will check if the directory containing the new class file exist or not.
      * @param string $value being validated
-     * @param DataSetInterface $dataSet
+     * @param self $dataSet
      * @return Result
      */
-    public function validateNewClass(string $value, DataSetInterface $dataSet): Result
+    public function validateNewClass(string $value, self $dataSet): Result
     {
         $result = new Result();
         $class = ltrim($value, '\\');
@@ -407,7 +408,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * @param string $value the attribute to be validated
      * @return bool whether the value is a reserved PHP keyword.
      */
-    public function isReservedKeyword($value): bool
+    public function isReservedKeyword(string $value): bool
     {
         static $keywords = [
             '__class__',
