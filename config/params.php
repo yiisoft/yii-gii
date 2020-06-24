@@ -11,7 +11,7 @@ return [
         ],
     ],
     'aliases' => [
-        '@yiisoft/gii' => dirname(__DIR__)
+        '@yiisoft/yii-gii' => dirname(__DIR__)
     ],
     'gii'     => [
         'generators' => [

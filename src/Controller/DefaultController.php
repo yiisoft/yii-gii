@@ -30,7 +30,7 @@ class DefaultController implements ViewContextInterface
         $this->gii = $gii;
         $this->responseFactory = $responseFactory;
         $this->view = $view;
-        $this->layout = $aliases->get('@yiisoft/gii/views') . '/layout/generator';
+        $this->layout = $aliases->get('@yiisoft/yii-gii/views') . '/layout/generator';
     }
 
     public function index(): string
@@ -163,7 +163,7 @@ class DefaultController implements ViewContextInterface
 
     public function getViewPath(): string
     {
-        return $this->aliases->get('@yiisoft/gii/views') . '/default';
+        return $this->aliases->get('@yiisoft/yii-gii/views') . '/default';
     }
 
     private function findLayoutFile(?string $file): ?string
