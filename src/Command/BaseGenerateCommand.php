@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yiisoft\Yii\Gii\Command;
 
 use Symfony\Component\Console\Command\Command;
@@ -17,7 +19,6 @@ use function count;
 
 abstract class BaseGenerateCommand extends Command
 {
-    protected const NAME = '';
     protected GiiInterface $gii;
 
     public function __construct(GiiInterface $gii)

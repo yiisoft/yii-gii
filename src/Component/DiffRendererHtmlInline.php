@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yiisoft\Yii\Gii\Components;
 
 use Diff_Renderer_Html_Array;

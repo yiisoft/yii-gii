@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yiisoft\Yii\Gii\Command;
 
 use Symfony\Component\Console\Input\InputArgument;
@@ -17,7 +19,7 @@ use Yiisoft\Yii\Gii\GeneratorInterface;
  */
 final class ControllerCommand extends BaseGenerateCommand
 {
-    protected const NAME = 'controller';
+    private const NAME = 'controller';
     protected static $defaultName = 'gii/controller';
 
     protected function configure(): void
