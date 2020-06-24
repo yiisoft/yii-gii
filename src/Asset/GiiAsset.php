@@ -1,6 +1,8 @@
 <?php
 
-namespace Yiisoft\Yii\Gii;
+declare(strict_types=1);
+
+namespace Yiisoft\Yii\Gii\Asset;
 
 use Yiisoft\Assets\AssetBundle;
 use Yiisoft\Yii\JQuery\YiiAsset;
@@ -10,7 +12,7 @@ use Yiisoft\Yii\JQuery\YiiAsset;
  */
 class GiiAsset extends AssetBundle
 {
-    public ?string $sourcePath = '@Yiisoft/Yii/Gii/assets';
+    public ?string $sourcePath = '@yiisoft/yii-gii/assets';
     public array $css = [
         'css/main.css',
     ];

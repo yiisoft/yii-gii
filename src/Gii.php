@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yiisoft\Yii\Gii;
 
 use Psr\Container\ContainerInterface;
@@ -10,13 +12,11 @@ final class Gii implements GiiInterface
 {
     private ContainerInterface $container;
     private iterable $generators;
-    private array $params;
 
-    public function __construct(iterable $generators, ContainerInterface $container, array $params = [])
+    public function __construct(iterable $generators, ContainerInterface $container)
     {
         $this->generators = $generators;
         $this->container = $container;
-        $this->params = $params;
     }
 
     public function addGenerator(string $name, $generator): void

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yiisoft\Yii\Gii\Generator\Controller;
 
 use Yiisoft\Strings\Inflector;
@@ -97,7 +99,7 @@ final class Generator extends AbstractGenerator
     {
         return [
             'controllerClass' => 'This is the name of the controller class to be generated. You should
-                provide a fully qualified namespaced class (e.g. <code>app\controllers\PostController</code>),
+                provide a fully qualified namespaced class (e.g. <code>App\Controller\PostController</code>),
                 and class name should be in CamelCase ending with the word <code>Controller</code>. Make sure the class
                 is using the same namespace as specified by your application\'s controllerNamespace property.',
             'actions' => 'Provide one or multiple action IDs to generate empty action method(s) in the controller. Separate multiple action IDs with commas or spaces.
@@ -107,7 +109,7 @@ final class Generator extends AbstractGenerator
                     <li><code>create-order</code> generates <code>createOrder()</code></li>
                 </ul>',
             'viewsPath' => 'Specify the directory for storing the view scripts for the controller. You may use path alias here, e.g.,
-                <code>/var/www/yii-demo/controllers/views/order</code>, <code>@app/views/order</code>. If not set, it will default
+                <code>/var/www/app/controllers/views/order</code>, <code>@app/views/order</code>. If not set, it will default
                 to <code>@app/views/ControllerID</code>',
             'baseClass' => 'This is the class that the new controller class will extend from. Please make sure the class exists and can be autoloaded.',
         ];
@@ -124,13 +126,13 @@ final class Generator extends AbstractGenerator
 
         $files[] = (new CodeFile(
             $this->getControllerFile(),
-            $this->render('controller.php')
+            $this->render('controller')
         ))->withBasePath($this->aliases->get('@root'));
 
         foreach ($this->getActionIDs() as $action) {
             $files[] = (new CodeFile(
                 $this->getViewFile($action),
-                $this->render('view.php', ['action' => $action])
+                $this->render('view', ['action' => $action])
             ))->withBasePath($this->aliases->get('@root'));
         }
 
@@ -165,7 +167,7 @@ final class Generator extends AbstractGenerator
     public function getControllerID(): string
     {
         $name = StringHelper::basename($this->controllerClass);
-        return (new Inflector())->camel2id(substr($name, 0, strlen($name) - 10));
+        return (new Inflector())->camel2id(substr($name, 0, -10));
     }
 
     /**

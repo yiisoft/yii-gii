@@ -6,7 +6,6 @@ use Yiisoft\Aliases\Aliases;
 use Yiisoft\View\View;
 use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Yii\Gii\Generator\Controller\Generator as ControllerGenerator;
-use Yiisoft\Yii\Gii\Parameters;
 use Yiisoft\Yii\Gii\Tests\GiiTestCase;
 
 /**

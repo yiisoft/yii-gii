@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yiisoft\Yii\Gii\Controller;
 
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -28,7 +30,7 @@ class DefaultController implements ViewContextInterface
         $this->gii = $gii;
         $this->responseFactory = $responseFactory;
         $this->view = $view;
-        $this->layout = $aliases->get('@views') . '/layout/generator';
+        $this->layout = $aliases->get('@yiisoft/yii-gii/views') . '/layout/generator';
     }
 
     public function index(): string
@@ -64,7 +66,7 @@ class DefaultController implements ViewContextInterface
         return $this->render('view', $params);
     }
 
-    public function preview(string $id, string $file, ServerRequestInterface $request): string
+    public function preview(string $id, string $file, ServerRequestInterface $request)
     {
         $generator = $this->loadGenerator($id, $request);
         if ($generator->validate()) {
@@ -79,19 +81,19 @@ class DefaultController implements ViewContextInterface
                 }
             }
         }
-        return $this->responseFactory
-            ->createResponse(Status::UNPROCESSABLE_ENTITY)
-            ->getBody()
-            ->write("Code file not found: $file");
+
+        $response = $this->responseFactory->createResponse(Status::UNPROCESSABLE_ENTITY);
+        $response->getBody()->write("Code file not found: $file");
+        return $response;
     }
 
-    public function diff($id, $file, ServerRequestInterface $request): int
+    public function diff($id, $file, ServerRequestInterface $request)
     {
         $generator = $this->loadGenerator($id, $request);
         if ($generator->validate()) {
             foreach ($generator->generate() as $f) {
                 if ($f->getId() === $file) {
-                    return $this->renderPartial(
+                    return $this->render(
                         'diff',
                         [
                             'diff' => $f->diff(),
@@ -100,10 +102,10 @@ class DefaultController implements ViewContextInterface
                 }
             }
         }
-        return $this->responseFactory
-            ->createResponse(Status::UNPROCESSABLE_ENTITY)
-            ->getBody()
-            ->write("Code file not found: $file");
+
+        $response = $this->responseFactory->createResponse(Status::UNPROCESSABLE_ENTITY);
+        $response->getBody()->write("Code file not found: $file");
+        return $response;
     }
 
     /**
@@ -122,10 +124,9 @@ class DefaultController implements ViewContextInterface
             return $generator->$action();
         }
 
-        return $this->responseFactory
-            ->createResponse(Status::UNPROCESSABLE_ENTITY)
-            ->getBody()
-            ->write("Unknown generator action: {$action}");
+        $response = $this->responseFactory->createResponse(Status::UNPROCESSABLE_ENTITY);
+        $response->getBody()->write("Unknown generator action: {$action}");
+        return $response;
     }
 
     protected function loadGenerator(string $id, ServerRequestInterface $request): GeneratorInterface
@@ -162,7 +163,7 @@ class DefaultController implements ViewContextInterface
 
     public function getViewPath(): string
     {
-        return $this->aliases->get('@views') . '/default';
+        return $this->aliases->get('@yiisoft/yii-gii/views') . '/default';
     }
 
     private function findLayoutFile(?string $file): ?string
