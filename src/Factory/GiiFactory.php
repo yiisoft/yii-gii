@@ -33,6 +33,6 @@ final class GiiFactory
             }
             $generatorsInstances[$name] = $generator;
         }
-        return new Gii($generatorsInstances, $container, $this->params);
+        return new Gii($generatorsInstances, $container);
     }
 }
