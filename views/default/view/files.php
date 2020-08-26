@@ -51,7 +51,7 @@ use Yiisoft\Yii\Gii\CodeFile;
             </tr>
         </thead>
         <tbody id="files-body">
-            <?php foreach ($files as $file): ?>
+            <?php foreach ($files as $file) : ?>
                 <?php
                 if ($file->getOperation() === CodeFile::OP_OVERWRITE) {
                     $trClass = 'table-warning';
@@ -66,7 +66,7 @@ use Yiisoft\Yii\Gii\CodeFile;
             <tr class="<?= "$file->getOperation() $trClass" ?>">
                 <td class="file">
                     <?= Html::a(Html::encode($file->getRelativePath()), ['preview', 'id' => $id, 'file' => $file->getId()], ['class' => 'preview-code', 'data-title' => $file->getRelativePath()]) ?>
-                    <?php if ($file->getOperation() === CodeFile::OP_OVERWRITE): ?>
+                    <?php if ($file->getOperation() === CodeFile::OP_OVERWRITE) : ?>
                         <?= Html::a('diff', ['diff', 'id' => $id, 'file' => $file->getId()], ['class' => 'diff-code badge badge-warning', 'data-title' => $file->getRelativePath()]) ?>
                     <?php endif; ?>
                 </td>
@@ -79,7 +79,7 @@ use Yiisoft\Yii\Gii\CodeFile;
                     }
                     ?>
                 </td>
-                <?php if ($fileChangeExists): ?>
+                <?php if ($fileChangeExists) : ?>
                 <td class="check">
                     <?php
                     if ($file->getOperation() === CodeFile::OP_SKIP) {
