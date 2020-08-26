@@ -23,7 +23,7 @@ class <?= StringHelper::basename($generator->getControllerClass()) ?> <?= $gener
         return '<?= $generator->getControllerID() ?>';
     }
 
-<?php foreach ($generator->getActionIDs() as $action): ?>
+<?php foreach ($generator->getActionIDs() as $action) : ?>
     public function <?= $action ?>()
     {
         return $this->render('<?= $action ?>');
