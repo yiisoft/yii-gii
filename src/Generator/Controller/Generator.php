@@ -166,8 +166,8 @@ final class Generator extends AbstractGenerator
      */
     public function getControllerID(): string
     {
-        $name = StringHelper::basename($this->controllerClass);
-        return (new Inflector())->camel2id(substr($name, 0, -10));
+        $name = StringHelper::baseName($this->controllerClass);
+        return (new Inflector())->pascalCaseToId(substr($name, 0, -10));
     }
 
     /**

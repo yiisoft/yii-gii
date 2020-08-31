@@ -12,7 +12,7 @@ echo "<?php\n";
 
 namespace <?= $generator->getControllerNamespace() ?>;
 
-class <?= StringHelper::basename($generator->getControllerClass()) ?> <?= $generator->getBaseClass()
+class <?= StringHelper::baseName($generator->getControllerClass()) ?> <?= $generator->getBaseClass()
 ? 'extends \\' . trim(
     $generator->getBaseClass(),
     '\\'
