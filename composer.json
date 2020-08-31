@@ -20,7 +20,7 @@
     "require": {
         "php": "^7.4|^8.0",
         "phpspec/php-diff": "^1.1.0",
-        "yiisoft/strings": "^3.0@dev",
+        "yiisoft/strings": "^1.0",
         "yiisoft/arrays": "^3.0@dev",
         "yiisoft/aliases": "^1.0",
         "yiisoft/http": "^1.0@dev",
