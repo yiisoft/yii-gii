@@ -10,7 +10,7 @@ return [
             'gii/controller' => ControllerCommand::class,
         ],
     ],
-    'aliases' => [
+    'yiisoft/aliases' => [
         '@yiisoft/yii-gii' => dirname(__DIR__)
     ],
     'gii'     => [
