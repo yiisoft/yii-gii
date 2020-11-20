@@ -23,6 +23,7 @@ interface GeneratorInterface
      * This is the main method that child classes should implement.
      * Please refer to {@see \Yiisoft\Yii\Gii\Generator\Controller\Generator::generate()} as an example
      * on how to implement this method.
+     *
      * @return CodeFile[] a list of code files to be created.
      */
     public function generate(): array;

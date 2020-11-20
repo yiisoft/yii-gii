@@ -38,7 +38,6 @@ use Yiisoft\Yii\Gii\GeneratorInterface;
  * - {@see GeneratorInterface::validate()}: returns generator validation result
  * - {@see GeneratorInterface::generate()}: generates the code based on the current user input and the specified code template files.
  *   This is the place where main code generation code resides.
- *
  */
 abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface, ViewContextInterface
 {
@@ -75,6 +74,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * Returns a list of code template files that are required.
      * Derived classes usually should override this method if they require the existence of
      * certain template files.
+     *
      * @return array list of code template files that are required. They should be file paths
      * relative to {@see getTemplatePath()}.
      */
@@ -87,6 +87,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * Returns the list of sticky attributes.
      * A sticky attribute will remember its value and will initialize the attribute with this value
      * when the generator is restarted.
+     *
      * @return array list of sticky attributes
      */
     public function stickyAttributes(): array
@@ -98,6 +99,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * Returns the list of hint messages.
      * The array keys are the attribute names, and the array values are the corresponding hint messages.
      * Hint messages will be displayed to end users when they are filling the form for the generator.
+     *
      * @return array the list of hint messages
      */
     public function hints(): array
@@ -113,6 +115,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * Returns the list of auto complete values.
      * The array keys are the attribute names, and the array values are the corresponding auto complete values.
      * Auto complete values can also be callable typed in order one want to make postponed data generation.
+     *
      * @return array the list of auto complete values
      */
     public function autoCompleteData(): array
@@ -123,6 +126,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
     /**
      * Returns the message to be displayed when the newly generated code is saved successfully.
      * Child classes may override this method to customize the message.
+     *
      * @return string the message to be displayed when the newly generated code is saved successfully.
      */
     public function successMessage(): string
@@ -134,8 +138,10 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * Returns the view file for the input form of the generator.
      * The default implementation will return the "form.php" file under the directory
      * that contains the generator class file.
-     * @return string the view file for the input form of the generator.
+     *
      * @throws ReflectionException
+     *
+     * @return string the view file for the input form of the generator.
      */
     public function formView(): string
     {
@@ -148,8 +154,10 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * Returns the root path to the default code template files.
      * The default implementation will return the "templates" subdirectory of the
      * directory containing the generator class file.
-     * @return string the root path to the default code template files.
+     *
      * @throws ReflectionException
+     *
+     * @return string the root path to the default code template files.
      */
     private function defaultTemplate(): string
     {
@@ -189,13 +197,14 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
         return [
             'template' => [
                 (new Required())->message('A code template must be selected.'),
-                (new Callback([$this, 'validateTemplate']))
+                (new Callback([$this, 'validateTemplate'])),
             ],
         ];
     }
 
     /**
      * Loads sticky attributes from an internal file and populates them into the generator.
+     *
      * @internal
      */
     public function loadStickyAttributes(): void
@@ -217,6 +226,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
 
     /**
      * Loads sticky attributes from an internal file and populates them into the generator.
+     *
      * @param array $data
      */
     public function load(array $data): void
@@ -252,18 +262,21 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
 
     protected function getStickyDataFile(): string
     {
-        return sprintf('%s/gii/%s.json', $this->aliases->get('@runtime'), str_replace('\\', '-', get_class($this)));
+        return sprintf('%s/gii/%s.json', $this->aliases->get('@runtime'), str_replace('\\', '-', static::class));
     }
 
     /**
      * Saves the generated code into files.
+     *
      * @param CodeFile[] $files the code files to be saved
      * @param array $answers
      * @param string[] $results this parameter receives a value from this method indicating the log messages
      * generated while saving the code files.
-     * @return bool whether files are successfully saved without any error.
+     *
      * @throws ReflectionException
      * @throws InvalidConfigException
+     *
+     * @return bool whether files are successfully saved without any error.
      */
     public function save(array $files, array $answers, &$results): bool
     {
@@ -289,7 +302,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
                 $results[] = "   skipped    $relativePath";
             }
         }
-        $results[] = "done!";
+        $results[] = 'done!';
 
         return !$hasError;
     }
@@ -300,9 +313,10 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
     }
 
     /**
-     * @return string the root path of the template files that are currently being used.
      * @throws ReflectionException
      * @throws InvalidConfigException
+     *
+     * @return string the root path of the template files that are currently being used.
      */
     public function getTemplatePath(): string
     {
@@ -320,12 +334,15 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
     /**
      * Generates code using the specified code template and parameters.
      * Note that the code template will be used as a PHP file.
+     *
      * @param string $template the code template file. This must be specified as a file path
      * relative to {@see getTemplatePath()}.
      * @param array $params list of parameters to be passed to the template file.
-     * @return string the generated code
+     *
      * @throws Throwable
      * @throws ViewNotFoundException
+     *
+     * @return string the generated code
      */
     public function render(string $template, array $params = []): string
     {
@@ -338,8 +355,10 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * Validates the template selection.
      * This method validates whether the user selects an existing template
      * and the template contains all required template files as specified in {@see requiredTemplates()}.
+     *
      * @param string $value
      * @param self $dataSet
+     *
      * @return Result
      */
     public function validateTemplate(string $value, self $dataSet): Result
@@ -365,7 +384,9 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
 
     /**
      * An inline validator that checks if the attribute value refers to an existing class name.
+     *
      * @param string $value the attribute being validated
+     *
      * @return Result
      */
     public function validateClass(string $value): Result
@@ -381,8 +402,10 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
     /**
      * An inline validator that checks if the attribute value refers to a valid namespaced class name.
      * The validator will check if the directory containing the new class file exist or not.
+     *
      * @param string $value being validated
      * @param self $dataSet
+     *
      * @return Result
      */
     public function validateNewClass(string $value, self $dataSet): Result
@@ -406,6 +429,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
 
     /**
      * @param string $value the attribute to be validated
+     *
      * @return bool whether the value is a reserved PHP keyword.
      */
     public function isReservedKeyword(string $value): bool
@@ -490,7 +514,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
             'var',
             'while',
             'xor',
-            'fn'
+            'fn',
         ];
 
         return in_array(strtolower($value), $keywords, true);
@@ -501,6 +525,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      *
      * @param string $string the text be generated
      * @param array $placeholders the placeholders to use by `Yii::t()`
+     *
      * @return string
      */
     public function generateString(string $string = '', array $placeholders = []): string
@@ -522,6 +547,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
 
     /**
      * @param string $attribute
+     *
      * @return mixed
      */
     public function getAttributeValue(string $attribute)
