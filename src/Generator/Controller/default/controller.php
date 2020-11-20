@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * This is the template for generating a controller class file.
  */
@@ -23,11 +23,11 @@ class <?= StringHelper::baseName($generator->getControllerClass()) ?> <?= $gener
         return '<?= $generator->getControllerID() ?>';
     }
 
-<?php foreach ($generator->getActionIDs() as $action) : ?>
+<?php foreach ($generator->getActionIDs() as $action) { ?>
     public function <?= $action ?>()
     {
         return $this->render('<?= $action ?>');
     }
 
-<?php endforeach; ?>
+<?php } ?>
 }
