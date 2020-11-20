@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 /**
  * This is the template for generating an action view file.
  */
@@ -9,7 +9,7 @@
 echo "<?php\n";
 ?>
 /* @var $this yii\web\View */
-<?= '?>' ?>
+<?= "?>" ?>
 
 <h1><?= $generator->getControllerID() . '/' . $action ?></h1>
 

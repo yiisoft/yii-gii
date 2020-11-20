@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii\Command;
 
-use function count;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -14,8 +13,9 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Yiisoft\Yii\Console\ExitCode;
 use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Yii\Gii\GeneratorInterface;
-
 use Yiisoft\Yii\Gii\GiiInterface;
+
+use function count;
 
 abstract class BaseGenerateCommand extends Command
 {
@@ -36,7 +36,6 @@ abstract class BaseGenerateCommand extends Command
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     *
      * @return int|void|null
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -59,16 +58,16 @@ abstract class BaseGenerateCommand extends Command
     {
         $output->writeln("<fg=red>Code not generated. Please fix the following errors:</>\n");
         foreach ($generator->getErrors() as $attribute => $errors) {
-            $output->writeln(sprintf(' - <fg=cyan>%s</>: <fg=green>%s</>', $attribute, implode('; ', $errors)));
+            $output->writeln(sprintf(" - <fg=cyan>%s</>: <fg=green>%s</>", $attribute, implode('; ', $errors)));
         }
-        $output->writeln('');
+        $output->writeln("");
     }
 
     protected function generateCode(GeneratorInterface $generator, InputInterface $input, OutputInterface $output): void
     {
         $files = $generator->generate();
         if (count($files) === 0) {
-            $output->writeln('<fg=cyan>No code to be generated.</>');
+            $output->writeln("<fg=cyan>No code to be generated.</>");
             return;
         }
         $output->writeln("<fg=magenta>The following files will be generated</>:\n");
