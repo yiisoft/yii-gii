@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Yiisoft\Yii\Gii\Tests\Generators;
 
 use Yiisoft\Aliases\Aliases;
@@ -25,7 +23,7 @@ class ControllerGeneratorTest extends GiiTestCase
             [
                 'template' => 'default',
                 'controllerClass' => 'TestController',
-                'actions' => 'index,edit,view',
+                'actions' => 'index,edit,view'
             ]
         );
 
@@ -50,8 +48,8 @@ class ControllerGeneratorTest extends GiiTestCase
                 'controllerClass' => 'Wr0ngContr0ller',
                 'actions' => 'index,ed1t,view',
                 'templates' => [
-                    'default' => dirname(__DIR__ . '../templates'),
-                ],
+                    'default' => dirname(__DIR__ . '../templates')
+                ]
             ]
         );
 
@@ -74,8 +72,8 @@ class ControllerGeneratorTest extends GiiTestCase
                 'controllerClass' => 'TestController',
                 'actions' => 'index,edit,view',
                 'templates' => [
-                    'custom' => '@app/templates/custom',
-                ],
+                    'custom' => '@app/templates/custom'
+                ]
             ]
         );
 

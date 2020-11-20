@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 /**
  * This is the template for generating a controller class file.
  */
@@ -10,9 +10,9 @@ use Yiisoft\Strings\StringHelper;
 echo "<?php\n";
 ?>
 
-namespace <?php echo $generator->getControllerNamespace() ?>;
+namespace <?= $generator->getControllerNamespace() ?>;
 
-class <?php echo StringHelper::baseName($generator->getControllerClass()) ?> <?php echo $generator->getBaseClass()
+class <?= StringHelper::baseName($generator->getControllerClass()) ?> <?= $generator->getBaseClass()
 ? 'extends \\' . trim(
     $generator->getBaseClass(),
     '\\'
@@ -20,14 +20,14 @@ class <?php echo StringHelper::baseName($generator->getControllerClass()) ?> <?p
 {
     public function getId(): string
     {
-        return '<?php echo $generator->getControllerID() ?>';
+        return '<?= $generator->getControllerID() ?>';
     }
 
-<?php foreach ($generator->getActionIDs() as $action) { ?>
-    public function <?php echo $action ?>()
+<?php foreach ($generator->getActionIDs() as $action) : ?>
+    public function <?= $action ?>()
     {
-        return $this->render('<?php echo $action ?>');
+        return $this->render('<?= $action ?>');
     }
 
-<?php } ?>
+<?php endforeach; ?>
 }

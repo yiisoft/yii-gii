@@ -69,7 +69,6 @@ final class CodeFile
 
     /**
      * Constructor.
-     *
      * @param string $path the file path that the new code should be saved to.
      * @param string $content the newly generated code content.
      */
@@ -86,7 +85,6 @@ final class CodeFile
 
     /**
      * Saves the code into the file specified by [[path]].
-     *
      * @return bool the error occurred while saving the code file, or true if no error.
      */
     public function save(): bool
@@ -191,7 +189,6 @@ final class CodeFile
      *
      * @param mixed $lines1
      * @param mixed $lines2
-     *
      * @return string
      */
     private function renderDiff($lines1, $lines2): string
