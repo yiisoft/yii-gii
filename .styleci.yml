@@ -38,7 +38,6 @@ enabled:
     - native_function_casing
     - native_function_type_declaration_casing
     - no_alias_functions
-    - no_alternative_syntax
     - no_empty_comment
     - no_empty_phpdoc
     - no_empty_statement
