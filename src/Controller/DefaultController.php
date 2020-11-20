@@ -112,9 +112,11 @@ class DefaultController implements ViewContextInterface
      * Runs an action defined in the generator.
      * Given an action named "xyz", the method "actionXyz()" in the generator will be called.
      * If the method does not exist, a 400 HTTP exception will be thrown.
+     *
      * @param string $id the ID of the generator
      * @param string $action
      * @param ServerRequestInterface $request
+     *
      * @return mixed the result of the action.
      */
     public function action(string $id, string $action, ServerRequestInterface $request)
@@ -137,7 +139,6 @@ class DefaultController implements ViewContextInterface
 
         return $generator;
     }
-
 
     private function render(string $view, array $parameters = []): string
     {
