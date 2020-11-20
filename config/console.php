@@ -19,5 +19,5 @@ return [
             $container->get(EventDispatcherInterface::class),
             $container->get(LoggerInterface::class)
         );
-    }
+    },
 ];
