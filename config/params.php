@@ -11,14 +11,14 @@ return [
         ],
     ],
     'yiisoft/aliases' => [
-        '@yiisoft/yii-gii' => dirname(__DIR__)
+        '@yiisoft/yii-gii' => dirname(__DIR__),
     ],
-    'gii'     => [
+    'gii' => [
         'generators' => [
-            'controller' => \Yiisoft\Yii\Gii\Generator\Controller\Generator::class
+            'controller' => \Yiisoft\Yii\Gii\Generator\Controller\Generator::class,
         ],
-        'basePath'   => '@root',
-        'viewPath'   => '@views',
+        'basePath' => '@root',
+        'viewPath' => '@views',
         'controller' => [
             'namespace' => 'App\\Controller',
             'directory' => '@src/Controller',

@@ -23,7 +23,7 @@ final class Generator extends AbstractGenerator
      */
     private string $controllerClass = '';
     /**
-     * @var null|string the controller's views path
+     * @var string|null the controller's views path
      */
     private ?string $viewsPath = null;
     /**
@@ -57,17 +57,17 @@ final class Generator extends AbstractGenerator
                         ->message(
                             'Only word characters are allowed, and the class name must start with a capital letter and end with "Controller".'
                         ),
-                    (new Callback([$this, 'validateNewClass']))
+                    (new Callback([$this, 'validateNewClass'])),
                 ],
                 'baseClass' => [
                     new Required(),
                     (new MatchRegularExpression('/^[\w\\\\]*$/'))
-                        ->message('Only word characters and backslashes are allowed.')
+                        ->message('Only word characters and backslashes are allowed.'),
                 ],
                 'actions' => [
                     (new MatchRegularExpression('/^[a-z][a-z0-9\\-,\\s]*$/'))
-                        ->message('Only a-z, 0-9, dashes (-), spaces and commas are allowed.')
-                ]
+                        ->message('Only a-z, 0-9, dashes (-), spaces and commas are allowed.'),
+                ],
             ]
         );
     }
@@ -141,6 +141,7 @@ final class Generator extends AbstractGenerator
 
     /**
      * Normalizes [[actions]] into an array of action IDs.
+     *
      * @return array an array of action IDs entered by the user
      */
     public function getActionIDs(): array
@@ -172,6 +173,7 @@ final class Generator extends AbstractGenerator
 
     /**
      * @param string $action the action ID
+     *
      * @return string the action view file path
      */
     public function getViewFile(string $action): string

@@ -26,8 +26,10 @@ final class Gii implements GiiInterface
 
     /**
      * @param string $name
-     * @return GeneratorInterface
+     *
      * @throws GeneratorNotFoundException
+     *
+     * @return GeneratorInterface
      */
     public function getGenerator(string $name): GeneratorInterface
     {
