@@ -63,7 +63,10 @@
                 "config/console.php"
             ],
             "common": "config/common.php",
-            "tests": "config/tests.php"
+            "tests": [
+                "$console",
+                "config/tests.php"
+            ]
         }
     },
     "repositories": [

@@ -18,4 +18,5 @@ return [
             '@root' => dirname(__DIR__) . '/tests/runtime',
         ]
     ),
+    \Psr\Log\LoggerInterface::class => \Psr\Log\NullLogger::class
 ];
