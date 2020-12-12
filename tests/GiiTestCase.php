@@ -11,7 +11,6 @@ use Yiisoft\Di\Container;
 use Yiisoft\Files\FileHelper;
 use Yiisoft\Yii\Gii\Exception\GeneratorNotFoundException;
 use Yiisoft\Yii\Gii\Generator\Controller\Generator as ControllerGenerator;
-use Yiisoft\Yii\Gii\GeneratorInterface;
 use Yiisoft\Yii\Gii\GiiInterface;
 
 /**
