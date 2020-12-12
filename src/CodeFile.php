@@ -7,7 +7,7 @@ namespace Yiisoft\Yii\Gii;
 use Diff;
 use RuntimeException;
 use Yiisoft\Html\Html;
-use Yiisoft\Yii\Gii\Components\DiffRendererHtmlInline;
+use Yiisoft\Yii\Gii\Component\DiffRendererHtmlInline;
 
 /**
  * CodeFile represents a code file to be generated.
