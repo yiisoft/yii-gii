@@ -278,7 +278,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      *
      * @return bool whether files are successfully saved without any error.
      */
-    public function save(array $files, array $answers, &$results): bool
+    public function save(array $files, array $answers, array &$results): bool
     {
         $results = ['Generating code using template "' . $this->getTemplatePath() . '"...'];
         $hasError = false;

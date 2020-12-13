@@ -158,7 +158,7 @@ final class Generator extends AbstractGenerator
     public function getControllerFile(): string
     {
         return $this->aliases->get(
-            sprintf('%s/%s.php', $this->getDirectory(), $this->getControllerClass())
+            sprintf('%s/%s.php', $this->getDirectory() ?? '', $this->getControllerClass())
         );
     }
 

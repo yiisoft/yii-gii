@@ -11,9 +11,13 @@ use Yiisoft\Yii\Gii\Exception\GeneratorNotFoundException;
 final class Gii implements GiiInterface
 {
     private ContainerInterface $container;
-    private iterable $generators;
 
-    public function __construct(iterable $generators, ContainerInterface $container)
+    /**
+     * @var array<string, mixed>
+     */
+    private array $generators;
+
+    public function __construct(array $generators, ContainerInterface $container)
     {
         $this->generators = $generators;
         $this->container = $container;
@@ -42,6 +46,7 @@ final class Gii implements GiiInterface
         } elseif ($generator instanceof GeneratorInterface) {
             return $generator;
         } elseif (is_object($generator) && method_exists($generator, '__invoke')) {
+            /** @psalm-suppress InvalidFunctionCall */
             $generator = $generator($this->container);
         }
         if (!($generator instanceof GeneratorInterface)) {

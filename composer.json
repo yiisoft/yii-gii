@@ -31,6 +31,7 @@
         "yiisoft/yii-console": "^3.0@dev"
     },
     "require-dev": {
+        "nyholm/psr7": "^1.0",
         "phpunit/phpunit": "^9.4",
         "roave/infection-static-analysis-plugin": "^1.5",
         "spatie/phpunit-watcher": "^1.23",

@@ -8,6 +8,7 @@ use Diff_Renderer_Html_Array;
 
 /**
  * Renders diff to HTML. Output adjusted to be copy-paste friendly.
+ * @psalm-suppress PropertyNotSetInConstructor
  */
 class DiffRendererHtmlInline extends Diff_Renderer_Html_Array
 {
@@ -15,9 +16,11 @@ class DiffRendererHtmlInline extends Diff_Renderer_Html_Array
      * Render a and return diff with changes between the two sequences
      * displayed inline (under each other)
      *
+     * @psalm-suppress ImplementedReturnTypeMismatch
+     *
      * @return string The generated inline diff.
      */
-    public function render()
+    public function render(): string
     {
         $changes = parent::render();
         $html = '';
