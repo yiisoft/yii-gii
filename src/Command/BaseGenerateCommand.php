@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii\Command;
 
-use function count;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -13,9 +12,11 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Yiisoft\Yii\Console\ExitCode;
 use Yiisoft\Yii\Gii\CodeFile;
+use Yiisoft\Yii\Gii\Generator\AbstractGenerator;
 use Yiisoft\Yii\Gii\GeneratorInterface;
-
 use Yiisoft\Yii\Gii\GiiInterface;
+
+use function count;
 
 abstract class BaseGenerateCommand extends Command
 {
@@ -37,10 +38,11 @@ abstract class BaseGenerateCommand extends Command
      * @param InputInterface $input
      * @param OutputInterface $output
      *
-     * @return int|void|null
+     * @return int
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        /** @var AbstractGenerator $generator */
         $generator = $this->getGenerator();
         $generator->load(array_filter(array_merge($input->getOptions(), $input->getArguments())));
         $output->writeln("Running '{$generator->getName()}'...\n");
@@ -58,6 +60,7 @@ abstract class BaseGenerateCommand extends Command
     protected function displayValidationErrors(GeneratorInterface $generator, OutputInterface $output): void
     {
         $output->writeln("<fg=red>Code not generated. Please fix the following errors:</>\n");
+        /** @var AbstractGenerator $generator */
         foreach ($generator->getErrors() as $attribute => $errors) {
             $output->writeln(sprintf(' - <fg=cyan>%s</>: <fg=green>%s</>', $attribute, implode('; ', $errors)));
         }
@@ -66,6 +69,7 @@ abstract class BaseGenerateCommand extends Command
 
     protected function generateCode(GeneratorInterface $generator, InputInterface $input, OutputInterface $output): void
     {
+        /** @var AbstractGenerator $generator */
         $files = $generator->generate();
         if (count($files) === 0) {
             $output->writeln('<fg=cyan>No code to be generated.</>');
@@ -108,6 +112,7 @@ abstract class BaseGenerateCommand extends Command
             return;
         }
 
+        $results = [];
         $isSaved = $generator->save($files, $answers, $results);
         foreach ($results as $n => $result) {
             if ($n === 0) {
@@ -132,13 +137,19 @@ abstract class BaseGenerateCommand extends Command
         }
     }
 
-    protected function confirm($input, $output)
+    /**
+     * @return bool|mixed|string|null
+     */
+    protected function confirm(InputInterface $input, OutputInterface $output)
     {
         $question = new ConfirmationQuestion("\nReady to generate the selected files? (yes|no) [yes]:", true);
         return $this->getHelper('question')->ask($input, $output, $question);
     }
 
-    protected function choice($input, $output)
+    /**
+     * @return bool|mixed|string|null
+     */
+    protected function choice(InputInterface $input, OutputInterface $output)
     {
         $question = new ChoiceQuestion(
             "\nDo you want to overwrite this file?",
