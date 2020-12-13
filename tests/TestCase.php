@@ -14,7 +14,6 @@ use Yiisoft\Di\Container;
 use Yiisoft\EventDispatcher\Dispatcher\Dispatcher;
 use Yiisoft\EventDispatcher\Provider\Provider;
 use Yiisoft\Files\FileHelper;
-use Yiisoft\View\Theme;
 use Yiisoft\View\View;
 use Yiisoft\View\WebView;
 
@@ -50,9 +49,9 @@ class TestCase extends \PHPUnit\Framework\TestCase
                 View::class => [
                     '__class' => WebView::class,
                     '__construct()' => [
-                        'basePath' => '@views'
-                    ]
-                ]
+                        'basePath' => '@views',
+                    ],
+                ],
             ]
         );
     }
