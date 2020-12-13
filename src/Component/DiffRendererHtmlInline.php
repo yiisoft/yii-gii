@@ -8,6 +8,7 @@ use Diff_Renderer_Html_Array;
 
 /**
  * Renders diff to HTML. Output adjusted to be copy-paste friendly.
+ *
  * @psalm-suppress PropertyNotSetInConstructor
  */
 class DiffRendererHtmlInline extends Diff_Renderer_Html_Array

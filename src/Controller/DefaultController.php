@@ -73,6 +73,7 @@ class DefaultController implements ViewContextInterface
 
     /**
      * @param ServerRequestInterface $request
+     *
      * @return \Psr\Http\Message\ResponseInterface|string
      */
     public function preview(ServerRequestInterface $request)
@@ -100,6 +101,7 @@ class DefaultController implements ViewContextInterface
 
     /**
      * @param ServerRequestInterface $request
+     *
      * @return \Psr\Http\Message\ResponseInterface|string
      */
     public function diff(ServerRequestInterface $request)
@@ -152,6 +154,7 @@ class DefaultController implements ViewContextInterface
     /**
      * @param string $id
      * @param ServerRequestInterface $request
+     *
      * @return GeneratorInterface|AbstractGenerator
      */
     protected function loadGenerator(string $id, ServerRequestInterface $request): GeneratorInterface
