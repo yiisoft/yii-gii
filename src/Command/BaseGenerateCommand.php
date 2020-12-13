@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii\Command;
 
-use Yiisoft\Yii\Gii\Generator\AbstractGenerator;
-use function count;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -14,9 +12,11 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Yiisoft\Yii\Console\ExitCode;
 use Yiisoft\Yii\Gii\CodeFile;
+use Yiisoft\Yii\Gii\Generator\AbstractGenerator;
 use Yiisoft\Yii\Gii\GeneratorInterface;
-
 use Yiisoft\Yii\Gii\GiiInterface;
+
+use function count;
 
 abstract class BaseGenerateCommand extends Command
 {
