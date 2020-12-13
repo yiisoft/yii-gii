@@ -9,6 +9,15 @@ use Yiisoft\Yii\Gii\CodeFile;
 
 class CodeFileTest extends TestCase
 {
+    private ?Aliases $aliases = null;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->aliases = $this->getContainer()->get(Aliases::class);
+    }
+
     public function dataProviderDiff() {
         return [
             [
@@ -199,12 +208,12 @@ class CodeFileTest extends TestCase
 
     /** @dataProvider dataProviderConstruct */
     public function testConstruct(string $path, int $expectedOperation) {
-        $codeFile = new CodeFile($this->container->get(Aliases::class)->get($path), '');
+        $codeFile = new CodeFile($this->aliases->get($path), '');
         $this->assertEquals($codeFile->getOperation(), $expectedOperation);
     }
 
     public function testConstructWithSameContent() {
-        $path = $this->container->get(Aliases::class)->get('@app/Controllers/EmptyController.php');
+        $path = $this->aliases->get('@app/Controllers/EmptyController.php');
         $codeFile = new CodeFile(
             $path,
             file_get_contents($path)
@@ -214,12 +223,12 @@ class CodeFileTest extends TestCase
 
     /** @dataProvider dataProviderDiff */
     public function testDiff(string $path, string $content, $result) {
-        $codeFile = new CodeFile($this->container->get(Aliases::class)->get($path), $content);
+        $codeFile = new CodeFile($this->aliases->get($path), $content);
         $this->assertEquals($codeFile->diff(), $result);
     }
 
     public function testDiffSameContent() {
-        $path = $this->container->get(Aliases::class)->get('@app/Controllers/EmptyController.php');
+        $path = $this->aliases->get('@app/Controllers/EmptyController.php');
         $codeFile = new CodeFile(
             $path,
             file_get_contents($path)
@@ -229,14 +238,14 @@ class CodeFileTest extends TestCase
 
     /** @dataProvider dataProviderPreview */
     public function testPreview(string $path, string $content, $result) {
-        $codeFile = new CodeFile($this->container->get(Aliases::class)->get($path), $content);
+        $codeFile = new CodeFile($this->aliases->get($path), $content);
         $this->assertEquals($codeFile->preview(), $result);
     }
 
     public function testSave() {
-        $dest = $this->container->get(Aliases::class)->get('@app/runtime/EmptyController.php');
+        $dest = $this->aliases->get('@app/runtime/EmptyController.php');
         copy(
-            $this->container->get(Aliases::class)->get('@app/Controllers/EmptyController.php'),
+            $this->aliases->get('@app/Controllers/EmptyController.php'),
             $dest,
         );
         $codeFile = new CodeFile($dest, '');
@@ -246,7 +255,7 @@ class CodeFileTest extends TestCase
     }
 
     public function testSaveWithNonExistentFile() {
-        $file = $this->container->get(Aliases::class)->get('@app/runtime/nonExistentFile.php');
+        $file = $this->aliases->get('@app/runtime/nonExistentFile.php');
         $codeFile = new CodeFile($file, '');
 
         $this->assertEquals($codeFile->save(), true);
@@ -254,26 +263,26 @@ class CodeFileTest extends TestCase
     }
 
     public function testSaveWithNonExistentDirectory() {
-        $codeFile = new CodeFile($this->container->get(Aliases::class)->get('@app/runtime/unknown/nonExistentFile.php'), '');
+        $codeFile = new CodeFile($this->aliases->get('@app/runtime/unknown/nonExistentFile.php'), '');
         $this->assertEquals($codeFile->save(), true);
     }
 
     public function testPath() {
-        $file = $this->container->get(Aliases::class)->get('@app/runtime');
+        $file = $this->aliases->get('@app/runtime');
         $codeFile = new CodeFile($file, '');
 
         $this->assertEquals($codeFile->getPath(), $file);
     }
 
     public function testRelativePath() {
-        $app = $this->container->get(Aliases::class)->get('@app');
+        $app = $this->aliases->get('@app');
         $codeFile = (new CodeFile($app . DIRECTORY_SEPARATOR . 'runtime', ''))->withBasePath($app);
 
         $this->assertEquals($codeFile->getRelativePath(), 'runtime');
     }
 
     public function testRelativePathWithEmptyBasePath() {
-        $file = $this->container->get(Aliases::class)->get('@app/runtime');
+        $file = $this->aliases->get('@app/runtime');
         $codeFile = new CodeFile($file, '');
 
         $this->assertEquals($codeFile->getRelativePath(), $file);

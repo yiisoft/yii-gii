@@ -22,7 +22,7 @@ use Yiisoft\View\WebView;
  */
 class TestCase extends \PHPUnit\Framework\TestCase
 {
-    protected ?ContainerInterface $container;
+    private ?ContainerInterface $container;
 
     protected function setUp(): void
     {
