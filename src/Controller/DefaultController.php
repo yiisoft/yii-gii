@@ -10,6 +10,7 @@ use Yiisoft\Aliases\Aliases;
 use Yiisoft\Http\Status;
 use Yiisoft\View\ViewContextInterface;
 use Yiisoft\View\WebView;
+use Yiisoft\Yii\Gii\Generator\AbstractGenerator;
 use Yiisoft\Yii\Gii\GeneratorInterface;
 use Yiisoft\Yii\Gii\GiiInterface;
 
@@ -30,6 +31,7 @@ class DefaultController implements ViewContextInterface
         $this->gii = $gii;
         $this->responseFactory = $responseFactory;
         $this->view = $view;
+        $this->aliases = $aliases;
         $this->layout = $aliases->get('@yiisoft/yii-gii/views') . '/layout/generator';
     }
 
@@ -40,8 +42,10 @@ class DefaultController implements ViewContextInterface
         return $this->render('index');
     }
 
-    public function view($id, ServerRequestInterface $request): string
+    public function view(ServerRequestInterface $request): string
     {
+        $id = $request->getAttribute('id');
+        /** @var AbstractGenerator $generator */
         $generator = $this->loadGenerator($id, $request);
         $params = ['generator' => $generator, 'id' => $id];
 
@@ -54,6 +58,7 @@ class DefaultController implements ViewContextInterface
                 $generator->saveStickyAttributes();
                 $files = $generator->generate();
                 if ($generate !== null && !empty($answers)) {
+                    $results = [];
                     $params['hasError'] = !$generator->save($files, (array)$answers, $results);
                     $params['results'] = $results;
                 } else {
@@ -66,8 +71,15 @@ class DefaultController implements ViewContextInterface
         return $this->render('view', $params);
     }
 
-    public function preview(string $id, string $file, ServerRequestInterface $request)
+    /**
+     * @param ServerRequestInterface $request
+     *
+     * @return \Psr\Http\Message\ResponseInterface|string
+     */
+    public function preview(ServerRequestInterface $request)
     {
+        $id = $request->getAttribute('id');
+        $file = $request->getAttribute('file');
         $generator = $this->loadGenerator($id, $request);
         if ($generator->validate()) {
             foreach ($generator->generate() as $f) {
@@ -87,8 +99,15 @@ class DefaultController implements ViewContextInterface
         return $response;
     }
 
-    public function diff($id, $file, ServerRequestInterface $request)
+    /**
+     * @param ServerRequestInterface $request
+     *
+     * @return \Psr\Http\Message\ResponseInterface|string
+     */
+    public function diff(ServerRequestInterface $request)
     {
+        $id = $request->getAttribute('id');
+        $file = $request->getAttribute('file');
         $generator = $this->loadGenerator($id, $request);
         if ($generator->validate()) {
             foreach ($generator->generate() as $f) {
@@ -113,14 +132,15 @@ class DefaultController implements ViewContextInterface
      * Given an action named "xyz", the method "actionXyz()" in the generator will be called.
      * If the method does not exist, a 400 HTTP exception will be thrown.
      *
-     * @param string $id the ID of the generator
-     * @param string $action
      * @param ServerRequestInterface $request
      *
      * @return mixed the result of the action.
      */
-    public function action(string $id, string $action, ServerRequestInterface $request)
+    public function action(ServerRequestInterface $request)
     {
+        $id = $request->getAttribute('id');
+        $action = $request->getAttribute('action');
+        /** @var AbstractGenerator $generator */
         $generator = $this->loadGenerator($id, $request);
         if (method_exists($generator, $action)) {
             return $generator->$action();
@@ -131,11 +151,18 @@ class DefaultController implements ViewContextInterface
         return $response;
     }
 
+    /**
+     * @param string $id
+     * @param ServerRequestInterface $request
+     *
+     * @return AbstractGenerator|GeneratorInterface
+     */
     protected function loadGenerator(string $id, ServerRequestInterface $request): GeneratorInterface
     {
+        /** @var AbstractGenerator $generator */
         $generator = $this->gii->getGenerator($id);
         $generator->loadStickyAttributes();
-        $generator->load($request->getParsedBody());
+        $generator->load((array)$request->getParsedBody());
 
         return $generator;
     }
@@ -146,7 +173,7 @@ class DefaultController implements ViewContextInterface
         return $this->renderContent($content);
     }
 
-    private function renderContent($content): string
+    private function renderContent(string $content): string
     {
         $layout = $this->findLayoutFile($this->layout);
         if ($layout !== null) {

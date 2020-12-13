@@ -273,12 +273,12 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * @param string[] $results this parameter receives a value from this method indicating the log messages
      * generated while saving the code files.
      *
-     * @throws ReflectionException
      * @throws InvalidConfigException
+     * @throws ReflectionException
      *
      * @return bool whether files are successfully saved without any error.
      */
-    public function save(array $files, array $answers, &$results): bool
+    public function save(array $files, array $answers, array &$results): bool
     {
         $results = ['Generating code using template "' . $this->getTemplatePath() . '"...'];
         $hasError = false;
@@ -313,8 +313,8 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
     }
 
     /**
-     * @throws ReflectionException
      * @throws InvalidConfigException
+     * @throws ReflectionException
      *
      * @return string the root path of the template files that are currently being used.
      */
@@ -339,8 +339,8 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * relative to {@see getTemplatePath()}.
      * @param array $params list of parameters to be passed to the template file.
      *
-     * @throws Throwable
      * @throws ViewNotFoundException
+     * @throws Throwable
      *
      * @return string the generated code
      */

@@ -7,7 +7,7 @@ namespace Yiisoft\Yii\Gii\Tests;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Yii\Gii\CodeFile;
 
-class CodeFileTest extends GiiTestCase
+class CodeFileTest extends TestCase
 {
     public function dataProviderDiff() {
         return [
