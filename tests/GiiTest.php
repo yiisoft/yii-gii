@@ -4,11 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii\Tests;
 
-use PHPUnit\Framework\TestCase;
-use Psr\Container\ContainerInterface;
-use Yiisoft\Composer\Config\Builder;
-use Yiisoft\Di\Container;
-use Yiisoft\Files\FileHelper;
 use Yiisoft\Yii\Gii\Exception\GeneratorNotFoundException;
 use Yiisoft\Yii\Gii\Generator\Controller\Generator as ControllerGenerator;
 use Yiisoft\Yii\Gii\GiiInterface;
@@ -16,29 +11,8 @@ use Yiisoft\Yii\Gii\GiiInterface;
 /**
  * GiiTestCase is the base class for all gii related test cases
  */
-class GiiTestCase extends TestCase
+class GiiTest extends TestCase
 {
-    private ?ContainerInterface $container;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        FileHelper::createDirectory(__DIR__ . '/runtime');
-        $this->container = new Container(require Builder::path('tests', dirname(__DIR__)));
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-        FileHelper::removeDirectory(__DIR__ . '/runtime');
-        $this->container = null;
-    }
-
-    protected function getContainer(): ContainerInterface
-    {
-        return $this->container;
-    }
-
     public function testGeneratorInstance(): void
     {
         $controllerGenerator = $this->getContainer()->get(GiiInterface::class)->getGenerator('controller');

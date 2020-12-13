@@ -8,12 +8,12 @@ use Yiisoft\Aliases\Aliases;
 use Yiisoft\View\View;
 use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Yii\Gii\Generator\Controller\Generator as ControllerGenerator;
-use Yiisoft\Yii\Gii\Tests\GiiTestCase;
+use Yiisoft\Yii\Gii\Tests\TestCase;
 
 /**
  * ControllerGeneratorTest checks that Gii controller generator produces valid results
  */
-class ControllerGeneratorTest extends GiiTestCase
+class ControllerGeneratorTest extends TestCase
 {
     public function testValidGenerator(): void
     {
