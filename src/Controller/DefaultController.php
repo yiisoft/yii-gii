@@ -155,7 +155,7 @@ class DefaultController implements ViewContextInterface
      * @param string $id
      * @param ServerRequestInterface $request
      *
-     * @return GeneratorInterface|AbstractGenerator
+     * @return AbstractGenerator|GeneratorInterface
      */
     protected function loadGenerator(string $id, ServerRequestInterface $request): GeneratorInterface
     {

@@ -274,8 +274,8 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * generated while saving the code files.
      *
      * @throws InvalidConfigException
-     *
      * @throws ReflectionException
+     *
      * @return bool whether files are successfully saved without any error.
      */
     public function save(array $files, array $answers, array &$results): bool
@@ -316,6 +316,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * @throws InvalidConfigException
      *
      * @throws ReflectionException
+     *
      * @return string the root path of the template files that are currently being used.
      */
     public function getTemplatePath(): string
@@ -342,6 +343,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * @throws ViewNotFoundException
      *
      * @throws Throwable
+     *
      * @return string the generated code
      */
     public function render(string $template, array $params = []): string
