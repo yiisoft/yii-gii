@@ -314,7 +314,6 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
 
     /**
      * @throws InvalidConfigException
-     *
      * @throws ReflectionException
      *
      * @return string the root path of the template files that are currently being used.
@@ -341,7 +340,6 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * @param array $params list of parameters to be passed to the template file.
      *
      * @throws ViewNotFoundException
-     *
      * @throws Throwable
      *
      * @return string the generated code
