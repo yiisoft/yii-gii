@@ -18,7 +18,7 @@ use Yiisoft\Yii\Gii\GiiInterface;
  */
 class GiiTestCase extends TestCase
 {
-    private ?ContainerInterface $container;
+    protected ?ContainerInterface $container;
 
     protected function setUp(): void
     {
