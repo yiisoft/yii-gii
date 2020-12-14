@@ -6,5 +6,4 @@ namespace Yiisoft\Yii\Gii\Tests\Controllers;
 
 class EmptyController
 {
-
 }
