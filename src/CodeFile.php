@@ -75,7 +75,7 @@ final class CodeFile
      */
     public function __construct(string $path, string $content)
     {
-        $this->path = strtr($path, '/\\', DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR);
+        $this->path = $this->preparePath($path);
         $this->content = $content;
         $this->id = dechex(crc32($this->path));
         $this->operation = self::OP_CREATE;
@@ -238,7 +238,7 @@ final class CodeFile
     public function withBasePath(string $basePath): self
     {
         $new = clone $this;
-        $new->basePath = $basePath;
+        $new->basePath = $this->preparePath($basePath);
 
         return $new;
     }
@@ -257,5 +257,10 @@ final class CodeFile
         $new->newDirMode = $mode;
 
         return $new;
+    }
+
+    private function preparePath(string $path): string
+    {
+        return strtr($path, '/\\', DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR);
     }
 }
