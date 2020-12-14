@@ -170,11 +170,7 @@ class CodeFileTest extends TestCase
             [
                 '@app/Controllers/EmptyController.php',
                 '',
-                <<<HTML
-                <code><span style="color: #000000">
-                </span>
-                </code>
-                HTML
+                highlight_string('', true)
             ],
             [
                 '@app/Controllers/image.png',
@@ -271,7 +267,7 @@ class CodeFileTest extends TestCase
         $file = $this->aliases->get('@app/runtime');
         $codeFile = new CodeFile($file, '');
 
-        $this->assertEquals($codeFile->getPath(), $file);
+        $this->assertEquals($codeFile->getPath(), realpath($file));
     }
 
     public function testRelativePath() {
@@ -285,6 +281,6 @@ class CodeFileTest extends TestCase
         $file = $this->aliases->get('@app/runtime');
         $codeFile = new CodeFile($file, '');
 
-        $this->assertEquals($codeFile->getRelativePath(), $file);
+        $this->assertEquals($codeFile->getRelativePath(), realpath($file));
     }
 }
