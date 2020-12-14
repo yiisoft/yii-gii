@@ -50,8 +50,9 @@ final class Gii implements GiiInterface
             $generator = $generator($this->container);
         }
         if (!($generator instanceof GeneratorInterface)) {
+            $type = is_object($generator) ? get_class($generator) : gettype($generator);
             throw new RuntimeException(
-                'Generator should be GeneratorInterface instance. "' . get_class($generator) . '" given.'
+                'Generator should be GeneratorInterface instance. "' . $type . '" given.'
             );
         }
         return $generator;

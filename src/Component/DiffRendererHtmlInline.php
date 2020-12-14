@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\Gii\Components;
+namespace Yiisoft\Yii\Gii\Component;
 
 use Diff_Renderer_Html_Array;
 

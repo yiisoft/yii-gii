@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii\Tests;
 
+use Psr\Container\ContainerInterface;
 use Yiisoft\Yii\Gii\Exception\GeneratorNotFoundException;
 use Yiisoft\Yii\Gii\Generator\Controller\Generator as ControllerGenerator;
 use Yiisoft\Yii\Gii\GiiInterface;
@@ -15,7 +16,21 @@ class GiiTest extends TestCase
 {
     public function testGeneratorInstance(): void
     {
-        $controllerGenerator = $this->getContainer()->get(GiiInterface::class)->getGenerator('controller');
+        $gii = $this->getContainer()->get(GiiInterface::class);
+        $controllerGenerator = $gii->getGenerator('controller');
+        $this->assertInstanceOf(ControllerGenerator::class, $controllerGenerator);
+
+        $gii->addGenerator('stringGenerator', ControllerGenerator::class);
+        $controllerGenerator = $gii->getGenerator('stringGenerator');
+        $this->assertInstanceOf(ControllerGenerator::class, $controllerGenerator);
+
+        $gii->addGenerator('callableGenerator', new class() {
+            public function __invoke(ContainerInterface $container)
+            {
+                return $container->get(ControllerGenerator::class);
+            }
+        });
+        $controllerGenerator = $gii->getGenerator('callableGenerator');
         $this->assertInstanceOf(ControllerGenerator::class, $controllerGenerator);
     }
 
@@ -33,5 +48,15 @@ class GiiTest extends TestCase
             'Generator should be GeneratorInterface instance. "' . get_class(new \stdClass()) . '" given.'
         );
         $this->getContainer()->get(GiiInterface::class)->getGenerator('wrong');
+    }
+
+    public function testWrongGeneratorTypeInstance(): void
+    {
+        $this->getContainer()->get(GiiInterface::class)->addGenerator('wrongType', 409);
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage(
+            'Generator should be GeneratorInterface instance. "' . gettype(409) . '" given.'
+        );
+        $this->getContainer()->get(GiiInterface::class)->getGenerator('wrongType');
     }
 }
