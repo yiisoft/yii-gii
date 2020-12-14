@@ -18,7 +18,7 @@ class CodeFileTest extends TestCase
         $this->aliases = $this->getContainer()->get(Aliases::class);
     }
 
-    public function dataProviderDiff()
+    public function dataProviderDiff(): array
     {
         return [
             [
@@ -130,7 +130,7 @@ class CodeFileTest extends TestCase
         ];
     }
 
-    public function dataProviderPreview()
+    public function dataProviderPreview(): array
     {
         return [
             [
@@ -151,7 +151,7 @@ class CodeFileTest extends TestCase
         ];
     }
 
-    public function dataProviderConstruct()
+    public function dataProviderConstruct(): array
     {
         return [
             [
@@ -170,13 +170,13 @@ class CodeFileTest extends TestCase
     }
 
     /** @dataProvider dataProviderConstruct */
-    public function testConstruct(string $path, int $expectedOperation)
+    public function testConstruct(string $path, int $expectedOperation): void
     {
         $codeFile = new CodeFile($this->aliases->get($path), '');
         $this->assertEquals($codeFile->getOperation(), $expectedOperation);
     }
 
-    public function testConstructWithSameContent()
+    public function testConstructWithSameContent(): void
     {
         $path = $this->aliases->get('@app/Controllers/EmptyController.php');
         $codeFile = new CodeFile(
@@ -187,13 +187,13 @@ class CodeFileTest extends TestCase
     }
 
     /** @dataProvider dataProviderDiff */
-    public function testDiff(string $path, string $content, $result)
+    public function testDiff(string $path, string $content, $result): void
     {
         $codeFile = new CodeFile($this->aliases->get($path), $content);
         $this->assertEquals($codeFile->diff(), $result);
     }
 
-    public function testDiffSameContent()
+    public function testDiffSameContent(): void
     {
         $path = $this->aliases->get('@app/Controllers/EmptyController.php');
         $codeFile = new CodeFile(
@@ -204,13 +204,13 @@ class CodeFileTest extends TestCase
     }
 
     /** @dataProvider dataProviderPreview */
-    public function testPreview(string $path, string $content, $result)
+    public function testPreview(string $path, string $content, $result): void
     {
         $codeFile = new CodeFile($this->aliases->get($path), $content);
         $this->assertEquals($codeFile->preview(), $result);
     }
 
-    public function testSave()
+    public function testSave(): void
     {
         $dest = $this->aliases->get('@app/runtime/EmptyController.php');
         copy(
@@ -223,7 +223,7 @@ class CodeFileTest extends TestCase
         $this->assertFileExists($dest);
     }
 
-    public function testSaveWithNonExistentFile()
+    public function testSaveWithNonExistentFile(): void
     {
         $file = $this->aliases->get('@app/runtime/nonExistentFile.php');
         $codeFile = new CodeFile($file, '');
@@ -232,13 +232,13 @@ class CodeFileTest extends TestCase
         $this->assertFileExists($file);
     }
 
-    public function testSaveWithNonExistentDirectory()
+    public function testSaveWithNonExistentDirectory(): void
     {
         $codeFile = new CodeFile($this->aliases->get('@app/runtime/unknown/nonExistentFile.php'), '');
         $this->assertEquals($codeFile->save(), true);
     }
 
-    public function testPath()
+    public function testPath(): void
     {
         $file = $this->aliases->get('@app/runtime');
         $codeFile = new CodeFile($file, '');
@@ -246,7 +246,7 @@ class CodeFileTest extends TestCase
         $this->assertEquals($codeFile->getPath(), realpath($file));
     }
 
-    public function testRelativePath()
+    public function testRelativePath(): void
     {
         $app = $this->aliases->get('@app');
         $codeFile = (new CodeFile($app . DIRECTORY_SEPARATOR . 'runtime', ''))->withBasePath($app);
@@ -254,7 +254,7 @@ class CodeFileTest extends TestCase
         $this->assertEquals($codeFile->getRelativePath(), 'runtime');
     }
 
-    public function testRelativePathWithEmptyBasePath()
+    public function testRelativePathWithEmptyBasePath(): void
     {
         $file = $this->aliases->get('@app/runtime');
         $codeFile = new CodeFile($file, '');
