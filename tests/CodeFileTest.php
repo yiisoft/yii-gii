@@ -25,15 +25,15 @@ class CodeFileTest extends TestCase
                 '@app/Controllers/EmptyController.php',
                 <<<PHP
                  <?php
-                    
+
                  declare(strict_types=1);
-                    
+
                  namespace Yiisoft\Yii\Gii\Tests\Controllers;
-                    
+
                  class EmptyController
                  {
                     public function customMethod() {
-                    
+
                     }
                  }
                  PHP,
@@ -46,42 +46,10 @@ class CodeFileTest extends TestCase
                             <th>Differences</th>
                         </tr>
                     </thead>    <tbody class="ChangeEqual">        <tr>
-                            <th data-line-number="1"></th>
-                            <th data-line-number="1"></th>
-                            <td class="Left">&lt;?php</td>
-                        </tr>    </tbody>    <tbody class="ChangeReplace">        <tr>
-                            <th data-line-number="2"></th>
-                            <th data-line-number="&nbsp;"></th>
-                            <td class="Left"><span></span></td>
-                        </tr>        <tr>
-                            <th data-line-number="2"></th>
-                            <th data-line-number="&nbsp;"></th>
-                            <td class="Right"><span>&nbsp; </span></td>
-                        </tr>    </tbody>    <tbody class="ChangeEqual">        <tr>
-                            <th data-line-number="3"></th>
-                            <th data-line-number="3"></th>
-                            <td class="Left">declare(strict_types=1);</td>
-                        </tr>    </tbody>    <tbody class="ChangeReplace">        <tr>
-                            <th data-line-number="4"></th>
-                            <th data-line-number="&nbsp;"></th>
-                            <td class="Left"><span></span></td>
-                        </tr>        <tr>
-                            <th data-line-number="4"></th>
-                            <th data-line-number="&nbsp;"></th>
-                            <td class="Right"><span>&nbsp; </span></td>
-                        </tr>    </tbody>    <tbody class="ChangeEqual">        <tr>
-                            <th data-line-number="5"></th>
-                            <th data-line-number="5"></th>
-                            <td class="Left">namespace Yiisoft\Yii\Gii\Tests\Controllers;</td>
-                        </tr>    </tbody>    <tbody class="ChangeReplace">        <tr>
                             <th data-line-number="6"></th>
-                            <th data-line-number="&nbsp;"></th>
-                            <td class="Left"><span></span></td>
-                        </tr>        <tr>
                             <th data-line-number="6"></th>
-                            <th data-line-number="&nbsp;"></th>
-                            <td class="Right"><span>&nbsp; </span></td>
-                        </tr>    </tbody>    <tbody class="ChangeEqual">        <tr>
+                            <td class="Left"></td>
+                        </tr>        <tr>
                             <th data-line-number="7"></th>
                             <th data-line-number="7"></th>
                             <td class="Left">class EmptyController</td>
@@ -89,24 +57,20 @@ class CodeFileTest extends TestCase
                             <th data-line-number="8"></th>
                             <th data-line-number="8"></th>
                             <td class="Left">{</td>
-                        </tr>    </tbody>    <tbody class="ChangeReplace">        <tr>
-                            <th data-line-number="9"></th>
+                        </tr>    </tbody>    <tbody class="ChangeInsert">        <tr>
                             <th data-line-number="&nbsp;"></th>
-                            <td class="Left"><span></span></td>
-                        </tr>        <tr>
                             <th data-line-number="9"></th>
-                            <th data-line-number="&nbsp;"></th>
-                            <td class="Right"><span>&nbsp; public function customMethod() {</span></td>
+                            <td class="Right"><ins>&nbsp; public function customMethod() {</ins>&nbsp;</td>
                         </tr>        <tr>
+                            <th data-line-number="&nbsp;"></th>
                             <th data-line-number="10"></th>
-                            <th data-line-number="&nbsp;"></th>
-                            <td class="Right"><span>&nbsp; </span></td>
+                            <td class="Right"><ins></ins>&nbsp;</td>
                         </tr>        <tr>
+                            <th data-line-number="&nbsp;"></th>
                             <th data-line-number="11"></th>
-                            <th data-line-number="&nbsp;"></th>
-                            <td class="Right"><span>&nbsp; }</span></td>
+                            <td class="Right"><ins>&nbsp; }</ins>&nbsp;</td>
                         </tr>    </tbody>    <tbody class="ChangeEqual">        <tr>
-                            <th data-line-number="10"></th>
+                            <th data-line-number="9"></th>
                             <th data-line-number="12"></th>
                             <td class="Left">}</td>
                         </tr>    </tbody></table>
