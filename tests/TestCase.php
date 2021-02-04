@@ -27,7 +27,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        FileHelper::createDirectory(__DIR__ . '/runtime');
+        FileHelper::ensureDirectory(__DIR__ . '/runtime');
         $this->container = new Container(
             [
                 \Yiisoft\Yii\Gii\GiiInterface::class => new \Yiisoft\Yii\Gii\Factory\GiiFactory(
