@@ -26,7 +26,6 @@
         "yiisoft/json": "^1.0",
         "yiisoft/strings": "^1.0",
         "yiisoft/validator": "^3.0@dev",
-        "yiisoft/var-dumper": "^3.0@dev",
         "yiisoft/view": "^3.0@dev",
         "yiisoft/yii-console": "^3.0@dev"
     },
