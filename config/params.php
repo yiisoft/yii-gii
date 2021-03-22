@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Yiisoft\Yii\Gii\Command\ControllerCommand;
 
 return [
-    'console' => [
+    'yiisoft/yii-console' => [
         'commands' => [
             'gii/controller' => ControllerCommand::class,
         ],
