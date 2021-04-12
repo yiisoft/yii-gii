@@ -10,11 +10,11 @@
 // ...
 if (YII_ENV_DEV) {    
     $config['modules']['gii'] = [
-        '__class' => Yiisoft\Yii\Gii\Gii::class,
+        'class' => Yiisoft\Yii\Gii\Gii::class,
         'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'],  
          'generators' => [
             'myCrud' => [
-                '__class' => app\myTemplates\crud\Generator::class,
+                'class' => app\myTemplates\crud\Generator::class,
                 'templates' => [
                     'my' => '@app/myTemplates/crud/default',
                 ]

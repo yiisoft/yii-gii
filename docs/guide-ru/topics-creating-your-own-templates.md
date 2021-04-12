@@ -37,11 +37,11 @@
 // ...
 if (YII_ENV_DEV) {
     $config['modules']['gii'] = [
-        '__class' => \Yiisoft\Yii\Gii\Gii::class,
+        'class' => \Yiisoft\Yii\Gii\Gii::class,
         'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'],
         'generators' => [ // здесь
             'crud' => [ // название генератора
-                '__class' => \Yiisoft\Yii\Gii\Generators\Crud\Generator::class, // класс генератора
+                'class' => \Yiisoft\Yii\Gii\Generators\Crud\Generator::class, // класс генератора
                 'templates' => [ // настройки сторонних шаблонов
                     'myCrud' => '@app/myTemplates/crud/default', // имя_шаблона => путь_к_шаблону
                 ]
