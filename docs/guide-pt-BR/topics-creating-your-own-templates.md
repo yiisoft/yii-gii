@@ -41,11 +41,11 @@ Agora você precisa informar ao Gii sobre nosso modelo (template). A configuraç
 // ...
 if (YII_ENV_DEV) {
     $config['modules']['gii'] = [
-        '__class' => \Yiisoft\Yii\Gii\Gii::class,
+        'class' => \Yiisoft\Yii\Gii\Gii::class,
         'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'],
         'generators' => [ //here
             'crud' => [ // generator name
-                '__class' => \Yiisoft\Yii\Gii\Generators\Crud\Generator::class, // generator class
+                'class' => \Yiisoft\Yii\Gii\Generators\Crud\Generator::class, // generator class
                 'templates' => [ //setting for out templates
                     'myCrud' => '@app/myTemplates/crud/default', // template name => path to template
                 ]

@@ -53,7 +53,7 @@ http://localhost/path/to/index.php/gii
 
 ```php
 'gii' => [
-    '__class' => \Yiisoft\Yii\Gii\Gii::class,
+    'class' => \Yiisoft\Yii\Gii\Gii::class,
     'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'] // adjust this to your needs
 ],
 ```
@@ -102,7 +102,7 @@ if (YII_ENV_DEV) {
 
     $config['bootstrap'][] = 'gii';
     $config['modules']['gii'] = [
-        '__class' => \Yiisoft\Yii\Gii\Gii::class,
+        'class' => \Yiisoft\Yii\Gii\Gii::class,
         'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'],
     ];
 }
