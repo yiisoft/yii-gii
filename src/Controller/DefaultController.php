@@ -177,12 +177,11 @@ class DefaultController implements ViewContextInterface
     {
         $layout = $this->findLayoutFile($this->layout);
         if ($layout !== null) {
-            return $this->view->renderFile(
+            return $this->view->withContext($this)->renderFile(
                 $layout,
                 [
                     'content' => $content,
-                ],
-                $this
+                ]
             );
         }
 
