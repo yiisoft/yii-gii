@@ -17,6 +17,7 @@ use Yiisoft\Validator\Result;
 use Yiisoft\Validator\ResultSet;
 use Yiisoft\Validator\Rule\Callback;
 use Yiisoft\Validator\Rule\Required;
+use Yiisoft\Validator\ValidationContext;
 use Yiisoft\Validator\Validator;
 use Yiisoft\View\Exception\ViewNotFoundException;
 use Yiisoft\View\View;
@@ -173,7 +174,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
 
     final public function validate(): ResultSet
     {
-        $results = (new Validator($this->rules()))->validate($this);
+        $results = (new Validator())->validate($this, $this->rules());
         foreach ($results as $attribute => $resultItem) {
             if (!$resultItem->isValid()) {
                 $this->errors[$attribute] = $resultItem->getErrors();
@@ -348,7 +349,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
     {
         $params['generator'] = $this;
 
-        return $this->view->render($template, $params, $this);
+        return $this->view->withContext($this)->render($template, $params);
     }
 
     /**
@@ -357,12 +358,14 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * and the template contains all required template files as specified in {@see requiredTemplates()}.
      *
      * @param string $value
-     * @param self $dataSet
+     * @param ValidationContext $validationContext
      *
      * @return Result
      */
-    public function validateTemplate(string $value, self $dataSet): Result
+    public function validateTemplate(string $value, ValidationContext $validationContext): Result
     {
+        /** @var self $dataSet */
+        $dataSet = $validationContext->getDataSet();
         $result = new Result();
         $templates = $dataSet->getTemplates();
         if ($templates === []) {
@@ -404,12 +407,14 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * The validator will check if the directory containing the new class file exist or not.
      *
      * @param string $value being validated
-     * @param self $dataSet
+     * @param ValidationContext $validationContext
      *
      * @return Result
      */
-    public function validateNewClass(string $value, self $dataSet): Result
+    public function validateNewClass(string $value, ValidationContext $validationContext): Result
     {
+        /** @var self $dataSet */
+        $dataSet = $validationContext->getDataSet();
         $result = new Result();
         $class = ltrim($value, '\\');
         if (($pos = strrpos($class, '\\')) !== false) {

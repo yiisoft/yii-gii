@@ -169,7 +169,7 @@ class DefaultController implements ViewContextInterface
 
     private function render(string $view, array $parameters = []): string
     {
-        $content = $this->view->render($view, $parameters, $this);
+        $content = $this->view->withContext($this)->render($view, $parameters);
         return $this->renderContent($content);
     }
 
