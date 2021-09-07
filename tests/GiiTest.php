@@ -24,7 +24,7 @@ class GiiTest extends TestCase
         $controllerGenerator = $gii->getGenerator('stringGenerator');
         $this->assertInstanceOf(ControllerGenerator::class, $controllerGenerator);
 
-        $gii->addGenerator('callableGenerator', new class() {
+        $gii->addGenerator('callableGenerator', new class () {
             public function __invoke(ContainerInterface $container)
             {
                 return $container->get(ControllerGenerator::class);
