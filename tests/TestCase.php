@@ -11,11 +11,11 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Di\Container;
+use Yiisoft\Di\ContainerConfig;
 use Yiisoft\EventDispatcher\Dispatcher\Dispatcher;
 use Yiisoft\EventDispatcher\Provider\Provider;
 use Yiisoft\Files\FileHelper;
 use Yiisoft\View\View;
-use Yiisoft\View\WebView;
 
 /**
  * GiiTestCase is the base class for all gii related test cases
@@ -28,8 +28,9 @@ class TestCase extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
         FileHelper::ensureDirectory(__DIR__ . '/runtime');
-        $this->container = new Container(
-            [
+
+        $config = ContainerConfig::create()
+            ->withDefinitions([
                 \Yiisoft\Yii\Gii\GiiInterface::class => new \Yiisoft\Yii\Gii\Factory\GiiFactory(
                     [
                         'controller' => \Yiisoft\Yii\Gii\Generator\Controller\Generator::class,
@@ -47,13 +48,12 @@ class TestCase extends \PHPUnit\Framework\TestCase
                 ListenerProviderInterface::class => Provider::class,
                 LoggerInterface::class => NullLogger::class,
                 View::class => [
-                    'class' => WebView::class,
                     '__construct()' => [
                         'basePath' => '@views',
                     ],
                 ],
-            ]
-        );
+            ]);
+        $this->container = new Container($config);
     }
 
     protected function tearDown(): void

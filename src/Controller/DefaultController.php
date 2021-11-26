@@ -54,7 +54,7 @@ class DefaultController implements ViewContextInterface
         $answers = $request->getAttribute('answers');
 
         if ($preview !== null || $generate !== null) {
-            if ($generator->validate()) {
+            if ($generator->validate()->isValid()) {
                 $generator->saveStickyAttributes();
                 $files = $generator->generate();
                 if ($generate !== null && !empty($answers)) {
@@ -81,7 +81,7 @@ class DefaultController implements ViewContextInterface
         $id = $request->getAttribute('id');
         $file = $request->getAttribute('file');
         $generator = $this->loadGenerator($id, $request);
-        if ($generator->validate()) {
+        if ($generator->validate()->isValid()) {
             foreach ($generator->generate() as $f) {
                 if ($f->getId() === $file) {
                     $content = $f->preview();
@@ -109,7 +109,7 @@ class DefaultController implements ViewContextInterface
         $id = $request->getAttribute('id');
         $file = $request->getAttribute('file');
         $generator = $this->loadGenerator($id, $request);
-        if ($generator->validate()) {
+        if ($generator->validate()->isValid()) {
             foreach ($generator->generate() as $f) {
                 if ($f->getId() === $file) {
                     return $this->render(

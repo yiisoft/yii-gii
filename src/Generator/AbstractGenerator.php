@@ -174,6 +174,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
 
     final public function validate(): ResultSet
     {
+        /** @psalm-suppress PossiblyInvalidArgument */
         $results = (new Validator())->validate($this, $this->rules());
         foreach ($results as $attribute => $resultItem) {
             if (!$resultItem->isValid()) {
@@ -197,8 +198,8 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
     {
         return [
             'template' => [
-                (new Required())->message('A code template must be selected.'),
-                (new Callback([$this, 'validateTemplate'])),
+                Required::rule()->message('A code template must be selected.'),
+                Callback::rule([$this, 'validateTemplate']),
             ],
         ];
     }

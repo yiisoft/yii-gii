@@ -46,7 +46,7 @@ abstract class BaseGenerateCommand extends Command
         $generator = $this->getGenerator();
         $generator->load(array_filter(array_merge($input->getOptions(), $input->getArguments())));
         $output->writeln("Running '{$generator->getName()}'...\n");
-        if ($generator->validate() && !$generator->hasErrors()) {
+        if ($generator->validate()->isValid() && !$generator->hasErrors()) {
             $this->generateCode($generator, $input, $output);
         } else {
             $this->displayValidationErrors($generator, $output);
