@@ -16,7 +16,6 @@ use Yiisoft\EventDispatcher\Dispatcher\Dispatcher;
 use Yiisoft\EventDispatcher\Provider\Provider;
 use Yiisoft\Files\FileHelper;
 use Yiisoft\View\View;
-use Yiisoft\View\WebView;
 
 /**
  * GiiTestCase is the base class for all gii related test cases
