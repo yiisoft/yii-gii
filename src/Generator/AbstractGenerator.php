@@ -174,6 +174,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
 
     final public function validate(): ResultSet
     {
+        /** @psalm-suppress PossiblyInvalidArgument */
         $results = (new Validator())->validate($this, $this->rules());
         foreach ($results as $attribute => $resultItem) {
             if (!$resultItem->isValid()) {
