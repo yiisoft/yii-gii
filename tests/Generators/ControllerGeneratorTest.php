@@ -83,7 +83,7 @@ class ControllerGeneratorTest extends TestCase
 
         $this->assertFalse(
             $generator->hasErrors(),
-            implode("\n", array_values($validationResult->getResult('template')->getErrors()))
+            implode("\n", $validationResult->getResult('template')->getErrors())
         );
         $this->assertContainsOnlyInstancesOf(CodeFile::class, $generator->generate());
     }

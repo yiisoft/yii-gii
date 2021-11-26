@@ -197,8 +197,8 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
     {
         return [
             'template' => [
-                (new Required())->message('A code template must be selected.'),
-                (new Callback([$this, 'validateTemplate'])),
+                Required::rule()->message('A code template must be selected.'),
+                Callback::rule([$this, 'validateTemplate']),
             ],
         ];
     }

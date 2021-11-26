@@ -52,20 +52,20 @@ final class Generator extends AbstractGenerator
             parent::rules(),
             [
                 'controllerClass' => [
-                    new Required(),
-                    (new MatchRegularExpression('/^[A-Z][\w]*Controller$/'))
+                    Required::rule(),
+                    MatchRegularExpression::rule('/^[A-Z][\w]*Controller$/')
                         ->message(
                             'Only word characters are allowed, and the class name must start with a capital letter and end with "Controller".'
                         ),
-                    (new Callback([$this, 'validateNewClass'])),
+                    Callback::rule([$this, 'validateNewClass']),
                 ],
                 'baseClass' => [
-                    new Required(),
-                    (new MatchRegularExpression('/^[\w\\\\]*$/'))
+                    Required::rule(),
+                    MatchRegularExpression::rule('/^[\w\\\\]*$/')
                         ->message('Only word characters and backslashes are allowed.'),
                 ],
                 'actions' => [
-                    (new MatchRegularExpression('/^[a-z][a-z0-9\\-,\\s]*$/'))
+                    MatchRegularExpression::rule('/^[a-z][a-z0-9\\-,\\s]*$/')
                         ->message('Only a-z, 0-9, dashes (-), spaces and commas are allowed.'),
                 ],
             ]

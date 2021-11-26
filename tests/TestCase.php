@@ -49,7 +49,6 @@ class TestCase extends \PHPUnit\Framework\TestCase
                 ListenerProviderInterface::class => Provider::class,
                 LoggerInterface::class => NullLogger::class,
                 View::class => [
-                    'class' => WebView::class,
                     '__construct()' => [
                         'basePath' => '@views',
                     ],
