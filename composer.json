@@ -32,7 +32,7 @@
     "require-dev": {
         "nyholm/psr7": "^1.0",
         "phpunit/phpunit": "^9.5",
-        "roave/infection-static-analysis-plugin": "^1.10",
+        "roave/infection-static-analysis-plugin": "^1.14",
         "spatie/phpunit-watcher": "^1.23",
         "vimeo/psalm": "^4.12",
         "yiisoft/di": "^1.0",
