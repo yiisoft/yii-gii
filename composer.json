@@ -11,9 +11,10 @@
     "support": {
         "source": "https://github.com/yiisoft/yii-gii",
         "issues": "https://github.com/yiisoft/yii-gii/issues",
-        "forum": "http://www.yiiframework.com/forum/",
-        "wiki": "http://www.yiiframework.com/wiki/",
-        "irc": "irc://irc.freenode.net/yii"
+        "forum": "https://www.yiiframework.com/forum/",
+        "wiki": "https://www.yiiframework.com/wiki/",
+        "irc": "irc://irc.freenode.net/yii",
+        "chat": "https://t.me/yii3en"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
@@ -32,9 +33,9 @@
     "require-dev": {
         "nyholm/psr7": "^1.0",
         "phpunit/phpunit": "^9.5",
-        "roave/infection-static-analysis-plugin": "^1.14",
+        "roave/infection-static-analysis-plugin": "^1.16",
         "spatie/phpunit-watcher": "^1.23",
-        "vimeo/psalm": "^4.12",
+        "vimeo/psalm": "^4.18",
         "yiisoft/di": "^1.0",
         "yiisoft/event-dispatcher": "^1.0",
         "yiisoft/files": "^1.0",
