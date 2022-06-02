@@ -30,7 +30,8 @@ abstract class BaseGenerateCommand extends Command
 
     protected function configure(): void
     {
-        $this->addOption('overwrite', 'o', InputArgument::OPTIONAL, '')
+        $this
+            ->addOption('overwrite', 'o', InputArgument::OPTIONAL, '')
             ->addOption('template', 't', InputArgument::OPTIONAL, '');
     }
 
@@ -46,7 +47,9 @@ abstract class BaseGenerateCommand extends Command
         $generator = $this->getGenerator();
         $generator->load(array_filter(array_merge($input->getOptions(), $input->getArguments())));
         $output->writeln("Running '{$generator->getName()}'...\n");
-        if ($generator->validate()->isValid() && !$generator->hasErrors()) {
+        if ($generator
+                ->validate()
+                ->isValid() && !$generator->hasErrors()) {
             $this->generateCode($generator, $input, $output);
         } else {
             $this->displayValidationErrors($generator, $output);
@@ -143,7 +146,9 @@ abstract class BaseGenerateCommand extends Command
     protected function confirm(InputInterface $input, OutputInterface $output)
     {
         $question = new ConfirmationQuestion("\nReady to generate the selected files? (yes|no) [yes]:", true);
-        return $this->getHelper('question')->ask($input, $output, $question);
+        return $this
+            ->getHelper('question')
+            ->ask($input, $output, $question);
     }
 
     /**
@@ -160,6 +165,8 @@ abstract class BaseGenerateCommand extends Command
                 'na' => 'Skip this and the rest of the changed files.',
             ]
         );
-        return $this->getHelper('question')->ask($input, $output, $question);
+        return $this
+            ->getHelper('question')
+            ->ask($input, $output, $question);
     }
 }

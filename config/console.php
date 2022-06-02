@@ -15,7 +15,9 @@ return [
     ListenerProviderInterface::class => Yiisoft\EventDispatcher\Provider\Provider::class,
     View::class => static function (ContainerInterface $container) {
         return new View(
-            $container->get(Aliases::class)->get('@views'),
+            $container
+                ->get(Aliases::class)
+                ->get('@views'),
             $container->get(Theme::class),
             $container->get(EventDispatcherInterface::class),
             $container->get(LoggerInterface::class)

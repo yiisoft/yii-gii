@@ -54,7 +54,9 @@ class DefaultController implements ViewContextInterface
         $answers = $request->getAttribute('answers');
 
         if ($preview !== null || $generate !== null) {
-            if ($generator->validate()->isValid()) {
+            if ($generator
+                ->validate()
+                ->isValid()) {
                 $generator->saveStickyAttributes();
                 $files = $generator->generate();
                 if ($generate !== null && !empty($answers)) {
@@ -81,7 +83,9 @@ class DefaultController implements ViewContextInterface
         $id = $request->getAttribute('id');
         $file = $request->getAttribute('file');
         $generator = $this->loadGenerator($id, $request);
-        if ($generator->validate()->isValid()) {
+        if ($generator
+            ->validate()
+            ->isValid()) {
             foreach ($generator->generate() as $f) {
                 if ($f->getId() === $file) {
                     $content = $f->preview();
@@ -95,7 +99,9 @@ class DefaultController implements ViewContextInterface
         }
 
         $response = $this->responseFactory->createResponse(Status::UNPROCESSABLE_ENTITY);
-        $response->getBody()->write("Code file not found: $file");
+        $response
+            ->getBody()
+            ->write("Code file not found: $file");
         return $response;
     }
 
@@ -109,7 +115,9 @@ class DefaultController implements ViewContextInterface
         $id = $request->getAttribute('id');
         $file = $request->getAttribute('file');
         $generator = $this->loadGenerator($id, $request);
-        if ($generator->validate()->isValid()) {
+        if ($generator
+            ->validate()
+            ->isValid()) {
             foreach ($generator->generate() as $f) {
                 if ($f->getId() === $file) {
                     return $this->render(
@@ -123,7 +131,9 @@ class DefaultController implements ViewContextInterface
         }
 
         $response = $this->responseFactory->createResponse(Status::UNPROCESSABLE_ENTITY);
-        $response->getBody()->write("Code file not found: $file");
+        $response
+            ->getBody()
+            ->write("Code file not found: $file");
         return $response;
     }
 
@@ -147,7 +157,9 @@ class DefaultController implements ViewContextInterface
         }
 
         $response = $this->responseFactory->createResponse(Status::UNPROCESSABLE_ENTITY);
-        $response->getBody()->write("Unknown generator action: {$action}");
+        $response
+            ->getBody()
+            ->write("Unknown generator action: {$action}");
         return $response;
     }
 
@@ -169,7 +181,9 @@ class DefaultController implements ViewContextInterface
 
     private function render(string $view, array $parameters = []): string
     {
-        $content = $this->view->withContext($this)->render($view, $parameters);
+        $content = $this->view
+            ->withContext($this)
+            ->render($view, $parameters);
         return $this->renderContent($content);
     }
 
@@ -177,12 +191,14 @@ class DefaultController implements ViewContextInterface
     {
         $layout = $this->findLayoutFile($this->layout);
         if ($layout !== null) {
-            return $this->view->withContext($this)->renderFile(
-                $layout,
-                [
-                    'content' => $content,
-                ]
-            );
+            return $this->view
+                ->withContext($this)
+                ->renderFile(
+                    $layout,
+                    [
+                        'content' => $content,
+                    ]
+                );
         }
 
         return $content;

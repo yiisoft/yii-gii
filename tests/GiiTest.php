@@ -16,7 +16,9 @@ class GiiTest extends TestCase
 {
     public function testGeneratorInstance(): void
     {
-        $gii = $this->getContainer()->get(GiiInterface::class);
+        $gii = $this
+            ->getContainer()
+            ->get(GiiInterface::class);
         $controllerGenerator = $gii->getGenerator('controller');
         $this->assertInstanceOf(ControllerGenerator::class, $controllerGenerator);
 
@@ -37,26 +39,41 @@ class GiiTest extends TestCase
     public function testUnknownGeneratorInstance(): void
     {
         $this->expectException(GeneratorNotFoundException::class);
-        $this->getContainer()->get(GiiInterface::class)->getGenerator('unknown');
+        $this
+            ->getContainer()
+            ->get(GiiInterface::class)
+            ->getGenerator('unknown');
     }
 
     public function testWrongGeneratorInstance(): void
     {
-        $this->getContainer()->get(GiiInterface::class)->addGenerator('wrong', new \stdClass());
+        $this
+            ->getContainer()
+            ->get(GiiInterface::class)
+            ->addGenerator('wrong', new \stdClass());
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage(
             'Generator should be GeneratorInterface instance. "' . get_class(new \stdClass()) . '" given.'
         );
-        $this->getContainer()->get(GiiInterface::class)->getGenerator('wrong');
+        $this
+            ->getContainer()
+            ->get(GiiInterface::class)
+            ->getGenerator('wrong');
     }
 
     public function testWrongGeneratorTypeInstance(): void
     {
-        $this->getContainer()->get(GiiInterface::class)->addGenerator('wrongType', 409);
+        $this
+            ->getContainer()
+            ->get(GiiInterface::class)
+            ->addGenerator('wrongType', 409);
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage(
             'Generator should be GeneratorInterface instance. "' . gettype(409) . '" given.'
         );
-        $this->getContainer()->get(GiiInterface::class)->getGenerator('wrongType');
+        $this
+            ->getContainer()
+            ->get(GiiInterface::class)
+            ->getGenerator('wrongType');
     }
 }

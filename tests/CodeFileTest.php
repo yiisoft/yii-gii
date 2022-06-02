@@ -15,7 +15,9 @@ class CodeFileTest extends TestCase
     {
         parent::setUp();
 
-        $this->aliases = $this->getContainer()->get(Aliases::class);
+        $this->aliases = $this
+            ->getContainer()
+            ->get(Aliases::class);
     }
 
     public function dataProviderDiff(): array

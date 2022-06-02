@@ -350,7 +350,9 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
     {
         $params['generator'] = $this;
 
-        return $this->view->withContext($this)->render($template, $params);
+        return $this->view
+            ->withContext($this)
+            ->render($template, $params);
     }
 
     /**
