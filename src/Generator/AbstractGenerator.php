@@ -358,7 +358,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      *
      * @return Result
      */
-    public function validateTemplate(mixed $value, $rule, ValidationContext $validationContext): Result
+    public function validateTemplate(mixed $value, Callback $rule, ValidationContext $validationContext): Result
     {
         /** @var self $dataSet */
         $dataSet = $validationContext->getDataSet();
@@ -407,7 +407,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      *
      * @return Result
      */
-    public function validateNewClass(mixed $value, $rule, ValidationContext $validationContext): Result
+    public function validateNewClass(mixed $value, Callback $rule, ValidationContext $validationContext): Result
     {
         /** @var self $dataSet */
         $dataSet = $validationContext->getDataSet();
