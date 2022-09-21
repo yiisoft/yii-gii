@@ -44,8 +44,7 @@ final class Generator extends AbstractGenerator
 
     public function getDescription(): string
     {
-        return 'This generator helps you to quickly generate a new controller class with
-            one or several controller actions and their corresponding views.';
+        return 'This generator helps you to quickly generate a new controller class with one or several controller actions and their corresponding views.';
     }
 
     /**
