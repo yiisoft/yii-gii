@@ -4,47 +4,44 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii\Controller;
 
-use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Yiisoft\Aliases\Aliases;
+use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Http\Status;
-use Yiisoft\View\ViewContextInterface;
-use Yiisoft\View\WebView;
+use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Yii\Gii\Generator\AbstractGenerator;
 use Yiisoft\Yii\Gii\GeneratorInterface;
 use Yiisoft\Yii\Gii\GiiInterface;
 
-class DefaultController implements ViewContextInterface
+class DefaultController
 {
-    private string $layout;
-
     public function __construct(
-        private ResponseFactoryInterface $responseFactory,
+        private DataResponseFactoryInterface $responseFactory,
         private GiiInterface $gii,
-        private WebView $view,
-        private Aliases $aliases,
     ) {
-        $this->layout = $aliases->get('@yii-gii/views') . '/layout/generator';
     }
 
-    public function index(): string
+    public function view(CurrentRoute $currentRoute, ServerRequestInterface $request)
     {
-        $this->layout = 'main';
-
-        return $this->render('index');
-    }
-
-    public function view(ServerRequestInterface $request): string
-    {
-        $id = $request->getAttribute('id');
+        $id = $currentRoute->getArgument('id');
         /** @var AbstractGenerator $generator */
         $generator = $this->loadGenerator($id, $request);
-        $params = ['generator' => $generator, 'id' => $id];
+        $params = [
+            'id' => $id,
+            'generator' => [
+                'name' => $generator->getName(),
+                'description' => $generator->getDescription(),
+                'template' => $generator->getTemplate(),
+                'templatePath' => $generator->getTemplatePath(),
+                'templates' => $generator->getTemplates(),
+                'viewPath' => $generator->getViewPath(),
+                'directory' => $generator->getDirectory(),
+            ],
+        ];
 
-        $preview = $request->getAttribute('preview');
-        $generate = $request->getAttribute('generate');
-        $answers = $request->getAttribute('answers');
+        $preview = $currentRoute->getArgument('preview');
+        $generate = $currentRoute->getArgument('generate');
+        $answers = $currentRoute->getArgument('answers');
 
         if ($preview !== null || $generate !== null) {
             if ($generator->validate()->isValid()) {
@@ -52,7 +49,7 @@ class DefaultController implements ViewContextInterface
                 $files = $generator->generate();
                 if ($generate !== null && !empty($answers)) {
                     $results = [];
-                    $params['hasError'] = !$generator->save($files, (array)$answers, $results);
+                    $params['hasError'] = !$generator->save($files, (array) $answers, $results);
                     $params['results'] = $results;
                 } else {
                     $params['files'] = $files;
@@ -61,63 +58,57 @@ class DefaultController implements ViewContextInterface
             }
         }
 
-        return $this->render('view', $params);
+        return $this->responseFactory->createResponse([
+            'params' => $params,
+        ]);
     }
 
     /**
      * @param ServerRequestInterface $request
      *
-     * @return ResponseInterface|string
+     * @return ResponseInterface
      */
-    public function preview(ServerRequestInterface $request)
+    public function preview(CurrentRoute $currentRoute, ServerRequestInterface $request): ResponseInterface
     {
-        $id = $request->getAttribute('id');
-        $file = $request->getAttribute('file');
+        $id = $currentRoute->getArgument('id');
+        $file = $currentRoute->getArgument('file');
         $generator = $this->loadGenerator($id, $request);
+
         if ($generator->validate()->isValid()) {
             foreach ($generator->generate() as $f) {
                 if ($f->getId() === $file) {
-                    $content = $f->preview();
-                    if ($content !== false) {
-                        return '<div class="content">' . $content . '</div>';
-                    }
-
-                    return '<div class="error">Preview is not available for this file type.</div>';
+                    return $this->responseFactory->createResponse([
+                        'preview' => $f->preview(),
+                    ]);
                 }
             }
         }
 
-        $response = $this->responseFactory->createResponse(Status::UNPROCESSABLE_ENTITY);
-        $response->getBody()->write("Code file not found: $file");
-        return $response;
+        return $this->responseFactory->createResponse(['error' => "Code file not found: $file"],
+            Status::UNPROCESSABLE_ENTITY);
     }
 
     /**
      * @param ServerRequestInterface $request
      *
-     * @return ResponseInterface|string
+     * @return ResponseInterface
      */
-    public function diff(ServerRequestInterface $request)
+    public function diff(CurrentRoute $currentRoute, ServerRequestInterface $request): ResponseInterface
     {
-        $id = $request->getAttribute('id');
-        $file = $request->getAttribute('file');
+        $id = $currentRoute->getArgument('id');
+        $file = $currentRoute->getArgument('file');
         $generator = $this->loadGenerator($id, $request);
         if ($generator->validate()->isValid()) {
             foreach ($generator->generate() as $f) {
                 if ($f->getId() === $file) {
-                    return $this->render(
-                        'diff',
-                        [
-                            'diff' => $f->diff(),
-                        ]
-                    );
+                    return $this->responseFactory->createResponse([
+                        'diff' => $f->diff(),
+                    ]);
                 }
             }
         }
-
-        $response = $this->responseFactory->createResponse(Status::UNPROCESSABLE_ENTITY);
-        $response->getBody()->write("Code file not found: $file");
-        return $response;
+        return $this->responseFactory->createResponse(['error' => "Code file not found: $file"],
+            Status::UNPROCESSABLE_ENTITY);
     }
 
     /**
@@ -129,19 +120,18 @@ class DefaultController implements ViewContextInterface
      *
      * @return mixed the result of the action.
      */
-    public function action(ServerRequestInterface $request)
+    public function action(CurrentRoute $currentRoute, ServerRequestInterface $request): ResponseInterface
     {
-        $id = $request->getAttribute('id');
-        $action = $request->getAttribute('action');
+        $id = $currentRoute->getArgument('id');
+        $action = $currentRoute->getArgument('action');
         /** @var AbstractGenerator $generator */
         $generator = $this->loadGenerator($id, $request);
         if (method_exists($generator, $action)) {
             return $generator->$action();
         }
 
-        $response = $this->responseFactory->createResponse(Status::UNPROCESSABLE_ENTITY);
-        $response->getBody()->write("Unknown generator action: {$action}");
-        return $response;
+        return $this->responseFactory->createResponse(['error' => "Unknown generator action: $action"],
+            Status::UNPROCESSABLE_ENTITY);
     }
 
     /**
@@ -155,47 +145,8 @@ class DefaultController implements ViewContextInterface
         /** @var AbstractGenerator $generator */
         $generator = $this->gii->getGenerator($id);
         $generator->loadStickyAttributes();
-        $generator->load((array)$request->getParsedBody());
+        $generator->load((array) $request->getParsedBody());
 
         return $generator;
-    }
-
-    private function render(string $view, array $parameters = []): string
-    {
-        $content = $this->view->withContext($this)->render($view, $parameters);
-        return $this->renderContent($content);
-    }
-
-    private function renderContent(string $content): string
-    {
-        $layout = $this->findLayoutFile($this->layout);
-        if ($layout !== null) {
-            return $this->view->withContext($this)->renderFile(
-                $layout,
-                [
-                    'content' => $content,
-                ]
-            );
-        }
-
-        return $content;
-    }
-
-    public function getViewPath(): string
-    {
-        return $this->aliases->get('@yii-gii/views') . '/default';
-    }
-
-    private function findLayoutFile(?string $file): ?string
-    {
-        if ($file === null) {
-            return null;
-        }
-
-        if (pathinfo($file, PATHINFO_EXTENSION) !== '') {
-            return $file;
-        }
-
-        return $file . '.' . $this->view->getDefaultExtension();
     }
 }
