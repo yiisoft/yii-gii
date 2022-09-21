@@ -189,6 +189,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      *     ...rules for the child class...
      * ]);
      * ```
+     *
      * @return Closure[]|Closure[][]|RuleInterface[]|RuleInterface[][]
      */
     public function rules(): array
