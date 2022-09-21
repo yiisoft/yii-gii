@@ -172,11 +172,10 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
 
     final public function validate(): Result
     {
-        /** @psalm-suppress PossiblyInvalidArgument */
-        $results = $this->validator->validate($this, $this->rules());
+        $result = $this->validator->validate($this, $this->rules());
 
-        $this->errors = $results->getErrorMessagesIndexedByAttribute();
-        return $results;
+        $this->errors = $result->getErrorMessagesIndexedByAttribute();
+        return $result;
     }
 
     /**
