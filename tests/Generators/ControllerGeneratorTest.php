@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii\Tests\Generators;
 
-use Yiisoft\Aliases\Aliases;
-use Yiisoft\View\View;
 use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Yii\Gii\Generator\Controller\Generator as ControllerGenerator;
 use Yiisoft\Yii\Gii\Tests\TestCase;
@@ -17,10 +15,7 @@ class ControllerGeneratorTest extends TestCase
 {
     public function testValidGenerator(): void
     {
-        $generator = new ControllerGenerator(
-            $this->getContainer()->get(Aliases::class),
-            $this->getContainer()->get(View::class)
-        );
+        $generator = $this->createGenerator();
         $generator->load(
             [
                 'template' => 'default',
@@ -40,10 +35,7 @@ class ControllerGeneratorTest extends TestCase
 
     public function testInvalidGenerator(): void
     {
-        $generator = new ControllerGenerator(
-            $this->getContainer()->get(Aliases::class),
-            $this->getContainer()->get(View::class)
-        );
+        $generator = $this->createGenerator();
         $generator->load(
             [
                 'template' => 'test',
@@ -64,10 +56,7 @@ class ControllerGeneratorTest extends TestCase
 
     public function testCustomTemplate(): void
     {
-        $generator = new ControllerGenerator(
-            $this->getContainer()->get(Aliases::class),
-            $this->getContainer()->get(View::class)
-        );
+        $generator = $this->createGenerator();
         $generator->load(
             [
                 'template' => 'custom',
@@ -83,8 +72,13 @@ class ControllerGeneratorTest extends TestCase
 
         $this->assertFalse(
             $generator->hasErrors(),
-            implode("\n", $validationResult->getResult('template')->getErrors())
+            implode("\n", $validationResult->getAttributeErrorMessages('template'))
         );
         $this->assertContainsOnlyInstancesOf(CodeFile::class, $generator->generate());
+    }
+
+    private function createGenerator(): ControllerGenerator
+    {
+        return $this->getContainer()->get(ControllerGenerator::class);
     }
 }

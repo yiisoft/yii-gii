@@ -7,7 +7,7 @@ namespace Yiisoft\Yii\Gii\Generator\Controller;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Strings\StringHelper;
 use Yiisoft\Validator\Rule\Callback;
-use Yiisoft\Validator\Rule\MatchRegularExpression;
+use Yiisoft\Validator\Rule\Regex;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Yii\Gii\Generator\AbstractGenerator;
@@ -52,21 +52,25 @@ final class Generator extends AbstractGenerator
             parent::rules(),
             [
                 'controllerClass' => [
-                    Required::rule(),
-                    MatchRegularExpression::rule('/^[A-Z][\w]*Controller$/')
-                        ->message(
-                            'Only word characters are allowed, and the class name must start with a capital letter and end with "Controller".'
-                        ),
-                    Callback::rule([$this, 'validateNewClass']),
+                    new Required(),
+                    new Regex(
+                        pattern: '/^[A-Z][\w]*Controller$/',
+                        message: 'Only word characters are allowed, and the class name must start with a capital letter and end with "Controller".'
+                    ),
+                    new Callback([$this, 'validateNewClass']),
                 ],
                 'baseClass' => [
-                    Required::rule(),
-                    MatchRegularExpression::rule('/^[\w\\\\]*$/')
-                        ->message('Only word characters and backslashes are allowed.'),
+                    new Required(),
+                    new Regex(
+                        pattern: '/^[\w\\\\]*$/',
+                        message: 'Only word characters and backslashes are allowed.'
+                    ),
                 ],
                 'actions' => [
-                    MatchRegularExpression::rule('/^[a-z][a-z0-9\\-,\\s]*$/')
-                        ->message('Only a-z, 0-9, dashes (-), spaces and commas are allowed.'),
+                    new Regex(
+                        pattern: '/^[a-z][a-z0-9\\-,\\s]*$/',
+                        message: 'Only a-z, 0-9, dashes (-), spaces and commas are allowed.'
+                    ),
                 ],
             ]
         );

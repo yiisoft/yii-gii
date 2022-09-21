@@ -14,11 +14,10 @@ use Yiisoft\Aliases\Aliases;
 use Yiisoft\Json\Json;
 use Yiisoft\Validator\DataSetInterface;
 use Yiisoft\Validator\Result;
-use Yiisoft\Validator\ResultSet;
 use Yiisoft\Validator\Rule\Callback;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\ValidationContext;
-use Yiisoft\Validator\Validator;
+use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\View\Exception\ViewNotFoundException;
 use Yiisoft\View\View;
 use Yiisoft\View\ViewContextInterface;
@@ -37,8 +36,8 @@ use Yiisoft\Yii\Gii\GeneratorInterface;
  * - {@see GeneratorInterface::getName()}: returns the name of the generator
  * - {@see GeneratorInterface::getDescription()}: returns the detailed description of the generator
  * - {@see GeneratorInterface::validate()}: returns generator validation result
- * - {@see GeneratorInterface::generate()}: generates the code based on the current user input and the specified code template files.
- *   This is the place where main code generation code resides.
+ * - {@see GeneratorInterface::generate()}: generates the code based on the current user input and the specified code
+ * template files. This is the place where main code generation code resides.
  */
 abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface, ViewContextInterface
 {
@@ -54,13 +53,12 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      */
     private string $template = 'default';
     private ?string $directory = null;
-    protected Aliases $aliases;
-    protected View $view;
 
-    public function __construct(Aliases $aliases, View $view)
-    {
-        $this->aliases = $aliases;
-        $this->view = $view;
+    public function __construct(
+        protected Aliases $aliases,
+        protected View $view,
+        protected ValidatorInterface $validator,
+    ) {
     }
 
     public function attributeLabels(): array
@@ -140,9 +138,9 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * The default implementation will return the "form.php" file under the directory
      * that contains the generator class file.
      *
+     * @return string the view file for the input form of the generator.
      * @throws ReflectionException
      *
-     * @return string the view file for the input form of the generator.
      */
     public function formView(): string
     {
@@ -156,9 +154,9 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * The default implementation will return the "templates" subdirectory of the
      * directory containing the generator class file.
      *
+     * @return string the root path to the default code template files.
      * @throws ReflectionException
      *
-     * @return string the root path to the default code template files.
      */
     private function defaultTemplate(): string
     {
@@ -172,15 +170,12 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
         return '';
     }
 
-    final public function validate(): ResultSet
+    final public function validate(): Result
     {
         /** @psalm-suppress PossiblyInvalidArgument */
-        $results = (new Validator())->validate($this, $this->rules());
-        foreach ($results as $attribute => $resultItem) {
-            if (!$resultItem->isValid()) {
-                $this->errors[$attribute] = $resultItem->getErrors();
-            }
-        }
+        $results = $this->validator->validate($this, $this->rules());
+
+        $this->errors = $results->getErrorMessagesIndexedByAttribute();
         return $results;
     }
 
@@ -198,8 +193,8 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
     {
         return [
             'template' => [
-                Required::rule()->message('A code template must be selected.'),
-                Callback::rule([$this, 'validateTemplate']),
+                new Required(message: 'A code template must be selected.'),
+                new Callback([$this, 'validateTemplate']),
             ],
         ];
     }
@@ -275,10 +270,10 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * @param string[] $results this parameter receives a value from this method indicating the log messages
      * generated while saving the code files.
      *
-     * @throws InvalidConfigException
+     * @return bool whether files are successfully saved without any error.
      * @throws ReflectionException
      *
-     * @return bool whether files are successfully saved without any error.
+     * @throws InvalidConfigException
      */
     public function save(array $files, array $answers, array &$results): bool
     {
@@ -315,10 +310,10 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
     }
 
     /**
-     * @throws InvalidConfigException
+     * @return string the root path of the template files that are currently being used.
      * @throws ReflectionException
      *
-     * @return string the root path of the template files that are currently being used.
+     * @throws InvalidConfigException
      */
     public function getTemplatePath(): string
     {
@@ -341,10 +336,10 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * relative to {@see getTemplatePath()}.
      * @param array $params list of parameters to be passed to the template file.
      *
-     * @throws ViewNotFoundException
+     * @return string the generated code
      * @throws Throwable
      *
-     * @return string the generated code
+     * @throws ViewNotFoundException
      */
     public function render(string $template, array $params = []): string
     {
@@ -363,7 +358,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      *
      * @return Result
      */
-    public function validateTemplate(string $value, ValidationContext $validationContext): Result
+    public function validateTemplate(mixed $value, $rule, ValidationContext $validationContext): Result
     {
         /** @var self $dataSet */
         $dataSet = $validationContext->getDataSet();
@@ -407,12 +402,12 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * An inline validator that checks if the attribute value refers to a valid namespaced class name.
      * The validator will check if the directory containing the new class file exist or not.
      *
-     * @param string $value being validated
+     * @param mixed $value being validated
      * @param ValidationContext $validationContext
      *
      * @return Result
      */
-    public function validateNewClass(string $value, ValidationContext $validationContext): Result
+    public function validateNewClass(mixed $value, $rule, ValidationContext $validationContext): Result
     {
         /** @var self $dataSet */
         $dataSet = $validationContext->getDataSet();
@@ -556,7 +551,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      *
      * @return mixed
      */
-    public function getAttributeValue(string $attribute)
+    public function getAttributeValue(string $attribute): mixed
     {
         if (!$this->hasAttribute($attribute)) {
             throw new InvalidArgumentException(sprintf('There is no "%s" in %s.', $attribute, $this->getName()));
@@ -609,5 +604,13 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
     public function setDirectory(string $directory): void
     {
         $this->directory = $directory;
+    }
+
+    public function getData(): mixed
+    {
+        return [
+            'templates' => $this->templates,
+            'template' => $this->template,
+        ];
     }
 }
