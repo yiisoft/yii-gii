@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii\Generator;
 
+use Closure;
 use Exception;
 use InvalidArgumentException;
 use ReflectionClass;
@@ -16,6 +17,7 @@ use Yiisoft\Validator\DataSetInterface;
 use Yiisoft\Validator\Result;
 use Yiisoft\Validator\Rule\Callback;
 use Yiisoft\Validator\Rule\Required;
+use Yiisoft\Validator\RuleInterface;
 use Yiisoft\Validator\ValidationContext;
 use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\View\Exception\ViewNotFoundException;
@@ -187,8 +189,9 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      *     ...rules for the child class...
      * ]);
      * ```
+     * @return Closure[]|Closure[][]|RuleInterface[]|RuleInterface[][]
      */
-    public function rules(): iterable
+    public function rules(): array
     {
         return [
             'template' => [

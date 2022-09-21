@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii\Generator\Controller;
 
+use Closure;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Strings\StringHelper;
 use Yiisoft\Validator\Rule\Callback;
 use Yiisoft\Validator\Rule\Regex;
 use Yiisoft\Validator\Rule\Required;
+use Yiisoft\Validator\RuleInterface;
 use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Yii\Gii\Generator\AbstractGenerator;
 
@@ -46,10 +48,13 @@ final class Generator extends AbstractGenerator
             one or several controller actions and their corresponding views.';
     }
 
-    public function rules(): iterable
+    /**
+     * @return Closure[]|Closure[][]|RuleInterface[]|RuleInterface[][]
+     */
+    public function rules(): array
     {
         return array_merge(
-            [...parent::rules()],
+            parent::rules(),
             [
                 'controllerClass' => [
                     new Required(),
