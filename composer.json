@@ -64,7 +64,8 @@
                 "$common",
                 "console.php"
             ],
-            "common": "common.php"
+            "common": "common.php",
+            "routes": "routes.php"
         }
     },
     "repositories": [
