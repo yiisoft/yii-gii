@@ -182,13 +182,13 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * Child classes should override this method like the following so that the parent
      * rules are included:
      *
-     * ~~~
+     * ```php
      * return array_merge(parent::rules(), [
      *     ...rules for the child class...
      * ]);
-     * ~~~
+     * ```
      */
-    public function rules(): array
+    public function rules(): iterable
     {
         return [
             'template' => [

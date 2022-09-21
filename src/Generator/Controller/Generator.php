@@ -46,10 +46,10 @@ final class Generator extends AbstractGenerator
             one or several controller actions and their corresponding views.';
     }
 
-    public function rules(): array
+    public function rules(): iterable
     {
         return array_merge(
-            parent::rules(),
+            [...parent::rules()],
             [
                 'controllerClass' => [
                     new Required(),
