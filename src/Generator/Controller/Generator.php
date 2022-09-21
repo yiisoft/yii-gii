@@ -29,7 +29,7 @@ final class Generator extends AbstractGenerator
      */
     private ?string $viewsPath = null;
     /**
-     * @var null|string the base class of the controller or null if no parent class present
+     * @var string|null the base class of the controller or null if no parent class present
      */
     private ?string $baseClass = null;
     /**
