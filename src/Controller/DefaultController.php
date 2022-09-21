@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\Gii\Controller;
 
 use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Http\Status;
@@ -32,7 +33,7 @@ class DefaultController implements ViewContextInterface
         $this->responseFactory = $responseFactory;
         $this->view = $view;
         $this->aliases = $aliases;
-        $this->layout = $aliases->get('@yiisoft/yii-gii/views') . '/layout/generator';
+        $this->layout = $aliases->get('@yii-gii/views') . '/layout/generator';
     }
 
     public function index(): string
@@ -74,7 +75,7 @@ class DefaultController implements ViewContextInterface
     /**
      * @param ServerRequestInterface $request
      *
-     * @return \Psr\Http\Message\ResponseInterface|string
+     * @return ResponseInterface|string
      */
     public function preview(ServerRequestInterface $request)
     {
@@ -102,7 +103,7 @@ class DefaultController implements ViewContextInterface
     /**
      * @param ServerRequestInterface $request
      *
-     * @return \Psr\Http\Message\ResponseInterface|string
+     * @return ResponseInterface|string
      */
     public function diff(ServerRequestInterface $request)
     {
@@ -190,7 +191,7 @@ class DefaultController implements ViewContextInterface
 
     public function getViewPath(): string
     {
-        return $this->aliases->get('@yiisoft/yii-gii/views') . '/default';
+        return $this->aliases->get('@yii-gii/views') . '/default';
     }
 
     private function findLayoutFile(?string $file): ?string
