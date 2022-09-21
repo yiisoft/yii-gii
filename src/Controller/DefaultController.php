@@ -18,21 +18,13 @@ use Yiisoft\Yii\Gii\GiiInterface;
 class DefaultController implements ViewContextInterface
 {
     private string $layout;
-    private ResponseFactoryInterface $responseFactory;
-    private GiiInterface $gii;
-    private WebView $view;
-    private Aliases $aliases;
 
     public function __construct(
-        GiiInterface $gii,
-        WebView $view,
-        Aliases $aliases,
-        ResponseFactoryInterface $responseFactory
+        private ResponseFactoryInterface $responseFactory,
+        private GiiInterface $gii,
+        private WebView $view,
+        private Aliases $aliases,
     ) {
-        $this->gii = $gii;
-        $this->responseFactory = $responseFactory;
-        $this->view = $view;
-        $this->aliases = $aliases;
         $this->layout = $aliases->get('@yii-gii/views') . '/layout/generator';
     }
 
