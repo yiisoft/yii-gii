@@ -29,9 +29,9 @@ final class Generator extends AbstractGenerator
      */
     private ?string $viewsPath = null;
     /**
-     * @var string the base class of the controller
+     * @var null|string the base class of the controller or null if no parent class present
      */
-    private string $baseClass = 'App\\Controller';
+    private ?string $baseClass = null;
     /**
      * @var string list of action IDs separated by commas or spaces
      */
@@ -65,10 +65,10 @@ final class Generator extends AbstractGenerator
                     new Callback([$this, 'validateNewClass']),
                 ],
                 'baseClass' => [
-                    new Required(),
                     new Regex(
                         pattern: '/^[\w\\\\]*$/',
-                        message: 'Only word characters and backslashes are allowed.'
+                        message: 'Only word characters and backslashes are allowed.',
+                        skipOnEmpty: true,
                     ),
                 ],
                 'actions' => [
@@ -232,7 +232,7 @@ final class Generator extends AbstractGenerator
         $this->viewsPath = $viewsPath;
     }
 
-    public function getBaseClass(): string
+    public function getBaseClass(): ?string
     {
         return $this->baseClass;
     }
