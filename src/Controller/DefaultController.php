@@ -84,8 +84,10 @@ class DefaultController
             }
         }
 
-        return $this->responseFactory->createResponse(['error' => "Code file not found: $file"],
-            Status::UNPROCESSABLE_ENTITY);
+        return $this->responseFactory->createResponse(
+            ['error' => "Code file not found: $file"],
+            Status::UNPROCESSABLE_ENTITY
+        );
     }
 
     /**
@@ -107,8 +109,10 @@ class DefaultController
                 }
             }
         }
-        return $this->responseFactory->createResponse(['error' => "Code file not found: $file"],
-            Status::UNPROCESSABLE_ENTITY);
+        return $this->responseFactory->createResponse(
+            ['error' => "Code file not found: $file"],
+            Status::UNPROCESSABLE_ENTITY
+        );
     }
 
     /**
@@ -130,8 +134,10 @@ class DefaultController
             return $generator->$action();
         }
 
-        return $this->responseFactory->createResponse(['error' => "Unknown generator action: $action"],
-            Status::UNPROCESSABLE_ENTITY);
+        return $this->responseFactory->createResponse(
+            ['error' => "Unknown generator action: $action"],
+            Status::UNPROCESSABLE_ENTITY
+        );
     }
 
     /**
