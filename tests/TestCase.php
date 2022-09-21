@@ -23,8 +23,8 @@ use Yiisoft\Validator\SimpleRuleHandlerContainer;
 use Yiisoft\Validator\Validator;
 use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\View\View;
-use Yiisoft\Yii\Gii\Factory\GiiFactory;
 use Yiisoft\Yii\Gii\Generator\Controller\Generator;
+use Yiisoft\Yii\Gii\Gii;
 use Yiisoft\Yii\Gii\GiiInterface;
 
 /**
@@ -41,11 +41,16 @@ class TestCase extends \PHPUnit\Framework\TestCase
 
         $config = ContainerConfig::create()
             ->withDefinitions([
-                GiiInterface::class => new GiiFactory(
-                    [
+                GiiInterface::class => function (ContainerInterface $container) {
+                    $generators = [
                         'controller' => Generator::class,
-                    ]
-                ),
+                    ];
+                    $generatorsInstances = [];
+                    foreach ($generators as $name => $class) {
+                        $generatorsInstances[$name] = $container->get($class);
+                    }
+                    return new Gii($generatorsInstances, $container);
+                },
                 Aliases::class => new Aliases(
                     [
                         '@app' => dirname(__DIR__) . '/tests',
