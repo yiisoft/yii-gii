@@ -41,10 +41,12 @@ final class Gii implements GiiInterface
             throw new GeneratorNotFoundException('Generator "' . $name . '" not found');
         }
         $generator = $this->generators[$name];
+        if ($generator instanceof GeneratorInterface) {
+            return $generator;
+        }
+
         if (is_string($generator)) {
             $generator = $this->container->get($generator);
-        } elseif ($generator instanceof GeneratorInterface) {
-            return $generator;
         } elseif (is_object($generator) && method_exists($generator, '__invoke')) {
             /** @psalm-suppress InvalidFunctionCall */
             $generator = $generator($this->container);
@@ -55,6 +57,7 @@ final class Gii implements GiiInterface
                 'Generator should be GeneratorInterface instance. "' . $type . '" given.'
             );
         }
+
         return $generator;
     }
 }

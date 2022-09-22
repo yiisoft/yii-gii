@@ -10,12 +10,22 @@ use Psr\EventDispatcher\ListenerProviderInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Yiisoft\Aliases\Aliases;
+use Yiisoft\Definitions\Reference;
 use Yiisoft\Di\Container;
 use Yiisoft\Di\ContainerConfig;
 use Yiisoft\EventDispatcher\Dispatcher\Dispatcher;
 use Yiisoft\EventDispatcher\Provider\Provider;
 use Yiisoft\Files\FileHelper;
+use Yiisoft\Translator\Translator;
+use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\Validator\RuleHandlerResolverInterface;
+use Yiisoft\Validator\SimpleRuleHandlerContainer;
+use Yiisoft\Validator\Validator;
+use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\View\View;
+use Yiisoft\Yii\Gii\Generator\Controller\Generator;
+use Yiisoft\Yii\Gii\Gii;
+use Yiisoft\Yii\Gii\GiiInterface;
 
 /**
  * GiiTestCase is the base class for all gii related test cases
@@ -31,11 +41,16 @@ class TestCase extends \PHPUnit\Framework\TestCase
 
         $config = ContainerConfig::create()
             ->withDefinitions([
-                \Yiisoft\Yii\Gii\GiiInterface::class => new \Yiisoft\Yii\Gii\Factory\GiiFactory(
-                    [
-                        'controller' => \Yiisoft\Yii\Gii\Generator\Controller\Generator::class,
-                    ]
-                ),
+                GiiInterface::class => function (ContainerInterface $container) {
+                    $generators = [
+                        'controller' => Generator::class,
+                    ];
+                    $generatorsInstances = [];
+                    foreach ($generators as $name => $class) {
+                        $generatorsInstances[$name] = $container->get($class);
+                    }
+                    return new Gii($generatorsInstances, $container);
+                },
                 Aliases::class => new Aliases(
                     [
                         '@app' => dirname(__DIR__) . '/tests',
@@ -52,6 +67,16 @@ class TestCase extends \PHPUnit\Framework\TestCase
                         'basePath' => '@views',
                     ],
                 ],
+                TranslatorInterface::class => [
+                    'class' => Translator::class,
+                    '__construct()' => [
+                        'en',
+                        'en',
+                        Reference::to(EventDispatcherInterface::class),
+                    ],
+                ],
+                RuleHandlerResolverInterface::class => SimpleRuleHandlerContainer::class,
+                ValidatorInterface::class => Validator::class,
             ]);
         $this->container = new Container($config);
     }

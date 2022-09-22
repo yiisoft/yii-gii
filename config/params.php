@@ -11,9 +11,9 @@ return [
         ],
     ],
     'yiisoft/aliases' => [
-        '@yiisoft/yii-gii' => dirname(__DIR__),
+        '@yii-gii' => dirname(__DIR__),
     ],
-    'gii' => [
+    'yiisoft/yii-gii' => [
         'generators' => [
             'controller' => \Yiisoft\Yii\Gii\Generator\Controller\Generator::class,
         ],

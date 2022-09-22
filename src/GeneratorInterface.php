@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii;
 
-use Yiisoft\Validator\ResultSet;
+use Yiisoft\Validator\Result;
 
 interface GeneratorInterface
 {
@@ -31,5 +31,5 @@ interface GeneratorInterface
     /**
      * Returns the validation result
      */
-    public function validate(): ResultSet;
+    public function validate(): Result;
 }

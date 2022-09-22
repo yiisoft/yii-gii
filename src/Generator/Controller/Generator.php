@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii\Generator\Controller;
 
+use Closure;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Strings\StringHelper;
 use Yiisoft\Validator\Rule\Callback;
-use Yiisoft\Validator\Rule\MatchRegularExpression;
+use Yiisoft\Validator\Rule\Regex;
 use Yiisoft\Validator\Rule\Required;
+use Yiisoft\Validator\RuleInterface;
 use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Yii\Gii\Generator\AbstractGenerator;
 
@@ -27,9 +29,9 @@ final class Generator extends AbstractGenerator
      */
     private ?string $viewsPath = null;
     /**
-     * @var string the base class of the controller
+     * @var string|null the base class of the controller or null if no parent class present
      */
-    private string $baseClass = 'App\\Controller';
+    private ?string $baseClass = null;
     /**
      * @var string list of action IDs separated by commas or spaces
      */
@@ -46,27 +48,34 @@ final class Generator extends AbstractGenerator
             one or several controller actions and their corresponding views.';
     }
 
+    /**
+     * @return Closure[]|Closure[][]|RuleInterface[]|RuleInterface[][]
+     */
     public function rules(): array
     {
         return array_merge(
             parent::rules(),
             [
                 'controllerClass' => [
-                    Required::rule(),
-                    MatchRegularExpression::rule('/^[A-Z][\w]*Controller$/')
-                        ->message(
-                            'Only word characters are allowed, and the class name must start with a capital letter and end with "Controller".'
-                        ),
-                    Callback::rule([$this, 'validateNewClass']),
+                    new Required(),
+                    new Regex(
+                        pattern: '/^[A-Z][\w]*Controller$/',
+                        message: 'Only word characters are allowed, and the class name must start with a capital letter and end with "Controller".'
+                    ),
+                    new Callback([$this, 'validateNewClass']),
                 ],
                 'baseClass' => [
-                    Required::rule(),
-                    MatchRegularExpression::rule('/^[\w\\\\]*$/')
-                        ->message('Only word characters and backslashes are allowed.'),
+                    new Regex(
+                        pattern: '/^[\w\\\\]*$/',
+                        message: 'Only word characters and backslashes are allowed.',
+                        skipOnEmpty: true,
+                    ),
                 ],
                 'actions' => [
-                    MatchRegularExpression::rule('/^[a-z][a-z0-9\\-,\\s]*$/')
-                        ->message('Only a-z, 0-9, dashes (-), spaces and commas are allowed.'),
+                    new Regex(
+                        pattern: '/^[a-z][a-z0-9\\-,\\s]*$/',
+                        message: 'Only a-z, 0-9, dashes (-), spaces and commas are allowed.'
+                    ),
                 ],
             ]
         );
@@ -223,7 +232,7 @@ final class Generator extends AbstractGenerator
         $this->viewsPath = $viewsPath;
     }
 
-    public function getBaseClass(): string
+    public function getBaseClass(): ?string
     {
         return $this->baseClass;
     }
