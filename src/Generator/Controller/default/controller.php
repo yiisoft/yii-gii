@@ -8,12 +8,12 @@ use Yiisoft\Strings\StringHelper;
 
 /* @var $generator Yiisoft\Yii\Gii\Generator\Controller\Generator */
 
-$classModifiers = [];
-$classModifiers[] = StringHelper::baseName($generator->getControllerClass());
+$classDefinitionParts = [];
+$classDefinitionParts[] = StringHelper::baseName($generator->getControllerClass());
 if ($generator->getBaseClass() !== null) {
-    $classModifiers[] = 'extends \\' . trim($generator->getBaseClass(), '\\');
+    $classDefinitionParts[] = 'extends \\' . trim($generator->getBaseClass(), '\\');
 }
-$classDefinition = implode(' ', $classModifiers) . PHP_EOL;
+$classDefinition = implode(' ', $classDefinitionParts) . PHP_EOL;
 
 
 echo "<?php\n";
