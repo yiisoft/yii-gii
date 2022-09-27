@@ -10,17 +10,11 @@ use Yiisoft\Yii\Gii\Exception\GeneratorNotFoundException;
 
 final class Gii implements GiiInterface
 {
-    private ContainerInterface $container;
-
     /**
-     * @var array<string, mixed>
+     * @param array<string, mixed> $generators
      */
-    private array $generators;
-
-    public function __construct(array $generators, ContainerInterface $container)
+    public function __construct(private array $generators, private ContainerInterface $container)
     {
-        $this->generators = $generators;
-        $this->container = $container;
     }
 
     public function addGenerator(string $name, $generator): void
@@ -29,11 +23,9 @@ final class Gii implements GiiInterface
     }
 
     /**
-     * @param string $name
      *
      * @throws GeneratorNotFoundException
      *
-     * @return GeneratorInterface
      */
     public function getGenerator(string $name): GeneratorInterface
     {
@@ -52,7 +44,7 @@ final class Gii implements GiiInterface
             $generator = $generator($this->container);
         }
         if (!($generator instanceof GeneratorInterface)) {
-            $type = is_object($generator) ? get_class($generator) : gettype($generator);
+            $type = get_debug_type($generator);
             throw new RuntimeException(
                 'Generator should be GeneratorInterface instance. "' . $type . '" given.'
             );

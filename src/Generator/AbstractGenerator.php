@@ -226,8 +226,6 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
 
     /**
      * Loads sticky attributes from an internal file and populates them into the generator.
-     *
-     * @param array $data
      */
     public function load(array $data): void
     {
@@ -269,13 +267,11 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * Saves the generated code into files.
      *
      * @param CodeFile[] $files the code files to be saved
-     * @param array $answers
      * @param string[] $results this parameter receives a value from this method indicating the log messages
      * generated while saving the code files.
      *
      * @throws ReflectionException
      * @throws InvalidConfigException
-     *
      * @return bool whether files are successfully saved without any error.
      */
     public function save(array $files, array $answers, array &$results): bool
@@ -357,9 +353,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * and the template contains all required template files as specified in {@see requiredTemplates()}.
      *
      * @param string $value
-     * @param ValidationContext $validationContext
      *
-     * @return Result
      */
     public function validateTemplate(mixed $value, Callback $rule, ValidationContext $validationContext): Result
     {
@@ -388,8 +382,6 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * An inline validator that checks if the attribute value refers to an existing class name.
      *
      * @param string $value the attribute being validated
-     *
-     * @return Result
      */
     public function validateClass(string $value): Result
     {
@@ -406,9 +398,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * The validator will check if the directory containing the new class file exist or not.
      *
      * @param mixed $value being validated
-     * @param ValidationContext $validationContext
      *
-     * @return Result
      */
     public function validateNewClass(mixed $value, Callback $rule, ValidationContext $validationContext): Result
     {
@@ -423,7 +413,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
                 if (!is_dir($path)) {
                     $result->addError("Please make sure the directory containing this class exists: $path");
                 }
-            } catch (InvalidArgumentException $exception) {
+            } catch (InvalidArgumentException) {
                 $result->addError("The class namespace is invalid: $ns");
             }
         }
@@ -529,8 +519,6 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      *
      * @param string $string the text be generated
      * @param array $placeholders the placeholders to use by `Yii::t()`
-     *
-     * @return string
      */
     public function generateString(string $string = '', array $placeholders = []): string
     {
@@ -549,11 +537,6 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
         return $str;
     }
 
-    /**
-     * @param string $attribute
-     *
-     * @return mixed
-     */
     public function getAttributeValue(string $attribute): mixed
     {
         if (!$this->hasAttribute($attribute)) {

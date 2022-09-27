@@ -20,12 +20,9 @@ use function count;
 
 abstract class BaseGenerateCommand extends Command
 {
-    protected GiiInterface $gii;
-
-    public function __construct(GiiInterface $gii)
+    public function __construct(protected GiiInterface $gii)
     {
         parent::__construct();
-        $this->gii = $gii;
     }
 
     protected function configure(): void
@@ -34,12 +31,6 @@ abstract class BaseGenerateCommand extends Command
             ->addOption('template', 't', InputArgument::OPTIONAL, '');
     }
 
-    /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     *
-     * @return int
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         /** @var AbstractGenerator $generator */

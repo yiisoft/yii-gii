@@ -64,12 +64,7 @@ class DefaultController implements ViewContextInterface
         return $this->render('view', $params);
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     *
-     * @return ResponseInterface|string
-     */
-    public function preview(ServerRequestInterface $request)
+    public function preview(ServerRequestInterface $request): \Psr\Http\Message\ResponseInterface|string
     {
         $id = $request->getAttribute('id');
         $file = $request->getAttribute('file');
@@ -92,12 +87,7 @@ class DefaultController implements ViewContextInterface
         return $response;
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     *
-     * @return ResponseInterface|string
-     */
-    public function diff(ServerRequestInterface $request)
+    public function diff(ServerRequestInterface $request): \Psr\Http\Message\ResponseInterface|string
     {
         $id = $request->getAttribute('id');
         $file = $request->getAttribute('file');
@@ -125,7 +115,6 @@ class DefaultController implements ViewContextInterface
      * Given an action named "xyz", the method "actionXyz()" in the generator will be called.
      * If the method does not exist, a 400 HTTP exception will be thrown.
      *
-     * @param ServerRequestInterface $request
      *
      * @return mixed the result of the action.
      */
@@ -144,12 +133,6 @@ class DefaultController implements ViewContextInterface
         return $response;
     }
 
-    /**
-     * @param string $id
-     * @param ServerRequestInterface $request
-     *
-     * @return AbstractGenerator|GeneratorInterface
-     */
     protected function loadGenerator(string $id, ServerRequestInterface $request): GeneratorInterface
     {
         /** @var AbstractGenerator $generator */

@@ -43,13 +43,9 @@ final class CodeFile
      */
     private string $path;
     /**
-     * @var string the newly generated code content
-     */
-    private string $content;
-    /**
      * @var int the operation to be performed. This can be [[OP_CREATE]], [[OP_OVERWRITE]] or [[OP_SKIP]].
      */
-    private int $operation;
+    private int $operation = self::OP_CREATE;
     /**
      * @var string the base path
      */
@@ -73,12 +69,10 @@ final class CodeFile
      * @param string $path the file path that the new code should be saved to.
      * @param string $content the newly generated code content.
      */
-    public function __construct(string $path, string $content)
+    public function __construct(string $path, private string $content)
     {
         $this->path = $this->preparePath($path);
-        $this->content = $content;
         $this->id = dechex(crc32($this->path));
-        $this->operation = self::OP_CREATE;
         if (is_file($path)) {
             $this->operation = file_get_contents($path) === $content ? self::OP_SKIP : self::OP_OVERWRITE;
         }
@@ -124,7 +118,7 @@ final class CodeFile
      */
     public function getRelativePath(): string
     {
-        if (!empty($this->basePath) && strpos($this->path, $this->basePath) === 0) {
+        if (!empty($this->basePath) && str_starts_with($this->path, $this->basePath)) {
             return substr($this->path, strlen($this->basePath) + 1);
         }
 
@@ -145,10 +139,8 @@ final class CodeFile
 
     /**
      * Returns preview or false if it cannot be rendered
-     *
-     * @return bool|string
      */
-    public function preview()
+    public function preview(): bool|string
     {
         if (($pos = strrpos($this->path, '.')) !== false) {
             $type = substr($this->path, $pos + 1);
@@ -169,10 +161,8 @@ final class CodeFile
 
     /**
      * Returns diff or false if it cannot be calculated
-     *
-     * @return bool|string
      */
-    public function diff()
+    public function diff(): bool|string
     {
         $type = strtolower($this->getType());
         if (in_array($type, ['jpg', 'gif', 'png', 'exe'])) {
@@ -189,12 +179,9 @@ final class CodeFile
     /**
      * Renders diff between two sets of lines
      *
-     * @param mixed $lines1
-     * @param mixed $lines2
      *
-     * @return string
      */
-    private function renderDiff($lines1, $lines2): string
+    private function renderDiff(mixed $lines1, mixed $lines2): string
     {
         if (!is_array($lines1)) {
             $lines1 = explode("\n", $lines1);
