@@ -204,9 +204,6 @@ final class Generator extends AbstractGenerator
         return $this->controllerNamespace;
     }
 
-    /**
-     * @param string $controllerNamespace
-     */
     public function setControllerNamespace(string $controllerNamespace): void
     {
         $this->controllerNamespace = $controllerNamespace;
