@@ -272,6 +272,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      *
      * @throws ReflectionException
      * @throws InvalidConfigException
+     *
      * @return bool whether files are successfully saved without any error.
      */
     public function save(array $files, array $answers, array &$results): bool
@@ -353,7 +354,6 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * and the template contains all required template files as specified in {@see requiredTemplates()}.
      *
      * @param string $value
-     *
      */
     public function validateTemplate(mixed $value, Callback $rule, ValidationContext $validationContext): Result
     {
@@ -398,7 +398,6 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * The validator will check if the directory containing the new class file exist or not.
      *
      * @param mixed $value being validated
-     *
      */
     public function validateNewClass(mixed $value, Callback $rule, ValidationContext $validationContext): Result
     {

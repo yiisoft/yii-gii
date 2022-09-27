@@ -178,8 +178,6 @@ final class CodeFile
 
     /**
      * Renders diff between two sets of lines
-     *
-     *
      */
     private function renderDiff(mixed $lines1, mixed $lines2): string
     {

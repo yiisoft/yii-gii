@@ -64,7 +64,7 @@ class DefaultController implements ViewContextInterface
         return $this->render('view', $params);
     }
 
-    public function preview(ServerRequestInterface $request): \Psr\Http\Message\ResponseInterface|string
+    public function preview(ServerRequestInterface $request): ResponseInterface|string
     {
         $id = $request->getAttribute('id');
         $file = $request->getAttribute('file');
@@ -87,7 +87,7 @@ class DefaultController implements ViewContextInterface
         return $response;
     }
 
-    public function diff(ServerRequestInterface $request): \Psr\Http\Message\ResponseInterface|string
+    public function diff(ServerRequestInterface $request): ResponseInterface|string
     {
         $id = $request->getAttribute('id');
         $file = $request->getAttribute('file');
@@ -114,7 +114,6 @@ class DefaultController implements ViewContextInterface
      * Runs an action defined in the generator.
      * Given an action named "xyz", the method "actionXyz()" in the generator will be called.
      * If the method does not exist, a 400 HTTP exception will be thrown.
-     *
      *
      * @return mixed the result of the action.
      */
