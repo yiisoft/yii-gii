@@ -55,7 +55,7 @@ class GiiTest extends TestCase
         $this->getContainer()->get(GiiInterface::class)->addGenerator('wrongType', 409);
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage(
-            'Generator should be GeneratorInterface instance. "' . gettype(409) . '" given.'
+            'Generator should be GeneratorInterface instance. "' . get_debug_type(409) . '" given.'
         );
         $this->getContainer()->get(GiiInterface::class)->getGenerator('wrongType');
     }

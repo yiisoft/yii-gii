@@ -524,7 +524,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
         $string = addslashes($string);
         if (!empty($placeholders)) {
             $phKeys = array_map(
-                fn ($word) => '{' . $word . '}',
+                static fn ($word) => '{' . $word . '}',
                 array_keys($placeholders)
             );
             $phValues = array_values($placeholders);
@@ -591,7 +591,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
         $this->directory = $directory;
     }
 
-    public function getData(): mixed
+    public function getData(): array
     {
         return [
             'templates' => $this->templates,
