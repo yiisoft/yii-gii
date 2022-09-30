@@ -23,7 +23,7 @@ name: static analysis
 
 jobs:
   psalm:
-    uses: yiisoft/actions/.github/workflows/psalm.yml@master
+    uses: yiisoft/actions/.github/workflows/psalm.yml@cache-composer
     with:
       os: >-
         ['ubuntu-latest']

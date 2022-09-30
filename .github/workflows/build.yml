@@ -23,7 +23,7 @@ name: build
 
 jobs:
   phpunit:
-    uses: yiisoft/actions/.github/workflows/phpunit.yml@master
+    uses: yiisoft/actions/.github/workflows/phpunit.yml@cache-composer
     with:
       os: >-
         ['ubuntu-latest', 'windows-latest']
