@@ -29,4 +29,3 @@ jobs:
         ['8.1']
     secrets:
       STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
-
