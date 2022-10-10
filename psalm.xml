@@ -10,7 +10,6 @@
         <ignoreFiles>
             <directory name="vendor" />
             <directory name="src/Generator/Controller/default" />
-            <file name="src/Generator/Controller/form.php" />
         </ignoreFiles>
     </projectFiles>
 </psalm>
