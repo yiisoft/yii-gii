@@ -6,7 +6,6 @@ namespace Yiisoft\Yii\Gii;
 
 use Diff;
 use RuntimeException;
-use Yiisoft\Html\Html;
 use Yiisoft\Yii\Gii\Component\DiffRendererHtmlInline;
 
 /**
@@ -37,7 +36,7 @@ final class CodeFile
     public const OPERATIONS = [
         self::OP_CREATE => 'Create',
         self::OP_OVERWRITE => 'Overwrite',
-        self::OP_SKIP => 'Skip'
+        self::OP_SKIP => 'Skip',
     ];
 
     /**

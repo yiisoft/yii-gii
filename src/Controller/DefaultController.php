@@ -73,8 +73,10 @@ final class DefaultController
                         );
                     }
                 }
-                return $this->responseFactory->createResponse(['message' => "Code file not found: $file"],
-                    Status::UNPROCESSABLE_ENTITY);
+                return $this->responseFactory->createResponse(
+                    ['message' => "Code file not found: $file"],
+                    Status::UNPROCESSABLE_ENTITY
+                );
             }
             return $this->responseFactory->createResponse(['files' => $files, 'operations' => CodeFile::OPERATIONS]);
         }
@@ -95,8 +97,10 @@ final class DefaultController
                     return $this->responseFactory->createResponse(['diff' => $generatedFile->diff()]);
                 }
             }
-            return $this->responseFactory->createResponse(['message' => "Code file not found: $file"],
-                Status::UNPROCESSABLE_ENTITY);
+            return $this->responseFactory->createResponse(
+                ['message' => "Code file not found: $file"],
+                Status::UNPROCESSABLE_ENTITY
+            );
         }
 
         return $this->responseFactory->createResponse(

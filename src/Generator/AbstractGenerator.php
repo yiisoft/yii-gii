@@ -333,7 +333,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      */
     public function render(string $template, array $params = []): string
     {
-        $file = sprintf("%s/%s.php", $this->aliases->get($this->getTemplatePath()), $template);
+        $file = sprintf('%s/%s.php', $this->aliases->get($this->getTemplatePath()), $template);
 
         $renderer = function (): void {
             extract(array: func_get_arg(1), flags: EXTR_OVERWRITE);
