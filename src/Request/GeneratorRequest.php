@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yiisoft\Yii\Gii\Request;
 
 use Yiisoft\RequestModel\RequestModel;
