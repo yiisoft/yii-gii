@@ -20,9 +20,6 @@ use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\RuleInterface;
 use Yiisoft\Validator\ValidationContext;
 use Yiisoft\Validator\ValidatorInterface;
-use Yiisoft\View\Exception\ViewNotFoundException;
-use Yiisoft\View\View;
-use Yiisoft\View\ViewContextInterface;
 use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Yii\Gii\Exception\InvalidConfigException;
 use Yiisoft\Yii\Gii\GeneratorInterface;
@@ -41,7 +38,7 @@ use Yiisoft\Yii\Gii\GeneratorInterface;
  * - {@see GeneratorInterface::generate()}: generates the code based on the current user input and the specified code
  * template files. This is the place where main code generation code resides.
  */
-abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface, ViewContextInterface
+abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
 {
     private array $errors = [];
     /**
@@ -58,7 +55,6 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
 
     public function __construct(
         protected Aliases $aliases,
-        protected View $view,
         protected ValidatorInterface $validator,
     ) {
     }
@@ -212,7 +208,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
         $stickyAttributes = $this->stickyAttributes();
         $path = $this->getStickyDataFile();
         if (is_file($path)) {
-            $result = Json::decode(file_get_contents($path), true);
+            $result = Json::decode(file_get_contents($path));
             if (is_array($result)) {
                 foreach ($stickyAttributes as $name) {
                     $method = 'set' . $name;
@@ -304,11 +300,6 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
         return !$hasError;
     }
 
-    public function getViewPath(): string
-    {
-        return $this->aliases->get($this->getTemplatePath());
-    }
-
     /**
      * @throws ReflectionException
      * @throws InvalidConfigException
@@ -337,15 +328,34 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * @param array $params list of parameters to be passed to the template file.
      *
      * @throws Throwable
-     * @throws ViewNotFoundException
      *
      * @return string the generated code
      */
     public function render(string $template, array $params = []): string
     {
-        $params['generator'] = $this;
+        $file = sprintf("%s/%s.php", $this->aliases->get($this->getTemplatePath()), $template);
 
-        return $this->view->withContext($this)->render($template, $params);
+        $renderer = function (): void {
+            extract(array: func_get_arg(1), flags: EXTR_OVERWRITE);
+            /** @psalm-suppress UnresolvableInclude */
+            require func_get_arg(0);
+        };
+
+        $obInitialLevel = ob_get_level();
+        ob_start();
+        ob_implicit_flush(false);
+        try {
+            /** @psalm-suppress PossiblyInvalidFunctionCall */
+            $renderer->bindTo($this)($file, $params);
+            return ob_get_clean();
+        } catch (Throwable $e) {
+            while (ob_get_level() > $obInitialLevel) {
+                if (!@ob_end_clean()) {
+                    ob_clean();
+                }
+            }
+            throw $e;
+        }
     }
 
     /**

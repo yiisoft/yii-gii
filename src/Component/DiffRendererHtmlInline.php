@@ -11,7 +11,7 @@ use Diff_Renderer_Html_Array;
  *
  * @psalm-suppress PropertyNotSetInConstructor
  */
-class DiffRendererHtmlInline extends Diff_Renderer_Html_Array
+final class DiffRendererHtmlInline extends Diff_Renderer_Html_Array
 {
     /**
      * Render a and return diff with changes between the two sequences

@@ -4,7 +4,7 @@ declare(strict_types=1);
  * This is the template for generating an action view file.
  */
 
-/* @var $generator Yiisoft\Yii\Gii\Generator\Controller\Generator */
+/* @var $this Yiisoft\Yii\Gii\Generator\Controller\Generator */
 /* @var $action string the action ID */
 
 echo "<?php\n";
@@ -17,7 +17,7 @@ declare(strict_types=1);
  */
 <?= '?>' ?>
 
-<h1><?= $generator->getControllerID() . '/' . $action ?></h1>
+<h1><?= $this->getControllerID() . '/' . $action ?></h1>
 
 <p>
     You may change the content of this page by modifying

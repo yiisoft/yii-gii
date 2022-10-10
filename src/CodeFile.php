@@ -34,6 +34,12 @@ final class CodeFile
      * The new code file and the existing one are identical.
      */
     public const OP_SKIP = 2;
+    public const OPERATIONS = [
+        self::OP_CREATE => 'Create',
+        self::OP_OVERWRITE => 'Overwrite',
+        self::OP_SKIP => 'Skip'
+    ];
+
     /**
      * @var string an ID that uniquely identifies this code file.
      */
@@ -140,7 +146,7 @@ final class CodeFile
     /**
      * Returns preview or false if it cannot be rendered
      */
-    public function preview(): bool|string
+    public function preview(): false|string
     {
         if (($pos = strrpos($this->path, '.')) !== false) {
             $type = substr($this->path, $pos + 1);
@@ -153,7 +159,12 @@ final class CodeFile
         }
 
         if (!in_array($type, ['jpg', 'gif', 'png', 'exe'])) {
-            return nl2br(Html::encode($this->content));
+            $content = htmlspecialchars(
+                $this->content,
+                ENT_NOQUOTES | ENT_SUBSTITUTE | ENT_HTML5,
+                'UTF-8'
+            );
+            return nl2br($content);
         }
 
         return false;
@@ -162,7 +173,7 @@ final class CodeFile
     /**
      * Returns diff or false if it cannot be calculated
      */
-    public function diff(): bool|string
+    public function diff(): false|string
     {
         $type = strtolower($this->getType());
         if (in_array($type, ['jpg', 'gif', 'png', 'exe'])) {
@@ -195,9 +206,7 @@ final class CodeFile
         }
 
         $renderer = new DiffRendererHtmlInline();
-        $diff = new Diff($lines1, $lines2);
-
-        return $diff->render($renderer);
+        return (new Diff($lines1, $lines2))->render($renderer);
     }
 
     public function getId(): string

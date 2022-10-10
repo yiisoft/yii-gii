@@ -18,6 +18,8 @@ interface GeneratorInterface
      */
     public function getDescription(): string;
 
+    public function getTemplatePath(): string;
+
     /**
      * Generates the code based on the current user input and the specified code template files.
      * This is the main method that child classes should implement.
