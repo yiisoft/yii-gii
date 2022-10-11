@@ -15,7 +15,7 @@ use Yiisoft\Yii\Debug\Api\Middleware\ResponseDataWrapper;
 use Yiisoft\Yii\Gii\Controller\DefaultController;
 use Yiisoft\Yii\Middleware\IpFilter;
 
-if (!(bool)($params['yiisoft/yii-enabled']['enabled'] ?? false)) {
+if (!(bool)($params['yiisoft/yii-gii']['enabled'] ?? false)) {
     return [];
 }
 
