@@ -43,7 +43,8 @@
         "yiisoft/di": "^1.1",
         "yiisoft/event-dispatcher": "^1.0",
         "yiisoft/files": "^2.0",
-        "yiisoft/log": "^2.0"
+        "yiisoft/log": "^2.0",
+        "yiisoft/router-fastroute": "^1.0"
     },
     "autoload": {
         "psr-4": {
