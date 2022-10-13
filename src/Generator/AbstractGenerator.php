@@ -336,7 +336,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
         $file = sprintf('%s/%s.php', $this->aliases->get($this->getTemplatePath()), $template);
 
         $renderer = function (): void {
-            extract(array: func_get_arg(1), flags: EXTR_OVERWRITE);
+            extract(func_get_arg(1));
             /** @psalm-suppress UnresolvableInclude */
             require func_get_arg(0);
         };

@@ -36,6 +36,7 @@ final class DefaultController
 
     public function generate(GeneratorRequest $request): ResponseInterface
     {
+        /** @var AbstractGenerator $generator */
         $generator = $request->getGenerator();
         $answers = $request->getAnswers();
         $validationResult = $generator->validate();
@@ -57,6 +58,7 @@ final class DefaultController
 
     public function preview(GeneratorRequest $request, #[Query('file')] ?string $file = null): ResponseInterface
     {
+        /** @var AbstractGenerator $generator */
         $generator = $request->getGenerator();
         $validationResult = $generator->validate();
         if ($validationResult->isValid()) {
@@ -89,6 +91,7 @@ final class DefaultController
 
     public function diff(GeneratorRequest $request, #[Query('file')] string $file): ResponseInterface
     {
+        /** @var AbstractGenerator $generator */
         $generator = $request->getGenerator();
         $validationResult = $generator->validate();
         if ($validationResult->isValid()) {
