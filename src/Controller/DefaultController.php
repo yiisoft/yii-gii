@@ -80,7 +80,7 @@ final class DefaultController
                     Status::UNPROCESSABLE_ENTITY
                 );
             }
-            return $this->responseFactory->createResponse(['files' => $files, 'operations' => CodeFile::OPERATIONS]);
+            return $this->responseFactory->createResponse(['files' => $files, 'operations' => CodeFile::OPERATIONS_MAP]);
         }
 
         return $this->responseFactory->createResponse(

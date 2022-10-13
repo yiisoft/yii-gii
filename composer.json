@@ -27,9 +27,11 @@
         "yiisoft/http": "^1.2",
         "yiisoft/json": "^1.0",
         "yiisoft/request-model": "dev-master",
+        "yiisoft/router": "^1.2",
         "yiisoft/strings": "^2.1",
         "yiisoft/validator": "^3.0@dev",
-        "yiisoft/yii-console": "^1.3"
+        "yiisoft/yii-console": "^1.3",
+        "yiisoft/yii-middleware": "dev-master"
     },
     "require-dev": {
         "nyholm/psr7": "^1.5",

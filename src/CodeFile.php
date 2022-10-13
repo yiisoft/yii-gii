@@ -33,7 +33,10 @@ final class CodeFile
      * The new code file and the existing one are identical.
      */
     public const OP_SKIP = 2;
-    public const OPERATIONS = [
+    /**
+     * Operations map to be performed.
+     */
+    public const OPERATIONS_MAP = [
         self::OP_CREATE => 'Create',
         self::OP_OVERWRITE => 'Overwrite',
         self::OP_SKIP => 'Skip',
@@ -48,7 +51,7 @@ final class CodeFile
      */
     private string $path;
     /**
-     * @var int the operation to be performed. This can be [[OP_CREATE]], [[OP_OVERWRITE]] or [[OP_SKIP]].
+     * @var int the operation to be performed. This can be {@see OP_CREATE}, {@see OP_OVERWRITE} or {@see OP_SKIP}.
      */
     private int $operation = self::OP_CREATE;
     /**

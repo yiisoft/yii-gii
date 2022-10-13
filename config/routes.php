@@ -11,7 +11,6 @@ use Yiisoft\DataResponse\Middleware\FormatDataResponseAsJson;
 use Yiisoft\Router\Group;
 use Yiisoft\Router\Route;
 use Yiisoft\Validator\ValidatorInterface;
-use Yiisoft\Yii\Debug\Api\Middleware\ResponseDataWrapper;
 use Yiisoft\Yii\Gii\Controller\DefaultController;
 use Yiisoft\Yii\Middleware\IpFilter;
 
@@ -31,7 +30,6 @@ return [
              }
          )
          ->middleware(FormatDataResponseAsJson::class)
-         ->middleware(ResponseDataWrapper::class)
          ->namePrefix('gii/api/')
          ->routes(
              Route::get('/{generator}')

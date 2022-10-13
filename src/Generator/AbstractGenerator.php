@@ -132,22 +132,6 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
     }
 
     /**
-     * Returns the view file for the input form of the generator.
-     * The default implementation will return the "form.php" file under the directory
-     * that contains the generator class file.
-     *
-     * @throws ReflectionException
-     *
-     * @return string the view file for the input form of the generator.
-     */
-    public function formView(): string
-    {
-        $class = new ReflectionClass($this);
-
-        return dirname($class->getFileName()) . '/form.php';
-    }
-
-    /**
      * Returns the root path to the default code template files.
      * The default implementation will return the "templates" subdirectory of the
      * directory containing the generator class file.
