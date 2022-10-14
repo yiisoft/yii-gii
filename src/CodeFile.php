@@ -6,7 +6,6 @@ namespace Yiisoft\Yii\Gii;
 
 use Diff;
 use RuntimeException;
-use Yiisoft\Html\Html;
 use Yiisoft\Yii\Gii\Component\DiffRendererHtmlInline;
 
 /**
@@ -35,6 +34,15 @@ final class CodeFile
      */
     public const OP_SKIP = 2;
     /**
+     * Operations map to be performed.
+     */
+    public const OPERATIONS_MAP = [
+        self::OP_CREATE => 'Create',
+        self::OP_OVERWRITE => 'Overwrite',
+        self::OP_SKIP => 'Skip',
+    ];
+
+    /**
      * @var string an ID that uniquely identifies this code file.
      */
     private string $id;
@@ -43,7 +51,7 @@ final class CodeFile
      */
     private string $path;
     /**
-     * @var int the operation to be performed. This can be [[OP_CREATE]], [[OP_OVERWRITE]] or [[OP_SKIP]].
+     * @var int the operation to be performed. This can be {@see OP_CREATE}, {@see OP_OVERWRITE} or {@see OP_SKIP}.
      */
     private int $operation = self::OP_CREATE;
     /**
@@ -140,7 +148,7 @@ final class CodeFile
     /**
      * Returns preview or false if it cannot be rendered
      */
-    public function preview(): bool|string
+    public function preview(): false|string
     {
         if (($pos = strrpos($this->path, '.')) !== false) {
             $type = substr($this->path, $pos + 1);
@@ -153,7 +161,12 @@ final class CodeFile
         }
 
         if (!in_array($type, ['jpg', 'gif', 'png', 'exe'])) {
-            return nl2br(Html::encode($this->content));
+            $content = htmlspecialchars(
+                $this->content,
+                ENT_NOQUOTES | ENT_SUBSTITUTE | ENT_HTML5,
+                'UTF-8'
+            );
+            return nl2br($content);
         }
 
         return false;
@@ -162,7 +175,7 @@ final class CodeFile
     /**
      * Returns diff or false if it cannot be calculated
      */
-    public function diff(): bool|string
+    public function diff(): false|string
     {
         $type = strtolower($this->getType());
         if (in_array($type, ['jpg', 'gif', 'png', 'exe'])) {
@@ -195,9 +208,7 @@ final class CodeFile
         }
 
         $renderer = new DiffRendererHtmlInline();
-        $diff = new Diff($lines1, $lines2);
-
-        return $diff->render($renderer);
+        return (new Diff($lines1, $lines2))->render($renderer);
     }
 
     public function getId(): string

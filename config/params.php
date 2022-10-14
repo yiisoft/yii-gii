@@ -10,10 +10,9 @@ return [
             'gii/controller' => ControllerCommand::class,
         ],
     ],
-    'yiisoft/aliases' => [
-        '@yii-gii' => dirname(__DIR__),
-    ],
     'yiisoft/yii-gii' => [
+        'enabled' => true,
+        'allowedIPs' => ['127.0.0.1', '::1'],
         'generators' => [
             'controller' => \Yiisoft\Yii\Gii\Generator\Controller\Generator::class,
         ],

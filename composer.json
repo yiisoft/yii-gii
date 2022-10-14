@@ -23,12 +23,15 @@
         "phpspec/php-diff": "^1.1.0",
         "yiisoft/aliases": "^2.0",
         "yiisoft/arrays": "^2.1",
+        "yiisoft/data-response": "^1.0",
         "yiisoft/http": "^1.2",
         "yiisoft/json": "^1.0",
+        "yiisoft/request-model": "dev-master",
+        "yiisoft/router": "^1.2",
         "yiisoft/strings": "^2.1",
         "yiisoft/validator": "^3.0@dev",
-        "yiisoft/view": "^6.0",
-        "yiisoft/yii-console": "^1.3"
+        "yiisoft/yii-console": "^1.3",
+        "yiisoft/yii-middleware": "dev-master"
     },
     "require-dev": {
         "nyholm/psr7": "^1.5",
@@ -40,7 +43,8 @@
         "yiisoft/di": "^1.1",
         "yiisoft/event-dispatcher": "^1.0",
         "yiisoft/files": "^2.0",
-        "yiisoft/log": "^2.0"
+        "yiisoft/log": "^2.0",
+        "yiisoft/router-fastroute": "^1.0"
     },
     "autoload": {
         "psr-4": {

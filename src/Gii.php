@@ -17,14 +17,11 @@ final class Gii implements GiiInterface
     {
     }
 
-    public function addGenerator(string $name, $generator): void
+    public function addGenerator(string $name, mixed $generator): void
     {
         $this->generators[$name] = $generator;
     }
 
-    /**
-     * @throws GeneratorNotFoundException
-     */
     public function getGenerator(string $name): GeneratorInterface
     {
         if (!isset($this->generators[$name])) {
