@@ -61,32 +61,29 @@ final class DefaultController
         /** @var AbstractGenerator $generator */
         $generator = $request->getGenerator();
         $validationResult = $generator->validate();
-        if ($validationResult->isValid()) {
-            $files = $generator->generate();
-            if ($file !== null) {
-                foreach ($files as $generatedFile) {
-                    if ($generatedFile->getId() === $file) {
-                        $content = $generatedFile->preview();
-                        if ($content !== false) {
-                            return $this->responseFactory->createResponse(['content' => $content]);
-                        }
-                        return $this->responseFactory->createResponse(
-                            ['content' => 'Preview is not available for this file type.']
-                        );
-                    }
-                }
-                return $this->responseFactory->createResponse(
-                    ['message' => "Code file not found: $file"],
-                    Status::UNPROCESSABLE_ENTITY
-                );
-            }
-            return $this->responseFactory->createResponse(['files' => $files, 'operations' => CodeFile::OPERATIONS_MAP]);
+        if (!$validationResult->isValid()) {
+            return $this->responseFactory->createResponse(
+                ['errors' => $validationResult->getErrorMessagesIndexedByAttribute()],
+                Status::UNPROCESSABLE_ENTITY
+            );
         }
 
-        return $this->responseFactory->createResponse(
-            ['errors' => $validationResult->getErrorMessagesIndexedByAttribute()],
-            Status::UNPROCESSABLE_ENTITY
-        );
+        $files = $generator->generate();
+        if ($file !== null) {
+            foreach ($files as $generatedFile) {
+                if ($generatedFile->getId() === $file) {
+                    $content = $generatedFile->preview();
+                    return $this->responseFactory->createResponse(
+                        ['content' => $content ?: 'Preview is not available for this file type.']
+                    );
+                }
+            }
+            return $this->responseFactory->createResponse(
+                ['message' => "Code file not found: $file"],
+                Status::UNPROCESSABLE_ENTITY
+            );
+        }
+        return $this->responseFactory->createResponse(['files' => $files, 'operations' => CodeFile::OPERATIONS_MAP]);
     }
 
     public function diff(GeneratorRequest $request, #[Query('file')] string $file): ResponseInterface
