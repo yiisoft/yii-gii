@@ -18,6 +18,7 @@ use Yiisoft\EventDispatcher\Provider\Provider;
 use Yiisoft\Files\FileHelper;
 use Yiisoft\Translator\Translator;
 use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\Validator\RuleHandlerContainer;
 use Yiisoft\Validator\RuleHandlerResolverInterface;
 use Yiisoft\Validator\SimpleRuleHandlerContainer;
 use Yiisoft\Validator\Validator;
@@ -75,7 +76,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
                         Reference::to(EventDispatcherInterface::class),
                     ],
                 ],
-                RuleHandlerResolverInterface::class => SimpleRuleHandlerContainer::class,
+                RuleHandlerResolverInterface::class => RuleHandlerContainer::class,
                 ValidatorInterface::class => Validator::class,
             ]);
         $this->container = new Container($config);

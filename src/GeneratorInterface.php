@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\Gii;
 
 use Yiisoft\Validator\Result;
+use Yiisoft\Yii\Gii\Generator\AbstractGeneratorCommand;
 
 interface GeneratorInterface
 {
@@ -18,7 +19,7 @@ interface GeneratorInterface
      */
     public function getDescription(): string;
 
-    public function getTemplatePath(): string;
+    public function getTemplatePath(AbstractGeneratorCommand $command): string;
 
     /**
      * Generates the code based on the current user input and the specified code template files.
@@ -28,10 +29,10 @@ interface GeneratorInterface
      *
      * @return CodeFile[] a list of code files to be created.
      */
-    public function generate(): array;
+    public function generate(AbstractGeneratorCommand $command): array;
 
     /**
      * Returns the validation result
      */
-    public function validate(): Result;
+    public function validate(AbstractGeneratorCommand $command): Result;
 }

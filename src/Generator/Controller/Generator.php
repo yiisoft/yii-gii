@@ -5,38 +5,27 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\Gii\Generator\Controller;
 
 use Closure;
+use InvalidArgumentException;
+use Yiisoft\Aliases\Aliases;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Strings\StringHelper;
+use Yiisoft\Validator\Exception\UnexpectedRuleException;
 use Yiisoft\Validator\Rule\Callback;
 use Yiisoft\Validator\Rule\Regex;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\RuleInterface;
+use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Yii\Gii\Generator\AbstractGenerator;
+use Yiisoft\Yii\Gii\Generator\AbstractGeneratorCommand;
+use Yiisoft\Yii\Gii\GiiParametersProvider;
+use Yiisoft\Yii\Gii\Validator\NewClassRule;
 
 /**
  * This generator will generate a controller and one or a few action view files.
  */
 final class Generator extends AbstractGenerator
 {
-    private string $controllerNamespace = 'App\\Controller';
-    /**
-     * @var string the controller class name
-     */
-    private string $controllerClass = '';
-    /**
-     * @var string|null the controller's views path
-     */
-    private ?string $viewsPath = null;
-    /**
-     * @var string|null the base class of the controller or null if no parent class present
-     */
-    private ?string $baseClass = null;
-    /**
-     * @var string list of action IDs separated by commas or spaces
-     */
-    private string $actions = 'index';
-
     public function getName(): string
     {
         return 'Controller Generator';
@@ -46,39 +35,6 @@ final class Generator extends AbstractGenerator
     {
         return 'This generator helps you to quickly generate a new controller class with
             one or several controller actions and their corresponding views.';
-    }
-
-    /**
-     * @return Closure[]|Closure[][]|RuleInterface[]|RuleInterface[][]
-     */
-    public function rules(): array
-    {
-        return array_merge(
-            parent::rules(),
-            [
-                'controllerClass' => [
-                    new Required(),
-                    new Regex(
-                        pattern: '/^[A-Z][\w]*Controller$/',
-                        message: 'Only word characters are allowed, and the class name must start with a capital letter and end with "Controller".'
-                    ),
-                    new Callback([$this, 'validateNewClass']),
-                ],
-                'baseClass' => [
-                    new Regex(
-                        pattern: '/^[\w\\\\]*$/',
-                        message: 'Only word characters and backslashes are allowed.',
-                        skipOnEmpty: true,
-                    ),
-                ],
-                'actions' => [
-                    new Regex(
-                        pattern: '/^[a-z][a-z0-9\\-,\\s]*$/',
-                        message: 'Only a-z, 0-9, dashes (-), spaces and commas are allowed.'
-                    ),
-                ],
-            ]
-        );
     }
 
     public function attributeLabels(): array
@@ -129,19 +85,23 @@ final class Generator extends AbstractGenerator
         return 'The controller has been generated successfully.';
     }
 
-    public function generate(): array
+    public function generate(AbstractGeneratorCommand $command): array
     {
+        if (!$command instanceof ControllerCommand) {
+            throw new InvalidArgumentException();
+        }
+
         $files = [];
 
         $files[] = (new CodeFile(
-            $this->getControllerFile(),
-            $this->render('controller')
+            $this->getControllerFile($command),
+            $this->render($command, 'controller')
         ))->withBasePath($this->aliases->get('@root'));
 
-        foreach ($this->getActionIDs() as $action) {
+        foreach ($command->getActions() as $action) {
             $files[] = (new CodeFile(
-                $this->getViewFile($action),
-                $this->render('view', ['action' => $action])
+                $this->getViewFile($command, $action),
+                $this->render($command, 'view', ['action' => $action])
             ))->withBasePath($this->aliases->get('@root'));
         }
 
@@ -153,31 +113,19 @@ final class Generator extends AbstractGenerator
      *
      * @return array an array of action IDs entered by the user
      */
-    public function getActionIDs(): array
+    public function getActionIDs(ControllerCommand $command): array
     {
-        $actions = array_unique(preg_split('/[\s,]+/', $this->actions, -1, PREG_SPLIT_NO_EMPTY));
-        sort($actions);
-
-        return $actions;
+        return $command->getActions();
     }
 
     /**
      * @return string the controller class file path
      */
-    public function getControllerFile(): string
+    private function getControllerFile(ControllerCommand $command): string
     {
         return $this->aliases->get(
-            sprintf('%s/%s.php', $this->getDirectory() ?? '', $this->getControllerClass())
+            sprintf('%s/%s.php', $this->getDirectory() ?? '', $command->getControllerClass())
         );
-    }
-
-    /**
-     * @return string the controller ID
-     */
-    public function getControllerID(): string
-    {
-        $name = StringHelper::baseName($this->controllerClass);
-        return (new Inflector())->pascalCaseToId(substr($name, 0, -10));
     }
 
     /**
@@ -185,67 +133,14 @@ final class Generator extends AbstractGenerator
      *
      * @return string the action view file path
      */
-    public function getViewFile(string $action): string
+    public function getViewFile(ControllerCommand $command, string $action): string
     {
-        if (empty($this->getViewsPath())) {
+        if (empty($command->getViewsPath())) {
             return $this->aliases->get(
-                '@views/' . $this->getControllerID() . "/$action.php"
+                '@views/' . $command->getControllerID() . "/$action.php"
             );
         }
 
-        return $this->aliases->get(str_replace('\\', '/', $this->getViewsPath()) . "/$action.php");
-    }
-
-    /**
-     * @return string the namespace of the controller class
-     */
-    public function getControllerNamespace(): string
-    {
-        return $this->controllerNamespace;
-    }
-
-    public function setControllerNamespace(string $controllerNamespace): void
-    {
-        $this->controllerNamespace = $controllerNamespace;
-    }
-
-    public function getControllerClass(): string
-    {
-        return $this->controllerClass;
-    }
-
-    public function setControllerClass(string $controllerClass): void
-    {
-        $this->controllerClass = $controllerClass;
-    }
-
-    public function getViewsPath(): ?string
-    {
-        return $this->viewsPath;
-    }
-
-    public function setViewsPath(?string $viewsPath): void
-    {
-        $this->viewsPath = $viewsPath;
-    }
-
-    public function getBaseClass(): ?string
-    {
-        return $this->baseClass;
-    }
-
-    public function setBaseClass(string $baseClass): void
-    {
-        $this->baseClass = $baseClass;
-    }
-
-    public function getActions(): string
-    {
-        return $this->actions;
-    }
-
-    public function setActions(string $actions): void
-    {
-        $this->actions = $actions;
+        return $this->aliases->get(str_replace('\\', '/', $command->getViewsPath()) . "/$action.php");
     }
 }
