@@ -6,12 +6,12 @@ declare(strict_types=1);
 
 use Yiisoft\Strings\StringHelper;
 
-/* @var $this Yiisoft\Yii\Gii\Generator\Controller\Generator */
+/* @var $command Yiisoft\Yii\Gii\Generator\Controller\ControllerCommand */
 
 $classDefinitionParts = [];
-$classDefinitionParts[] = StringHelper::baseName($this->getControllerClass());
-if ($this->getBaseClass() !== null) {
-    $classDefinitionParts[] = 'extends \\' . trim($this->getBaseClass(), '\\');
+$classDefinitionParts[] = StringHelper::baseName($command->getControllerClass());
+if ($command->getBaseClass() !== null) {
+    $classDefinitionParts[] = 'extends \\' . trim($command->getBaseClass(), '\\');
 }
 $classDefinition = implode(' ', $classDefinitionParts) . PHP_EOL;
 
@@ -21,7 +21,7 @@ echo "<?php\n";
 
 declare(strict_types=1);
 
-namespace <?= $this->getControllerNamespace() ?>;
+namespace <?= $command->getControllerNamespace() ?>;
 
 use Yiisoft\Yii\View\ViewRenderer;
 
@@ -31,7 +31,7 @@ final class <?= $classDefinition; ?>
     {
         $this->viewRenderer = $viewRenderer->withController($this);
     }
-<?php foreach ($this->getActionIDs() as $action) : ?>
+<?php foreach ($command->getActions() as $action) : ?>
 
     public function <?= $action ?>()
     {

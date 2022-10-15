@@ -88,4 +88,14 @@ class ControllerCommand extends AbstractGeneratorCommand
     {
         return $this->viewsPath;
     }
+
+    public function getControllerNamespace(): string
+    {
+        return $this->controllerNamespace;
+    }
+
+    public function getBaseClass(): ?string
+    {
+        return $this->baseClass;
+    }
 }
