@@ -20,7 +20,6 @@ use Yiisoft\Translator\Translator;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Validator\RuleHandlerContainer;
 use Yiisoft\Validator\RuleHandlerResolverInterface;
-use Yiisoft\Validator\SimpleRuleHandlerContainer;
 use Yiisoft\Validator\Validator;
 use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\View\View;

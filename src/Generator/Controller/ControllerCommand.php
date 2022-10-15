@@ -6,7 +6,6 @@ namespace Yiisoft\Yii\Gii\Generator\Controller;
 
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Strings\StringHelper;
-use Yiisoft\Validator\Rule\Callback;
 use Yiisoft\Validator\Rule\Each;
 use Yiisoft\Validator\Rule\Regex;
 use Yiisoft\Validator\Rule\Required;
@@ -18,7 +17,6 @@ class ControllerCommand extends AbstractGeneratorCommand
 {
     public function __construct(
         private string $controllerNamespace = 'App\\Controller',
-
         #[Required]
         #[Regex(
             pattern: '/^[A-Z][\w]*Controller$/',
@@ -33,7 +31,6 @@ class ControllerCommand extends AbstractGeneratorCommand
          * @var string|null the controller's views path
          */
         private ?string $viewsPath = null,
-
         #[Regex(
             pattern: '/^[\w\\\\]*$/',
             message: 'Only word characters and backslashes are allowed.',
@@ -43,7 +40,6 @@ class ControllerCommand extends AbstractGeneratorCommand
          * @var string|null the base class of the controller or null if no parent class present
          */
         private ?string $baseClass = null,
-
         #[Each([
             new Regex(
                 pattern: '/^[a-z][a-z0-9\\-,\\s]*$/',
@@ -55,14 +51,12 @@ class ControllerCommand extends AbstractGeneratorCommand
          * @var string[] list of action IDs
          */
         private array $actions = ['index'],
-
         #[Required(message: 'A code template must be selected.')]
         #[TemplateRule]
         private string $template = 'default',
     ) {
         parent::__construct($template);
         sort($this->actions);
-
     }
 
     /**

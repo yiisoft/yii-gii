@@ -41,7 +41,6 @@ class ControllerGeneratorTest extends TestCase
             controllerClass: 'Wr0ngContr0ller',
             actions: ['index', 'ed1t', 'view'],
             template: 'test',
-
         );
 
         $result = $generator->validate($command);
@@ -84,7 +83,7 @@ class ControllerGeneratorTest extends TestCase
         $injector = new Injector($this->getContainer());
 
         return $injector->make(ControllerGenerator::class, [
-            new GiiParametersProvider(...$params)
+            new GiiParametersProvider(...$params),
         ]);
     }
 }
