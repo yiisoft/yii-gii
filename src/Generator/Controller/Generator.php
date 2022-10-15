@@ -4,22 +4,10 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii\Generator\Controller;
 
-use Closure;
 use InvalidArgumentException;
-use Yiisoft\Aliases\Aliases;
-use Yiisoft\Strings\Inflector;
-use Yiisoft\Strings\StringHelper;
-use Yiisoft\Validator\Exception\UnexpectedRuleException;
-use Yiisoft\Validator\Rule\Callback;
-use Yiisoft\Validator\Rule\Regex;
-use Yiisoft\Validator\Rule\Required;
-use Yiisoft\Validator\RuleInterface;
-use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Yii\Gii\Generator\AbstractGenerator;
 use Yiisoft\Yii\Gii\Generator\AbstractGeneratorCommand;
-use Yiisoft\Yii\Gii\GiiParametersProvider;
-use Yiisoft\Yii\Gii\Validator\NewClassRule;
 
 /**
  * This generator will generate a controller and one or a few action view files.

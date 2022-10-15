@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii\Generator;
 
-use Closure;
 use Exception;
 use InvalidArgumentException;
-use ReflectionClass;
 use ReflectionException;
 use RuntimeException;
 use Throwable;
@@ -15,14 +13,10 @@ use Yiisoft\Aliases\Aliases;
 use Yiisoft\Json\Json;
 use Yiisoft\Validator\DataSetInterface;
 use Yiisoft\Validator\Result;
-use Yiisoft\Validator\Rule\Callback;
 use Yiisoft\Validator\Rule\Required;
-use Yiisoft\Validator\RuleInterface;
-use Yiisoft\Validator\ValidationContext;
 use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Yii\Gii\Exception\InvalidConfigException;
-use Yiisoft\Yii\Gii\Generator\Controller\ControllerCommand;
 use Yiisoft\Yii\Gii\GeneratorInterface;
 use Yiisoft\Yii\Gii\GiiParametersProvider;
 
@@ -473,7 +467,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
     public function getData(): array
     {
         return [
-//            'templates' => $this->templates,
+            //            'templates' => $this->templates,
             'template' => $this->template,
         ];
     }

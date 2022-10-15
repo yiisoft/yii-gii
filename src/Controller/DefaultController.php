@@ -26,7 +26,7 @@ final class DefaultController
             'name' => $generator->getName(),
             'description' => $generator->getDescription(),
             'template' => $generator->getTemplate(),
-//            'templatePath' => $generator->getTemplatePath(),
+            //            'templatePath' => $generator->getTemplatePath(),
             'templates' => $generator->getTemplates(),
             'directory' => $generator->getDirectory(),
         ];

@@ -8,10 +8,8 @@ use InvalidArgumentException;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Validator\Exception\UnexpectedRuleException;
 use Yiisoft\Validator\Result;
-use Yiisoft\Validator\Rule\Callback;
 use Yiisoft\Validator\RuleHandlerInterface;
 use Yiisoft\Validator\ValidationContext;
-use Yiisoft\Yii\Gii\GiiParametersProvider;
 
 final class NewClassHandler implements RuleHandlerInterface
 {
