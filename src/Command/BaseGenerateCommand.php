@@ -130,6 +130,7 @@ abstract class BaseGenerateCommand extends Command
             $output->writeln("\n<fg=red>Some errors occurred while generating the files.</>");
         }
     }
+
     abstract protected function createGeneratorCommand(InputInterface $input): AbstractGeneratorCommand;
 
     /**

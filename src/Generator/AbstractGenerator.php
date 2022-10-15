@@ -128,7 +128,6 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
         $class = new ReflectionClass($this);
 
         return dirname($class->getFileName()) . '/default';
-
     }
 
     public function getDescription(): string
@@ -295,7 +294,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
         ob_implicit_flush(false);
         try {
             /** @psalm-suppress PossiblyInvalidFunctionCall */
-            $renderer->bindTo($this)($file, array_merge($params, ['command'=>$command]));
+            $renderer->bindTo($this)($file, array_merge($params, ['command' => $command]));
             return ob_get_clean();
         } catch (Throwable $e) {
             while (ob_get_level() > $obInitialLevel) {
