@@ -6,6 +6,7 @@ namespace Yiisoft\Yii\Gii\Generator;
 
 use Exception;
 use InvalidArgumentException;
+use ReflectionClass;
 use ReflectionException;
 use RuntimeException;
 use Throwable;
@@ -43,7 +44,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * The value of this property is internally managed by this class.
      */
     private string $template = 'default';
-    private ?string $directory = null;
+    private string $directory = 'src/Controller';
 
     public function __construct(
         protected Aliases $aliases,
@@ -124,7 +125,10 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      */
     private function defaultTemplate(): string
     {
-        return __DIR__ . '/default';
+        $class = new ReflectionClass($this);
+
+        return dirname($class->getFileName()) . '/default';
+
     }
 
     public function getDescription(): string
@@ -291,7 +295,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
         ob_implicit_flush(false);
         try {
             /** @psalm-suppress PossiblyInvalidFunctionCall */
-            $renderer->bindTo($this)($file, $params);
+            $renderer->bindTo($this)($file, array_merge($params, ['command'=>$command]));
             return ob_get_clean();
         } catch (Throwable $e) {
             while (ob_get_level() > $obInitialLevel) {
@@ -459,7 +463,7 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
         return $this->errors !== [];
     }
 
-    public function getDirectory(): ?string
+    public function getDirectory(): string
     {
         return $this->directory;
     }

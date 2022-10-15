@@ -13,6 +13,7 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Yiisoft\Yii\Console\ExitCode;
 use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Yii\Gii\Generator\AbstractGenerator;
+use Yiisoft\Yii\Gii\Generator\AbstractGeneratorCommand;
 use Yiisoft\Yii\Gii\GeneratorInterface;
 use Yiisoft\Yii\Gii\GiiInterface;
 
@@ -35,10 +36,12 @@ abstract class BaseGenerateCommand extends Command
     {
         /** @var AbstractGenerator $generator */
         $generator = $this->getGenerator();
+        $generatorCommand = $this->createGeneratorCommand($input);
+
         $generator->load(array_filter(array_merge($input->getOptions(), $input->getArguments())));
         $output->writeln("Running '{$generator->getName()}'...\n");
-        if ($generator->validate()->isValid() && !$generator->hasErrors()) {
-            $this->generateCode($generator, $input, $output);
+        if ($generator->validate($generatorCommand)->isValid() && !$generator->hasErrors()) {
+            $this->generateCode($generator, $generatorCommand, $input, $output);
         } else {
             $this->displayValidationErrors($generator, $output);
             return ExitCode::UNSPECIFIED_ERROR;
@@ -58,10 +61,10 @@ abstract class BaseGenerateCommand extends Command
         $output->writeln('');
     }
 
-    protected function generateCode(GeneratorInterface $generator, InputInterface $input, OutputInterface $output): void
+    protected function generateCode(GeneratorInterface $generator, AbstractGeneratorCommand $generatorCommand, InputInterface $input, OutputInterface $output): void
     {
         /** @var AbstractGenerator $generator */
-        $files = $generator->generate();
+        $files = $generator->generate($generatorCommand);
         if (count($files) === 0) {
             $output->writeln('<fg=cyan>No code to be generated.</>');
             return;
@@ -127,6 +130,7 @@ abstract class BaseGenerateCommand extends Command
             $output->writeln("\n<fg=red>Some errors occurred while generating the files.</>");
         }
     }
+    abstract protected function createGeneratorCommand(InputInterface $input): AbstractGeneratorCommand;
 
     /**
      * @return bool|mixed|string|null
