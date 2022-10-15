@@ -19,7 +19,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "php": "^8.0",
+        "php": "^8.1",
         "phpspec/php-diff": "^1.1.0",
         "yiisoft/aliases": "^2.0",
         "yiisoft/arrays": "^2.1",
