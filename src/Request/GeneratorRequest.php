@@ -23,4 +23,9 @@ final class GeneratorRequest extends RequestModel
     {
         return $this->getAttributeValue('body.answers');
     }
+
+    public function getBody(): array
+    {
+        return $this->getAttributeValue('body.parameters', []);
+    }
 }

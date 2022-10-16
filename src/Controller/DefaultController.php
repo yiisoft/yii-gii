@@ -50,7 +50,7 @@ final class DefaultController
         CommandHydrator $commandHydrator
     ): ResponseInterface {
         $generator = $request->getGenerator();
-        $command = $commandHydrator->hydrate($generator::getCommandClass(), $request->getData());
+        $command = $commandHydrator->hydrate($generator::getCommandClass(), $request->getBody());
         $answers = $request->getAnswers();
         try {
             $files = $generator->generate($command);
@@ -59,7 +59,12 @@ final class DefaultController
         }
         $params = [];
         $results = [];
-        $params['hasError'] = !$codeFileSaver->save($command, $files, (array) $answers, $results);
+        // TODO: get answers from the request
+        $answers = [];
+        foreach ($files as $file) {
+            $answers[$file->getId()] = true;
+        }
+        $params['hasError'] = !$codeFileSaver->save($command, $files, $answers, $results);
         $params['results'] = $results;
         return $this->responseFactory->createResponse($params);
     }
@@ -70,28 +75,34 @@ final class DefaultController
         #[Query('file')] ?string $file = null
     ): ResponseInterface {
         $generator = $request->getGenerator();
-        $command = $commandHydrator->hydrate($generator::getCommandClass(), $request->getData());
+        $command = $commandHydrator->hydrate($generator::getCommandClass(), $request->getBody());
 
         try {
             $files = $generator->generate($command);
         } catch (InvalidGeneratorCommandException $e) {
             return $this->createErrorResponse($e);
         }
-        if ($file !== null) {
-            foreach ($files as $generatedFile) {
-                if ($generatedFile->getId() === $file) {
-                    $content = $generatedFile->preview();
-                    return $this->responseFactory->createResponse(
-                        ['content' => $content ?: 'Preview is not available for this file type.']
-                    );
-                }
-            }
-            return $this->responseFactory->createResponse(
-                ['message' => "Code file not found: $file"],
-                Status::UNPROCESSABLE_ENTITY
-            );
+        if ($file === null) {
+            return $this->responseFactory->createResponse([
+                'files' => array_map($this->serializeCodeFile(...), $files),
+                // todo: fix showing operations' keys. they are skipped because of serialization numerical arrays
+                'operations' => CodeFile::OPERATIONS_MAP,
+            ]);
         }
-        return $this->responseFactory->createResponse(['files' => $files, 'operations' => CodeFile::OPERATIONS_MAP]);
+
+        foreach ($files as $generatedFile) {
+            if ($generatedFile->getId() === $file) {
+                $content = $generatedFile->preview();
+                return $this->responseFactory->createResponse(
+                    ['content' => $content ?: 'Preview is not available for this file type.']
+                );
+            }
+        }
+
+        return $this->responseFactory->createResponse(
+            ['message' => "Code file not found: $file"],
+            Status::UNPROCESSABLE_ENTITY
+        );
     }
 
     public function diff(
@@ -100,7 +111,7 @@ final class DefaultController
         #[Query('file')] string $file
     ): ResponseInterface {
         $generator = $request->getGenerator();
-        $command = $commandHydrator->hydrate($generator::getCommandClass(), $request->getData());
+        $command = $commandHydrator->hydrate($generator::getCommandClass(), $request->getBody());
 
         try {
             $files = $generator->generate($command);
@@ -126,5 +137,18 @@ final class DefaultController
             ['errors' => $e->getResult()->getErrorMessagesIndexedByAttribute()],
             Status::UNPROCESSABLE_ENTITY
         );
+    }
+
+    private function serializeCodeFile(CodeFile $file): array
+    {
+        return [
+            'id' => $file->getId(),
+            'content' => $file->getContent(),
+            'operation' => $file->getOperation(),
+            'path' => $file->getPath(),
+            'relativePath' => $file->getRelativePath(),
+            'type' => $file->getType(),
+            'preview' => $file->preview(),
+        ];
     }
 }
