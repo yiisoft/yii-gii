@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii\Tests\Generators;
 
-use Throwable;
 use Yiisoft\Injector\Injector;
 use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Yii\Gii\Exception\InvalidGeneratorCommandException;

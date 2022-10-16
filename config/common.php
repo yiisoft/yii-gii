@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Psr\Container\ContainerInterface;
 use Yiisoft\Injector\Injector;
 use Yiisoft\Yii\Gii\GeneratorInterface;
 use Yiisoft\Yii\Gii\Gii;

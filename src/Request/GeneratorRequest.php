@@ -18,9 +18,7 @@ final class GeneratorRequest extends RequestModel
     public function getGenerator(): GeneratorInterface
     {
         /** @var AbstractGenerator $generator */
-        $generator = $this->gii->getGenerator($this->getAttributeValue('router.generator'));
-
-        return $generator;
+        return $this->gii->getGenerator($this->getAttributeValue('router.generator'));
     }
 
     public function getAnswers(): ?array

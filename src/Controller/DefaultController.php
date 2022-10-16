@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii\Controller;
 
-use Exception;
 use Psr\Http\Message\ResponseInterface;
-use Throwable;
 use Yiisoft\DataResponse\DataResponse;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Http\Status;
@@ -14,7 +12,6 @@ use Yiisoft\RequestModel\Attribute\Query;
 use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Yii\Gii\CodeFileSaver;
 use Yiisoft\Yii\Gii\Exception\InvalidGeneratorCommandException;
-use Yiisoft\Yii\Gii\Generator\AbstractGenerator;
 use Yiisoft\Yii\Gii\GeneratorInterface;
 use Yiisoft\Yii\Gii\Request\GeneratorRequest;
 

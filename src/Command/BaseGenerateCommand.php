@@ -11,7 +11,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Throwable;
 use Yiisoft\Validator\Result;
 use Yiisoft\Yii\Console\ExitCode;
 use Yiisoft\Yii\Gii\CodeFile;
@@ -74,7 +73,7 @@ abstract class BaseGenerateCommand extends Command
      * @param AbstractGeneratorCommand $generatorCommand
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @return void
+     *
      * @throws ReflectionException
      * @throws InvalidConfigException
      */

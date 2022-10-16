@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\Gii\Exception;
 
 use Exception;
-use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 use Yiisoft\Validator\Result;
 
 final class InvalidGeneratorCommandException extends Exception

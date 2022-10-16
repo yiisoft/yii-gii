@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii;
 
-use Yiisoft\Validator\Result;
 use Yiisoft\Yii\Gii\Exception\InvalidGeneratorCommandException;
 use Yiisoft\Yii\Gii\Generator\AbstractGeneratorCommand;
 
@@ -36,6 +35,7 @@ interface GeneratorInterface
      * on how to implement this method.
      *
      * @throws InvalidGeneratorCommandException
+     *
      * @return CodeFile[] a list of code files to be created.
      */
     public function generate(AbstractGeneratorCommand $command): array;
