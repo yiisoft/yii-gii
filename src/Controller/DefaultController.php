@@ -29,7 +29,7 @@ final class DefaultController
         $generators = $gii->getGenerators();
 
         return $this->responseFactory->createResponse([
-            'generators' => array_map($this->serializeGenerator(...), $generators),
+            'generators' => array_map($this->serializeGenerator(...), array_values($generators)),
         ]);
     }
 
