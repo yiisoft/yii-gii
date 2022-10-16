@@ -9,7 +9,7 @@ use ReflectionException;
 use Yiisoft\Yii\Gii\Exception\InvalidConfigException;
 use Yiisoft\Yii\Gii\Generator\AbstractGeneratorCommand;
 
-class CodeFileWriter
+final class CodeFileWriter
 {
     /**
      * Saves the generated code into files.
