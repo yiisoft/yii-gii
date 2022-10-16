@@ -12,6 +12,7 @@ use Yiisoft\RequestModel\Attribute\Query;
 use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Yii\Gii\CodeFileSaver;
 use Yiisoft\Yii\Gii\Exception\InvalidGeneratorCommandException;
+use Yiisoft\Yii\Gii\GeneratorCommandInterface;
 use Yiisoft\Yii\Gii\GeneratorInterface;
 use Yiisoft\Yii\Gii\Request\GeneratorRequest;
 
@@ -24,10 +25,17 @@ final class DefaultController
     public function get(GeneratorRequest $request): ResponseInterface
     {
         $generator = $request->getGenerator();
+        /**
+         * @psalm-var class-string<GeneratorCommandInterface> $commandClass
+         */
+        $commandClass = $generator::getCommandClass();
         $params = [
+            'id' => $generator::getId(),
             'name' => $generator::getName(),
             'description' => $generator::getDescription(),
-            'commandClass' => $generator::getCommandClass(),
+            'commandClass' => $commandClass,
+            'hints' => $commandClass::getHints(),
+            'attributeLabels' => $commandClass::getAttributeLabels(),
             //            'templatePath' => $generator->getTemplatePath(),
             //            'templates' => $generator->getTemplates(),
             'directory' => $generator->getDirectory(),
