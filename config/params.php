@@ -6,6 +6,16 @@ use Yiisoft\Yii\Gii\Command\ControllerCommand;
 use Yiisoft\Yii\Gii\Generator\Controller\ControllerGenerator;
 
 return [
+    'yiisoft/yii-debug' => [
+        'ignoredRequests' => [
+            '/gii**',
+        ],
+    ],
+    'yiisoft/yii-swagger' => [
+        'annotation-paths' => [
+            dirname(__DIR__) . '/src/Controller',
+        ],
+    ],
     'yiisoft/yii-console' => [
         'commands' => [
             'gii/controller' => ControllerCommand::class,
