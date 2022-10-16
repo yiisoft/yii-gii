@@ -8,5 +8,5 @@ interface GeneratorCommandInterface
 {
     public static function getAttributeLabels(): array;
 
-    public static function hints(): array;
+    public static function getHints(): array;
 }

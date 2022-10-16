@@ -103,7 +103,7 @@ final class ControllerCommand extends AbstractGeneratorCommand
         ];
     }
 
-    public static function hints(): array
+    public static function getHints(): array
     {
         return [
             'controllerClass' => 'This is the name of the controller class to be generated. You should
