@@ -4,11 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii\Tests;
 
-use Psr\Container\ContainerInterface;
-use RuntimeException;
-use stdClass;
 use Yiisoft\Yii\Gii\Exception\GeneratorNotFoundException;
-use Yiisoft\Yii\Gii\Generator\Controller\ControllerGenerator as ControllerGenerator;
 use Yiisoft\Yii\Gii\GiiInterface;
 
 /**
