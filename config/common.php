@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Psr\Container\ContainerInterface;
+use Yiisoft\Injector\Injector;
 use Yiisoft\Yii\Gii\GeneratorInterface;
 use Yiisoft\Yii\Gii\Gii;
 use Yiisoft\Yii\Gii\GiiInterface;
@@ -12,26 +13,18 @@ use Yiisoft\Yii\Gii\GiiInterface;
  */
 
 return [
-    GiiInterface::class => function (ContainerInterface $container) use ($params): GiiInterface {
+    GiiInterface::class => function (Injector $injector) use ($params): GiiInterface {
         $generatorsInstances = [];
         $generators = $params['yiisoft/yii-gii']['generators'];
-        $generatorsParameters = $params['yiisoft/yii-gii'];
 
-        foreach ($generators as $name => $generator) {
-            if (!is_string($name)) {
-                throw new InvalidArgumentException('Generator name must be set.');
-            }
-
+        foreach ($generators as $generator) {
             /**
-             * TODO: fix preparing generators
              * @var $generator GeneratorInterface
              */
-            $generator = $container->get($generator['class']);
-//            if (array_key_exists($name, $generatorsParameters) && is_array($generatorsParameters[$name])) {
-//                $generator->load($generatorsParameters[$name]);
-//            }
-            $generatorsInstances[$name] = $generator;
+            $class = $generator['class'];
+            $generator = $injector->make($class, $generator['parameters']);
+            $generatorsInstances[] = $generator;
         }
-        return new Gii($generatorsInstances, $container);
+        return new Gii($generatorsInstances);
     },
 ];

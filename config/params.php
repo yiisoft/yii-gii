@@ -15,7 +15,7 @@ return [
         'enabled' => true,
         'allowedIPs' => ['127.0.0.1', '::1'],
         'generators' => [
-            ControllerGenerator::getId() => [
+            [
                 'class' => ControllerGenerator::class,
                 'parameters' => [
                     'namespace' => 'App\\Controller',

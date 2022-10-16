@@ -4,47 +4,34 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii;
 
-use Psr\Container\ContainerInterface;
-use RuntimeException;
 use Yiisoft\Yii\Gii\Exception\GeneratorNotFoundException;
 
 final class Gii implements GiiInterface
 {
     /**
-     * @param array<string, mixed> $generators
+     * @param array<string, GeneratorInterface> $generators
      */
-    public function __construct(private array $generators, private ContainerInterface $container)
+    public function __construct(private array $generators)
     {
+        $this->generators = array_combine(
+            array_map(fn (GeneratorInterface $generator) => $generator::getId(), $generators),
+            array_values($this->generators)
+        );
     }
 
-    public function addGenerator(string $name, mixed $generator): void
+    public function addGenerator(GeneratorInterface $generator): void
     {
-        $this->generators[$name] = $generator;
+        $this->generators[$generator::getId()] = $generator;
     }
 
-    public function getGenerator(string $name): GeneratorInterface
+    public function getGenerator(string $id): GeneratorInterface
     {
-        if (!isset($this->generators[$name])) {
-            throw new GeneratorNotFoundException('Generator "' . $name . '" not found');
-        }
-        $generator = $this->generators[$name];
-        if ($generator instanceof GeneratorInterface) {
-            return $generator;
+        if (!isset($this->generators[$id])) {
+            var_dump($this->generators);
+            exit();
+            throw new GeneratorNotFoundException('Generator "' . $id . '" not found');
         }
 
-        if (is_string($generator)) {
-            $generator = $this->container->get($generator);
-        } elseif (is_object($generator) && method_exists($generator, '__invoke')) {
-            /** @psalm-suppress InvalidFunctionCall */
-            $generator = $generator($this->container);
-        }
-        if (!($generator instanceof GeneratorInterface)) {
-            $type = get_debug_type($generator);
-            throw new RuntimeException(
-                'Generator should be GeneratorInterface instance. "' . $type . '" given.'
-            );
-        }
-
-        return $generator;
+        return $this->generators[$id];
     }
 }
