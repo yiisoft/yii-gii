@@ -12,6 +12,7 @@ use Yiisoft\Router\Group;
 use Yiisoft\Router\Route;
 use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\Yii\Gii\Controller\DefaultController;
+use Yiisoft\Yii\Gii\Middleware\Cors;
 use Yiisoft\Yii\Middleware\IpFilter;
 
 if (!(bool) ($params['yiisoft/yii-gii']['enabled'] ?? false)) {
@@ -20,6 +21,7 @@ if (!(bool) ($params['yiisoft/yii-gii']['enabled'] ?? false)) {
 
 return [
     Group::create('/gii/api')
+        ->withCors(Cors::class)
         ->middleware(
             static function (ResponseFactoryInterface $responseFactory, ValidatorInterface $validator) use ($params) {
                 return new IpFilter(
@@ -34,7 +36,7 @@ return [
         ->routes(
             Group::create('/generator')
                 ->routes(
-                    Route::get('/')
+                    Route::get('[/]')
                         ->action([DefaultController::class, 'list'])
                         ->name('list'),
                     Route::get('/{generator}')
