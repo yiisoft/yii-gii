@@ -9,6 +9,7 @@ use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Http\Status;
 use Yiisoft\RequestModel\Attribute\Query;
 use Yiisoft\Yii\Gii\CodeFile;
+use Yiisoft\Yii\Gii\CodeFileSaver;
 use Yiisoft\Yii\Gii\Generator\AbstractGenerator;
 use Yiisoft\Yii\Gii\GeneratorInterface;
 use Yiisoft\Yii\Gii\Request\GeneratorRequest;
@@ -34,17 +35,18 @@ final class DefaultController
         return $this->responseFactory->createResponse($params);
     }
 
-    public function generate(GeneratorRequest $request): ResponseInterface
+    public function generate(GeneratorRequest $request, CodeFileSaver $codeFileSaver): ResponseInterface
     {
-        /** @var AbstractGenerator $generator */
+        /** @var GeneratorInterface $generator */
         $generator = $request->getGenerator();
+        $command = new ($generator::getCommandClass())();
         $answers = $request->getAnswers();
-        $result = $generator->validate();
+        $result = $generator->validate($command);
         if ($result->isValid()) {
-            $files = $generator->generate();
+            $files = $generator->generate($command);
             $params = [];
             $results = [];
-            $params['hasError'] = !$generator->save($files, (array)$answers, $results);
+            $params['hasError'] = !$codeFileSaver->save($command, $files, (array)$answers, $results);
             $params['results'] = $results;
             return $this->responseFactory->createResponse($params);
         }
@@ -57,9 +59,10 @@ final class DefaultController
 
     public function preview(GeneratorRequest $request, #[Query('file')] ?string $file = null): ResponseInterface
     {
-        /** @var AbstractGenerator $generator */
+        /** @var GeneratorInterface $generator */
         $generator = $request->getGenerator();
-        $validationResult = $generator->validate();
+        $command = new ($generator::getCommandClass())();
+        $validationResult = $generator->validate($command);
         if (!$validationResult->isValid()) {
             return $this->responseFactory->createResponse(
                 ['errors' => $validationResult->getErrorMessagesIndexedByAttribute()],
@@ -67,7 +70,7 @@ final class DefaultController
             );
         }
 
-        $files = $generator->generate();
+        $files = $generator->generate($command);
         if ($file !== null) {
             foreach ($files as $generatedFile) {
                 if ($generatedFile->getId() === $file) {
@@ -87,11 +90,12 @@ final class DefaultController
 
     public function diff(GeneratorRequest $request, #[Query('file')] string $file): ResponseInterface
     {
-        /** @var AbstractGenerator $generator */
+        /** @var GeneratorInterface $generator */
         $generator = $request->getGenerator();
-        $validationResult = $generator->validate();
+        $command = new ($generator::getCommandClass())();
+        $validationResult = $generator->validate($command);
         if ($validationResult->isValid()) {
-            foreach ($generator->generate() as $generatedFile) {
+            foreach ($generator->generate($command) as $generatedFile) {
                 if ($generatedFile->getId() === $file) {
                     return $this->responseFactory->createResponse(['diff' => $generatedFile->diff()]);
                 }

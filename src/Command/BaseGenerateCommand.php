@@ -13,6 +13,7 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Yiisoft\Validator\Result;
 use Yiisoft\Yii\Console\ExitCode;
 use Yiisoft\Yii\Gii\CodeFile;
+use Yiisoft\Yii\Gii\CodeFileSaver;
 use Yiisoft\Yii\Gii\Generator\AbstractGenerator;
 use Yiisoft\Yii\Gii\Generator\AbstractGeneratorCommand;
 use Yiisoft\Yii\Gii\GeneratorInterface;
@@ -22,7 +23,9 @@ use function count;
 
 abstract class BaseGenerateCommand extends Command
 {
-    public function __construct(protected GiiInterface $gii)
+    public function __construct(protected GiiInterface $gii,
+    protected CodeFileSaver $codeFileSaver,
+    )
     {
         parent::__construct();
     }
@@ -111,7 +114,7 @@ abstract class BaseGenerateCommand extends Command
         }
 
         $results = [];
-        $isSaved = $generator->save($files, $answers, $results);
+        $isSaved = $this->codeFileSaver->save($generatorCommand, $files, $answers, $results);
         foreach ($results as $n => $result) {
             if ($n === 0) {
                 $output->writeln("<fg=blue>{$result}</>");
