@@ -91,7 +91,6 @@ final class DefaultController
 
     /**
      * @param ReflectionParameter[] $constructorParameters
-     * @return void
      */
     private function findReflectionParameter(string $name, array $constructorParameters): ReflectionParameter|null
     {
