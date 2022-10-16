@@ -103,7 +103,7 @@ final class ReservedKeywordHandler implements RuleHandlerInterface
         $result = new Result();
         if (self::isReservedKeyword($value)) {
             $result->addError(
-                message: "The value {value} is reserved keyword.",
+                message: 'The value {value} is reserved keyword.',
                 parameters: ['value' => $value],
             );
         }
