@@ -11,7 +11,6 @@ use Throwable;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Validator\Result;
 use Yiisoft\Validator\ValidatorInterface;
-use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Yii\Gii\Exception\InvalidConfigException;
 use Yiisoft\Yii\Gii\GeneratorInterface;
 use Yiisoft\Yii\Gii\GiiParametersProvider;
@@ -26,7 +25,6 @@ use Yiisoft\Yii\Gii\GiiParametersProvider;
  *
  * - {@see GeneratorInterface::getName()}: returns the name of the generator
  * - {@see GeneratorInterface::getDescription()}: returns the detailed description of the generator
- * - {@see GeneratorInterface::validate()}: returns generator validation result
  * - {@see GeneratorInterface::generate()}: generates the code based on the current user input and the specified code
  * template files. This is the place where main code generation code resides.
  */
@@ -70,11 +68,6 @@ abstract class AbstractGenerator implements GeneratorInterface
         return dirname($class->getFileName()) . '/default';
     }
 
-    public function validate(AbstractGeneratorCommand $command): Result
-    {
-        return $this->validator->validate($command);
-    }
-
     /**
      * @return string the root path of the template files that are currently being used.
      * @throws InvalidConfigException
@@ -95,6 +88,29 @@ abstract class AbstractGenerator implements GeneratorInterface
 
         throw new InvalidConfigException("Unknown template: {$template}");
     }
+
+    final public function generate(AbstractGeneratorCommand $command): array
+    {
+        $result = $this->validator->validate($command);
+
+        if (!$result->isValid()) {
+            throw new class ($result) extends Exception {
+                public function __construct(private Result $result)
+                {
+                    parent::__construct('Invalid generator data.');
+                }
+
+                public function getResult(): Result
+                {
+                    return $this->result;
+                }
+            };
+        }
+
+        return $this->doGenerate($command);
+    }
+
+    abstract protected function doGenerate(AbstractGeneratorCommand $command): array;
 
     /**
      * Generates code using the specified code template and parameters.
@@ -251,4 +267,5 @@ abstract class AbstractGenerator implements GeneratorInterface
     {
         return $this->directory;
     }
+
 }

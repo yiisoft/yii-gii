@@ -32,9 +32,4 @@ interface GeneratorInterface
      * @return CodeFile[] a list of code files to be created.
      */
     public function generate(AbstractGeneratorCommand $command): array;
-
-    /**
-     * Returns the validation result
-     */
-    public function validate(AbstractGeneratorCommand $command): Result;
 }

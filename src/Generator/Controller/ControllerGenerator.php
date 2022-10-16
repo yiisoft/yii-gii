@@ -33,7 +33,7 @@ final class ControllerGenerator extends AbstractGenerator
         ];
     }
 
-    public function generate(AbstractGeneratorCommand $command): array
+    public function doGenerate(AbstractGeneratorCommand $command): array
     {
         if (!$command instanceof ControllerCommand) {
             throw new InvalidArgumentException();

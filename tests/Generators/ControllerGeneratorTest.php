@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii\Tests\Generators;
 
+use Throwable;
 use Yiisoft\Injector\Injector;
 use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Yii\Gii\Generator\Controller\ControllerCommand;
@@ -25,9 +26,9 @@ class ControllerGeneratorTest extends TestCase
             template: 'default',
         );
 
-        $result = $generator->validate($command);
+        $files = $generator->generate($command);
 
-        $this->assertTrue($result->isValid(), print_r($result->getErrors(), true));
+        $this->assertNotEmpty($files);
     }
 
     public function testInvalidGenerator(): void
@@ -43,9 +44,10 @@ class ControllerGeneratorTest extends TestCase
             template: 'test',
         );
 
-        $result = $generator->validate($command);
+        $this->expectException(Throwable::class);
+        $files = $generator->generate($command);
 
-        $this->assertFalse($result->isValid(), print_r($result->getErrors(), true));
+//        $this->assertFalse($result->isValid(), print_r($result->getErrors(), true));
 
         // TODO: fix test
         $this->markTestIncomplete('The template should be incomplete.'); // but why?
@@ -66,7 +68,8 @@ class ControllerGeneratorTest extends TestCase
             template: 'custom',
         );
 
-        $result = $generator->validate($command);
+        $this->expectException(Throwable::class);
+        $files = $generator->generate($command);
 
         // TODO: fix test
         $this->markTestIncomplete('The result should be invalid.');

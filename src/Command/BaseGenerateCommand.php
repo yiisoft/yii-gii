@@ -4,16 +4,19 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii\Command;
 
+use ReflectionException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Throwable;
 use Yiisoft\Validator\Result;
 use Yiisoft\Yii\Console\ExitCode;
 use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Yii\Gii\CodeFileSaver;
+use Yiisoft\Yii\Gii\Exception\InvalidConfigException;
 use Yiisoft\Yii\Gii\Generator\AbstractGenerator;
 use Yiisoft\Yii\Gii\Generator\AbstractGeneratorCommand;
 use Yiisoft\Yii\Gii\GeneratorInterface;
@@ -23,10 +26,10 @@ use function count;
 
 abstract class BaseGenerateCommand extends Command
 {
-    public function __construct(protected GiiInterface $gii,
-    protected CodeFileSaver $codeFileSaver,
-    )
-    {
+    public function __construct(
+        protected GiiInterface $gii,
+        protected CodeFileSaver $codeFileSaver,
+    ) {
         parent::__construct();
     }
 
@@ -43,12 +46,13 @@ abstract class BaseGenerateCommand extends Command
         $generatorCommand = $this->createGeneratorCommand($input);
 
         $output->writeln("Running '{$generator->getName()}'...\n");
-        $result = $generator->validate($generatorCommand);
-        if (!$result->isValid()) {
-            $this->displayValidationErrors($generator, $output);
+        try {
+            $files = $generator->generate($generatorCommand);
+        } catch (Throwable $e) {
+            $this->displayValidationErrors($e->getResult(), $output);
             return ExitCode::UNSPECIFIED_ERROR;
         }
-        $this->generateCode($generator, $generatorCommand, $input, $output);
+        $this->generateCode($files, $generatorCommand, $input, $output);
         return ExitCode::OK;
     }
 
@@ -64,14 +68,21 @@ abstract class BaseGenerateCommand extends Command
         $output->writeln('');
     }
 
+    /**
+     * @param CodeFile[] $files
+     * @param AbstractGeneratorCommand $generatorCommand
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return void
+     * @throws ReflectionException
+     * @throws InvalidConfigException
+     */
     protected function generateCode(
-        GeneratorInterface $generator,
+        array $files,
         AbstractGeneratorCommand $generatorCommand,
         InputInterface $input,
         OutputInterface $output
     ): void {
-        /** @var AbstractGenerator $generator */
-        $files = $generator->generate($generatorCommand);
         if (count($files) === 0) {
             $output->writeln('<fg=cyan>No code to be generated.</>');
             return;
