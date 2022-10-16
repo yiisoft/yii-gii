@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\Gii\Controller;
 
 use Psr\Http\Message\ResponseInterface;
+use ReflectionClass;
+use ReflectionParameter;
 use Yiisoft\DataResponse\DataResponse;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Http\Status;
@@ -45,15 +47,24 @@ final class DefaultController
         $dataset = new AttributesRulesProvider($commandClass);
         $rules = $dataset->getRules();
         $dumpedRules = (new RulesDumper())->asArray($rules);
+        $attributes = $commandClass::getAttributes();
         $hints = $commandClass::getHints();
         $labels = $commandClass::getAttributeLabels();
-        $attributes = [];
 
-        foreach ($dumpedRules as $attributeName => $rules) {
-            $attributes[$attributeName] = [
+        $reflection = new ReflectionClass($commandClass);
+        $constructorParameters = $reflection->getConstructor()->getParameters();
+
+        $attributesResult = [];
+        foreach ($attributes as $attributeName) {
+            $reflectionProperty = $reflection->getProperty($attributeName);
+            $defaultValue = $reflectionProperty->hasDefaultValue()
+                ? $reflectionProperty->getDefaultValue()
+                : $this->findReflectionParameter($attributeName, $constructorParameters)?->getDefaultValue();
+            $attributesResult[$attributeName] = [
+                'defaultValue' => $defaultValue,
                 'hint' => $hints[$attributeName] ?? null,
                 'label' => $labels[$attributeName] ?? null,
-                'rules' => $rules,
+                'rules' => $dumpedRules[$attributeName] ?? [],
             ];
         }
 
@@ -62,7 +73,7 @@ final class DefaultController
             'name' => $generator::getName(),
             'description' => $generator::getDescription(),
             'commandClass' => $commandClass,
-            'attributes' => $attributes,
+            'attributes' => $attributesResult,
             //            'templatePath' => $generator->getTemplatePath(),
             //            'templates' => $generator->getTemplates(),
             'directory' => $generator->getDirectory(),
@@ -76,6 +87,20 @@ final class DefaultController
         return $this->responseFactory->createResponse(
             $this->serializeGenerator($generator)
         );
+    }
+
+    /**
+     * @param ReflectionParameter[] $constructorParameters
+     * @return void
+     */
+    private function findReflectionParameter(string $name, array $constructorParameters): ReflectionParameter|null
+    {
+        foreach ($constructorParameters as $parameter) {
+            if ($parameter->getName() === $name) {
+                return $parameter;
+            }
+        }
+        return null;
     }
 
     public function generate(
