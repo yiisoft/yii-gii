@@ -46,7 +46,6 @@ final class DefaultController
 
     public function generate(GeneratorRequest $request, CodeFileSaver $codeFileSaver): ResponseInterface
     {
-        /** @var GeneratorInterface $generator */
         $generator = $request->getGenerator();
         $command = new ($generator::getCommandClass())();
         $answers = $request->getAnswers();
@@ -64,7 +63,6 @@ final class DefaultController
 
     public function preview(GeneratorRequest $request, #[Query('file')] ?string $file = null): ResponseInterface
     {
-        /** @var GeneratorInterface $generator */
         $generator = $request->getGenerator();
         $command = new ($generator::getCommandClass())();
         try {
@@ -91,7 +89,6 @@ final class DefaultController
 
     public function diff(GeneratorRequest $request, #[Query('file')] string $file): ResponseInterface
     {
-        /** @var GeneratorInterface $generator */
         $generator = $request->getGenerator();
         $command = new ($generator::getCommandClass())();
         try {
