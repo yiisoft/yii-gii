@@ -13,6 +13,7 @@ use Yiisoft\Http\Status;
 use Yiisoft\RequestModel\Attribute\Query;
 use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Yii\Gii\CodeFileSaver;
+use Yiisoft\Yii\Gii\Exception\InvalidGeneratorCommandException;
 use Yiisoft\Yii\Gii\Generator\AbstractGenerator;
 use Yiisoft\Yii\Gii\GeneratorInterface;
 use Yiisoft\Yii\Gii\Request\GeneratorRequest;
@@ -46,7 +47,7 @@ final class DefaultController
         $answers = $request->getAnswers();
         try {
             $files = $generator->generate($command);
-        } catch (Throwable $e) {
+        } catch (InvalidGeneratorCommandException $e) {
             return $this->createErrorResponse($e);
         }
         $params = [];
@@ -63,7 +64,7 @@ final class DefaultController
         $command = new ($generator::getCommandClass())();
         try {
             $files = $generator->generate($command);
-        } catch (Throwable $e) {
+        } catch (InvalidGeneratorCommandException $e) {
             return $this->createErrorResponse($e);
         }
         if ($file !== null) {
@@ -90,7 +91,7 @@ final class DefaultController
         $command = new ($generator::getCommandClass())();
         try {
             $files = $generator->generate($command);
-        } catch (Throwable $e) {
+        } catch (InvalidGeneratorCommandException $e) {
             return $this->createErrorResponse($e);
         }
 
@@ -105,7 +106,7 @@ final class DefaultController
         );
     }
 
-    private function createErrorResponse(Throwable|Exception $e): DataResponse
+    private function createErrorResponse(InvalidGeneratorCommandException $e): DataResponse
     {
         return $this->responseFactory->createResponse(
         // TODO: fix

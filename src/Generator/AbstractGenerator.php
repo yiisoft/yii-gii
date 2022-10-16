@@ -11,7 +11,9 @@ use Throwable;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Validator\Result;
 use Yiisoft\Validator\ValidatorInterface;
+use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Yii\Gii\Exception\InvalidConfigException;
+use Yiisoft\Yii\Gii\Exception\InvalidGeneratorCommandException;
 use Yiisoft\Yii\Gii\GeneratorInterface;
 use Yiisoft\Yii\Gii\GiiParametersProvider;
 
@@ -89,22 +91,17 @@ abstract class AbstractGenerator implements GeneratorInterface
         throw new InvalidConfigException("Unknown template: {$template}");
     }
 
+    /**
+     * @param AbstractGeneratorCommand $command
+     * @return array|CodeFile
+     * @throws InvalidGeneratorCommandException
+     */
     final public function generate(AbstractGeneratorCommand $command): array
     {
         $result = $this->validator->validate($command);
 
         if (!$result->isValid()) {
-            throw new class ($result) extends Exception {
-                public function __construct(private Result $result)
-                {
-                    parent::__construct('Invalid generator data.');
-                }
-
-                public function getResult(): Result
-                {
-                    return $this->result;
-                }
-            };
+            throw new InvalidGeneratorCommandException($result);
         }
 
         return $this->doGenerate($command);

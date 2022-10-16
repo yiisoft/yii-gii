@@ -12,8 +12,6 @@ use Yiisoft\Yii\Gii\GiiInterface;
 
 final class ControllerRequest extends RequestModel
 {
-    private const NAME = 'controller';
-
     public function __construct(private GiiInterface $gii)
     {
     }
@@ -21,7 +19,7 @@ final class ControllerRequest extends RequestModel
     public function getGenerator(): GeneratorInterface
     {
         /** @var ControllerGenerator $generator */
-        $generator = $this->gii->getGenerator(self::NAME);
+        $generator = $this->gii->getGenerator(ControllerGenerator::getId());
 
         return $generator;
     }

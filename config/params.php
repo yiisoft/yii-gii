@@ -15,13 +15,15 @@ return [
         'enabled' => true,
         'allowedIPs' => ['127.0.0.1', '::1'],
         'generators' => [
-            'controller' => ControllerGenerator::class,
+            ControllerGenerator::getId() => [
+                'class' => ControllerGenerator::class,
+                'parameters' => [
+                    'namespace' => 'App\\Controller',
+                    'directory' => '@src/Controller',
+                ],
+            ],
         ],
         'basePath' => '@root',
         'viewPath' => '@views',
-        'controller' => [
-            'namespace' => 'App\\Controller',
-            'directory' => '@src/Controller',
-        ],
     ],
 ];

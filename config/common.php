@@ -26,10 +26,10 @@ return [
              * TODO: fix preparing generators
              * @var $generator GeneratorInterface
              */
-            $generator = $container->get($generator);
-            if (array_key_exists($name, $generatorsParameters) && is_array($generatorsParameters[$name])) {
-                $generator->load($generatorsParameters[$name]);
-            }
+            $generator = $container->get($generator['class']);
+//            if (array_key_exists($name, $generatorsParameters) && is_array($generatorsParameters[$name])) {
+//                $generator->load($generatorsParameters[$name]);
+//            }
             $generatorsInstances[$name] = $generator;
         }
         return new Gii($generatorsInstances, $container);

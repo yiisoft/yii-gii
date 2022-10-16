@@ -7,6 +7,7 @@ namespace Yiisoft\Yii\Gii\Tests\Generators;
 use Throwable;
 use Yiisoft\Injector\Injector;
 use Yiisoft\Yii\Gii\CodeFile;
+use Yiisoft\Yii\Gii\Exception\InvalidGeneratorCommandException;
 use Yiisoft\Yii\Gii\Generator\Controller\ControllerCommand;
 use Yiisoft\Yii\Gii\Generator\Controller\ControllerGenerator as ControllerGenerator;
 use Yiisoft\Yii\Gii\GiiParametersProvider;
@@ -44,7 +45,7 @@ class ControllerGeneratorTest extends TestCase
             template: 'test',
         );
 
-        $this->expectException(Throwable::class);
+        $this->expectException(InvalidGeneratorCommandException::class);
         $files = $generator->generate($command);
 
 //        $this->assertFalse($result->isValid(), print_r($result->getErrors(), true));
@@ -68,17 +69,19 @@ class ControllerGeneratorTest extends TestCase
             template: 'custom',
         );
 
-        $this->expectException(Throwable::class);
-        $files = $generator->generate($command);
+        try {
+            $generator->generate($command);
+        } catch (InvalidGeneratorCommandException $e) {
+            $this->assertFalse(
+                $e->getResult()->isValid(),
+                print_r($e->getResult()->getErrors(), true)
+            );
+            $this->assertContainsOnlyInstancesOf(CodeFile::class, []);
+            throw $e;
+        }
 
         // TODO: fix test
         $this->markTestIncomplete('The result should be invalid.');
-
-        $this->assertFalse(
-            $result->isValid(),
-            print_r($result->getErrors(), true)
-        );
-        $this->assertContainsOnlyInstancesOf(CodeFile::class, $generator->generate($command));
     }
 
     private function createGenerator(...$params): ControllerGenerator

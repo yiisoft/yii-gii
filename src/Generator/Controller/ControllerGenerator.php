@@ -25,6 +25,11 @@ final class ControllerGenerator extends AbstractGenerator
             one or several controller actions and their corresponding views.';
     }
 
+    public static function getId(): string
+    {
+        return 'controller';
+    }
+
     public function requiredTemplates(): array
     {
         return [

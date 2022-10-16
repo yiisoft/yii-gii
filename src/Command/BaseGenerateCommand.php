@@ -17,6 +17,7 @@ use Yiisoft\Yii\Console\ExitCode;
 use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Yii\Gii\CodeFileSaver;
 use Yiisoft\Yii\Gii\Exception\InvalidConfigException;
+use Yiisoft\Yii\Gii\Exception\InvalidGeneratorCommandException;
 use Yiisoft\Yii\Gii\Generator\AbstractGenerator;
 use Yiisoft\Yii\Gii\Generator\AbstractGeneratorCommand;
 use Yiisoft\Yii\Gii\GeneratorInterface;
@@ -48,7 +49,7 @@ abstract class BaseGenerateCommand extends Command
         $output->writeln("Running '{$generator->getName()}'...\n");
         try {
             $files = $generator->generate($generatorCommand);
-        } catch (Throwable $e) {
+        } catch (InvalidGeneratorCommandException $e) {
             $this->displayValidationErrors($e->getResult(), $output);
             return ExitCode::UNSPECIFIED_ERROR;
         }
