@@ -8,7 +8,6 @@ use ReflectionClass;
 use ReflectionException;
 use Throwable;
 use Yiisoft\Aliases\Aliases;
-use Yiisoft\Validator\Result;
 use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Yii\Gii\Exception\InvalidConfigException;
@@ -58,9 +57,9 @@ abstract class AbstractGenerator implements GeneratorInterface
      * The default implementation will return the "templates" subdirectory of the
      * directory containing the generator class file.
      *
+     * @return string the root path to the default code template files.
      * @throws ReflectionException
      *
-     * @return string the root path to the default code template files.
      */
     private function defaultTemplate(): string
     {
@@ -70,10 +69,10 @@ abstract class AbstractGenerator implements GeneratorInterface
     }
 
     /**
-     * @throws InvalidConfigException
+     * @return string the root path of the template files that are currently being used.
      * @throws ReflectionException
      *
-     * @return string the root path of the template files that are currently being used.
+     * @throws InvalidConfigException
      */
     public function getTemplatePath(AbstractGeneratorCommand $command): string
     {
@@ -93,9 +92,9 @@ abstract class AbstractGenerator implements GeneratorInterface
     /**
      * @param AbstractGeneratorCommand $command
      *
+     * @return array|CodeFile
      * @throws InvalidGeneratorCommandException
      *
-     * @return array|CodeFile
      */
     final public function generate(AbstractGeneratorCommand $command): array
     {
@@ -118,9 +117,9 @@ abstract class AbstractGenerator implements GeneratorInterface
      * relative to {@see getTemplatePath()}.
      * @param array $params list of parameters to be passed to the template file.
      *
+     * @return string the generated code
      * @throws Throwable
      *
-     * @return string the generated code
      */
     protected function render(AbstractGeneratorCommand $command, string $template, array $params = []): string
     {
@@ -151,21 +150,6 @@ abstract class AbstractGenerator implements GeneratorInterface
             }
             throw $e;
         }
-    }
-
-    /**
-     * An inline validator that checks if the attribute value refers to an existing class name.
-     *
-     * @param string $value the attribute being validated
-     */
-    public function validateClass(string $value): Result
-    {
-        $result = new Result();
-        if (!class_exists($value)) {
-            $result->addError("Class '$value' does not exist or has syntax error.");
-        }
-
-        return $result;
     }
 
     public function getDirectory(): string
