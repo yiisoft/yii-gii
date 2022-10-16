@@ -12,8 +12,8 @@ use Yiisoft\RequestModel\Attribute\Query;
 use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Yii\Gii\CodeFileSaver;
 use Yiisoft\Yii\Gii\Exception\InvalidGeneratorCommandException;
+use Yiisoft\Yii\Gii\Generator\CommandHydrator;
 use Yiisoft\Yii\Gii\GeneratorCommandInterface;
-use Yiisoft\Yii\Gii\GeneratorInterface;
 use Yiisoft\Yii\Gii\Request\GeneratorRequest;
 
 final class DefaultController
@@ -44,10 +44,13 @@ final class DefaultController
         return $this->responseFactory->createResponse($params);
     }
 
-    public function generate(GeneratorRequest $request, CodeFileSaver $codeFileSaver): ResponseInterface
-    {
+    public function generate(
+        GeneratorRequest $request,
+        CodeFileSaver $codeFileSaver,
+        CommandHydrator $commandHydrator
+    ): ResponseInterface {
         $generator = $request->getGenerator();
-        $command = new ($generator::getCommandClass())();
+        $command = $commandHydrator->hydrate($generator::getCommandClass(), $request->getData());
         $answers = $request->getAnswers();
         try {
             $files = $generator->generate($command);
@@ -61,10 +64,14 @@ final class DefaultController
         return $this->responseFactory->createResponse($params);
     }
 
-    public function preview(GeneratorRequest $request, #[Query('file')] ?string $file = null): ResponseInterface
-    {
+    public function preview(
+        GeneratorRequest $request,
+        CommandHydrator $commandHydrator,
+        #[Query('file')] ?string $file = null
+    ): ResponseInterface {
         $generator = $request->getGenerator();
-        $command = new ($generator::getCommandClass())();
+        $command = $commandHydrator->hydrate($generator::getCommandClass(), $request->getData());
+
         try {
             $files = $generator->generate($command);
         } catch (InvalidGeneratorCommandException $e) {
@@ -87,10 +94,14 @@ final class DefaultController
         return $this->responseFactory->createResponse(['files' => $files, 'operations' => CodeFile::OPERATIONS_MAP]);
     }
 
-    public function diff(GeneratorRequest $request, #[Query('file')] string $file): ResponseInterface
-    {
+    public function diff(
+        GeneratorRequest $request,
+        CommandHydrator $commandHydrator,
+        #[Query('file')] string $file
+    ): ResponseInterface {
         $generator = $request->getGenerator();
-        $command = new ($generator::getCommandClass())();
+        $command = $commandHydrator->hydrate($generator::getCommandClass(), $request->getData());
+
         try {
             $files = $generator->generate($command);
         } catch (InvalidGeneratorCommandException $e) {
