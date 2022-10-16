@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Psr\Container\ContainerInterface;
+use Yiisoft\Yii\Gii\GeneratorInterface;
 use Yiisoft\Yii\Gii\Gii;
 use Yiisoft\Yii\Gii\GiiInterface;
 
@@ -21,6 +22,10 @@ return [
                 throw new InvalidArgumentException('Generator name must be set.');
             }
 
+            /**
+             * TODO: fix preparing generators
+             * @var $generator GeneratorInterface
+             */
             $generator = $container->get($generator);
             if (array_key_exists($name, $generatorsParameters) && is_array($generatorsParameters[$name])) {
                 $generator->load($generatorsParameters[$name]);

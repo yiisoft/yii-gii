@@ -10,6 +10,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Yiisoft\Validator\Result;
 use Yiisoft\Yii\Console\ExitCode;
 use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Yii\Gii\Generator\AbstractGenerator;
@@ -38,31 +39,34 @@ abstract class BaseGenerateCommand extends Command
         $generator = $this->getGenerator();
         $generatorCommand = $this->createGeneratorCommand($input);
 
-        $generator->load(array_filter(array_merge($input->getOptions(), $input->getArguments())));
         $output->writeln("Running '{$generator->getName()}'...\n");
-        if ($generator->validate($generatorCommand)->isValid() && !$generator->hasErrors()) {
-            $this->generateCode($generator, $generatorCommand, $input, $output);
-        } else {
+        $result = $generator->validate($generatorCommand);
+        if (!$result->isValid()) {
             $this->displayValidationErrors($generator, $output);
             return ExitCode::UNSPECIFIED_ERROR;
         }
+        $this->generateCode($generator, $generatorCommand, $input, $output);
         return ExitCode::OK;
     }
 
     abstract protected function getGenerator(): GeneratorInterface;
 
-    protected function displayValidationErrors(GeneratorInterface $generator, OutputInterface $output): void
+    protected function displayValidationErrors(Result $result, OutputInterface $output): void
     {
         $output->writeln("<fg=red>Code not generated. Please fix the following errors:</>\n");
         /** @var AbstractGenerator $generator */
-        foreach ($generator->getErrors() as $attribute => $errors) {
-            $output->writeln(sprintf(' - <fg=cyan>%s</>: <fg=green>%s</>', $attribute, implode('; ', $errors)));
+        foreach ($result->getErrorMessages() as $attribute => $errorMessage) {
+            $output->writeln(sprintf(' - <fg=cyan>%s</>: <fg=green>%s</>', $attribute, $errorMessage));
         }
         $output->writeln('');
     }
 
-    protected function generateCode(GeneratorInterface $generator, AbstractGeneratorCommand $generatorCommand, InputInterface $input, OutputInterface $output): void
-    {
+    protected function generateCode(
+        GeneratorInterface $generator,
+        AbstractGeneratorCommand $generatorCommand,
+        InputInterface $input,
+        OutputInterface $output
+    ): void {
         /** @var AbstractGenerator $generator */
         $files = $generator->generate($generatorCommand);
         if (count($files) === 0) {

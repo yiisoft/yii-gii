@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\Gii\Tests;
 
 use Psr\Container\ContainerInterface;
+use RuntimeException;
+use stdClass;
 use Yiisoft\Yii\Gii\Exception\GeneratorNotFoundException;
-use Yiisoft\Yii\Gii\Generator\Controller\Generator as ControllerGenerator;
+use Yiisoft\Yii\Gii\Generator\Controller\ControllerGenerator as ControllerGenerator;
 use Yiisoft\Yii\Gii\GiiInterface;
 
 /**
@@ -42,10 +44,10 @@ class GiiTest extends TestCase
 
     public function testWrongGeneratorInstance(): void
     {
-        $this->getContainer()->get(GiiInterface::class)->addGenerator('wrong', new \stdClass());
-        $this->expectException(\RuntimeException::class);
+        $this->getContainer()->get(GiiInterface::class)->addGenerator('wrong', new stdClass());
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
-            'Generator should be GeneratorInterface instance. "' . \stdClass::class . '" given.'
+            'Generator should be GeneratorInterface instance. "' . stdClass::class . '" given.'
         );
         $this->getContainer()->get(GiiInterface::class)->getGenerator('wrong');
     }
@@ -53,7 +55,7 @@ class GiiTest extends TestCase
     public function testWrongGeneratorTypeInstance(): void
     {
         $this->getContainer()->get(GiiInterface::class)->addGenerator('wrongType', 409);
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
             'Generator should be GeneratorInterface instance. "' . get_debug_type(409) . '" given.'
         );

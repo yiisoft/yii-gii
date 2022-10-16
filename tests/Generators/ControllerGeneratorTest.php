@@ -7,7 +7,7 @@ namespace Yiisoft\Yii\Gii\Tests\Generators;
 use Yiisoft\Injector\Injector;
 use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Yii\Gii\Generator\Controller\ControllerCommand;
-use Yiisoft\Yii\Gii\Generator\Controller\Generator as ControllerGenerator;
+use Yiisoft\Yii\Gii\Generator\Controller\ControllerGenerator as ControllerGenerator;
 use Yiisoft\Yii\Gii\GiiParametersProvider;
 use Yiisoft\Yii\Gii\Tests\TestCase;
 

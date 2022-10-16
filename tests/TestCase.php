@@ -23,7 +23,7 @@ use Yiisoft\Validator\RuleHandlerResolverInterface;
 use Yiisoft\Validator\Validator;
 use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\View\View;
-use Yiisoft\Yii\Gii\Generator\Controller\Generator;
+use Yiisoft\Yii\Gii\Generator\Controller\ControllerGenerator;
 use Yiisoft\Yii\Gii\Gii;
 use Yiisoft\Yii\Gii\GiiInterface;
 
@@ -43,7 +43,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
             ->withDefinitions([
                 GiiInterface::class => function (ContainerInterface $container) {
                     $generators = [
-                        'controller' => Generator::class,
+                        'controller' => ControllerGenerator::class,
                     ];
                     $generatorsInstances = [];
                     foreach ($generators as $name => $class) {

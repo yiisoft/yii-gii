@@ -38,13 +38,23 @@ final class TemplateRuleHandler implements RuleHandlerInterface
             return $result;
         }
         if (!isset($templates[$value])) {
-            $result->addError('Invalid template selection.');
-        } else {
-            $templatePath = $templates[$value];
-            foreach ($this->parametersProvider->getRequiredTemplates() as $template) {
-                if (!is_file($this->aliases->get($templatePath . '/' . $template))) {
-                    $result->addError("Unable to find the required code template file '$template'.");
-                }
+            $result->addError(
+                message: 'Template "{template}" does not exist. Known templates: {templates}',
+                parameters: [
+                    'template' => $value,
+                    'templates' => implode(', ', array_keys($templates)),
+                ],
+            );
+            return $result;
+        }
+
+        $templatePath = $templates[$value];
+        foreach ($this->parametersProvider->getRequiredTemplates() as $template) {
+            if (!is_file($this->aliases->get($templatePath . '/' . $template))) {
+                $result->addError(
+                    message: 'Unable to find the required code template file "{template}".',
+                    parameters: ['template' => $template],
+                );
             }
         }
 

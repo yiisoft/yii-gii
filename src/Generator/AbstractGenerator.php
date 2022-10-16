@@ -5,16 +5,11 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\Gii\Generator;
 
 use Exception;
-use InvalidArgumentException;
 use ReflectionClass;
 use ReflectionException;
-use RuntimeException;
 use Throwable;
 use Yiisoft\Aliases\Aliases;
-use Yiisoft\Json\Json;
-use Yiisoft\Validator\DataSetInterface;
 use Yiisoft\Validator\Result;
-use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Yii\Gii\Exception\InvalidConfigException;
@@ -35,30 +30,15 @@ use Yiisoft\Yii\Gii\GiiParametersProvider;
  * - {@see GeneratorInterface::generate()}: generates the code based on the current user input and the specified code
  * template files. This is the place where main code generation code resides.
  */
-abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
+abstract class AbstractGenerator implements GeneratorInterface
 {
-    private array $errors = [];
-
-    /**
-     * @var string the name of the code template that the user has selected.
-     * The value of this property is internally managed by this class.
-     */
-    private string $template = 'default';
     private string $directory = 'src/Controller';
 
     public function __construct(
         protected Aliases $aliases,
         protected ValidatorInterface $validator,
-        protected         GiiParametersProvider $parametersProvider,
+        protected GiiParametersProvider $parametersProvider,
     ) {
-    }
-
-    public function attributeLabels(): array
-    {
-        return [
-            'enableI18N' => 'Enable I18N',
-            'messageCategory' => 'Message Category',
-        ];
     }
 
     /**
@@ -75,53 +55,13 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
     }
 
     /**
-     * Returns the list of sticky attributes.
-     * A sticky attribute will remember its value and will initialize the attribute with this value
-     * when the generator is restarted.
-     *
-     * @return array list of sticky attributes
-     */
-    public function stickyAttributes(): array
-    {
-        return ['template', 'enableI18N', 'messageCategory'];
-    }
-
-    /**
-     * Returns the list of hint messages.
-     * The array keys are the attribute names, and the array values are the corresponding hint messages.
-     * Hint messages will be displayed to end users when they are filling the form for the generator.
-     *
-     * @return array the list of hint messages
-     */
-    public function hints(): array
-    {
-        return [
-            'enableI18N' => 'This indicates whether the generator should generate strings using <code>Yii::t()</code> method.
-                Set this to <code>true</code> if you are planning to make your application translatable.',
-            'messageCategory' => 'This is the category used by <code>Yii::t()</code> in case you enable I18N.',
-        ];
-    }
-
-    /**
-     * Returns the list of auto complete values.
-     * The array keys are the attribute names, and the array values are the corresponding auto complete values.
-     * Auto complete values can also be callable typed in order one want to make postponed data generation.
-     *
-     * @return array the list of auto complete values
-     */
-    public function autoCompleteData(): array
-    {
-        return [];
-    }
-
-    /**
      * Returns the root path to the default code template files.
      * The default implementation will return the "templates" subdirectory of the
      * directory containing the generator class file.
      *
+     * @return string the root path to the default code template files.
      * @throws ReflectionException
      *
-     * @return string the root path to the default code template files.
      */
     private function defaultTemplate(): string
     {
@@ -130,75 +70,9 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
         return dirname($class->getFileName()) . '/default';
     }
 
-    public function getDescription(): string
-    {
-        return '';
-    }
-
     public function validate(AbstractGeneratorCommand $command): Result
     {
         return $this->validator->validate($command);
-    }
-
-    /**
-     * Loads sticky attributes from an internal file and populates them into the generator.
-     *
-     * @internal
-     */
-    public function loadStickyAttributes(): void
-    {
-        $stickyAttributes = $this->stickyAttributes();
-        $path = $this->getStickyDataFile();
-        if (is_file($path)) {
-            $result = Json::decode(file_get_contents($path));
-            if (is_array($result)) {
-                foreach ($stickyAttributes as $name) {
-                    $method = 'set' . $name;
-                    if (array_key_exists($name, $result) && method_exists($this, $method)) {
-                        $this->$method($result[$name]);
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Loads sticky attributes from an internal file and populates them into the generator.
-     */
-    public function load(array $data): void
-    {
-        foreach ($data as $name => $value) {
-            $method = 'set' . $name;
-            if (method_exists($this, $method)) {
-                $this->$method($value);
-            }
-        }
-    }
-
-    /**
-     * Saves sticky attributes into an internal file.
-     */
-    public function saveStickyAttributes(): void
-    {
-        $stickyAttributes = $this->stickyAttributes();
-        $stickyAttributes[] = 'template';
-        $values = [];
-        foreach ($stickyAttributes as $name) {
-            $method = 'get' . $name;
-            if (method_exists($this, $method)) {
-                $values[$name] = $this->$method();
-            }
-        }
-        $path = $this->getStickyDataFile();
-        if (!mkdir($concurrentDirectory = dirname($path), 0755, true) && !is_dir($concurrentDirectory)) {
-            throw new RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
-        }
-        file_put_contents($path, Json::encode($values));
-    }
-
-    protected function getStickyDataFile(): string
-    {
-        return sprintf('%s/gii/%s.json', $this->aliases->get('@runtime'), str_replace('\\', '-', static::class));
     }
 
     /**
@@ -208,10 +82,10 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * @param string[] $results this parameter receives a value from this method indicating the log messages
      * generated while saving the code files.
      *
-     * @throws ReflectionException
+     * @return bool whether files are successfully saved without any error.
      * @throws InvalidConfigException
      *
-     * @return bool whether files are successfully saved without any error.
+     * @throws ReflectionException
      */
     public function save(array $files, array $answers, array &$results): bool
     {
@@ -243,10 +117,10 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
     }
 
     /**
-     * @throws ReflectionException
+     * @return string the root path of the template files that are currently being used.
      * @throws InvalidConfigException
      *
-     * @return string the root path of the template files that are currently being used.
+     * @throws ReflectionException
      */
     public function getTemplatePath(AbstractGeneratorCommand $command): string
     {
@@ -271,9 +145,9 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
      * relative to {@see getTemplatePath()}.
      * @param array $params list of parameters to be passed to the template file.
      *
+     * @return string the generated code
      * @throws Throwable
      *
-     * @return string the generated code
      */
     protected function render(AbstractGeneratorCommand $command, string $template, array $params = []): string
     {
@@ -414,64 +288,8 @@ abstract class AbstractGenerator implements GeneratorInterface, DataSetInterface
         return in_array(strtolower($value), $keywords, true);
     }
 
-    /**
-     * Generates a string depending on enableI18N property
-     *
-     * @param string $string the text be generated
-     * @param array $placeholders the placeholders to use by `Yii::t()`
-     */
-    public function generateString(string $string = '', array $placeholders = []): string
-    {
-        $string = addslashes($string);
-        if (!empty($placeholders)) {
-            $phKeys = array_map(
-                static fn ($word) => '{' . $word . '}',
-                array_keys($placeholders)
-            );
-            $phValues = array_values($placeholders);
-            $str = "'" . str_replace($phKeys, $phValues, $string) . "'";
-        } else {
-            // No placeholders, just the given string
-            $str = "'" . $string . "'";
-        }
-        return $str;
-    }
-
-    public function getAttributeValue(string $attribute): mixed
-    {
-        if (!$this->hasAttribute($attribute)) {
-            throw new InvalidArgumentException(sprintf('There is no "%s" in %s.', $attribute, $this->getName()));
-        }
-        $method = 'get' . $attribute;
-        return $this->$method();
-    }
-
-    public function hasAttribute(string $attribute): bool
-    {
-        $method = 'get' . $attribute;
-        return method_exists($this, $method);
-    }
-
-    public function getErrors(): array
-    {
-        return $this->errors;
-    }
-
-    public function hasErrors(): bool
-    {
-        return $this->errors !== [];
-    }
-
     public function getDirectory(): string
     {
         return $this->directory;
-    }
-
-    public function getData(): array
-    {
-        return [
-            //            'templates' => $this->templates,
-            'template' => $this->template,
-        ];
     }
 }

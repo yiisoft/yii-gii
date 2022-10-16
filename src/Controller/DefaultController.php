@@ -10,6 +10,7 @@ use Yiisoft\Http\Status;
 use Yiisoft\RequestModel\Attribute\Query;
 use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Yii\Gii\Generator\AbstractGenerator;
+use Yiisoft\Yii\Gii\GeneratorInterface;
 use Yiisoft\Yii\Gii\Request\GeneratorRequest;
 
 final class DefaultController
@@ -20,12 +21,11 @@ final class DefaultController
 
     public function get(GeneratorRequest $request): ResponseInterface
     {
-        /** @var AbstractGenerator $generator */
         $generator = $request->getGenerator();
         $params = [
-            'name' => $generator->getName(),
-            'description' => $generator->getDescription(),
-            //            'template' => $generator->getTemplate(),
+            'name' => $generator::getName(),
+            'description' => $generator::getDescription(),
+            'commandClass' => $generator::getCommandClass(),
             //            'templatePath' => $generator->getTemplatePath(),
             //            'templates' => $generator->getTemplates(),
             'directory' => $generator->getDirectory(),
@@ -39,9 +39,8 @@ final class DefaultController
         /** @var AbstractGenerator $generator */
         $generator = $request->getGenerator();
         $answers = $request->getAnswers();
-        $validationResult = $generator->validate();
-        if ($validationResult->isValid()) {
-            $generator->saveStickyAttributes();
+        $result = $generator->validate();
+        if ($result->isValid()) {
             $files = $generator->generate();
             $params = [];
             $results = [];
@@ -51,7 +50,7 @@ final class DefaultController
         }
 
         return $this->responseFactory->createResponse(
-            ['errors' => $validationResult->getErrorMessagesIndexedByAttribute()],
+            ['errors' => $result->getErrorMessagesIndexedByAttribute()],
             Status::UNPROCESSABLE_ENTITY
         );
     }
