@@ -41,7 +41,7 @@ abstract class BaseGenerateCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        /** @var AbstractGenerator $generator */
+        /** @var GeneratorInterface $generator */
         $generator = $this->getGenerator();
         $generatorCommand = $this->createGeneratorCommand($input);
 
@@ -61,7 +61,6 @@ abstract class BaseGenerateCommand extends Command
     protected function displayValidationErrors(Result $result, OutputInterface $output): void
     {
         $output->writeln("<fg=red>Code not generated. Please fix the following errors:</>\n");
-        /** @var AbstractGenerator $generator */
         foreach ($result->getErrorMessages() as $attribute => $errorMessage) {
             $output->writeln(sprintf(' - <fg=cyan>%s</>: <fg=green>%s</>', $attribute, $errorMessage));
         }
