@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\Gii\Request;
 
 use Yiisoft\RequestModel\RequestModel;
-use Yiisoft\Yii\Gii\Generator\AbstractGenerator;
 use Yiisoft\Yii\Gii\GeneratorInterface;
 use Yiisoft\Yii\Gii\GiiInterface;
 
