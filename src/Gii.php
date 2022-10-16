@@ -32,4 +32,9 @@ final class Gii implements GiiInterface
 
         return $this->generators[$id];
     }
+
+    public function getGenerators(): array
+    {
+        return $this->generators;
+    }
 }

@@ -14,6 +14,8 @@ use Yiisoft\Yii\Gii\CodeFileWriter;
 use Yiisoft\Yii\Gii\Exception\InvalidGeneratorCommandException;
 use Yiisoft\Yii\Gii\Generator\CommandHydrator;
 use Yiisoft\Yii\Gii\GeneratorCommandInterface;
+use Yiisoft\Yii\Gii\GeneratorInterface;
+use Yiisoft\Yii\Gii\GiiInterface;
 use Yiisoft\Yii\Gii\Request\GeneratorRequest;
 
 final class DefaultController
@@ -22,14 +24,23 @@ final class DefaultController
     {
     }
 
-    public function get(GeneratorRequest $request): ResponseInterface
+    public function list(GiiInterface $gii): ResponseInterface
     {
-        $generator = $request->getGenerator();
+        $generators = $gii->getGenerators();
+
+        return $this->responseFactory->createResponse([
+            'generators' => array_map($this->serializeGenerator(...), $generators),
+        ]);
+    }
+
+    private function serializeGenerator(GeneratorInterface $generator): array
+    {
         /**
-         * @psalm-var class-string<GeneratorCommandInterface> $commandClass
+         * @psalm-var $commandClass class-string<GeneratorCommandInterface>
          */
         $commandClass = $generator::getCommandClass();
-        $params = [
+
+        return [
             'id' => $generator::getId(),
             'name' => $generator::getName(),
             'description' => $generator::getDescription(),
@@ -40,8 +51,15 @@ final class DefaultController
             //            'templates' => $generator->getTemplates(),
             'directory' => $generator->getDirectory(),
         ];
+    }
 
-        return $this->responseFactory->createResponse($params);
+    public function get(GeneratorRequest $request): ResponseInterface
+    {
+        $generator = $request->getGenerator();
+
+        return $this->responseFactory->createResponse(
+            $this->serializeGenerator($generator)
+        );
     }
 
     public function generate(

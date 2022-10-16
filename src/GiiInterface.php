@@ -17,4 +17,9 @@ interface GiiInterface
      * @throws GeneratorNotFoundException
      */
     public function getGenerator(string $id): GeneratorInterface;
+
+    /**
+     * @return GeneratorInterface[]
+     */
+    public function getGenerators(): array;
 }

@@ -24,6 +24,9 @@ interface GeneratorInterface
      */
     public static function getDescription(): string;
 
+    /**
+     * @psalm-return class-string<GeneratorCommandInterface>
+     */
     public static function getCommandClass(): string;
 
     public function getTemplatePath(AbstractGeneratorCommand $command): string;
