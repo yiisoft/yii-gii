@@ -10,7 +10,7 @@ use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Http\Status;
 use Yiisoft\RequestModel\Attribute\Query;
 use Yiisoft\Yii\Gii\CodeFile;
-use Yiisoft\Yii\Gii\CodeFileSaver;
+use Yiisoft\Yii\Gii\CodeFileWriter;
 use Yiisoft\Yii\Gii\Exception\InvalidGeneratorCommandException;
 use Yiisoft\Yii\Gii\Generator\CommandHydrator;
 use Yiisoft\Yii\Gii\GeneratorCommandInterface;
@@ -46,7 +46,7 @@ final class DefaultController
 
     public function generate(
         GeneratorRequest $request,
-        CodeFileSaver $codeFileSaver,
+        CodeFileWriter $codeFileWriter,
         CommandHydrator $commandHydrator
     ): ResponseInterface {
         $generator = $request->getGenerator();
@@ -64,7 +64,7 @@ final class DefaultController
         foreach ($files as $file) {
             $answers[$file->getId()] = true;
         }
-        $params['hasError'] = !$codeFileSaver->save($command, $files, $answers, $results);
+        $params['hasError'] = !$codeFileWriter->write($command, $files, $answers, $results);
         $params['results'] = $results;
         return $this->responseFactory->createResponse($params);
     }

@@ -9,7 +9,7 @@ use ReflectionException;
 use Yiisoft\Yii\Gii\Exception\InvalidConfigException;
 use Yiisoft\Yii\Gii\Generator\AbstractGeneratorCommand;
 
-class CodeFileSaver
+class CodeFileWriter
 {
     /**
      * Saves the generated code into files.
@@ -23,7 +23,7 @@ class CodeFileSaver
      *
      * @return bool whether files are successfully saved without any error.
      */
-    public function save(AbstractGeneratorCommand $command, array $files, array $answers, array &$results): bool
+    public function write(AbstractGeneratorCommand $command, array $files, array $answers, array &$results): bool
     {
         $results = ['Generating code using template "' . $command->getTemplate() . '"...'];
         $hasError = false;
