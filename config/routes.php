@@ -32,17 +32,23 @@ return [
         ->middleware(FormatDataResponseAsJson::class)
         ->namePrefix('gii/api/')
         ->routes(
-            Route::get('/{generator}')
-                ->action([DefaultController::class, 'get'])
-                ->name('generator'),
-            Route::post('/{generator}/preview')
-                ->action([DefaultController::class, 'preview'])
-                ->name('preview'),
-            Route::post('/{generator}/generate')
-                ->action([DefaultController::class, 'generate'])
-                ->name('generate'),
-            Route::post('/{generator}/diff')
-                ->action([DefaultController::class, 'diff'])
-                ->name('diff')
+            Group::create('/generator')
+                ->routes(
+                    Route::get('/')
+                        ->action([DefaultController::class, 'list'])
+                        ->name('list'),
+                    Route::get('/{generator}')
+                        ->action([DefaultController::class, 'get'])
+                        ->name('generator'),
+                    Route::post('/{generator}/preview')
+                        ->action([DefaultController::class, 'preview'])
+                        ->name('preview'),
+                    Route::post('/{generator}/generate')
+                        ->action([DefaultController::class, 'generate'])
+                        ->name('generate'),
+                    Route::post('/{generator}/diff')
+                        ->action([DefaultController::class, 'diff'])
+                        ->name('diff')
+                )
         ),
 ];
