@@ -122,4 +122,15 @@ final class ControllerCommand extends AbstractGeneratorCommand
             'baseClass' => 'This is the class that the new controller class will extend from. Please make sure the class exists and can be autoloaded.',
         ];
     }
+
+    public static function getAttributes(): array
+    {
+        return [
+            'controllerNamespace',
+            'controllerClass',
+            'baseClass',
+            'actions',
+            'template',
+        ];
+    }
 }

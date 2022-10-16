@@ -9,6 +9,8 @@ use Yiisoft\DataResponse\DataResponse;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Http\Status;
 use Yiisoft\RequestModel\Attribute\Query;
+use Yiisoft\Validator\RulesDumper;
+use Yiisoft\Validator\RulesProvider\AttributesRulesProvider;
 use Yiisoft\Yii\Gii\CodeFile;
 use Yiisoft\Yii\Gii\CodeFileWriter;
 use Yiisoft\Yii\Gii\Exception\InvalidGeneratorCommandException;
@@ -40,13 +42,27 @@ final class DefaultController
          */
         $commandClass = $generator::getCommandClass();
 
+        $dataset = new AttributesRulesProvider($commandClass);
+        $rules = $dataset->getRules();
+        $dumpedRules = (new RulesDumper())->asArray($rules);
+        $hints = $commandClass::getHints();
+        $labels = $commandClass::getAttributeLabels();
+        $attributes = [];
+
+        foreach ($dumpedRules as $attributeName => $rules) {
+            $attributes[$attributeName] = [
+                'hint' => $hints[$attributeName] ?? null,
+                'label' => $labels[$attributeName] ?? null,
+                'rules' => $rules,
+            ];
+        }
+
         return [
             'id' => $generator::getId(),
             'name' => $generator::getName(),
             'description' => $generator::getDescription(),
             'commandClass' => $commandClass,
-            'hints' => $commandClass::getHints(),
-            'attributeLabels' => $commandClass::getAttributeLabels(),
+            'attributes' => $attributes,
             //            'templatePath' => $generator->getTemplatePath(),
             //            'templates' => $generator->getTemplates(),
             'directory' => $generator->getDirectory(),
