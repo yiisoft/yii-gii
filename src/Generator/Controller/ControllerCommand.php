@@ -18,7 +18,7 @@ final class ControllerCommand extends AbstractGeneratorCommand
     public function __construct(
         #[Required]
         #[Regex(
-            pattern: "/^(?:[a-z][a-z0-9]*\\\\?)+(?<!\\\\)$/i",
+            pattern: '/^(?:[a-z][a-z0-9]*\\\\?)+(?<!\\\\)$/i',
             message: 'Invalid namespace'
         )]
         private string $controllerNamespace = 'App\\Controller',
