@@ -18,8 +18,8 @@ final class ControllerCommand extends AbstractGeneratorCommand
     public function __construct(
         #[Required]
         #[Regex(
-            pattern: "/^(?:[a-z][a-z0-9]*\\?)+(?<=[^\\])$/i",
-            message: 'Only word characters are allowed, and the class name must start with a capital letter and end with "Controller".'
+            pattern: "/^(?:[a-z][a-z0-9]*\\\\?)+(?<!\\\\)$/i",
+            message: 'Invalid namespace'
         )]
         private string $controllerNamespace = 'App\\Controller',
         #[Required]
@@ -31,13 +31,13 @@ final class ControllerCommand extends AbstractGeneratorCommand
         /**
          * @var string the controller class name
          */
-        private string $controllerClass = '',
+        private string $controllerClass = 'IndexController',
         /**
          * @var string|null the controller's views path
          */
         private ?string $viewsPath = null,
         #[Regex(
-            pattern: '/^[a-z\\]*$/i',
+            pattern: '/^[a-z\\\\]*$/i',
             message: 'Only word characters and backslashes are allowed.',
             skipOnEmpty: true,
         )]
