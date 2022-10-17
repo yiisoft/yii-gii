@@ -16,10 +16,15 @@ use Yiisoft\Yii\Gii\Validator\TemplateRule;
 final class ControllerCommand extends AbstractGeneratorCommand
 {
     public function __construct(
+        #[Required]
+        #[Regex(
+            pattern: "/^(?:[a-z][a-z0-9]*\\?)+(?<=[^\\])$/i",
+            message: 'Only word characters are allowed, and the class name must start with a capital letter and end with "Controller".'
+        )]
         private string $controllerNamespace = 'App\\Controller',
         #[Required]
         #[Regex(
-            pattern: '/^[A-Z][\w]*Controller$/',
+            pattern: '/^[A-Z][a-zA-Z0-9]*Controller$/',
             message: 'Only word characters are allowed, and the class name must start with a capital letter and end with "Controller".'
         )]
         #[NewClassRule]
@@ -32,7 +37,7 @@ final class ControllerCommand extends AbstractGeneratorCommand
          */
         private ?string $viewsPath = null,
         #[Regex(
-            pattern: '/^[\w\\\\]*$/',
+            pattern: '/^[a-z\\]*$/i',
             message: 'Only word characters and backslashes are allowed.',
             skipOnEmpty: true,
         )]
@@ -42,7 +47,7 @@ final class ControllerCommand extends AbstractGeneratorCommand
         private ?string $baseClass = null,
         #[Each([
             new Regex(
-                pattern: '/^[a-z][a-z0-9\\-,\\s]*$/',
+                pattern: '/^[a-z][a-z0-9]*$/',
                 message: 'Only a-z, 0-9, dashes (-), spaces and commas are allowed.'
             ),
         ])
