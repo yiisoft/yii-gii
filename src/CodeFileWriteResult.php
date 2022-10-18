@@ -13,6 +13,7 @@ class CodeFileWriteResult
     public function addResult(CodeFile $file, CodeFileWriteStatusEnum $status): void
     {
         $this->results[$file->getId()] = [
+            'id' => $file->getId(),
             'status' => $status->value,
             'error' => null,
         ];
@@ -21,12 +22,14 @@ class CodeFileWriteResult
     public function addError(CodeFile $file, string $error): void
     {
         $this->results[$file->getId()] = [
+            'id' => $file->getId(),
             'status' => CodeFileWriteStatusEnum::ERROR->value,
             'error' => $error,
         ];
     }
 
     #[ArrayShape([
+        'id' => 'string',
         'status' => 'string',
         'error' => 'null|string',
     ])]

@@ -118,7 +118,7 @@ final class DefaultController
         }
         $result = $codeFileWriter->write($files, $answers);
 
-        return $this->responseFactory->createResponse($result->getResults());
+        return $this->responseFactory->createResponse(array_values($result->getResults()));
     }
 
     public function preview(
