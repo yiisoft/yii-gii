@@ -14,6 +14,7 @@ use Yiisoft\RequestModel\Attribute\Query;
 use Yiisoft\Validator\RulesDumper;
 use Yiisoft\Validator\RulesProvider\AttributesRulesProvider;
 use Yiisoft\Yii\Gii\CodeFile;
+use Yiisoft\Yii\Gii\CodeFileWriteOperationEnum;
 use Yiisoft\Yii\Gii\CodeFileWriter;
 use Yiisoft\Yii\Gii\Exception\InvalidGeneratorCommandException;
 use Yiisoft\Yii\Gii\Generator\CommandHydrator;
@@ -115,16 +116,9 @@ final class DefaultController
         } catch (InvalidGeneratorCommandException $e) {
             return $this->createErrorResponse($e);
         }
-        $params = [];
-        $results = [];
-        // TODO: get answers from the request
-        $answers = [];
-        foreach ($files as $file) {
-            $answers[$file->getId()] = true;
-        }
-        $params['hasError'] = !$codeFileWriter->write($command, $files, $answers, $results);
-        $params['results'] = $results;
-        return $this->responseFactory->createResponse($params);
+        $result = $codeFileWriter->write($files, $answers);
+
+        return $this->responseFactory->createResponse($result->getResults());
     }
 
     public function preview(
@@ -142,9 +136,8 @@ final class DefaultController
         }
         if ($file === null) {
             return $this->responseFactory->createResponse([
-                'files' => array_map($this->serializeCodeFile(...), $files),
-                // todo: fix showing operations' keys. they are skipped because of serialization numerical arrays
-                'operations' => CodeFile::OPERATIONS_MAP,
+                'files' => array_map($this->serializeCodeFile(...), array_values($files)),
+                'operations' => CodeFileWriteOperationEnum::getLabels(),
             ]);
         }
 
@@ -202,7 +195,7 @@ final class DefaultController
         return [
             'id' => $file->getId(),
             'content' => $file->getContent(),
-            'operation' => $file->getOperation(),
+            'operation' => $file->getOperation()->value,
             'path' => $file->getPath(),
             'relativePath' => $file->getRelativePath(),
             'type' => $file->getType(),

@@ -21,26 +21,6 @@ final class CodeFile
      * The new directory mode
      */
     private const DIR_MODE = 0777;
-    /**
-     * The code file is new.
-     */
-    public const OP_CREATE = 0;
-    /**
-     * The code file already exists, and the new one may need to overwrite it.
-     */
-    public const OP_OVERWRITE = 1;
-    /**
-     * The new code file and the existing one are identical.
-     */
-    public const OP_SKIP = 2;
-    /**
-     * Operations map to be performed.
-     */
-    public const OPERATIONS_MAP = [
-        self::OP_CREATE => 'Create',
-        self::OP_OVERWRITE => 'Overwrite',
-        self::OP_SKIP => 'Skip',
-    ];
 
     /**
      * @var string an ID that uniquely identifies this code file.
@@ -51,9 +31,9 @@ final class CodeFile
      */
     private string $path;
     /**
-     * @var int the operation to be performed. This can be {@see OP_CREATE}, {@see OP_OVERWRITE} or {@see OP_SKIP}.
+     * @var CodeFileWriteOperationEnum the operation to be performed. This can be {@see OP_CREATE}, {@see OP_OVERWRITE} or {@see OP_SKIP}.
      */
-    private int $operation = self::OP_CREATE;
+    private CodeFileWriteOperationEnum $operation = CodeFileWriteOperationEnum::OP_CREATE;
     /**
      * @var string the base path
      */
@@ -82,18 +62,19 @@ final class CodeFile
         $this->path = $this->preparePath($path);
         $this->id = dechex(crc32($this->path));
         if (is_file($path)) {
-            $this->operation = file_get_contents($path) === $content ? self::OP_SKIP : self::OP_OVERWRITE;
+            $this->operation = file_get_contents($path) === $content ? CodeFileWriteOperationEnum::OP_SKIP : CodeFileWriteOperationEnum::OP_OVERWRITE;
         }
     }
 
     /**
      * Saves the code into the file specified by [[path]].
      *
-     * @return bool the error occurred while saving the code file, or true if no error.
+     * @return CodeFileWriteStatusEnum the error occurred while saving the code file, or true if no error.
      */
-    public function save(): bool
+    public function save(): CodeFileWriteStatusEnum
     {
-        if ($this->operation === self::OP_CREATE) {
+        $status = CodeFileWriteStatusEnum::CREATED;
+        if ($this->operation === CodeFileWriteOperationEnum::OP_CREATE) {
             $dir = dirname($this->path);
             if (!is_dir($dir)) {
                 if ($this->newDirMode !== self::DIR_MODE) {
@@ -108,6 +89,9 @@ final class CodeFile
                 }
             }
         }
+        if (file_exists($this->path)) {
+            $status = CodeFileWriteStatusEnum::OVERWROTE;
+        }
         if (@file_put_contents($this->path, $this->content) === false) {
             throw new RuntimeException("Unable to write the file '{$this->path}'.");
         }
@@ -118,7 +102,7 @@ final class CodeFile
             @umask($mask);
         }
 
-        return true;
+        return $status;
     }
 
     /**
@@ -182,7 +166,7 @@ final class CodeFile
             return false;
         }
 
-        if ($this->operation === self::OP_OVERWRITE) {
+        if ($this->operation === CodeFileWriteOperationEnum::OP_OVERWRITE) {
             return $this->renderDiff(file($this->path), $this->content);
         }
 
@@ -216,7 +200,7 @@ final class CodeFile
         return $this->id;
     }
 
-    public function getOperation(): int
+    public function getOperation(): CodeFileWriteOperationEnum
     {
         return $this->operation;
     }

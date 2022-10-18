@@ -48,16 +48,18 @@ final class ControllerGenerator extends AbstractGenerator
 
         $rootPath = $this->aliases->get('@root');
 
-        $files[] = (new CodeFile(
+        $codeFile = (new CodeFile(
             $this->getControllerFile($command),
             $this->render($command, 'controller')
         ))->withBasePath($rootPath);
+        $files[$codeFile->getId()] = $codeFile;
 
         foreach ($command->getActions() as $action) {
-            $files[] = (new CodeFile(
+            $codeFile = (new CodeFile(
                 $this->getViewFile($command, $action),
                 $this->render($command, 'view', ['action' => $action])
             ))->withBasePath($rootPath);
+            $files[$codeFile->getId()] = $codeFile;
         }
 
         return $files;
