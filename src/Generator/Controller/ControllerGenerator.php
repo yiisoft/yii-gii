@@ -16,7 +16,7 @@ final class ControllerGenerator extends AbstractGenerator
 {
     public static function getName(): string
     {
-        return 'Controller Generator';
+        return 'Controller';
     }
 
     public static function getDescription(): string
