@@ -18,6 +18,7 @@ enum CodeFileWriteOperationEnum: string
      * The new code file and the existing one are identical.
      */
     case OP_SKIP = 'skip';
+
     /**
      * Operations map to be performed.
      */

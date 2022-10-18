@@ -138,7 +138,7 @@ abstract class BaseGenerateCommand extends Command
                 default => 'yellow',
             };
             $output->writeln(sprintf(
-                "<fg=%s>%s</>: %s",
+                '<fg=%s>%s</>: %s',
                 $color,
                 $result['status'],
                 $file->getRelativePath(),
@@ -148,7 +148,7 @@ abstract class BaseGenerateCommand extends Command
                 exit();
                 $hasError = true;
                 $output->writeln(sprintf(
-                    "<fg=red>%s</>",
+                    '<fg=red>%s</>',
                     $result['error']
                 ));
             }
