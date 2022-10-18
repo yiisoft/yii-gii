@@ -10,7 +10,7 @@ use Yiisoft\Strings\StringHelper;
 
 $classDefinitionParts = [];
 $classDefinitionParts[] = StringHelper::baseName($command->getControllerClass());
-if ($command->getBaseClass() !== null) {
+if (!empty($command->getBaseClass())) {
     $classDefinitionParts[] = 'extends \\' . trim($command->getBaseClass(), '\\');
 }
 $classDefinition = implode(' ', $classDefinitionParts) . PHP_EOL;
