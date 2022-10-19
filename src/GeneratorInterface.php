@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii;
 
+use ReflectionException;
 use Yiisoft\Yii\Gii\Component\CodeFile\CodeFile;
+use Yiisoft\Yii\Gii\Exception\InvalidConfigException;
 use Yiisoft\Yii\Gii\Exception\InvalidGeneratorCommandException;
 use Yiisoft\Yii\Gii\Generator\AbstractGeneratorCommand;
 
@@ -30,6 +32,12 @@ interface GeneratorInterface
      */
     public static function getCommandClass(): string;
 
+    /**
+     * @return string the root path of the template files that are currently being used.
+     * @throws InvalidConfigException
+     *
+     * @throws ReflectionException
+     */
     public function getTemplatePath(GeneratorCommandInterface $command): string;
 
     /**
@@ -43,4 +51,14 @@ interface GeneratorInterface
      * @return CodeFile[] a list of code files to be created.
      */
     public function generate(GeneratorCommandInterface $command): array;
+
+    /**
+     * Returns a list of code template files that are required.
+     * Derived classes usually should override this method if they require the existence of
+     * certain template files.
+     *
+     * @return array list of code template files that are required. They should be file paths
+     * relative to {@see getTemplatePath()}.
+     */
+    public function getRequiredTemplates();
 }

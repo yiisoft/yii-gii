@@ -27,10 +27,11 @@ return [
         'generators' => [
             [
                 'class' => ControllerGenerator::class,
-                'parameters' => [
-                    'directory' => '@src/Controller',
-                ],
+                'parameters' => [],
             ],
         ],
+        'parameters' => [
+            'templates' => []
+        ]
     ],
 ];

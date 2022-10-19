@@ -30,7 +30,7 @@ final class ControllerGenerator extends AbstractGenerator
             one or several controller actions and their corresponding views.';
     }
 
-    public function requiredTemplates(): array
+    public function getRequiredTemplates(): array
     {
         return [
             'controller.php',
@@ -50,14 +50,14 @@ final class ControllerGenerator extends AbstractGenerator
 
         $codeFile = (new CodeFile(
             $this->getControllerFile($command),
-            $this->render($command, 'controller')
+            $this->render($command, 'controller.php')
         ))->withBasePath($rootPath);
         $files[$codeFile->getId()] = $codeFile;
 
         foreach ($command->getActions() as $action) {
             $codeFile = (new CodeFile(
                 $this->getViewFile($command, $action),
-                $this->render($command, 'view', ['action' => $action])
+                $this->render($command, 'view.php', ['action' => $action])
             ))->withBasePath($rootPath);
             $files[$codeFile->getId()] = $codeFile;
         }
@@ -70,14 +70,18 @@ final class ControllerGenerator extends AbstractGenerator
      */
     private function getControllerFile(ControllerCommand $command): string
     {
-        $directory = empty($command->getDirectory()) ? '@src/Controller/' : $command->getDirectory() ;
+        $directory = empty($command->getDirectory()) ? '@src/Controller/' : $command->getDirectory();
 
         return $this->aliases->get(
-            sprintf(
-                '%s/%s.php',
-                str_replace('\\', '/', $directory),
-                $command->getControllerClass(),
-            )
+            str_replace(
+                ['\\', '//'],
+                '/',
+                sprintf(
+                    '%s/%s.php',
+                    $directory,
+                    $command->getControllerClass(),
+                ),
+            ),
         );
     }
 
@@ -88,15 +92,19 @@ final class ControllerGenerator extends AbstractGenerator
      */
     public function getViewFile(ControllerCommand $command, string $action): string
     {
-        $directory = empty($command->getViewsPath()) ? '@views/' : $command->getViewsPath() ;
+        $directory = empty($command->getViewsPath()) ? '@views/' : $command->getViewsPath();
 
         return $this->aliases->get(
-            sprintf(
-                '%s/%s/%s.php',
-                str_replace('\\', '/', $directory),
-                $command->getControllerID(),
-                $action,
-            )
+            str_replace(
+                ['\\', '//'],
+                '/',
+                sprintf(
+                    '%s/%s/%s.php',
+                    $directory,
+                    $command->getControllerID(),
+                    $action,
+                ),
+            ),
         );
     }
 

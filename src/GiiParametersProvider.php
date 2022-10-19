@@ -15,14 +15,14 @@ class GiiParametersProvider
     ) {
     }
 
-    public function getTemplates(): array
+    public function getTemplates(string $controllerId): array
     {
-        return $this->templates;
+        $templates = $this->templates[$controllerId] ?? [];
+        return array_merge(['default' => true], $templates);
     }
 
-    //TODO: fix
     public function getRequiredTemplates(): array
     {
-        return $this->templates;
+        return [];
     }
 }

@@ -38,15 +38,7 @@ abstract class AbstractGenerator implements GeneratorInterface
     ) {
     }
 
-    /**
-     * Returns a list of code template files that are required.
-     * Derived classes usually should override this method if they require the existence of
-     * certain template files.
-     *
-     * @return array list of code template files that are required. They should be file paths
-     * relative to {@see getTemplatePath()}.
-     */
-    public function requiredTemplates(): array
+    public function getRequiredTemplates(): array
     {
         return [];
     }
@@ -56,9 +48,9 @@ abstract class AbstractGenerator implements GeneratorInterface
      * The default implementation will return the "templates" subdirectory of the
      * directory containing the generator class file.
      *
+     * @return string the root path to the default code template files.
      * @throws ReflectionException
      *
-     * @return string the root path to the default code template files.
      */
     private function defaultTemplate(): string
     {
@@ -67,12 +59,6 @@ abstract class AbstractGenerator implements GeneratorInterface
         return dirname($class->getFileName()) . '/default';
     }
 
-    /**
-     * @throws ReflectionException
-     * @throws InvalidConfigException
-     *
-     * @return string the root path of the template files that are currently being used.
-     */
     public function getTemplatePath(GeneratorCommandInterface $command): string
     {
         $template = $command->getTemplate();
@@ -81,19 +67,16 @@ abstract class AbstractGenerator implements GeneratorInterface
             return $this->defaultTemplate();
         }
 
-        if (isset($this->parametersProvider->getTemplates()[$template])) {
-            return $this->parametersProvider->getTemplates()[$template];
-        }
+        $templates = $this->parametersProvider->getTemplates(static::getId());
 
-        throw new InvalidConfigException("Unknown template: {$template}");
+        return $templates[$template] ?? throw new InvalidConfigException("Unknown template: \"{$template}\"");
     }
 
     /**
-     * @param AbstractGeneratorCommand $command
-     *
-     * @throws InvalidGeneratorCommandException
+     * @param GeneratorCommandInterface $command
      *
      * @return CodeFile[]
+     * @throws InvalidGeneratorCommandException
      */
     final public function generate(GeneratorCommandInterface $command): array
     {
@@ -112,20 +95,20 @@ abstract class AbstractGenerator implements GeneratorInterface
      * Generates code using the specified code template and parameters.
      * Note that the code template will be used as a PHP file.
      *
-     * @param string $template the code template file. This must be specified as a file path
+     * @param string $templateFile the code template file. This must be specified as a file path
      * relative to {@see getTemplatePath()}.
      * @param array $params list of parameters to be passed to the template file.
      *
+     * @return string the generated code
      * @throws Throwable
      *
-     * @return string the generated code
      */
-    protected function render(GeneratorCommandInterface $command, string $template, array $params = []): string
+    protected function render(GeneratorCommandInterface $command, string $templateFile, array $params = []): string
     {
         $file = sprintf(
-            '%s/%s.php',
+            '%s/%s',
             $this->aliases->get($this->getTemplatePath($command)),
-            $template
+            $templateFile
         );
 
         $renderer = function (): void {
