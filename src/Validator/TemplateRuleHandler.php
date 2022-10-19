@@ -12,15 +12,16 @@ use Yiisoft\Validator\Result;
 use Yiisoft\Validator\RuleHandlerInterface;
 use Yiisoft\Validator\ValidationContext;
 use Yiisoft\Yii\Gii\GeneratorCommandInterface;
+use Yiisoft\Yii\Gii\GeneratorInterface;
 use Yiisoft\Yii\Gii\GiiInterface;
-use Yiisoft\Yii\Gii\GiiParametersProvider;
+use Yiisoft\Yii\Gii\ParametersProvider;
 
 final class TemplateRuleHandler implements RuleHandlerInterface
 {
     public function __construct(
         private Aliases $aliases,
         private GiiInterface $gii,
-        private GiiParametersProvider $parametersProvider,
+        private ParametersProvider $parametersProvider,
     ) {
     }
 
@@ -43,20 +44,10 @@ final class TemplateRuleHandler implements RuleHandlerInterface
         }
         $command = $context->getDataSet();
         if (!$command instanceof ObjectDataSet || !$command->getObject() instanceof GeneratorCommandInterface) {
-            // TODO
-            throw new RuntimeException('Unsupported dataset class');
+            throw new RuntimeException('Unsupported dataset class.');
         }
-        $selectedGenerator = null;
-        foreach ($this->gii->getGenerators() as $generator) {
-            if ($generator::getCommandClass() === $command->getObject()::class) {
-                $selectedGenerator = $generator;
-            }
-        }
-        // TODO
-        if ($selectedGenerator === null) {
-            throw new RuntimeException('Unknown generator');
-        }
-        $templates = $this->parametersProvider->getTemplates($selectedGenerator::getId());
+        $generator = $this->getGenerator($command);
+        $templates = $this->parametersProvider->getTemplates($generator::getId());
 
         if ($templates === []) {
             return $result;
@@ -73,7 +64,7 @@ final class TemplateRuleHandler implements RuleHandlerInterface
         }
 
         $templatePath = $templates[$value];
-        foreach ($selectedGenerator->getRequiredTemplates() as $template) {
+        foreach ($generator->getRequiredTemplates() as $template) {
             if (!is_file($this->aliases->get($templatePath . '/' . $template))) {
                 $result->addError(
                     message: 'Unable to find the required code template file "{template}".',
@@ -83,5 +74,15 @@ final class TemplateRuleHandler implements RuleHandlerInterface
         }
 
         return $result;
+    }
+
+    private function getGenerator(ObjectDataSet $dataSet): GeneratorInterface
+    {
+        foreach ($this->gii->getGenerators() as $generator) {
+            if ($generator::getCommandClass() === $dataSet->getObject()::class) {
+                return $generator;
+            }
+        }
+        throw new RuntimeException('Unknown generator');
     }
 }

@@ -8,7 +8,7 @@ use Yiisoft\Injector\Injector;
 use Yiisoft\Yii\Gii\Exception\InvalidGeneratorCommandException;
 use Yiisoft\Yii\Gii\Generator\Controller\ControllerCommand;
 use Yiisoft\Yii\Gii\Generator\Controller\ControllerGenerator as ControllerGenerator;
-use Yiisoft\Yii\Gii\GiiParametersProvider;
+use Yiisoft\Yii\Gii\ParametersProvider;
 use Yiisoft\Yii\Gii\Tests\TestCase;
 
 /**
@@ -76,7 +76,7 @@ class ControllerGeneratorTest extends TestCase
         $injector = new Injector($this->getContainer());
 
         return $injector->make(ControllerGenerator::class, [
-            new GiiParametersProvider(...$params),
+            new ParametersProvider(...$params),
         ]);
     }
 }

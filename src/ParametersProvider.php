@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii;
 
-class GiiParametersProvider
+final class ParametersProvider
 {
     public function __construct(
         /**
@@ -15,14 +15,9 @@ class GiiParametersProvider
     ) {
     }
 
-    public function getTemplates(string $controllerId): array
+    public function getTemplates(string $generator): array
     {
-        $templates = $this->templates[$controllerId] ?? [];
+        $templates = $this->templates[$generator] ?? [];
         return array_merge(['default' => true], $templates);
-    }
-
-    public function getRequiredTemplates(): array
-    {
-        return [];
     }
 }

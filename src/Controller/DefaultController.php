@@ -21,11 +21,15 @@ use Yiisoft\Yii\Gii\Generator\CommandHydrator;
 use Yiisoft\Yii\Gii\GeneratorCommandInterface;
 use Yiisoft\Yii\Gii\GeneratorInterface;
 use Yiisoft\Yii\Gii\GiiInterface;
+use Yiisoft\Yii\Gii\ParametersProvider;
 use Yiisoft\Yii\Gii\Request\GeneratorRequest;
 
 final class DefaultController
 {
-    public function __construct(private DataResponseFactoryInterface $responseFactory)
+    public function __construct(
+        private DataResponseFactoryInterface $responseFactory,
+        private ParametersProvider $parametersProvider,
+    )
     {
     }
 
@@ -184,7 +188,7 @@ final class DefaultController
             'description' => $generator::getDescription(),
             'commandClass' => $commandClass,
             'attributes' => $attributesResult,
-            //            'templates' => $generator->getTemplates(),
+            'templates' => $this->parametersProvider->getTemplates($generator::getId()),
         ];
     }
 

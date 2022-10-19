@@ -14,7 +14,7 @@ use Yiisoft\Yii\Gii\Exception\InvalidConfigException;
 use Yiisoft\Yii\Gii\Exception\InvalidGeneratorCommandException;
 use Yiisoft\Yii\Gii\GeneratorCommandInterface;
 use Yiisoft\Yii\Gii\GeneratorInterface;
-use Yiisoft\Yii\Gii\GiiParametersProvider;
+use Yiisoft\Yii\Gii\ParametersProvider;
 
 /**
  * This is the base class for all generator classes.
@@ -34,7 +34,7 @@ abstract class AbstractGenerator implements GeneratorInterface
     public function __construct(
         protected Aliases $aliases,
         protected ValidatorInterface $validator,
-        protected GiiParametersProvider $parametersProvider,
+        protected ParametersProvider $parametersProvider,
     ) {
     }
 

@@ -6,7 +6,7 @@ use Yiisoft\Injector\Injector;
 use Yiisoft\Yii\Gii\GeneratorInterface;
 use Yiisoft\Yii\Gii\Gii;
 use Yiisoft\Yii\Gii\GiiInterface;
-use Yiisoft\Yii\Gii\GiiParametersProvider;
+use Yiisoft\Yii\Gii\ParametersProvider;
 
 /**
  * @var array $params
@@ -27,8 +27,8 @@ return [
         }
         return new Gii($generatorsInstances);
     },
-    GiiParametersProvider::class => [
-        'class' => GiiParametersProvider::class,
+    ParametersProvider::class => [
+        'class' => ParametersProvider::class,
         '__construct()' => [
             'templates' => $params['yiisoft/yii-gii']['parameters']['templates'],
         ],
