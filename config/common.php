@@ -17,11 +17,11 @@ return [
         $generators = $params['yiisoft/yii-gii']['generators'];
 
         foreach ($generators as $generator) {
+            $class = $generator['class'];
             /**
              * @var $generator GeneratorInterface
              */
-            $class = $generator['class'];
-            $generator = $injector->make($class, $generator['parameters']);
+            $generator = $injector->make($class, $generator['parameters'] ?? []);
             $generatorsInstances[] = $generator;
         }
         return new Gii($generatorsInstances);
