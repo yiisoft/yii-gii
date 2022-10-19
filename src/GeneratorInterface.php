@@ -56,8 +56,8 @@ interface GeneratorInterface
      * Derived classes usually should override this method if they require the existence of
      * certain template files.
      *
-     * @return array list of code template files that are required. They should be file paths
+     * @return string[] list of code template files that are required. They should be file paths
      * relative to {@see getTemplatePath()}.
      */
-    public function getRequiredTemplates();
+    public function getRequiredTemplates(): array;
 }
