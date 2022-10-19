@@ -188,7 +188,7 @@ class CodeFileTest extends TestCase
         $this->assertEquals($codeFile->getOperation(), CodeFileWriteOperationEnum::SKIP);
     }
 
-// TODO: test \Yiisoft\Yii\Gii\Component\DiffRendererHtmlInline instead
+    // TODO: test \Yiisoft\Yii\Gii\Component\DiffRendererHtmlInline instead
 //    /** @dataProvider dataProviderDiff */
 //    public function testDiff(string $path, string $content, $result): void
 //    {
