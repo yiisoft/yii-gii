@@ -14,6 +14,7 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Yiisoft\Validator\Result;
 use Yiisoft\Yii\Console\ExitCode;
 use Yiisoft\Yii\Gii\CodeFile;
+use Yiisoft\Yii\Gii\CodeFileStateEnum;
 use Yiisoft\Yii\Gii\CodeFileWriteOperationEnum;
 use Yiisoft\Yii\Gii\CodeFileWriter;
 use Yiisoft\Yii\Gii\CodeFileWriteStatusEnum;
@@ -92,21 +93,28 @@ abstract class BaseGenerateCommand extends Command
         $answers = [];
         foreach ($files as $file) {
             $path = $file->getRelativePath();
-            if ($file->getOperation() === CodeFileWriteOperationEnum::OP_CREATE) {
-                $output->writeln("    <fg=green>[new]</>       <fg=blue>$path</>");
-                $answers[$file->getId()] = $file->getOperation()->value;
-            } elseif ($file->getOperation() === CodeFileWriteOperationEnum::OP_SKIP) {
-                $output->writeln("    <fg=green>[unchanged]</> <fg=blue>$path</>");
-                $answers[$file->getId()] = $file->getOperation()->value;
+            $color = match ($file->getState()) {
+                CodeFileStateEnum::PRESENT_SAME => 'yellow',
+                CodeFileStateEnum::PRESENT_DIFFERENT => 'blue',
+                CodeFileStateEnum::NOT_EXIST => 'green',
+                default => 'red',
+            };
+
+            if ($file->getState() === CodeFileStateEnum::NOT_EXIST) {
+                $output->writeln("    <fg=$color>[new]</>       <fg=blue>$path</>");
+                $answers[$file->getId()] = CodeFileWriteOperationEnum::SAVE->value;
+            } elseif ($file->getState() === CodeFileStateEnum::PRESENT_SAME) {
+                $output->writeln("    <fg=$color>[unchanged]</> <fg=blue>$path</>");
+                $answers[$file->getId()] = CodeFileWriteOperationEnum::SKIP->value;
             } else {
-                $output->writeln("    <fg=green>[changed]</>   <fg=blue>$path</>");
+                $output->writeln("    <fg=$color>[changed]</>   <fg=blue>$path</>");
                 if ($skipAll !== null) {
-                    $answers[$file->getId()] = CodeFileWriteOperationEnum::OP_OVERWRITE->value;
+                    $answers[$file->getId()] = CodeFileWriteOperationEnum::SAVE->value;
                 } else {
                     $answer = $this->choice($input, $output);
                     $answers[$file->getId()] = ($answer === 'y' || $answer === 'ya')
-                        ? CodeFileWriteOperationEnum::OP_OVERWRITE->value
-                        : CodeFileWriteOperationEnum::OP_SKIP->value;
+                        ? CodeFileWriteOperationEnum::SAVE->value
+                        : CodeFileWriteOperationEnum::SKIP->value;
                     if ($answer === 'ya') {
                         $skipAll = false;
                     } elseif ($answer === 'na') {
@@ -144,8 +152,6 @@ abstract class BaseGenerateCommand extends Command
                 $file->getRelativePath(),
             ));
             if (CodeFileWriteStatusEnum::ERROR->value === $result['status']) {
-                var_dump($result);
-                exit();
                 $hasError = true;
                 $output->writeln(sprintf(
                     '<fg=red>%s</>',

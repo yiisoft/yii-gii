@@ -196,6 +196,7 @@ final class DefaultController
             'id' => $file->getId(),
             'content' => $file->getContent(),
             'operation' => $file->getOperation()->value,
+            'state' => $file->getState()->value,
             'path' => $file->getPath(),
             'relativePath' => $file->getRelativePath(),
             'type' => $file->getType(),

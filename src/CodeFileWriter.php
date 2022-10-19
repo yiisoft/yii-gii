@@ -25,11 +25,10 @@ final class CodeFileWriter
             $operation = $answers[$fileId];
 
             switch (CodeFileWriteOperationEnum::tryFrom($operation)) {
-                case CodeFileWriteOperationEnum::OP_SKIP:
+                case CodeFileWriteOperationEnum::SKIP:
                     $result->addResult($file, CodeFileWriteStatusEnum::SKIPPED);
                     break;
-                case CodeFileWriteOperationEnum::OP_CREATE:
-                case CodeFileWriteOperationEnum::OP_OVERWRITE:
+                case CodeFileWriteOperationEnum::SAVE:
                     try {
                         $status = $file->save();
                     } catch (Exception $e) {
