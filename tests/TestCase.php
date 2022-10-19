@@ -22,7 +22,6 @@ use Yiisoft\Validator\RuleHandlerContainer;
 use Yiisoft\Validator\RuleHandlerResolverInterface;
 use Yiisoft\Validator\Validator;
 use Yiisoft\Validator\ValidatorInterface;
-use Yiisoft\View\View;
 use Yiisoft\Yii\Gii\Generator\Controller\ControllerGenerator;
 use Yiisoft\Yii\Gii\Gii;
 use Yiisoft\Yii\Gii\GiiInterface;
@@ -46,27 +45,22 @@ class TestCase extends \PHPUnit\Framework\TestCase
                         'controller' => ControllerGenerator::class,
                     ];
                     $generatorsInstances = [];
-                    foreach ($generators as $name => $class) {
-                        $generatorsInstances[$name] = $container->get($class);
+                    foreach ($generators as $class) {
+                        $generatorsInstances[] = $container->get($class);
                     }
-                    return new Gii($generatorsInstances, $container);
+                    return new Gii($generatorsInstances);
                 },
                 Aliases::class => new Aliases(
                     [
-                        '@app' => dirname(__DIR__) . '/tests',
-                        '@views' => dirname(__DIR__) . '/tests/runtime',
-                        '@view' => dirname(__DIR__) . '/tests/runtime',
-                        '@root' => dirname(__DIR__) . '/tests/runtime',
+                        '@src' => __DIR__,
+                        '@views' => '@src/runtime',
+                        '@view' => '@src/runtime',
+                        '@root' => '@src/runtime',
                     ]
                 ),
                 EventDispatcherInterface::class => Dispatcher::class,
                 ListenerProviderInterface::class => Provider::class,
                 LoggerInterface::class => NullLogger::class,
-                View::class => [
-                    '__construct()' => [
-                        'basePath' => '@views',
-                    ],
-                ],
                 TranslatorInterface::class => [
                     'class' => Translator::class,
                     '__construct()' => [

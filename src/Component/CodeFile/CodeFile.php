@@ -82,7 +82,7 @@ final class CodeFile
      */
     public function save(): CodeFileWriteStatusEnum
     {
-        if ($this->operation === CodeFileWriteOperationEnum::SAVE && $this->state !== CodeFileStateEnum::NOT_EXIST) {
+        if ($this->operation === CodeFileWriteOperationEnum::SAVE && $this->state !== CodeFileStateEnum::PRESENT_SAME) {
             $dir = dirname($this->path);
             if (!is_dir($dir)) {
                 if ($this->newDirMode !== self::DIR_MODE) {
