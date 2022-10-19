@@ -28,12 +28,9 @@ return [
             [
                 'class' => ControllerGenerator::class,
                 'parameters' => [
-                    'namespace' => 'App\\Controller',
                     'directory' => '@src/Controller',
                 ],
             ],
         ],
-        'basePath' => '@root',
-        'viewPath' => '@views',
     ],
 ];

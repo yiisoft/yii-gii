@@ -14,6 +14,11 @@ use Yiisoft\Yii\Gii\Generator\AbstractGeneratorCommand;
  */
 final class ControllerGenerator extends AbstractGenerator
 {
+    public static function getId(): string
+    {
+        return 'controller';
+    }
+
     public static function getName(): string
     {
         return 'Controller';
@@ -23,11 +28,6 @@ final class ControllerGenerator extends AbstractGenerator
     {
         return 'This generator helps you to quickly generate a new controller class with
             one or several controller actions and their corresponding views.';
-    }
-
-    public static function getId(): string
-    {
-        return 'controller';
     }
 
     public function requiredTemplates(): array
@@ -70,8 +70,14 @@ final class ControllerGenerator extends AbstractGenerator
      */
     private function getControllerFile(ControllerCommand $command): string
     {
+        $directory = empty($command->getDirectory()) ? '@src/Controller/' : $command->getDirectory() ;
+
         return $this->aliases->get(
-            sprintf('%s/%s.php', $this->getDirectory() ?? '', $command->getControllerClass())
+            sprintf(
+                '%s/%s.php',
+                str_replace('\\', '/', $directory),
+                $command->getControllerClass(),
+            )
         );
     }
 
@@ -82,13 +88,16 @@ final class ControllerGenerator extends AbstractGenerator
      */
     public function getViewFile(ControllerCommand $command, string $action): string
     {
-        if (empty($command->getViewsPath())) {
-            return $this->aliases->get(
-                "@views/{$command->getControllerID()}/$action.php"
-            );
-        }
+        $directory = empty($command->getViewsPath()) ? '@views/' : $command->getViewsPath() ;
 
-        return $this->aliases->get(str_replace('\\', '/', $command->getViewsPath()) . "/$action.php");
+        return $this->aliases->get(
+            sprintf(
+                '%s/%s/%s.php',
+                str_replace('\\', '/', $directory),
+                $command->getControllerID(),
+                $action,
+            )
+        );
     }
 
     public static function getCommandClass(): string

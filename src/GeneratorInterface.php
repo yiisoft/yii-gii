@@ -30,7 +30,7 @@ interface GeneratorInterface
      */
     public static function getCommandClass(): string;
 
-    public function getTemplatePath(AbstractGeneratorCommand $command): string;
+    public function getTemplatePath(GeneratorCommandInterface $command): string;
 
     /**
      * Generates the code based on the current user input and the specified code template files.
@@ -42,5 +42,5 @@ interface GeneratorInterface
      *
      * @return CodeFile[] a list of code files to be created.
      */
-    public function generate(AbstractGeneratorCommand $command): array;
+    public function generate(GeneratorCommandInterface $command): array;
 }

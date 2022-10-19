@@ -33,9 +33,13 @@ final class ControllerCommand extends AbstractGeneratorCommand
          */
         private string $controllerClass = 'IndexController',
         /**
+         * @var string|null the controller path
+         */
+        private string $controllerPath = '@src/Controller',
+        /**
          * @var string|null the controller's views path
          */
-        private ?string $viewsPath = null,
+        private string $viewsPath = '@views/',
         #[Regex(
             pattern: '/^[a-z\\\\]*$/i',
             message: 'Only word characters and backslashes are allowed.',
@@ -44,14 +48,13 @@ final class ControllerCommand extends AbstractGeneratorCommand
         /**
          * @var string|null the base class of the controller or null if no parent class present
          */
-        private ?string $baseClass = null,
+        private string $baseClass = '',
         #[Each([
             new Regex(
                 pattern: '/^[a-z][a-z0-9]*$/',
                 message: 'Only a-z, 0-9, dashes (-), spaces and commas are allowed.'
             ),
-        ])
-        ]
+        ])]
         /**
          * @var string[] list of action IDs
          */
@@ -83,7 +86,7 @@ final class ControllerCommand extends AbstractGeneratorCommand
         return $this->actions;
     }
 
-    public function getViewsPath(): ?string
+    public function getViewsPath(): string
     {
         return $this->viewsPath;
     }
@@ -93,18 +96,26 @@ final class ControllerCommand extends AbstractGeneratorCommand
         return $this->controllerNamespace;
     }
 
-    public function getBaseClass(): ?string
+    public function getBaseClass(): string
     {
         return $this->baseClass;
+    }
+
+    public function getDirectory(): string
+    {
+        return $this->controllerPath;
     }
 
     public static function getAttributeLabels(): array
     {
         return [
-            'baseClass' => 'Base Class',
+            'controllerNamespace' => 'Controller Namespace',
             'controllerClass' => 'Controller Class',
-            'viewsPath' => 'Views Path',
+            'baseClass' => 'Base Class',
+            'controllerPath' => 'Controller Path',
             'actions' => 'Action IDs',
+            'viewsPath' => 'Views Path',
+            'template' => 'Action IDs',
         ];
     }
 
@@ -134,8 +145,10 @@ final class ControllerCommand extends AbstractGeneratorCommand
             'controllerNamespace',
             'controllerClass',
             'baseClass',
+            'viewsPath',
             'actions',
             'template',
+            'controllerPath',
         ];
     }
 }

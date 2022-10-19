@@ -12,6 +12,7 @@ use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\Yii\Gii\Component\CodeFile\CodeFile;
 use Yiisoft\Yii\Gii\Exception\InvalidConfigException;
 use Yiisoft\Yii\Gii\Exception\InvalidGeneratorCommandException;
+use Yiisoft\Yii\Gii\GeneratorCommandInterface;
 use Yiisoft\Yii\Gii\GeneratorInterface;
 use Yiisoft\Yii\Gii\GiiParametersProvider;
 
@@ -30,8 +31,6 @@ use Yiisoft\Yii\Gii\GiiParametersProvider;
  */
 abstract class AbstractGenerator implements GeneratorInterface
 {
-    private string $directory = 'src/Controller';
-
     public function __construct(
         protected Aliases $aliases,
         protected ValidatorInterface $validator,
@@ -74,7 +73,7 @@ abstract class AbstractGenerator implements GeneratorInterface
      *
      * @return string the root path of the template files that are currently being used.
      */
-    public function getTemplatePath(AbstractGeneratorCommand $command): string
+    public function getTemplatePath(GeneratorCommandInterface $command): string
     {
         $template = $command->getTemplate();
 
@@ -94,9 +93,9 @@ abstract class AbstractGenerator implements GeneratorInterface
      *
      * @throws InvalidGeneratorCommandException
      *
-     * @return array|CodeFile
+     * @return CodeFile[]
      */
-    final public function generate(AbstractGeneratorCommand $command): array
+    final public function generate(GeneratorCommandInterface $command): array
     {
         $result = $this->validator->validate($command);
 
@@ -121,7 +120,7 @@ abstract class AbstractGenerator implements GeneratorInterface
      *
      * @return string the generated code
      */
-    protected function render(AbstractGeneratorCommand $command, string $template, array $params = []): string
+    protected function render(GeneratorCommandInterface $command, string $template, array $params = []): string
     {
         $file = sprintf(
             '%s/%s.php',
@@ -150,10 +149,5 @@ abstract class AbstractGenerator implements GeneratorInterface
             }
             throw $e;
         }
-    }
-
-    public function getDirectory(): string
-    {
-        return $this->directory;
     }
 }

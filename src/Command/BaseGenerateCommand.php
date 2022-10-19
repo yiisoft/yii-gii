@@ -21,6 +21,7 @@ use Yiisoft\Yii\Gii\Component\CodeFile\CodeFileWriteStatusEnum;
 use Yiisoft\Yii\Gii\Exception\InvalidConfigException;
 use Yiisoft\Yii\Gii\Exception\InvalidGeneratorCommandException;
 use Yiisoft\Yii\Gii\Generator\AbstractGeneratorCommand;
+use Yiisoft\Yii\Gii\GeneratorCommandInterface;
 use Yiisoft\Yii\Gii\GeneratorInterface;
 use Yiisoft\Yii\Gii\GiiInterface;
 
@@ -43,7 +44,6 @@ abstract class BaseGenerateCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        /** @var GeneratorInterface $generator */
         $generator = $this->getGenerator();
         $generatorCommand = $this->createGeneratorCommand($input);
 
@@ -54,7 +54,7 @@ abstract class BaseGenerateCommand extends Command
             $this->displayValidationErrors($e->getResult(), $output);
             return ExitCode::UNSPECIFIED_ERROR;
         }
-        $this->generateCode($files, $generatorCommand, $input, $output);
+        $this->generateCode($files, $input, $output);
         return ExitCode::OK;
     }
 
@@ -71,16 +71,12 @@ abstract class BaseGenerateCommand extends Command
 
     /**
      * @param CodeFile[] $files
-     * @param AbstractGeneratorCommand $generatorCommand
      * @param InputInterface $input
      * @param OutputInterface $output
      *
-     * @throws ReflectionException
-     * @throws InvalidConfigException
      */
     protected function generateCode(
         array $files,
-        AbstractGeneratorCommand $generatorCommand,
         InputInterface $input,
         OutputInterface $output
     ): void {
@@ -167,7 +163,7 @@ abstract class BaseGenerateCommand extends Command
         }
     }
 
-    abstract protected function createGeneratorCommand(InputInterface $input): AbstractGeneratorCommand;
+    abstract protected function createGeneratorCommand(InputInterface $input): GeneratorCommandInterface;
 
     /**
      * @return bool|mixed|string|null
