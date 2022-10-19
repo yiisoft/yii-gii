@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\Gii\Component\CodeFile;
 
 use Diff;
+use Diff_Renderer_Text_Unified;
 use RuntimeException;
-use Yiisoft\Yii\Gii\Component\DiffRendererHtmlInline;
 
 /**
  * CodeFile represents a code file to be generated.
@@ -31,7 +31,8 @@ final class CodeFile
      */
     private string $path;
     /**
-     * @var CodeFileWriteOperationEnum the operation to be performed. This can be {@see OP_CREATE}, {@see OP_OVERWRITE} or {@see OP_SKIP}.
+     * @var CodeFileWriteOperationEnum the operation to be performed. This can be {@see OP_CREATE}, {@see OP_OVERWRITE}
+     *     or {@see OP_SKIP}.
      */
     private CodeFileWriteOperationEnum $operation = CodeFileWriteOperationEnum::SAVE;
     /**
@@ -62,17 +63,16 @@ final class CodeFile
     {
         $this->path = $this->preparePath($path);
         $this->id = dechex(crc32($this->path));
-        $this->state  = CodeFileStateEnum::NOT_EXIST;
+        $this->state = CodeFileStateEnum::NOT_EXIST;
         if (is_file($path)) {
             if (file_get_contents($path) === $content) {
                 $this->operation = CodeFileWriteOperationEnum::SKIP;
-                $this->state  = CodeFileStateEnum::PRESENT_SAME;
+                $this->state = CodeFileStateEnum::PRESENT_SAME;
             } else {
                 $this->operation = CodeFileWriteOperationEnum::SAVE;
-                $this->state  = CodeFileStateEnum::PRESENT_DIFFERENT;
+                $this->state = CodeFileStateEnum::PRESENT_DIFFERENT;
             }
         }
-
     }
 
     /**
@@ -98,9 +98,9 @@ final class CodeFile
             }
         }
         $status = match ($this->state) {
-            CodeFileStateEnum::PRESENT_DIFFERENT=>CodeFileWriteStatusEnum::OVERWROTE,
-            CodeFileStateEnum::NOT_EXIST=>CodeFileWriteStatusEnum::CREATED,
-            default=>CodeFileWriteStatusEnum::SKIPPED,
+            CodeFileStateEnum::PRESENT_DIFFERENT => CodeFileWriteStatusEnum::OVERWROTE,
+            CodeFileStateEnum::NOT_EXIST => CodeFileWriteStatusEnum::CREATED,
+            default => CodeFileWriteStatusEnum::SKIPPED,
         };
         if (@file_put_contents($this->path, $this->content) === false) {
             throw new RuntimeException("Unable to write the file '{$this->path}'.");
@@ -201,7 +201,7 @@ final class CodeFile
             $lines2[$i] = rtrim($line, "\r\n");
         }
 
-        $renderer = new DiffRendererHtmlInline();
+        $renderer = new Diff_Renderer_Text_Unified();
         return (new Diff($lines1, $lines2))->render($renderer);
     }
 
