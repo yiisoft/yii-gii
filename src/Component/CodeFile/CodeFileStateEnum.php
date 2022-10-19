@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\Gii;
+namespace Yiisoft\Yii\Gii\Component\CodeFile;
 
 enum CodeFileStateEnum: string
 {

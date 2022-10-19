@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\Gii\Generator\Controller;
 
 use InvalidArgumentException;
-use Yiisoft\Yii\Gii\CodeFile;
+use Yiisoft\Yii\Gii\Component\CodeFile\CodeFile;
 use Yiisoft\Yii\Gii\Generator\AbstractGenerator;
 use Yiisoft\Yii\Gii\Generator\AbstractGeneratorCommand;
 

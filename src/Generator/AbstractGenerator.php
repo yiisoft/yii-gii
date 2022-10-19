@@ -9,7 +9,7 @@ use ReflectionException;
 use Throwable;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Validator\ValidatorInterface;
-use Yiisoft\Yii\Gii\CodeFile;
+use Yiisoft\Yii\Gii\Component\CodeFile\CodeFile;
 use Yiisoft\Yii\Gii\Exception\InvalidConfigException;
 use Yiisoft\Yii\Gii\Exception\InvalidGeneratorCommandException;
 use Yiisoft\Yii\Gii\GeneratorInterface;
