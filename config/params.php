@@ -31,7 +31,7 @@ return [
             ],
         ],
         'parameters' => [
-            'templates' => []
-        ]
+            'templates' => [],
+        ],
     ],
 ];

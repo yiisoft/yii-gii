@@ -30,7 +30,7 @@ return [
     GiiParametersProvider::class => [
         'class' => GiiParametersProvider::class,
         '__construct()' => [
-            'templates' => $params['yiisoft/yii-gii']['parameters']['templates']
-        ]
-    ]
+            'templates' => $params['yiisoft/yii-gii']['parameters']['templates'],
+        ],
+    ],
 ];
