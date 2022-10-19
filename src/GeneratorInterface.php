@@ -8,7 +8,6 @@ use ReflectionException;
 use Yiisoft\Yii\Gii\Component\CodeFile\CodeFile;
 use Yiisoft\Yii\Gii\Exception\InvalidConfigException;
 use Yiisoft\Yii\Gii\Exception\InvalidGeneratorCommandException;
-use Yiisoft\Yii\Gii\Generator\AbstractGeneratorCommand;
 
 interface GeneratorInterface
 {
@@ -33,10 +32,10 @@ interface GeneratorInterface
     public static function getCommandClass(): string;
 
     /**
-     * @return string the root path of the template files that are currently being used.
      * @throws InvalidConfigException
-     *
      * @throws ReflectionException
+     *
+     * @return string the root path of the template files that are currently being used.
      */
     public function getTemplatePath(GeneratorCommandInterface $command): string;
 

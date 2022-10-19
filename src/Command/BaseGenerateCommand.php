@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii\Command;
 
-use ReflectionException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -18,9 +17,7 @@ use Yiisoft\Yii\Gii\Component\CodeFile\CodeFileStateEnum;
 use Yiisoft\Yii\Gii\Component\CodeFile\CodeFileWriteOperationEnum;
 use Yiisoft\Yii\Gii\Component\CodeFile\CodeFileWriter;
 use Yiisoft\Yii\Gii\Component\CodeFile\CodeFileWriteStatusEnum;
-use Yiisoft\Yii\Gii\Exception\InvalidConfigException;
 use Yiisoft\Yii\Gii\Exception\InvalidGeneratorCommandException;
-use Yiisoft\Yii\Gii\Generator\AbstractGeneratorCommand;
 use Yiisoft\Yii\Gii\GeneratorCommandInterface;
 use Yiisoft\Yii\Gii\GeneratorInterface;
 use Yiisoft\Yii\Gii\GiiInterface;
@@ -73,7 +70,6 @@ abstract class BaseGenerateCommand extends Command
      * @param CodeFile[] $files
      * @param InputInterface $input
      * @param OutputInterface $output
-     *
      */
     protected function generateCode(
         array $files,
