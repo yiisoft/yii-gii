@@ -7,19 +7,19 @@ namespace Yiisoft\Yii\Gii\Component\CodeFile;
 enum CodeFileWriteStatusEnum: string
 {
     /**
-     * The code file is new.
+     * The code file was created.
      */
     case CREATED = 'created';
     /**
-     * The code file already exists, and the new one may need to overwrite it.
+     * The code file was overwrote.
      */
     case OVERWROTE = 'overwrote';
     /**
-     * The new code file and the existing one are identical.
+     * The new code file generation was skipped for some reasons.
      */
     case SKIPPED = 'skipped';
     /**
-     * The new code file and the existing one are identical.
+     * The new code file was not generated because of an error.
      */
     case ERROR = 'error';
 }
