@@ -194,9 +194,8 @@ abstract class BaseGenerateCommand extends Command
     private function areAllFilesSkipped(array $answers): bool
     {
         return [] === array_filter(
-                $answers,
-                fn ($answer) => CodeFileWriteOperationEnum::from($answer) !== CodeFileWriteOperationEnum::SKIP
-            );
+            $answers,
+            fn ($answer) => CodeFileWriteOperationEnum::from($answer) !== CodeFileWriteOperationEnum::SKIP
+        );
     }
 }
-
