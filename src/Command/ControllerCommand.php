@@ -47,7 +47,6 @@ final class ControllerCommand extends BaseGenerateCommand
         $template = $input->getOption('template');
         $template = $template !== null ? $template : 'default';
 
-        // TODO: sync params
         return new \Yiisoft\Yii\Gii\Generator\Controller\ControllerCommand(
             controllerClass: $input->getArgument('controllerClass'),
             viewsPath: (string)$input->getOption('viewsPath'),
