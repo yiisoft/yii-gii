@@ -116,10 +116,10 @@ abstract class BaseGenerateCommand extends Command
             }
         }
 
-//        if (!array_sum($answers)) {
-//            $output->writeln("\n<fg=cyan>No files were chosen to be generated.</>");
-//            return;
-//        }
+        if ($this->areAllFilesSkipped($answers)) {
+            $output->writeln("\n<fg=cyan>No files were found to be generated.</>");
+            return;
+        }
 
         if (!$this->confirm($input, $output)) {
             $output->writeln("\n<fg=cyan>No file was generated.</>");
@@ -137,18 +137,22 @@ abstract class BaseGenerateCommand extends Command
                 CodeFileWriteStatusEnum::ERROR->value => 'red',
                 default => 'yellow',
             };
-            $output->writeln(sprintf(
-                '<fg=%s>%s</>: %s',
-                $color,
-                $result['status'],
-                $file->getRelativePath(),
-            ));
+            $output->writeln(
+                sprintf(
+                    '<fg=%s>%s</>: %s',
+                    $color,
+                    $result['status'],
+                    $file->getRelativePath(),
+                )
+            );
             if (CodeFileWriteStatusEnum::ERROR->value === $result['status']) {
                 $hasError = true;
-                $output->writeln(sprintf(
-                    '<fg=red>%s</>',
-                    $result['error']
-                ));
+                $output->writeln(
+                    sprintf(
+                        '<fg=red>%s</>',
+                        $result['error']
+                    )
+                );
             }
         }
 
@@ -186,4 +190,13 @@ abstract class BaseGenerateCommand extends Command
         );
         return $this->getHelper('question')->ask($input, $output, $question);
     }
+
+    private function areAllFilesSkipped(array $answers): bool
+    {
+        return [] === array_filter(
+                $answers,
+                fn ($answer) => CodeFileWriteOperationEnum::from($answer) !== CodeFileWriteOperationEnum::SKIP
+            );
+    }
 }
+
