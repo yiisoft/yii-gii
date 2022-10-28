@@ -45,7 +45,7 @@ final class ControllerCommand extends BaseGenerateCommand
         $actions = $actions !== null ? explode(',', $actions) : ['index'];
 
         $template = $input->getOption('template');
-        $template = $template !== null ? $template : 'default';
+        $template ??= 'default';
 
         return new \Yiisoft\Yii\Gii\Generator\Controller\ControllerCommand(
             controllerClass: $input->getArgument('controllerClass'),

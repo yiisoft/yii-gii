@@ -51,7 +51,7 @@ final class CodeFile
      * Defaults to 0777, meaning the directory can be read, written and executed by all users.
      */
     private int $newDirMode = self::DIR_MODE;
-    private CodeFileStateEnum $state;
+    private CodeFileStateEnum $state = CodeFileStateEnum::NOT_EXIST;
 
     /**
      * Constructor.
@@ -63,7 +63,6 @@ final class CodeFile
     {
         $this->path = $this->preparePath($path);
         $this->id = dechex(crc32($this->path));
-        $this->state = CodeFileStateEnum::NOT_EXIST;
         if (is_file($path)) {
             if (file_get_contents($path) === $content) {
                 $this->operation = CodeFileWriteOperationEnum::SKIP;

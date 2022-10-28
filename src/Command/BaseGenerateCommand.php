@@ -68,8 +68,6 @@ abstract class BaseGenerateCommand extends Command
 
     /**
      * @param CodeFile[] $files
-     * @param InputInterface $input
-     * @param OutputInterface $output
      */
     protected function generateCode(
         array $files,
