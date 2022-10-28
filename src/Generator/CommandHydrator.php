@@ -14,8 +14,6 @@ class CommandHydrator
 
     /**
      * @psalm-param class-string<GeneratorCommandInterface> $commandClass
-     *
-     *
      */
     public function hydrate(string $commandClass, array $parameters): GeneratorCommandInterface
     {
