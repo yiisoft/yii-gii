@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use Yiisoft\Yii\Gii\Component\CodeFile\CodeFile;
 use Yiisoft\Yii\Gii\Generator\AbstractGenerator;
 use Yiisoft\Yii\Gii\Generator\AbstractGeneratorCommand;
+use Yiisoft\Yii\Gii\GeneratorCommandInterface;
 
 /**
  * This generator will generate a controller and one or a few action view files.
@@ -38,7 +39,7 @@ final class ControllerGenerator extends AbstractGenerator
         ];
     }
 
-    public function doGenerate(AbstractGeneratorCommand $command): array
+    public function doGenerate(GeneratorCommandInterface $command): array
     {
         if (!$command instanceof ControllerCommand) {
             throw new InvalidArgumentException();

@@ -90,7 +90,7 @@ abstract class AbstractGenerator implements GeneratorInterface
         return $this->doGenerate($command);
     }
 
-    abstract protected function doGenerate(AbstractGeneratorCommand $command): array;
+    abstract protected function doGenerate(GeneratorCommandInterface $command): array;
 
     /**
      * Generates code using the specified code template and parameters.

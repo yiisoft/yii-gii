@@ -153,7 +153,7 @@ final class DefaultController
     private function serializeGenerator(GeneratorInterface $generator): array
     {
         /**
-         * @psalm-var $commandClass class-string<GeneratorCommandInterface>
+         * @psalm-var class-string<GeneratorCommandInterface> $commandClass
          */
         $commandClass = $generator::getCommandClass();
 
@@ -165,7 +165,7 @@ final class DefaultController
         $labels = $commandClass::getAttributeLabels();
 
         $reflection = new ReflectionClass($commandClass);
-        $constructorParameters = $reflection->getConstructor()->getParameters();
+        $constructorParameters = $reflection->getConstructor()?->getParameters() ?? [];
 
         $attributesResult = [];
         foreach ($attributes as $attributeName) {

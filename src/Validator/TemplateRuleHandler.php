@@ -29,8 +29,6 @@ final class TemplateRuleHandler implements RuleHandlerInterface
      * Validates the template selection.
      * This method validates whether the user selects an existing template
      * and the template contains all required template files as specified in {@see requiredTemplates()}.
-     *
-     * @param string $value
      */
     public function validate(mixed $value, object $rule, ValidationContext $context): Result
     {

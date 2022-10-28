@@ -19,9 +19,9 @@ final class GeneratorRequest extends RequestModel
         return $this->gii->getGenerator($this->getAttributeValue('router.generator'));
     }
 
-    public function getAnswers(): ?array
+    public function getAnswers(): array
     {
-        return $this->getAttributeValue('body.answers');
+        return $this->getAttributeValue('body.answers', []);
     }
 
     public function getBody(): array

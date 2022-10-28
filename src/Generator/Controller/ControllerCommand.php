@@ -33,11 +33,11 @@ final class ControllerCommand extends AbstractGeneratorCommand
          */
         private string $controllerClass = 'IndexController',
         /**
-         * @var string|null the controller path
+         * @var string the controller path
          */
         private string $controllerPath = '@src/Controller',
         /**
-         * @var string|null the controller's views path
+         * @var string the controller's views path
          */
         private string $viewsPath = '@views/',
         #[Regex(
@@ -46,7 +46,7 @@ final class ControllerCommand extends AbstractGeneratorCommand
             skipOnEmpty: true,
         )]
         /**
-         * @var string|null the base class of the controller or null if no parent class present
+         * @var string the base class of the controller or null if no parent class present
          */
         private string $baseClass = '',
         #[Each([
