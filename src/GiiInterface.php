@@ -9,13 +9,17 @@ use Yiisoft\Yii\Gii\Exception\GeneratorNotFoundException;
 interface GiiInterface
 {
     /**
-     * @param string $name
-     * @param mixed $generator
+     * @param GeneratorInterface $generator
      */
-    public function addGenerator(string $name, mixed $generator): void;
+    public function addGenerator(GeneratorInterface $generator): void;
 
     /**
      * @throws GeneratorNotFoundException
      */
-    public function getGenerator(string $name): GeneratorInterface;
+    public function getGenerator(string $id): GeneratorInterface;
+
+    /**
+     * @return GeneratorInterface[]
+     */
+    public function getGenerators(): array;
 }

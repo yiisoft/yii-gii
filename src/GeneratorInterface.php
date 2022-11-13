@@ -4,34 +4,60 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii;
 
-use Yiisoft\Validator\Result;
+use ReflectionException;
+use Yiisoft\Yii\Gii\Component\CodeFile\CodeFile;
+use Yiisoft\Yii\Gii\Exception\InvalidConfigException;
+use Yiisoft\Yii\Gii\Exception\InvalidGeneratorCommandException;
 
 interface GeneratorInterface
 {
     /**
+     * Returns the id of the generator
+     */
+    public static function getId(): string;
+
+    /**
      * Returns the name of the generator
      */
-    public function getName(): string;
+    public static function getName(): string;
 
     /**
      * Returns the detailed description of the generator
      */
-    public function getDescription(): string;
+    public static function getDescription(): string;
 
-    public function getTemplatePath(): string;
+    /**
+     * @psalm-return class-string<GeneratorCommandInterface>
+     */
+    public static function getCommandClass(): string;
+
+    /**
+     * @throws InvalidConfigException
+     * @throws ReflectionException
+     *
+     * @return string the root path of the template files that are currently being used.
+     */
+    public function getTemplatePath(GeneratorCommandInterface $command): string;
 
     /**
      * Generates the code based on the current user input and the specified code template files.
      * This is the main method that child classes should implement.
-     * Please refer to {@see \Yiisoft\Yii\Gii\Generator\Controller\Generator::generate()} as an example
+     * Please refer to {@see \Yiisoft\Yii\Gii\Generator\Controller\ControllerGenerator::generate()} as an example
      * on how to implement this method.
+     *
+     * @throws InvalidGeneratorCommandException
      *
      * @return CodeFile[] a list of code files to be created.
      */
-    public function generate(): array;
+    public function generate(GeneratorCommandInterface $command): array;
 
     /**
-     * Returns the validation result
+     * Returns a list of code template files that are required.
+     * Derived classes usually should override this method if they require the existence of
+     * certain template files.
+     *
+     * @return string[] list of code template files that are required. They should be file paths
+     * relative to {@see getTemplatePath()}.
      */
-    public function validate(): Result;
+    public function getRequiredTemplates(): array;
 }
