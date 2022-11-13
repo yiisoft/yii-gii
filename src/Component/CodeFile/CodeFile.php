@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\Gii;
+namespace Yiisoft\Yii\Gii\Component\CodeFile;
 
 use Diff;
+use Diff_Renderer_Text_Unified;
 use RuntimeException;
-use Yiisoft\Html\Html;
-use Yiisoft\Yii\Gii\Component\DiffRendererHtmlInline;
 
 /**
  * CodeFile represents a code file to be generated.
@@ -22,18 +21,7 @@ final class CodeFile
      * The new directory mode
      */
     private const DIR_MODE = 0777;
-    /**
-     * The code file is new.
-     */
-    public const OP_CREATE = 0;
-    /**
-     * The code file already exists, and the new one may need to overwrite it.
-     */
-    public const OP_OVERWRITE = 1;
-    /**
-     * The new code file and the existing one are identical.
-     */
-    public const OP_SKIP = 2;
+
     /**
      * @var string an ID that uniquely identifies this code file.
      */
@@ -43,9 +31,10 @@ final class CodeFile
      */
     private string $path;
     /**
-     * @var int the operation to be performed. This can be [[OP_CREATE]], [[OP_OVERWRITE]] or [[OP_SKIP]].
+     * @var CodeFileWriteOperationEnum the operation to be performed. This can be {@see OP_CREATE}, {@see OP_OVERWRITE}
+     *     or {@see OP_SKIP}.
      */
-    private int $operation = self::OP_CREATE;
+    private CodeFileWriteOperationEnum $operation = CodeFileWriteOperationEnum::SAVE;
     /**
      * @var string the base path
      */
@@ -62,6 +51,7 @@ final class CodeFile
      * Defaults to 0777, meaning the directory can be read, written and executed by all users.
      */
     private int $newDirMode = self::DIR_MODE;
+    private CodeFileStateEnum $state = CodeFileStateEnum::NOT_EXIST;
 
     /**
      * Constructor.
@@ -74,18 +64,24 @@ final class CodeFile
         $this->path = $this->preparePath($path);
         $this->id = dechex(crc32($this->path));
         if (is_file($path)) {
-            $this->operation = file_get_contents($path) === $content ? self::OP_SKIP : self::OP_OVERWRITE;
+            if (file_get_contents($path) === $content) {
+                $this->operation = CodeFileWriteOperationEnum::SKIP;
+                $this->state = CodeFileStateEnum::PRESENT_SAME;
+            } else {
+                $this->operation = CodeFileWriteOperationEnum::SAVE;
+                $this->state = CodeFileStateEnum::PRESENT_DIFFERENT;
+            }
         }
     }
 
     /**
      * Saves the code into the file specified by [[path]].
      *
-     * @return bool the error occurred while saving the code file, or true if no error.
+     * @return CodeFileWriteStatusEnum the error occurred while saving the code file, or true if no error.
      */
-    public function save(): bool
+    public function save(): CodeFileWriteStatusEnum
     {
-        if ($this->operation === self::OP_CREATE) {
+        if ($this->operation === CodeFileWriteOperationEnum::SAVE && $this->state !== CodeFileStateEnum::PRESENT_SAME) {
             $dir = dirname($this->path);
             if (!is_dir($dir)) {
                 if ($this->newDirMode !== self::DIR_MODE) {
@@ -100,6 +96,11 @@ final class CodeFile
                 }
             }
         }
+        $status = match ($this->state) {
+            CodeFileStateEnum::PRESENT_DIFFERENT => CodeFileWriteStatusEnum::OVERWROTE,
+            CodeFileStateEnum::NOT_EXIST => CodeFileWriteStatusEnum::CREATED,
+            default => CodeFileWriteStatusEnum::SKIPPED,
+        };
         if (@file_put_contents($this->path, $this->content) === false) {
             throw new RuntimeException("Unable to write the file '{$this->path}'.");
         }
@@ -110,7 +111,7 @@ final class CodeFile
             @umask($mask);
         }
 
-        return true;
+        return $status;
     }
 
     /**
@@ -140,7 +141,7 @@ final class CodeFile
     /**
      * Returns preview or false if it cannot be rendered
      */
-    public function preview(): bool|string
+    public function preview(): false|string
     {
         if (($pos = strrpos($this->path, '.')) !== false) {
             $type = substr($this->path, $pos + 1);
@@ -153,7 +154,12 @@ final class CodeFile
         }
 
         if (!in_array($type, ['jpg', 'gif', 'png', 'exe'])) {
-            return nl2br(Html::encode($this->content));
+            $content = htmlspecialchars(
+                $this->content,
+                ENT_NOQUOTES | ENT_SUBSTITUTE | ENT_HTML5,
+                'UTF-8'
+            );
+            return nl2br($content);
         }
 
         return false;
@@ -162,14 +168,14 @@ final class CodeFile
     /**
      * Returns diff or false if it cannot be calculated
      */
-    public function diff(): bool|string
+    public function diff(): false|string
     {
         $type = strtolower($this->getType());
         if (in_array($type, ['jpg', 'gif', 'png', 'exe'])) {
             return false;
         }
 
-        if ($this->operation === self::OP_OVERWRITE) {
+        if ($this->state === CodeFileStateEnum::PRESENT_DIFFERENT) {
             return $this->renderDiff(file($this->path), $this->content);
         }
 
@@ -194,10 +200,8 @@ final class CodeFile
             $lines2[$i] = rtrim($line, "\r\n");
         }
 
-        $renderer = new DiffRendererHtmlInline();
-        $diff = new Diff($lines1, $lines2);
-
-        return $diff->render($renderer);
+        $renderer = new Diff_Renderer_Text_Unified();
+        return (new Diff($lines1, $lines2))->render($renderer);
     }
 
     public function getId(): string
@@ -205,9 +209,14 @@ final class CodeFile
         return $this->id;
     }
 
-    public function getOperation(): int
+    public function getOperation(): CodeFileWriteOperationEnum
     {
         return $this->operation;
+    }
+
+    public function getState(): CodeFileStateEnum
+    {
+        return $this->state;
     }
 
     public function getPath(): string

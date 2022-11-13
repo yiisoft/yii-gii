@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\Gii\Command;
 
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Yiisoft\Yii\Gii\Generator\Controller\ControllerGenerator;
+use Yiisoft\Yii\Gii\GeneratorCommandInterface;
 use Yiisoft\Yii\Gii\GeneratorInterface;
 
 /**
@@ -19,7 +22,6 @@ use Yiisoft\Yii\Gii\GeneratorInterface;
  */
 final class ControllerCommand extends BaseGenerateCommand
 {
-    private const NAME = 'controller';
     protected static $defaultName = 'gii/controller';
 
     protected function configure(): void
@@ -34,6 +36,23 @@ final class ControllerCommand extends BaseGenerateCommand
 
     public function getGenerator(): GeneratorInterface
     {
-        return $this->gii->getGenerator(self::NAME);
+        return $this->gii->getGenerator(ControllerGenerator::getId());
+    }
+
+    protected function createGeneratorCommand(InputInterface $input): GeneratorCommandInterface
+    {
+        $actions = $input->getOption('actions');
+        $actions = $actions !== null ? explode(',', $actions) : ['index'];
+
+        $template = $input->getOption('template');
+        $template ??= 'default';
+
+        return new \Yiisoft\Yii\Gii\Generator\Controller\ControllerCommand(
+            controllerClass: $input->getArgument('controllerClass'),
+            viewsPath: (string)$input->getOption('viewsPath'),
+            baseClass: (string)$input->getOption('baseClass'),
+            actions: $actions,
+            template: $template,
+        );
     }
 }

@@ -10,9 +10,15 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Yiisoft\Validator\Result;
 use Yiisoft\Yii\Console\ExitCode;
-use Yiisoft\Yii\Gii\CodeFile;
-use Yiisoft\Yii\Gii\Generator\AbstractGenerator;
+use Yiisoft\Yii\Gii\Component\CodeFile\CodeFile;
+use Yiisoft\Yii\Gii\Component\CodeFile\CodeFileStateEnum;
+use Yiisoft\Yii\Gii\Component\CodeFile\CodeFileWriteOperationEnum;
+use Yiisoft\Yii\Gii\Component\CodeFile\CodeFileWriter;
+use Yiisoft\Yii\Gii\Component\CodeFile\CodeFileWriteStatusEnum;
+use Yiisoft\Yii\Gii\Exception\InvalidGeneratorCommandException;
+use Yiisoft\Yii\Gii\GeneratorCommandInterface;
 use Yiisoft\Yii\Gii\GeneratorInterface;
 use Yiisoft\Yii\Gii\GiiInterface;
 
@@ -20,8 +26,10 @@ use function count;
 
 abstract class BaseGenerateCommand extends Command
 {
-    public function __construct(protected GiiInterface $gii)
-    {
+    public function __construct(
+        protected GiiInterface $gii,
+        protected CodeFileWriter $codeFileWriter,
+    ) {
         parent::__construct();
     }
 
@@ -33,35 +41,39 @@ abstract class BaseGenerateCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        /** @var AbstractGenerator $generator */
         $generator = $this->getGenerator();
-        $generator->load(array_filter(array_merge($input->getOptions(), $input->getArguments())));
+        $generatorCommand = $this->createGeneratorCommand($input);
+
         $output->writeln("Running '{$generator->getName()}'...\n");
-        if ($generator->validate()->isValid() && !$generator->hasErrors()) {
-            $this->generateCode($generator, $input, $output);
-        } else {
-            $this->displayValidationErrors($generator, $output);
+        try {
+            $files = $generator->generate($generatorCommand);
+        } catch (InvalidGeneratorCommandException $e) {
+            $this->displayValidationErrors($e->getResult(), $output);
             return ExitCode::UNSPECIFIED_ERROR;
         }
+        $this->generateCode($files, $input, $output);
         return ExitCode::OK;
     }
 
     abstract protected function getGenerator(): GeneratorInterface;
 
-    protected function displayValidationErrors(GeneratorInterface $generator, OutputInterface $output): void
+    protected function displayValidationErrors(Result $result, OutputInterface $output): void
     {
         $output->writeln("<fg=red>Code not generated. Please fix the following errors:</>\n");
-        /** @var AbstractGenerator $generator */
-        foreach ($generator->getErrors() as $attribute => $errors) {
-            $output->writeln(sprintf(' - <fg=cyan>%s</>: <fg=green>%s</>', $attribute, implode('; ', $errors)));
+        foreach ($result->getErrorMessages() as $attribute => $errorMessage) {
+            $output->writeln(sprintf(' - <fg=cyan>%s</>: <fg=green>%s</>', $attribute, $errorMessage));
         }
         $output->writeln('');
     }
 
-    protected function generateCode(GeneratorInterface $generator, InputInterface $input, OutputInterface $output): void
-    {
-        /** @var AbstractGenerator $generator */
-        $files = $generator->generate();
+    /**
+     * @param CodeFile[] $files
+     */
+    protected function generateCode(
+        array $files,
+        InputInterface $input,
+        OutputInterface $output
+    ): void {
         if (count($files) === 0) {
             $output->writeln('<fg=cyan>No code to be generated.</>');
             return;
@@ -71,19 +83,28 @@ abstract class BaseGenerateCommand extends Command
         $answers = [];
         foreach ($files as $file) {
             $path = $file->getRelativePath();
-            if ($file->getOperation() === CodeFile::OP_CREATE) {
-                $output->writeln("    <fg=green>[new]</>       <fg=blue>$path</>");
-                $answers[$file->getId()] = true;
-            } elseif ($file->getOperation() === CodeFile::OP_SKIP) {
-                $output->writeln("    <fg=green>[unchanged]</> <fg=blue>$path</>");
-                $answers[$file->getId()] = false;
+            $color = match ($file->getState()) {
+                CodeFileStateEnum::PRESENT_SAME => 'yellow',
+                CodeFileStateEnum::PRESENT_DIFFERENT => 'blue',
+                CodeFileStateEnum::NOT_EXIST => 'green',
+                default => 'red',
+            };
+
+            if ($file->getState() === CodeFileStateEnum::NOT_EXIST) {
+                $output->writeln("    <fg=$color>[new]</>       <fg=blue>$path</>");
+                $answers[$file->getId()] = CodeFileWriteOperationEnum::SAVE->value;
+            } elseif ($file->getState() === CodeFileStateEnum::PRESENT_SAME) {
+                $output->writeln("    <fg=$color>[unchanged]</> <fg=blue>$path</>");
+                $answers[$file->getId()] = CodeFileWriteOperationEnum::SKIP->value;
             } else {
-                $output->writeln("    <fg=green>[changed]</>   <fg=blue>$path</>");
+                $output->writeln("    <fg=$color>[changed]</>   <fg=blue>$path</>");
                 if ($skipAll !== null) {
-                    $answers[$file->getId()] = !$skipAll;
+                    $answers[$file->getId()] = CodeFileWriteOperationEnum::SAVE->value;
                 } else {
                     $answer = $this->choice($input, $output);
-                    $answers[$file->getId()] = $answer === 'y' || $answer === 'ya';
+                    $answers[$file->getId()] = ($answer === 'y' || $answer === 'ya')
+                        ? CodeFileWriteOperationEnum::SAVE->value
+                        : CodeFileWriteOperationEnum::SKIP->value;
                     if ($answer === 'ya') {
                         $skipAll = false;
                     } elseif ($answer === 'na') {
@@ -93,8 +114,8 @@ abstract class BaseGenerateCommand extends Command
             }
         }
 
-        if (!array_sum($answers)) {
-            $output->writeln("\n<fg=cyan>No files were chosen to be generated.</>");
+        if ($this->areAllFilesSkipped($answers)) {
+            $output->writeln("\n<fg=cyan>No files were found to be generated.</>");
             return;
         }
 
@@ -103,30 +124,44 @@ abstract class BaseGenerateCommand extends Command
             return;
         }
 
-        $results = [];
-        $isSaved = $generator->save($files, $answers, $results);
-        foreach ($results as $n => $result) {
-            if ($n === 0) {
-                $output->writeln("<fg=blue>{$result}</>");
-            } elseif ($n === key(array_slice($results, -1, 1, true))) {
-                $output->writeln("<fg=green>{$result}</>");
-            } else {
+        $result = $this->codeFileWriter->write($files, $answers);
+
+        $hasError = false;
+        foreach ($result->getResults() as $fileId => $result) {
+            $file = $files[$fileId];
+            $color = match ($result['status']) {
+                CodeFileWriteStatusEnum::CREATED->value => 'green',
+                CodeFileWriteStatusEnum::OVERWROTE->value => 'blue',
+                CodeFileWriteStatusEnum::ERROR->value => 'red',
+                default => 'yellow',
+            };
+            $output->writeln(
+                sprintf(
+                    '<fg=%s>%s</>: %s',
+                    $color,
+                    $result['status'],
+                    $file->getRelativePath(),
+                )
+            );
+            if (CodeFileWriteStatusEnum::ERROR->value === $result['status']) {
+                $hasError = true;
                 $output->writeln(
-                    '<fg=yellow>' . preg_replace(
-                        '%<span class="error">(.*?)</span>%',
-                        '<fg=red>\1</>',
-                        $result
-                    ) . '</>'
+                    sprintf(
+                        '<fg=red>%s</>',
+                        $result['error']
+                    )
                 );
             }
         }
 
-        if ($isSaved) {
-            $output->writeln("\n<fg=green>Files were generated successfully!</>");
-        } else {
+        if ($hasError) {
             $output->writeln("\n<fg=red>Some errors occurred while generating the files.</>");
+        } else {
+            $output->writeln("\n<fg=green>Files were generated successfully!</>");
         }
     }
+
+    abstract protected function createGeneratorCommand(InputInterface $input): GeneratorCommandInterface;
 
     /**
      * @return bool|mixed|string|null
@@ -152,5 +187,13 @@ abstract class BaseGenerateCommand extends Command
             ]
         );
         return $this->getHelper('question')->ask($input, $output, $question);
+    }
+
+    private function areAllFilesSkipped(array $answers): bool
+    {
+        return [] === array_filter(
+            $answers,
+            fn ($answer) => CodeFileWriteOperationEnum::from($answer) !== CodeFileWriteOperationEnum::SKIP
+        );
     }
 }

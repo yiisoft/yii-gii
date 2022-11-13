@@ -4,180 +4,203 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii\Controller;
 
-use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Yiisoft\Aliases\Aliases;
+use ReflectionClass;
+use ReflectionParameter;
+use Yiisoft\DataResponse\DataResponse;
+use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Http\Status;
-use Yiisoft\View\ViewContextInterface;
-use Yiisoft\View\WebView;
-use Yiisoft\Yii\Gii\Generator\AbstractGenerator;
+use Yiisoft\RequestModel\Attribute\Query;
+use Yiisoft\Validator\RulesDumper;
+use Yiisoft\Validator\RulesProvider\AttributesRulesProvider;
+use Yiisoft\Yii\Gii\Component\CodeFile\CodeFile;
+use Yiisoft\Yii\Gii\Component\CodeFile\CodeFileWriteOperationEnum;
+use Yiisoft\Yii\Gii\Component\CodeFile\CodeFileWriter;
+use Yiisoft\Yii\Gii\Exception\InvalidGeneratorCommandException;
+use Yiisoft\Yii\Gii\Generator\CommandHydrator;
+use Yiisoft\Yii\Gii\GeneratorCommandInterface;
 use Yiisoft\Yii\Gii\GeneratorInterface;
 use Yiisoft\Yii\Gii\GiiInterface;
+use Yiisoft\Yii\Gii\ParametersProvider;
+use Yiisoft\Yii\Gii\Request\GeneratorRequest;
 
-class DefaultController implements ViewContextInterface
+final class DefaultController
 {
-    private string $layout;
-
     public function __construct(
-        private ResponseFactoryInterface $responseFactory,
-        private GiiInterface $gii,
-        private WebView $view,
-        private Aliases $aliases,
+        private DataResponseFactoryInterface $responseFactory,
+        private ParametersProvider $parametersProvider,
     ) {
-        $this->layout = $aliases->get('@yii-gii/views') . '/layout/generator';
     }
 
-    public function index(): string
+    public function list(GiiInterface $gii): ResponseInterface
     {
-        $this->layout = 'main';
+        $generators = $gii->getGenerators();
 
-        return $this->render('index');
+        return $this->responseFactory->createResponse([
+            'generators' => array_map($this->serializeGenerator(...), array_values($generators)),
+        ]);
     }
 
-    public function view(ServerRequestInterface $request): string
+    public function get(GeneratorRequest $request): ResponseInterface
     {
-        $id = $request->getAttribute('id');
-        /** @var AbstractGenerator $generator */
-        $generator = $this->loadGenerator($id, $request);
-        $params = ['generator' => $generator, 'id' => $id];
+        $generator = $request->getGenerator();
 
-        $preview = $request->getAttribute('preview');
-        $generate = $request->getAttribute('generate');
-        $answers = $request->getAttribute('answers');
+        return $this->responseFactory->createResponse(
+            $this->serializeGenerator($generator)
+        );
+    }
 
-        if ($preview !== null || $generate !== null) {
-            if ($generator->validate()->isValid()) {
-                $generator->saveStickyAttributes();
-                $files = $generator->generate();
-                if ($generate !== null && !empty($answers)) {
-                    $results = [];
-                    $params['hasError'] = !$generator->save($files, (array)$answers, $results);
-                    $params['results'] = $results;
-                } else {
-                    $params['files'] = $files;
-                    $params['answers'] = $answers;
-                }
+    public function generate(
+        GeneratorRequest $request,
+        CodeFileWriter $codeFileWriter,
+        CommandHydrator $commandHydrator
+    ): ResponseInterface {
+        $generator = $request->getGenerator();
+        $command = $commandHydrator->hydrate($generator::getCommandClass(), $request->getBody());
+        $answers = $request->getAnswers();
+        try {
+            $files = $generator->generate($command);
+        } catch (InvalidGeneratorCommandException $e) {
+            return $this->createErrorResponse($e);
+        }
+        $result = $codeFileWriter->write($files, $answers);
+
+        return $this->responseFactory->createResponse(array_values($result->getResults()));
+    }
+
+    public function preview(
+        GeneratorRequest $request,
+        CommandHydrator $commandHydrator,
+        #[Query('file')] ?string $file = null
+    ): ResponseInterface {
+        $generator = $request->getGenerator();
+        $command = $commandHydrator->hydrate($generator::getCommandClass(), $request->getBody());
+
+        try {
+            $files = $generator->generate($command);
+        } catch (InvalidGeneratorCommandException $e) {
+            return $this->createErrorResponse($e);
+        }
+        if ($file === null) {
+            return $this->responseFactory->createResponse([
+                'files' => array_map($this->serializeCodeFile(...), array_values($files)),
+                'operations' => CodeFileWriteOperationEnum::getLabels(),
+            ]);
+        }
+
+        foreach ($files as $generatedFile) {
+            if ($generatedFile->getId() === $file) {
+                $content = $generatedFile->preview();
+                return $this->responseFactory->createResponse(
+                    ['content' => $content ?: 'Preview is not available for this file type.']
+                );
             }
         }
 
-        return $this->render('view', $params);
+        return $this->responseFactory->createResponse(
+            ['message' => "Code file not found: $file"],
+            Status::UNPROCESSABLE_ENTITY
+        );
     }
 
-    public function preview(ServerRequestInterface $request): ResponseInterface|string
-    {
-        $id = $request->getAttribute('id');
-        $file = $request->getAttribute('file');
-        $generator = $this->loadGenerator($id, $request);
-        if ($generator->validate()->isValid()) {
-            foreach ($generator->generate() as $f) {
-                if ($f->getId() === $file) {
-                    $content = $f->preview();
-                    if ($content !== false) {
-                        return '<div class="content">' . $content . '</div>';
-                    }
+    public function diff(
+        GeneratorRequest $request,
+        CommandHydrator $commandHydrator,
+        #[Query('file')] string $file
+    ): ResponseInterface {
+        $generator = $request->getGenerator();
+        $command = $commandHydrator->hydrate($generator::getCommandClass(), $request->getBody());
 
-                    return '<div class="error">Preview is not available for this file type.</div>';
-                }
-            }
+        try {
+            $files = $generator->generate($command);
+        } catch (InvalidGeneratorCommandException $e) {
+            return $this->createErrorResponse($e);
         }
 
-        $response = $this->responseFactory->createResponse(Status::UNPROCESSABLE_ENTITY);
-        $response->getBody()->write("Code file not found: $file");
-        return $response;
+        foreach ($files as $generatedFile) {
+            if ($generatedFile->getId() === $file) {
+                return $this->responseFactory->createResponse(['diff' => $generatedFile->diff()]);
+            }
+        }
+        return $this->responseFactory->createResponse(
+            ['message' => "Code file not found: $file"],
+            Status::UNPROCESSABLE_ENTITY
+        );
     }
 
-    public function diff(ServerRequestInterface $request): ResponseInterface|string
+    private function createErrorResponse(InvalidGeneratorCommandException $e): DataResponse
     {
-        $id = $request->getAttribute('id');
-        $file = $request->getAttribute('file');
-        $generator = $this->loadGenerator($id, $request);
-        if ($generator->validate()->isValid()) {
-            foreach ($generator->generate() as $f) {
-                if ($f->getId() === $file) {
-                    return $this->render(
-                        'diff',
-                        [
-                            'diff' => $f->diff(),
-                        ]
-                    );
-                }
-            }
+        return $this->responseFactory->createResponse(
+            ['errors' => $e->getResult()->getErrorMessagesIndexedByAttribute()],
+            Status::UNPROCESSABLE_ENTITY
+        );
+    }
+
+    private function serializeCodeFile(CodeFile $file): array
+    {
+        return [
+            'id' => $file->getId(),
+            'content' => $file->getContent(),
+            'operation' => $file->getOperation()->value,
+            'state' => $file->getState()->value,
+            'path' => $file->getPath(),
+            'relativePath' => $file->getRelativePath(),
+            'type' => $file->getType(),
+            'preview' => $file->preview(),
+        ];
+    }
+
+    private function serializeGenerator(GeneratorInterface $generator): array
+    {
+        /**
+         * @psalm-var class-string<GeneratorCommandInterface> $commandClass
+         */
+        $commandClass = $generator::getCommandClass();
+
+        $dataset = new AttributesRulesProvider($commandClass);
+        $rules = $dataset->getRules();
+        $dumpedRules = (new RulesDumper())->asArray($rules);
+        $attributes = $commandClass::getAttributes();
+        $hints = $commandClass::getHints();
+        $labels = $commandClass::getAttributeLabels();
+
+        $reflection = new ReflectionClass($commandClass);
+        $constructorParameters = $reflection->getConstructor()?->getParameters() ?? [];
+
+        $attributesResult = [];
+        foreach ($attributes as $attributeName) {
+            $reflectionProperty = $reflection->getProperty($attributeName);
+            $defaultValue = $reflectionProperty->hasDefaultValue()
+                ? $reflectionProperty->getDefaultValue()
+                : $this->findReflectionParameter($attributeName, $constructorParameters)?->getDefaultValue();
+            $attributesResult[$attributeName] = [
+                'defaultValue' => $defaultValue,
+                'hint' => $hints[$attributeName] ?? null,
+                'label' => $labels[$attributeName] ?? null,
+                'rules' => $dumpedRules[$attributeName] ?? [],
+            ];
         }
 
-        $response = $this->responseFactory->createResponse(Status::UNPROCESSABLE_ENTITY);
-        $response->getBody()->write("Code file not found: $file");
-        return $response;
+        return [
+            'id' => $generator::getId(),
+            'name' => $generator::getName(),
+            'description' => $generator::getDescription(),
+            'commandClass' => $commandClass,
+            'attributes' => $attributesResult,
+            'templates' => $this->parametersProvider->getTemplates($generator::getId()),
+        ];
     }
 
     /**
-     * Runs an action defined in the generator.
-     * Given an action named "xyz", the method "actionXyz()" in the generator will be called.
-     * If the method does not exist, a 400 HTTP exception will be thrown.
-     *
-     * @return mixed the result of the action.
+     * @param ReflectionParameter[] $constructorParameters
      */
-    public function action(ServerRequestInterface $request)
+    private function findReflectionParameter(string $name, array $constructorParameters): ReflectionParameter|null
     {
-        $id = $request->getAttribute('id');
-        $action = $request->getAttribute('action');
-        /** @var AbstractGenerator $generator */
-        $generator = $this->loadGenerator($id, $request);
-        if (method_exists($generator, $action)) {
-            return $generator->$action();
+        foreach ($constructorParameters as $parameter) {
+            if ($parameter->getName() === $name) {
+                return $parameter;
+            }
         }
-
-        $response = $this->responseFactory->createResponse(Status::UNPROCESSABLE_ENTITY);
-        $response->getBody()->write("Unknown generator action: {$action}");
-        return $response;
-    }
-
-    protected function loadGenerator(string $id, ServerRequestInterface $request): GeneratorInterface
-    {
-        /** @var AbstractGenerator $generator */
-        $generator = $this->gii->getGenerator($id);
-        $generator->loadStickyAttributes();
-        $generator->load((array)$request->getParsedBody());
-
-        return $generator;
-    }
-
-    private function render(string $view, array $parameters = []): string
-    {
-        $content = $this->view->withContext($this)->render($view, $parameters);
-        return $this->renderContent($content);
-    }
-
-    private function renderContent(string $content): string
-    {
-        $layout = $this->findLayoutFile($this->layout);
-        if ($layout !== null) {
-            return $this->view->withContext($this)->renderFile(
-                $layout,
-                [
-                    'content' => $content,
-                ]
-            );
-        }
-
-        return $content;
-    }
-
-    public function getViewPath(): string
-    {
-        return $this->aliases->get('@yii-gii/views') . '/default';
-    }
-
-    private function findLayoutFile(?string $file): ?string
-    {
-        if ($file === null) {
-            return null;
-        }
-
-        if (pathinfo($file, PATHINFO_EXTENSION) !== '') {
-            return $file;
-        }
-
-        return $file . '.' . $this->view->getDefaultExtension();
+        return null;
     }
 }
