@@ -64,9 +64,9 @@ class TestCase extends \PHPUnit\Framework\TestCase
                 TranslatorInterface::class => [
                     'class' => Translator::class,
                     '__construct()' => [
-                        'en',
-                        'en',
-                        Reference::to(EventDispatcherInterface::class),
+                        'locale' => 'en',
+                        'fallbackLocale' => 'en',
+                        'eventDispatcher' => Reference::to(EventDispatcherInterface::class),
                     ],
                 ],
                 RuleHandlerResolverInterface::class => RuleHandlerContainer::class,
