@@ -28,7 +28,7 @@
         "yiisoft/injector": "^1.1",
         "yiisoft/json": "^1.0",
         "yiisoft/request-model": "dev-master",
-        "yiisoft/router": "^1.2",
+        "yiisoft/router": "^1.2|^2.0",
         "yiisoft/strings": "^2.1",
         "yiisoft/validator": "^3.0@dev",
         "yiisoft/yii-console": "^1.3",
@@ -43,10 +43,10 @@
         "spatie/phpunit-watcher": "^1.23",
         "vimeo/psalm": "^4.27",
         "yiisoft/di": "^1.1",
+        "yiisoft/dummy-provider": "^1.0",
         "yiisoft/event-dispatcher": "^1.0",
         "yiisoft/files": "^2.0",
-        "yiisoft/log": "^2.0",
-        "yiisoft/router-fastroute": "^1.0"
+        "yiisoft/log": "^2.0"
     },
     "autoload": {
         "psr-4": {
