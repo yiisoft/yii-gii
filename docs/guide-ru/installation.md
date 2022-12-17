@@ -3,7 +3,7 @@
 
 ## Установка composer-пакета
 
-Предпочтительнее установить это расширение через [composer](http://getcomposer.org/download/).
+Предпочтительнее установить это расширение через [composer](https://getcomposer.org/download/).
 
 Либо запустите
 
