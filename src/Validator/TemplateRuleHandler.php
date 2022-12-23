@@ -6,7 +6,6 @@ namespace Yiisoft\Yii\Gii\Validator;
 
 use RuntimeException;
 use Yiisoft\Aliases\Aliases;
-use Yiisoft\Validator\DataSet\ObjectDataSet;
 use Yiisoft\Validator\Exception\UnexpectedRuleException;
 use Yiisoft\Validator\Result;
 use Yiisoft\Validator\RuleHandlerInterface;
