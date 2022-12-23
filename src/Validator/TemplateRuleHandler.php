@@ -6,7 +6,6 @@ namespace Yiisoft\Yii\Gii\Validator;
 
 use RuntimeException;
 use Yiisoft\Aliases\Aliases;
-use Yiisoft\Validator\DataSet\ObjectDataSet;
 use Yiisoft\Validator\Exception\UnexpectedRuleException;
 use Yiisoft\Validator\Result;
 use Yiisoft\Validator\RuleHandlerInterface;
@@ -40,9 +39,12 @@ final class TemplateRuleHandler implements RuleHandlerInterface
         if ($value === 'default') {
             return $result;
         }
-        $command = $context->getDataSet();
-        if (!$command instanceof ObjectDataSet || !$command->getObject() instanceof GeneratorCommandInterface) {
-            throw new RuntimeException('Unsupported dataset class.');
+        $command = $context->getRawData();
+        if (!$command instanceof GeneratorCommandInterface) {
+            throw new RuntimeException(sprintf(
+                'Unsupported dataset class "%s".',
+                get_debug_type($command)
+            ));
         }
         $generator = $this->getGenerator($command);
         $templates = $this->parametersProvider->getTemplates($generator::getId());
@@ -74,10 +76,10 @@ final class TemplateRuleHandler implements RuleHandlerInterface
         return $result;
     }
 
-    private function getGenerator(ObjectDataSet $dataSet): GeneratorInterface
+    private function getGenerator(GeneratorCommandInterface $dataSet): GeneratorInterface
     {
         foreach ($this->gii->getGenerators() as $generator) {
-            if ($generator::getCommandClass() === $dataSet->getObject()::class) {
+            if ($generator::getCommandClass() === $dataSet::class) {
                 return $generator;
             }
         }

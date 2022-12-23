@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\Gii\Validator;
 
 use Attribute;
+use Yiisoft\Validator\RuleHandlerInterface;
 use Yiisoft\Validator\RuleInterface;
 
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::IS_REPEATABLE)]
@@ -15,7 +16,7 @@ final class ReservedKeywordRule implements RuleInterface
         return 'gii_reserved_keyword';
     }
 
-    public function getHandlerClassName(): string
+    public function getHandler(): string|RuleHandlerInterface
     {
         return ReservedKeywordHandler::class;
     }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\Gii\Command;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -169,7 +170,11 @@ abstract class BaseGenerateCommand extends Command
     protected function confirm(InputInterface $input, OutputInterface $output)
     {
         $question = new ConfirmationQuestion("\nReady to generate the selected files? (yes|no) [yes]:", true);
-        return $this->getHelper('question')->ask($input, $output, $question);
+        /**
+         * @var QuestionHelper $helper
+         */
+        $helper = $this->getHelper('question');
+        return $helper->ask($input, $output, $question);
     }
 
     /**
@@ -186,7 +191,11 @@ abstract class BaseGenerateCommand extends Command
                 'na' => 'Skip this and the rest of the changed files.',
             ]
         );
-        return $this->getHelper('question')->ask($input, $output, $question);
+        /**
+         * @var QuestionHelper $helper
+         */
+        $helper = $this->getHelper('question');
+        return $helper->ask($input, $output, $question);
     }
 
     private function areAllFilesSkipped(array $answers): bool
