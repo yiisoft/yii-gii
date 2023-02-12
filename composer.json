@@ -68,11 +68,7 @@
         },
         "config-plugin": {
             "params": "params.php",
-            "console": [
-                "$common",
-                "console.php"
-            ],
-            "common": "common.php",
+            "di": "di.php",
             "routes": "routes.php"
         }
     },
