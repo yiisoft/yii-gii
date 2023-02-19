@@ -21,17 +21,17 @@
     "require": {
         "php": "^8.1",
         "phpspec/php-diff": "^1.1.3",
-        "yiisoft/aliases": "^2.0",
+        "yiisoft/aliases": "^3.0",
         "yiisoft/arrays": "^2.1|^3.0",
-        "yiisoft/data-response": "^1.0",
+        "yiisoft/data-response": "^2.0",
         "yiisoft/http": "^1.2",
         "yiisoft/injector": "^1.1",
         "yiisoft/json": "^1.0",
         "yiisoft/request-model": "dev-master",
-        "yiisoft/router": "^1.2|^2.0",
+        "yiisoft/router": "^3.0",
         "yiisoft/strings": "^2.1",
         "yiisoft/validator": "^3.0@dev",
-        "yiisoft/yii-console": "^1.3",
+        "yiisoft/yii-console": "^2.0",
         "yiisoft/yii-middleware": "dev-master"
     },
     "require-dev": {
@@ -47,7 +47,7 @@
         "yiisoft/event-dispatcher": "^1.0",
         "yiisoft/files": "^2.0",
         "yiisoft/log": "^2.0",
-        "yiisoft/translator": "^2.0"
+        "yiisoft/translator": "^3.0"
     },
     "autoload": {
         "psr-4": {
