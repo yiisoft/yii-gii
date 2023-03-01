@@ -30,7 +30,7 @@
         "yiisoft/request-model": "dev-master",
         "yiisoft/router": "^3.0",
         "yiisoft/strings": "^2.1",
-        "yiisoft/validator": "^3.0@dev",
+        "yiisoft/validator": "^1.0",
         "yiisoft/yii-console": "^2.0",
         "yiisoft/yii-middleware": "dev-master"
     },
