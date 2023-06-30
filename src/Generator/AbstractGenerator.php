@@ -126,7 +126,7 @@ abstract class AbstractGenerator implements GeneratorInterface
              * @noRector \Rector\Php71\Rector\FuncCall\RemoveExtraParametersRector
              * @psalm-suppress PossiblyInvalidFunctionCall
              */
-            $renderer->bindTo($this)($file, array_merge($params, ['command' => $command]));
+            $renderer->bindTo($this)();
             return ob_get_clean();
         } catch (Throwable $e) {
             while (ob_get_level() > $obInitialLevel) {
