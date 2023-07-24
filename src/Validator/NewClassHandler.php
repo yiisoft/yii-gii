@@ -14,7 +14,7 @@ use Yiisoft\Validator\ValidationContext;
 final class NewClassHandler implements RuleHandlerInterface
 {
     public function __construct(
-        private Aliases $aliases,
+        private readonly Aliases $aliases,
     ) {
     }
 

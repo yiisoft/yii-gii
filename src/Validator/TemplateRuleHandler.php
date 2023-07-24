@@ -18,9 +18,9 @@ use Yiisoft\Yii\Gii\ParametersProvider;
 final class TemplateRuleHandler implements RuleHandlerInterface
 {
     public function __construct(
-        private Aliases $aliases,
-        private GiiInterface $gii,
-        private ParametersProvider $parametersProvider,
+        private readonly Aliases $aliases,
+        private readonly GiiInterface $gii,
+        private readonly ParametersProvider $parametersProvider,
     ) {
     }
 
