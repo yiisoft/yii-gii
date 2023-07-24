@@ -27,8 +27,8 @@ use Yiisoft\Yii\Gii\Request\GeneratorRequest;
 final class DefaultController
 {
     public function __construct(
-        private DataResponseFactoryInterface $responseFactory,
-        private ParametersProvider $parametersProvider,
+        private readonly DataResponseFactoryInterface $responseFactory,
+        private readonly ParametersProvider $parametersProvider,
     ) {
     }
 

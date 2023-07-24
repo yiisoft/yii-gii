@@ -30,7 +30,7 @@ class ControllerGeneratorTest extends TestCase
         $this->assertNotEmpty($files);
     }
 
-    public function testInvalidGenerator(): void
+    public function testInvalidGenerator(): never
     {
         $generator = $this->createGenerator(
             templates: [

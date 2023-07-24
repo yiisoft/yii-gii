@@ -14,7 +14,7 @@ use Yiisoft\Validator\ValidationContext;
 final class NewClassHandler implements RuleHandlerInterface
 {
     public function __construct(
-        private Aliases $aliases,
+        private readonly Aliases $aliases,
     ) {
     }
 
@@ -31,7 +31,7 @@ final class NewClassHandler implements RuleHandlerInterface
         }
 
         $result = new Result();
-        $class = ltrim($value, '\\');
+        $class = ltrim((string) $value, '\\');
         if (($pos = strrpos($class, '\\')) !== false) {
             $ns = substr($class, 0, $pos);
             try {

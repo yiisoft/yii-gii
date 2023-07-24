@@ -11,7 +11,7 @@ use Yiisoft\Strings\StringHelper;
 $classDefinitionParts = [];
 $classDefinitionParts[] = StringHelper::baseName($command->getControllerClass());
 if (!empty($command->getBaseClass())) {
-    $classDefinitionParts[] = 'extends \\' . trim($command->getBaseClass(), '\\');
+    $classDefinitionParts[] = 'extends \\' . trim((string) $command->getBaseClass(), '\\');
 }
 $classDefinition = implode(' ', $classDefinitionParts) . PHP_EOL;
 

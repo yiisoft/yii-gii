@@ -10,7 +10,7 @@ use Yiisoft\Yii\Gii\GiiInterface;
 
 final class GeneratorRequest extends RequestModel
 {
-    public function __construct(private GiiInterface $gii)
+    public function __construct(private readonly GiiInterface $gii)
     {
     }
 
