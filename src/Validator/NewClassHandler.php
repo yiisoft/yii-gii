@@ -31,7 +31,7 @@ final class NewClassHandler implements RuleHandlerInterface
         }
 
         $result = new Result();
-        $class = ltrim((string) $value, '\\');
+        $class = ltrim($value, '\\');
         if (($pos = strrpos($class, '\\')) !== false) {
             $ns = substr($class, 0, $pos);
             try {

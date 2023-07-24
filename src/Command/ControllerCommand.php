@@ -42,7 +42,7 @@ final class ControllerCommand extends BaseGenerateCommand
     protected function createGeneratorCommand(InputInterface $input): GeneratorCommandInterface
     {
         $actions = $input->getOption('actions');
-        $actions = $actions !== null ? explode(',', (string) $actions) : ['index'];
+        $actions = $actions !== null ? explode(',', $actions) : ['index'];
 
         $template = $input->getOption('template');
         $template ??= 'default';

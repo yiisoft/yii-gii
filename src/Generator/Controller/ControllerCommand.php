@@ -15,18 +15,28 @@ use Yiisoft\Yii\Gii\Validator\TemplateRule;
 
 final class ControllerCommand extends AbstractGeneratorCommand
 {
+    #[Each([
+        new Regex(
+            pattern: '/^[a-z][a-z0-9]*$/',
+            message: 'Only a-z, 0-9, dashes (-), spaces and commas are allowed.'
+        ),
+    ])]
+    private readonly array $actions;
+
     public function __construct(
         #[Required]
         #[Regex(
             pattern: '/^(?:[a-z][a-z0-9]*)(?:\\\\[a-z][a-z0-9]*)*$/i',
             message: 'Invalid namespace'
-        )]private readonly string $controllerNamespace = 'App\\Controller',
+        )]
+        private readonly string $controllerNamespace = 'App\\Controller',
         #[Required]
         #[Regex(
             pattern: '/^[A-Z][a-zA-Z0-9]*Controller$/',
             message: 'Only word characters are allowed, and the class name must start with a capital letter and end with "Controller".'
         )]
-        #[NewClassRule]private readonly string $controllerClass = 'IndexController',
+        #[NewClassRule]
+        private readonly string $controllerClass = 'IndexController',
         /**
          * @var string the controller path
          */
@@ -39,19 +49,16 @@ final class ControllerCommand extends AbstractGeneratorCommand
             pattern: '/^[a-z\\\\]*$/i',
             message: 'Only word characters and backslashes are allowed.',
             skipOnEmpty: true,
-        )]private readonly string $baseClass = '',
-        #[Each([
-            new Regex(
-                pattern: '/^[a-z][a-z0-9]*$/',
-                message: 'Only a-z, 0-9, dashes (-), spaces and commas are allowed.'
-            ),
-        ])]private readonly array $actions = ['index'],
+        )]
+        private readonly string $baseClass = '',
+        array $actions = ['index'],
         #[Required(message: 'A code template must be selected.')]
         #[TemplateRule]
         protected string $template = 'default',
     ) {
         parent::__construct($template);
-        sort($this->actions);
+        sort($actions);
+        $this->actions = $actions;
     }
 
     /**

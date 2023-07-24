@@ -188,16 +188,16 @@ final class CodeFile
     private function renderDiff(mixed $lines1, mixed $lines2): string
     {
         if (!is_array($lines1)) {
-            $lines1 = explode("\n", (string) $lines1);
+            $lines1 = explode("\n", $lines1);
         }
         if (!is_array($lines2)) {
-            $lines2 = explode("\n", (string) $lines2);
+            $lines2 = explode("\n", $lines2);
         }
         foreach ($lines1 as $i => $line) {
-            $lines1[$i] = rtrim((string) $line, "\r\n");
+            $lines1[$i] = rtrim($line, "\r\n");
         }
         foreach ($lines2 as $i => $line) {
-            $lines2[$i] = rtrim((string) $line, "\r\n");
+            $lines2[$i] = rtrim($line, "\r\n");
         }
 
         $renderer = new Diff_Renderer_Text_Unified();

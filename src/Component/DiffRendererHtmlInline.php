@@ -54,7 +54,7 @@ HTML;
             }
 
             foreach ($blocks as $change) {
-                $tag = ucfirst((string) $change['tag']);
+                $tag = ucfirst($change['tag']);
                 $html .= <<<HTML
     <tbody class="Change{$tag}">
 HTML;
