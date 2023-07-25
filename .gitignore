@@ -27,8 +27,7 @@ phpunit.phar
 /tests/data/config.local.php
 /tests/docker
 /tests/dockerids
+/.phpunit.cache
 
 # node js
 /node_modules
-
-.phpunit.result.cache
