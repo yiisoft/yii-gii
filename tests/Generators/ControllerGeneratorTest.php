@@ -6,8 +6,7 @@ namespace Yiisoft\Yii\Gii\Tests\Generators;
 
 use Yiisoft\Injector\Injector;
 use Yiisoft\Yii\Gii\Exception\InvalidGeneratorCommandException;
-use Yiisoft\Yii\Gii\Generator\Controller\ControllerCommand;
-use Yiisoft\Yii\Gii\Generator\Controller\ControllerGenerator as ControllerGenerator;
+use Yiisoft\Yii\Gii\Generator\Controller\Command;
 use Yiisoft\Yii\Gii\ParametersProvider;
 use Yiisoft\Yii\Gii\Tests\TestCase;
 
@@ -19,7 +18,7 @@ class ControllerGeneratorTest extends TestCase
     public function testValidGenerator(): void
     {
         $generator = $this->createGenerator();
-        $command = new ControllerCommand(
+        $command = new Command(
             controllerClass: 'TestController',
             actions: ['index', 'edit', 'view'],
             template: 'default',
@@ -37,7 +36,7 @@ class ControllerGeneratorTest extends TestCase
                 'default' => dirname(__DIR__ . '../templates'),
             ],
         );
-        $command = new ControllerCommand(
+        $command = new Command(
             controllerClass: 'Wr0ngContr0ller',
             actions: ['index', 'ed1t', 'view'],
             template: 'test',
@@ -61,7 +60,7 @@ class ControllerGeneratorTest extends TestCase
                 'custom' => '@src/templates/custom',
             ],
         );
-        $command = new ControllerCommand(
+        $command = new Command(
             controllerClass: 'TestController',
             actions: ['index', 'edit', 'view'],
             template: 'custom',
@@ -71,11 +70,11 @@ class ControllerGeneratorTest extends TestCase
         $generator->generate($command);
     }
 
-    private function createGenerator(...$params): ControllerGenerator
+    private function createGenerator(...$params): Generator
     {
         $injector = new Injector($this->getContainer());
 
-        return $injector->make(ControllerGenerator::class, [
+        return $injector->make(Generator::class, [
             new ParametersProvider(...$params),
         ]);
     }

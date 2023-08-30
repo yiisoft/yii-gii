@@ -3,12 +3,13 @@
 declare(strict_types=1);
 
 use Yiisoft\Yii\Gii\Command\ControllerCommand;
-use Yiisoft\Yii\Gii\Generator\Controller\ControllerGenerator;
+use Yiisoft\Yii\Gii\Generator\ActiveRecord\Generator as ActiveRecordGenerator;
+use Yiisoft\Yii\Gii\Generator\Controller\Generator;
 
 return [
     'yiisoft/yii-debug' => [
         'ignoredRequests' => [
-            '/gii**',
+            //'/gii**',
         ],
     ],
     'yiisoft/yii-swagger' => [
@@ -26,7 +27,11 @@ return [
         'allowedIPs' => ['127.0.0.1', '::1'],
         'generators' => [
             [
-                'class' => ControllerGenerator::class,
+                'class' => Generator::class,
+                'parameters' => [],
+            ],
+            [
+                'class' => ActiveRecordGenerator::class,
                 'parameters' => [],
             ],
         ],
