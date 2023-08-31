@@ -22,57 +22,18 @@ use Yiisoft\Validator\RuleHandlerResolver\RuleHandlerContainer;
 use Yiisoft\Validator\RuleHandlerResolverInterface;
 use Yiisoft\Validator\Validator;
 use Yiisoft\Validator\ValidatorInterface;
-use Yiisoft\Yii\Gii\Generator\Controller\Generator;
+use Yiisoft\Yii\Gii\Generator as Generators;
 use Yiisoft\Yii\Gii\Gii;
 use Yiisoft\Yii\Gii\GiiInterface;
 
-/**
- * GiiTestCase is the base class for all gii related test cases
- */
-class TestCase extends \PHPUnit\Framework\TestCase
+abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
-    private ?ContainerInterface $container;
+    private ?ContainerInterface $container = null;
 
     protected function setUp(): void
     {
         parent::setUp();
         FileHelper::ensureDirectory(__DIR__ . '/runtime');
-
-        $config = ContainerConfig::create()
-            ->withDefinitions([
-                GiiInterface::class => function (ContainerInterface $container) {
-                    $generators = [
-                        'controller' => Generator::class,
-                    ];
-                    $generatorsInstances = [];
-                    foreach ($generators as $class) {
-                        $generatorsInstances[] = $container->get($class);
-                    }
-                    return new Gii($generatorsInstances);
-                },
-                Aliases::class => new Aliases(
-                    [
-                        '@src' => __DIR__,
-                        '@views' => '@src/runtime',
-                        '@view' => '@src/runtime',
-                        '@root' => '@src/runtime',
-                    ]
-                ),
-                EventDispatcherInterface::class => Dispatcher::class,
-                ListenerProviderInterface::class => Provider::class,
-                LoggerInterface::class => NullLogger::class,
-                TranslatorInterface::class => [
-                    'class' => Translator::class,
-                    '__construct()' => [
-                        'locale' => 'en',
-                        'fallbackLocale' => 'en',
-                        'eventDispatcher' => Reference::to(EventDispatcherInterface::class),
-                    ],
-                ],
-                RuleHandlerResolverInterface::class => RuleHandlerContainer::class,
-                ValidatorInterface::class => Validator::class,
-            ]);
-        $this->container = new Container($config);
     }
 
     protected function tearDown(): void
@@ -82,8 +43,47 @@ class TestCase extends \PHPUnit\Framework\TestCase
         $this->container = null;
     }
 
-    protected function getContainer(): ContainerInterface
+    protected function getContainer(array $definitions = []): ContainerInterface
     {
+        if ($this->container === null) {
+            $config = ContainerConfig::create()
+                ->withDefinitions([
+                    GiiInterface::class => function (ContainerInterface $container) {
+                        $generators = [
+                            Generators\Controller\Generator::getId() => Generators\Controller\Generator::class,
+                            Generators\ActiveRecord\Generator::getId() => Generators\ActiveRecord\Generator::class,
+                        ];
+                        $generatorsInstances = [];
+                        foreach ($generators as $class) {
+                            $generatorsInstances[] = $container->get($class);
+                        }
+                        return new Gii($generatorsInstances);
+                    },
+                    Aliases::class => new Aliases(
+                        [
+                            '@src' => __DIR__,
+                            '@views' => '@src/runtime',
+                            '@view' => '@src/runtime',
+                            '@root' => '@src/runtime',
+                        ]
+                    ),
+                    EventDispatcherInterface::class => Dispatcher::class,
+                    ListenerProviderInterface::class => Provider::class,
+                    LoggerInterface::class => NullLogger::class,
+                    TranslatorInterface::class => [
+                        'class' => Translator::class,
+                        '__construct()' => [
+                            'locale' => 'en',
+                            'fallbackLocale' => 'en',
+                            'eventDispatcher' => Reference::to(EventDispatcherInterface::class),
+                        ],
+                    ],
+                    RuleHandlerResolverInterface::class => RuleHandlerContainer::class,
+                    ValidatorInterface::class => Validator::class,
+                    ...$definitions,
+                ]);
+            $this->container = new Container($config);
+        }
         return $this->container;
     }
 }

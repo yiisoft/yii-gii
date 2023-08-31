@@ -4,21 +4,23 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii\Tests\Generators;
 
+use Yiisoft\ActiveRecord\ActiveRecord;
 use Yiisoft\Injector\Injector;
 use Yiisoft\Yii\Gii\Exception\InvalidGeneratorCommandException;
-use Yiisoft\Yii\Gii\Generator\Controller\Command;
-use Yiisoft\Yii\Gii\Generator\Controller\Generator;
+use Yiisoft\Yii\Gii\Generator\ActiveRecord\Command;
+use Yiisoft\Yii\Gii\Generator\ActiveRecord\Generator;
 use Yiisoft\Yii\Gii\ParametersProvider;
 use Yiisoft\Yii\Gii\Tests\TestCase;
 
-final class ControllerGeneratorTest extends TestCase
+final class ActiveRecordGeneratorTest extends TestCase
 {
     public function testValidGenerator(): void
     {
         $generator = $this->createGenerator();
         $command = new Command(
-            controllerClass: 'TestController',
-            actions: ['index', 'edit', 'view'],
+            namespace: 'App\\Model',
+            tableName: 'user',
+            baseClass: ActiveRecord::class,
             template: 'default',
         );
 
@@ -27,7 +29,7 @@ final class ControllerGeneratorTest extends TestCase
         $this->assertNotEmpty($files);
     }
 
-    public function testInvalidGenerator(): never
+    public function testInvalidGenerator(): void
     {
         $generator = $this->createGenerator(
             templates: [
@@ -35,20 +37,12 @@ final class ControllerGeneratorTest extends TestCase
             ],
         );
         $command = new Command(
-            controllerClass: 'Wr0ngContr0ller',
-            actions: ['index', 'ed1t', 'view'],
+            namespace: '0App',
             template: 'test',
         );
 
         $this->expectException(InvalidGeneratorCommandException::class);
-        $files = $generator->generate($command);
-
-//        $this->assertFalse($result->isValid(), print_r($result->getErrors(), true));
-
-        // TODO: fix test
-        $this->markTestIncomplete('The template should be incomplete.'); // but why?
-//        $this->assertNotEmpty($result->getAttributeErrorMessages('template'));
-        $this->assertNotEmpty($result->getAttributeErrorMessages('controllerClass'));
+        $generator->generate($command);
     }
 
     public function testCustomTemplate(): void
@@ -56,21 +50,20 @@ final class ControllerGeneratorTest extends TestCase
         $generator = $this->createGenerator(
             templates: [
                 Generator::getId() => [
-                    'custom' => '@src/templates/controller',
+                    'custom' => '@src/templates/active-record',
                 ],
             ],
         );
         $command = new Command(
-            controllerClass: 'TestController',
-            actions: ['index', 'edit', 'view'],
+            namespace: 'App\\Model',
+            tableName: 'user',
+            baseClass: ActiveRecord::class,
             template: 'custom',
         );
 
         $files = $generator->generate($command);
         $this->assertNotEmpty($files);
-        foreach ($files as $file) {
-            $this->assertEmpty($file->getContent());
-        }
+        $this->assertMatchesRegularExpression("/final custom class/", reset($files)->getContent());
     }
 
     private function createGenerator(...$params): Generator

@@ -83,6 +83,6 @@ final class TemplateRuleHandler implements RuleHandlerInterface
                 return $generator;
             }
         }
-        throw new RuntimeException('Unknown generator');
+        throw new RuntimeException(sprintf('Unknown generator "%s".', $dataSet::class));
     }
 }
