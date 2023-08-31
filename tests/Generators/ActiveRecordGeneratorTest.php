@@ -63,7 +63,7 @@ final class ActiveRecordGeneratorTest extends TestCase
 
         $files = $generator->generate($command);
         $this->assertNotEmpty($files);
-        $this->assertMatchesRegularExpression("/final custom class/", reset($files)->getContent());
+        $this->assertMatchesRegularExpression('/final custom class/', reset($files)->getContent());
     }
 
     private function createGenerator(...$params): Generator
