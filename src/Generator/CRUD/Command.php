@@ -55,7 +55,7 @@ final class Command extends AbstractGeneratorCommand
             skipOnEmpty: true,
         )]
         private readonly string $baseClass = '',
-        array $actions = ['index'],
+        array $actions = ['index', 'view'],
         #[Required(message: 'A code template must be selected.')]
         #[TemplateRule]
         protected string $template = 'default',

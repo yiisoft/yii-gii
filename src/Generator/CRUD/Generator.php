@@ -69,7 +69,7 @@ final class Generator extends AbstractGenerator
         $files[$codeFile->getId()] = $codeFile;
 
         //$actions = $command->getActions();
-        $actions = ['index'];
+        $actions = ['index', 'view'];
         $model = $this->activeRecordFactory->createAR($command->getModel());
         foreach ($actions as $action) {
             $codeFile = (new CodeFile(
@@ -96,7 +96,7 @@ final class Generator extends AbstractGenerator
                 sprintf(
                     '%s/%s.php',
                     $directory,
-                    $command->getControllerClass(),
+                    StringHelper::baseName($command->getModel()) . 'Controller',
                 ),
             ),
         );

@@ -12,6 +12,8 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
 
 $uses = [
     \Yiisoft\View\WebView::class,
+    \Yiisoft\Yii\DataView\Column\SerialColumn::class,
+    \Yiisoft\Yii\DataView\GridView::class,
     \Yiisoft\Data\Paginator\PaginatorInterface::class,
 ];
 $columns = [
@@ -39,6 +41,7 @@ declare(strict_types=1);
 /**
  * @var WebView $this
  * @var PaginatorInterface $paginator
+ * @var <?= $model::class ?> $model
  */
 <?= '?>' ?>
 
@@ -53,6 +56,7 @@ declare(strict_types=1);
             $columns
         )
     ) ?>
+    )
     ->id('w1-grid')
     ->paginator($paginator)
     ->render() ?>
