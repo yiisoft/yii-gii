@@ -9,6 +9,7 @@ use Yiisoft\Strings\Inflector;
 use Yiisoft\Validator\Rule\Regex;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Yii\Gii\Generator\AbstractGeneratorCommand;
+use Yiisoft\Yii\Gii\Validator\TableExistsRule;
 use Yiisoft\Yii\Gii\Validator\TemplateRule;
 
 final class Command extends AbstractGeneratorCommand
@@ -25,6 +26,7 @@ final class Command extends AbstractGeneratorCommand
             pattern: '/^(?:[a-z][a-z0-9]*)(?:\\\\[a-z][a-z0-9]*)*$/i',
             message: 'Invalid table name'
         )]
+        #[TableExistsRule]
         private readonly string $tableName = 'user',
         #[Regex(
             pattern: '/^[a-z\\\\]*$/i',
