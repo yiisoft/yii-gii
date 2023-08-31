@@ -60,7 +60,7 @@ final class Generator extends AbstractGenerator
         $rootPath = $this->aliases->get('@root');
 
         $properties = [];
-        if ($schema = $this->connection->getTableSchema($command->getTableName(), true)){
+        if ($schema = $this->connection->getTableSchema($command->getTableName(), true)) {
             foreach ($schema->getColumns() as $columnSchema) {
                 $properties[] = [
                     'name' => $columnSchema->getName(),
