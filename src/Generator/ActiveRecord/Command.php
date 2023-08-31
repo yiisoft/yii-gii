@@ -9,6 +9,7 @@ use Yiisoft\Strings\Inflector;
 use Yiisoft\Validator\Rule\Regex;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Yii\Gii\Generator\AbstractGeneratorCommand;
+use Yiisoft\Yii\Gii\Validator\ClassExistsRule;
 use Yiisoft\Yii\Gii\Validator\TableExistsRule;
 use Yiisoft\Yii\Gii\Validator\TemplateRule;
 
@@ -33,6 +34,7 @@ final class Command extends AbstractGeneratorCommand
             message: 'Only word characters and backslashes are allowed.',
             skipOnEmpty: true,
         )]
+        #[ClassExistsRule]
         private readonly string $baseClass = ActiveRecord::class,
         #[Required(message: 'A code template must be selected.')]
         #[TemplateRule]
@@ -65,8 +67,9 @@ final class Command extends AbstractGeneratorCommand
     {
         return [
             'namespace' => 'Controller Namespace',
+            'baseClass' => 'Base class',
             'tableName' => 'Table name',
-            'template' => 'Action IDs',
+            'template' => 'Template',
         ];
     }
 
@@ -86,6 +89,7 @@ final class Command extends AbstractGeneratorCommand
         return [
             'namespace',
             'tableName',
+            'baseClass',
             'template',
         ];
     }
