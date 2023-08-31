@@ -1,12 +1,13 @@
 <?php
-declare(strict_types=1);
-/**
- * This is the template for generating a controller class file.
- */
 
-/* @var $command Yiisoft\Yii\Gii\Generator\ActiveRecord\Command */
+declare(strict_types=1);
 
 use Yiisoft\Strings\StringHelper;
+
+/**
+ * @var Yiisoft\Yii\Gii\Generator\ActiveRecord\Command $command
+ * @var array<string, string> $properties
+ */
 
 echo "<?php\n";
 ?>
@@ -19,6 +20,17 @@ use <?= $command->getBaseClass() ?>;
 
 final class <?= $command->getModelName(); ?> extends <?= StringHelper::baseName($command->getBaseClass()) . PHP_EOL ?>
 {
+<?php foreach ($properties as $property): ?>
+    private <?=sprintf(
+        '%s%s $%s',
+        $property['isAllowNull'] ? '?' : '',
+        $property['type'],
+        $property['name'],
+    )?>;
+<?php endforeach; ?>
+<?php if (!empty($properties)) {
+    echo PHP_EOL;
+} ?>
     public function tableName(): string
     {
         return '<?= $command->getTableName() ?>';
