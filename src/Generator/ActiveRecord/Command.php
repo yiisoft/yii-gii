@@ -66,7 +66,7 @@ final class Command extends AbstractGeneratorCommand
     public static function getAttributeLabels(): array
     {
         return [
-            'namespace' => 'Controller Namespace',
+            'namespace' => 'Model namespace',
             'baseClass' => 'Base class',
             'tableName' => 'Table name',
             'template' => 'Template',
@@ -76,11 +76,9 @@ final class Command extends AbstractGeneratorCommand
     public static function getHints(): array
     {
         return [
-            'controllerClass' => 'This is the name of the controller class to be generated. You should
-                provide a fully qualified namespaced class (e.g. <code>App\Controller\PostController</code>),
-                and class name should be in CamelCase ending with the word <code>Controller</code>. Make sure the class
-                is using the same namespace as specified by your application\'s namespace property.',
-            'baseClass' => 'This is the class that the new controller class will extend from. Please make sure the class exists and can be autoloaded.',
+            'namespace' => 'Namespace for the model class to store it in the related directory.',
+            'baseClass' => 'Parent class for the new model class.',
+            'tableName' => 'Corresponded table name for the model class.',
         ];
     }
 
