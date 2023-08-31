@@ -58,7 +58,7 @@ final class Command extends AbstractGeneratorCommand
 
     public function getModelName(): string
     {
-        return (new Inflector)->tableToClass($this->tableName);
+        return (new Inflector())->tableToClass($this->tableName);
     }
 
     public static function getAttributeLabels(): array
