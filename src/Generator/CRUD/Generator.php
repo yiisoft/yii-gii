@@ -7,6 +7,7 @@ namespace Yiisoft\Yii\Gii\Generator\CRUD;
 use InvalidArgumentException;
 use Yiisoft\ActiveRecord\ActiveRecordFactory;
 use Yiisoft\Aliases\Aliases;
+use Yiisoft\Strings\StringHelper;
 use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\Yii\Gii\Component\CodeFile\CodeFile;
 use Yiisoft\Yii\Gii\Generator\AbstractGenerator;
@@ -117,7 +118,7 @@ final class Generator extends AbstractGenerator
                 sprintf(
                     '%s/%s/%s.php',
                     $directory,
-                    $command->getControllerID(),
+                    StringHelper::lowercase(StringHelper::baseName($command->getModel())),
                     $action,
                 ),
             ),
