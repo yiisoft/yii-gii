@@ -44,6 +44,8 @@
         "spatie/phpunit-watcher": "^1.23",
         "vimeo/psalm": "^5.13",
         "yiisoft/active-record": "^3.0@dev",
+        "yiisoft/cache": "^3.0",
+        "yiisoft/db-sqlite": "^1.0",
         "yiisoft/di": "^1.1",
         "yiisoft/dummy-provider": "^1.0",
         "yiisoft/event-dispatcher": "^1.0",

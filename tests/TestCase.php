@@ -9,7 +9,12 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
+use Psr\SimpleCache\CacheInterface;
 use Yiisoft\Aliases\Aliases;
+use Yiisoft\Cache\NullCache;
+use Yiisoft\Db\Connection\ConnectionInterface;
+use Yiisoft\Db\Sqlite\Connection as SqliteConnection;
+use Yiisoft\Db\Sqlite\Driver;
 use Yiisoft\Definitions\Reference;
 use Yiisoft\Di\Container;
 use Yiisoft\Di\ContainerConfig;
@@ -80,6 +85,13 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
                     ],
                     RuleHandlerResolverInterface::class => RuleHandlerContainer::class,
                     ValidatorInterface::class => Validator::class,
+                    CacheInterface::class => NullCache::class,
+                    ConnectionInterface::class => [
+                        'class' => SqliteConnection::class,
+                        '__construct()' => [
+                            new Driver('sqlite:' . __DIR__ . '/Support/test.db'),
+                        ],
+                    ],
                     ...$definitions,
                 ]);
             $this->container = new Container($config);

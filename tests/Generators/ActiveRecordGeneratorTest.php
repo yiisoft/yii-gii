@@ -29,6 +29,20 @@ final class ActiveRecordGeneratorTest extends TestCase
         $this->assertNotEmpty($files);
     }
 
+    public function testInvalidTableName(): void
+    {
+        $generator = $this->createGenerator();
+        $command = new Command(
+            namespace: 'App\\Model',
+            tableName: 'user2',
+            baseClass: ActiveRecord::class,
+            template: 'default',
+        );
+
+        $this->expectException(InvalidGeneratorCommandException::class);
+        $generator->generate($command);
+    }
+
     public function testInvalidGenerator(): void
     {
         $generator = $this->createGenerator(
