@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Yiisoft\Yii\Gii\Command\ControllerCommand;
-use Yiisoft\Yii\Gii\Generator\Controller\ControllerGenerator;
+use Yiisoft\Yii\Gii\Generator as Generators;
 
 return [
     'yiisoft/yii-debug' => [
@@ -26,7 +26,11 @@ return [
         'allowedIPs' => ['127.0.0.1', '::1'],
         'generators' => [
             [
-                'class' => ControllerGenerator::class,
+                'class' => Generators\Controller\Generator::class,
+                'parameters' => [],
+            ],
+            [
+                'class' => Generators\ActiveRecord\Generator::class,
                 'parameters' => [],
             ],
         ],
