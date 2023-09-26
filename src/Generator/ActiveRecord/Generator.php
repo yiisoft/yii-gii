@@ -22,7 +22,7 @@ final class Generator extends AbstractGenerator
         Aliases $aliases,
         ValidatorInterface $validator,
         ParametersProvider $parametersProvider,
-        private ConnectionInterface $connection,
+        private readonly ConnectionInterface $connection,
     ) {
         parent::__construct($aliases, $validator, $parametersProvider);
     }
