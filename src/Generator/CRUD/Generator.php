@@ -23,7 +23,7 @@ final class Generator extends AbstractGenerator
         Aliases $aliases,
         ValidatorInterface $validator,
         ParametersProvider $parametersProvider,
-        private ActiveRecordFactory $activeRecordFactory,
+        private readonly ActiveRecordFactory $activeRecordFactory,
     ) {
         parent::__construct($aliases, $validator, $parametersProvider);
     }
