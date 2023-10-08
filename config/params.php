@@ -29,6 +29,10 @@ return [
                 'class' => Generators\Controller\Generator::class,
                 'parameters' => [],
             ],
+            [
+                'class' => Generators\ActiveRecord\Generator::class,
+                'parameters' => [],
+            ],
         ],
         'parameters' => [
             'templates' => [],
