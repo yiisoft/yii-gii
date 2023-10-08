@@ -11,7 +11,7 @@ final class ParametersProvider
          * @var array<string, array<string, string>> a list of available code templates. The array keys are the template names,
          * and the array values are the corresponding template paths or path aliases.
          */
-        private array $templates = [],
+        private readonly array $templates = [],
     ) {
     }
 

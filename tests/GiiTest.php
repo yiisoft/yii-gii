@@ -10,7 +10,7 @@ use Yiisoft\Yii\Gii\GiiInterface;
 /**
  * GiiTestCase is the base class for all gii related test cases
  */
-class GiiTest extends TestCase
+final class GiiTest extends TestCase
 {
     public function testUnknownGeneratorInstance(): void
     {

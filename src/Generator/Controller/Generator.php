@@ -12,7 +12,7 @@ use Yiisoft\Yii\Gii\GeneratorCommandInterface;
 /**
  * This generator will generate a controller and one or a few action view files.
  */
-final class ControllerGenerator extends AbstractGenerator
+final class Generator extends AbstractGenerator
 {
     public static function getId(): string
     {
@@ -40,7 +40,7 @@ final class ControllerGenerator extends AbstractGenerator
 
     public function doGenerate(GeneratorCommandInterface $command): array
     {
-        if (!$command instanceof ControllerCommand) {
+        if (!$command instanceof Command) {
             throw new InvalidArgumentException();
         }
 
@@ -68,7 +68,7 @@ final class ControllerGenerator extends AbstractGenerator
     /**
      * @return string the controller class file path
      */
-    private function getControllerFile(ControllerCommand $command): string
+    private function getControllerFile(Command $command): string
     {
         $directory = empty($command->getDirectory()) ? '@src/Controller/' : $command->getDirectory();
 
@@ -90,7 +90,7 @@ final class ControllerGenerator extends AbstractGenerator
      *
      * @return string the action view file path
      */
-    public function getViewFile(ControllerCommand $command, string $action): string
+    public function getViewFile(Command $command, string $action): string
     {
         $directory = empty($command->getViewsPath()) ? '@views/' : $command->getViewsPath();
 
@@ -110,6 +110,6 @@ final class ControllerGenerator extends AbstractGenerator
 
     public static function getCommandClass(): string
     {
-        return ControllerCommand::class;
+        return Command::class;
     }
 }

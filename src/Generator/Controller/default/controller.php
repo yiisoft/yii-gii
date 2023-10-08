@@ -6,7 +6,7 @@ declare(strict_types=1);
 
 use Yiisoft\Strings\StringHelper;
 
-/* @var $command Yiisoft\Yii\Gii\Generator\Controller\ControllerCommand */
+/* @var $command Yiisoft\Yii\Gii\Generator\Controller\Command */
 
 $classDefinitionParts = [];
 $classDefinitionParts[] = StringHelper::baseName($command->getControllerClass());

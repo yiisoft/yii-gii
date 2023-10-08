@@ -13,7 +13,7 @@ use Yiisoft\Yii\Gii\Generator\AbstractGeneratorCommand;
 use Yiisoft\Yii\Gii\Validator\NewClassRule;
 use Yiisoft\Yii\Gii\Validator\TemplateRule;
 
-final class ControllerCommand extends AbstractGeneratorCommand
+final class Command extends AbstractGeneratorCommand
 {
     #[Each([
         new Regex(

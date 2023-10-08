@@ -10,7 +10,7 @@ use Yiisoft\Yii\Gii\Component\CodeFile\CodeFile;
 use Yiisoft\Yii\Gii\Component\CodeFile\CodeFileWriteOperationEnum;
 use Yiisoft\Yii\Gii\Component\CodeFile\CodeFileWriteStatusEnum;
 
-class CodeFileTest extends TestCase
+final class CodeFileTest extends TestCase
 {
     private ?Aliases $aliases = null;
 
