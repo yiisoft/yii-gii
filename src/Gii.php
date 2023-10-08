@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii;
 
+use Closure;
 use Yiisoft\Yii\Gii\Exception\GeneratorNotFoundException;
 
+/**
+ * @psalm-import-type LazyGenerator from GiiInterface
+ */
 final class Gii implements GiiInterface
 {
     /**
-     * @param array<string, GeneratorInterface> $generators
+     * @param array<string, GeneratorInterface|LazyGenerator> $generators
      */
     public function __construct(private array $generators)
     {
-        $this->generators = array_combine(
-            array_map(fn (GeneratorInterface $generator) => $generator::getId(), $generators),
-            array_values($this->generators)
-        );
     }
 
     public function addGenerator(GeneratorInterface $generator): void
@@ -30,11 +30,14 @@ final class Gii implements GiiInterface
             throw new GeneratorNotFoundException('Generator "' . $id . '" not found');
         }
 
-        return $this->generators[$id];
+        return $this->generators[$id] instanceof Closure ? $this->generators[$id]() : $this->generators[$id];
     }
 
     public function getGenerators(): array
     {
-        return $this->generators;
+        return array_map(
+            fn (Closure|GeneratorInterface $generator) => $generator instanceof Closure ? $generator() : $generator,
+            $this->generators
+        );
     }
 }
