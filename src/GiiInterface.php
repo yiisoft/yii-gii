@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii;
 
+use Closure;
 use Yiisoft\Yii\Gii\Exception\GeneratorNotFoundException;
 
+/**
+ * @psalm-type LazyGenerator = Closure(): GeneratorInterface
+ */
 interface GiiInterface
 {
     /**
-     * @param GeneratorInterface $generator
+     * @psalm-param GeneratorInterface $generator
      */
     public function addGenerator(GeneratorInterface $generator): void;
 

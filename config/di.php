@@ -20,10 +20,10 @@ return [
         foreach ($generators as $generator) {
             $class = $generator['class'];
             /**
-             * @var $generator GeneratorInterface
+             * @var $loader Closure(): GeneratorInterface
              */
-            $generator = $injector->make($class, $generator['parameters'] ?? []);
-            $generatorsInstances[] = $generator;
+            $loader = fn() => $injector->make($class, $generator['parameters'] ?? []);
+            $generatorsInstances[$class] = $loader;
         }
         return new Gii($generatorsInstances);
     },
