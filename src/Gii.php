@@ -13,7 +13,7 @@ use Yiisoft\Yii\Gii\Exception\GeneratorNotFoundException;
 final class Gii implements GiiInterface
 {
     /**
-     * @param array<string, LazyGenerator|GeneratorInterface> $generators
+     * @param array<string, GeneratorInterface|LazyGenerator> $generators
      */
     public function __construct(private array $generators)
     {
