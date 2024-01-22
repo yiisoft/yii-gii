@@ -5,7 +5,8 @@
     "keywords": [
         "yii",
         "gii",
-        "code generator"
+        "code generator",
+        "dev"
     ],
     "license": "BSD-3-Clause",
     "support": {
