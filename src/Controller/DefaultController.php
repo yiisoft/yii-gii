@@ -10,7 +10,7 @@ use ReflectionParameter;
 use Yiisoft\DataResponse\DataResponse;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Http\Status;
-use Yiisoft\RequestModel\Attribute\Query;
+use Yiisoft\Input\Http\Attribute\Parameter\Query;
 use Yiisoft\Validator\Helper\RulesDumper;
 use Yiisoft\Validator\RulesProvider\AttributesRulesProvider;
 use Yiisoft\Yii\Gii\Component\CodeFile\CodeFile;
