@@ -59,7 +59,7 @@ final class Generator extends AbstractGenerator
 
         //$prompt = $command->getPrompt();
         $prompt = [
-            "Generate a test with PHPUnit for the following class",
+            'Generate a test with PHPUnit for the following class',
             file_get_contents(__DIR__ . '/../../Gii.php'),
         ];
         $result = $client->geminiPro()->generateContent($prompt);
