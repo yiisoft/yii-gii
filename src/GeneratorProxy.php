@@ -13,7 +13,7 @@ class GeneratorProxy
     /**
      * @psalm-param class-string<GeneratorCommandInterface> $class
      */
-    public function __construct(private Closure $loader, private string $class)
+    public function __construct(private readonly Closure $loader, private readonly string $class)
     {
     }
 
