@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Yiisoft\Injector\Injector;
 use Yiisoft\Yii\Gii\GeneratorInterface;
+use Yiisoft\Yii\Gii\GeneratorProxy;
 use Yiisoft\Yii\Gii\Gii;
 use Yiisoft\Yii\Gii\GiiInterface;
 use Yiisoft\Yii\Gii\ParametersProvider;
@@ -22,8 +23,11 @@ return [
             /**
              * @var $loader Closure(): GeneratorInterface
              */
-            $loader = fn() => $injector->make($class, $generator['parameters'] ?? []);
-            $generatorsInstances[$class] = $loader;
+            $loader = new GeneratorProxy(
+                fn() => $injector->make($class, $generator['parameters'] ?? []),
+                $class,
+            );
+            $generatorsInstances[$class::getId()] = $loader;
         }
         return new Gii($generatorsInstances);
     },
