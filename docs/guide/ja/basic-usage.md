@@ -3,7 +3,7 @@
 
 Gii にアクセスすると、最初に、ジェネレータを選択できるエントリ・ページが開かれます。
 
-![Gii エントリ・ページ](images/gii-entry.png)
+![Gii エントリ・ページ](../../images/gii-entry.png)
 
 デフォルトでは、以下のジェネレータを利用できます。
 
@@ -18,7 +18,7 @@ Gii にアクセスすると、最初に、ジェネレータを選択できる�
 あなたの要求を満たすようにフォームに入力して "Preview" ボタンをクリックすると、Gii が生成しようとしているコードのプレビューが出来ます。
 選択したジェネレータや、既存のファイルの有無によって多少異なりますが、次の画像で見るのと同じような出力が得られます。
 
-![Gii プレビュー](images/gii-preview.png)
+![Gii プレビュー](../../images/gii-preview.png)
 
 ファイル名をクリックすると、そのファイルのために生成されるコードのプレビューを見ることが出来ます。
 ファイルが既に存在する場合は、既存のコードと生成されるコードのどこが異なるかを示す差分ビューも提供されます。
@@ -26,7 +26,7 @@ Gii にアクセスすると、最初に、ジェネレータを選択できる�
 
 > Tip: データベースに変更を加えた後で、モデル・ジェネレータを使ってモデルを更新したい場合は、Gii のプレビューからコードをコピーして、あなたのコードに変更をマージすることが出来ます。
 PHPStorm の [クリップボードと比較](https://www.jetbrains.com/help/phpstorm/comparing-files-and-folders.html) のような IDE の機能を使うと良いでしょう。
-[Aptana Studio](http://www.aptana.com/products/studio3/download) や [Eclipse](https://www.eclipse.org/pdt/) ベースのエディタも [AnyEdit tools plugin](https://andrei.gmxhome.de/anyedit/) を使って [クリップボードと比較](https://andrei.gmxhome.de/anyedit/examples.html) をすることが出来ます。
+[Aptana Studio](https://www.aptana.com/products/studio3/download) や [Eclipse](https://www.eclipse.org/pdt/) ベースのエディタも [AnyEdit tools plugin](https://andrei.gmxhome.de/anyedit/) を使って [クリップボードと比較](https://andrei.gmxhome.de/anyedit/examples.html) をすることが出来ます。
 この機能を使うと、関係のある変更だけを取り込んで、あなた自身のコードを取り消すような他の変更は放っておくことが出来ます。
 
 コードをレビューして、生成すべきファイルを選択し、"Generate" ボタンをクリックするとファイルが生成されます。
@@ -38,4 +38,3 @@ Gii がファイルを生成できないというエラーが出た場合は、�
   Gii によって生成されたモデルを変更せずに、ちょっとした所だけを修正して使っている人をよく見かけます。
   これは、意図されている Gii の使い方ではありません。
   Gii によって生成されるコードは不完全であったり、間違っていたりする可能性があるもので、あなたの要求を満たすように変更して初めて使用できるようになるものです。
-
