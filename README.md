@@ -48,13 +48,13 @@ return [
 
 You can then access Gii through the following URL:
 
-```shell
+```text
 http://localhost/path/to/index.php?r=gii
 ```
 
 or if you have enabled pretty URLs, you may use the following URL:
 
-```shell
+```text
 http://localhost/path/to/index.php/gii
 ```
 
@@ -77,7 +77,7 @@ yii gii/model --tableName=city --modelClass=City
 
 ## Documentation
 
-- Guide: [English](docs/guide/en/README.md), [中国人](docs/guide/zh-CN/README.md), [日本語](docs/guide/ja/README.md), [Português - Brasil](docs/guide/pt-BR/README.md)
+- Guide: [English](docs/guide/en/README.md), [中国人](docs/guide/zh-CN/README.md), [日本語](docs/guide/ja/README.md), [Português - Brasil](docs/guide/pt-BR/README.md), [Русский](docs/guide/ru/README.md)
 - [Internals](docs/internals.md)
 
 If you need help or have a question, the [Yii Forum](https://forum.yiiframework.com/c/yii-3-0/63) is a good place for that.
