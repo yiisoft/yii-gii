@@ -8,7 +8,7 @@ The preferred way to install this extension is through [composer](https://getcom
 Either run
 
 ```
-php composer.phar require --dev --prefer-dist yiisoft/yii-gii
+composer require --dev yiisoft/yii-gii
 ```
 
 or add
