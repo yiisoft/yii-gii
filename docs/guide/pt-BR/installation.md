@@ -8,7 +8,7 @@ A maneira preferida para instalar essa extensão é via [composer](https://getco
 Então rode
 
 ```
-composer require --dev yiisoft/yii2-gii
+composer require --dev yiisoft/yii-gii
 ```
 
 ou adicione
