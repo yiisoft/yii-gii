@@ -10,13 +10,23 @@
     ],
     "license": "BSD-3-Clause",
     "support": {
+        "issues": "https://github.com/yiisoft/yii-gii/issues?state=open",
         "source": "https://github.com/yiisoft/yii-gii",
-        "issues": "https://github.com/yiisoft/yii-gii/issues",
         "forum": "https://www.yiiframework.com/forum/",
         "wiki": "https://www.yiiframework.com/wiki/",
-        "irc": "irc://irc.freenode.net/yii",
+        "irc": "ircs://irc.libera.chat:6697/yii",
         "chat": "https://t.me/yii3en"
     },
+    "funding": [
+        {
+            "type": "opencollective",
+            "url": "https://opencollective.com/yiisoft"
+        },
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/yiisoft"
+        }
+    ],
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
