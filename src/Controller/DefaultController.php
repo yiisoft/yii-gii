@@ -19,6 +19,7 @@ use Yiisoft\Yii\Gii\Component\CodeFile\CodeFileWriter;
 use Yiisoft\Yii\Gii\Exception\InvalidGeneratorCommandException;
 use Yiisoft\Yii\Gii\Generator\CommandHydrator;
 use Yiisoft\Yii\Gii\GeneratorCommandInterface;
+use Yiisoft\Yii\Gii\GeneratorInterface;
 use Yiisoft\Yii\Gii\GeneratorProxy;
 use Yiisoft\Yii\Gii\GiiInterface;
 use Yiisoft\Yii\Gii\ParametersProvider;
@@ -39,7 +40,14 @@ final class DefaultController
         return $this->responseFactory->createResponse([
             'generators' => array_map(
                 $this->serializeGenerator(...),
-                array_values(array_map(fn(GeneratorProxy $proxy) => $proxy->getClass(), $generators)),
+                array_values(
+                    array_map(
+                        fn (GeneratorInterface|GeneratorProxy $generator) => $generator instanceof GeneratorProxy
+                            ? $generator->getClass()
+                            : $generator::class,
+                        $generators
+                    )
+                ),
             ),
         ]);
     }

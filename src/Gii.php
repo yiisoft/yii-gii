@@ -6,25 +6,29 @@ namespace Yiisoft\Yii\Gii;
 
 use Yiisoft\Yii\Gii\Exception\GeneratorNotFoundException;
 
-/**
- * @psalm-import-type LazyGenerator from GiiInterface
- */
 final class Gii implements GiiInterface
 {
     /**
      * @param array<string, GeneratorInterface|GeneratorProxy> $proxies
+     * @param array<string, GeneratorInterface> $instances
      */
-    public function __construct(private array $proxies)
+    public function __construct(
+        private readonly array $proxies,
+        private array $instances,
+    )
     {
     }
 
     public function addGenerator(GeneratorInterface $generator): void
     {
-        $this->proxies[$generator::getId()] = new GeneratorProxy(fn () => $generator, $generator::class);
+        $this->instances[$generator::getId()] = $generator;
     }
 
     public function getGenerator(string $id): GeneratorInterface
     {
+        if (isset($this->instances[$id])) {
+            return $this->instances[$id];
+        }
         return isset($this->proxies[$id])
             ? $this->proxies[$id]->loadGenerator()
             : throw new GeneratorNotFoundException('Generator "' . $id . '" not found');
@@ -32,6 +36,9 @@ final class Gii implements GiiInterface
 
     public function getGenerators(): array
     {
-        return $this->proxies;
+        return [
+            ...$this->instances,
+            ...$this->proxies,
+        ];
     }
 }

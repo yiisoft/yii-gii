@@ -28,6 +28,7 @@ use Yiisoft\Validator\RuleHandlerResolverInterface;
 use Yiisoft\Validator\Validator;
 use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\Yii\Gii\Generator as Generators;
+use Yiisoft\Yii\Gii\GeneratorProxy;
 use Yiisoft\Yii\Gii\Gii;
 use Yiisoft\Yii\Gii\GiiInterface;
 
@@ -54,15 +55,16 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             $config = ContainerConfig::create()
                 ->withDefinitions([
                     GiiInterface::class => function (ContainerInterface $container) {
-                        $generators = [
-                            Generators\Controller\Generator::getId() => Generators\Controller\Generator::class,
-                            Generators\ActiveRecord\Generator::getId() => Generators\ActiveRecord\Generator::class,
+                        $proxies = [
+                            Generators\Controller\Generator::getId() => new GeneratorProxy(
+                                fn() => $container->get(Generators\Controller\Generator::class),
+                                Generators\Controller\Generator::class,
+                            ),
                         ];
-                        $generatorsInstances = [];
-                        foreach ($generators as $class) {
-                            $generatorsInstances[] = $container->get($class);
-                        }
-                        return new Gii($generatorsInstances);
+                        $instances = [
+                            Generators\ActiveRecord\Generator::getId() => $container->get(Generators\ActiveRecord\Generator::class),
+                        ];
+                        return new Gii($proxies, $instances);
                     },
                     Aliases::class => new Aliases(
                         [

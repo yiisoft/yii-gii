@@ -6,19 +6,19 @@ namespace Yiisoft\Yii\Gii;
 
 use Closure;
 
-class GeneratorProxy
+final class GeneratorProxy
 {
     private ?GeneratorInterface $generator = null;
 
     /**
-     * @psalm-param class-string<GeneratorCommandInterface> $class
+     * @psalm-param class-string<GeneratorInterface> $class
      */
     public function __construct(private readonly Closure $loader, private readonly string $class)
     {
     }
 
     /**
-     * @return class-string<GeneratorCommandInterface>
+     * @return class-string<GeneratorInterface>
      */
     public function getClass(): string
     {
