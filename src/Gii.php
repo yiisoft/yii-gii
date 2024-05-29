@@ -25,12 +25,9 @@ final class Gii implements GiiInterface
 
     public function getGenerator(string $id): GeneratorInterface
     {
-        if (isset($this->instances[$id])) {
-            return $this->instances[$id];
-        }
-        return isset($this->proxies[$id])
+        return $this->instances[$id] ?? (isset($this->proxies[$id])
             ? $this->proxies[$id]->loadGenerator()
-            : throw new GeneratorNotFoundException('Generator "' . $id . '" not found');
+            : throw new GeneratorNotFoundException('Generator "' . $id . '" not found'));
     }
 
     public function getGenerators(): array
