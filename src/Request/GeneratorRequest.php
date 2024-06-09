@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii\Request;
 
-use Yiisoft\Hydrator\Temp\RouteArgument;
 use Yiisoft\Input\Http\Attribute\Parameter\Body;
 use Yiisoft\Input\Http\RequestInputInterface;
+use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Yii\Gii\GeneratorInterface;
 use Yiisoft\Yii\Gii\GiiInterface;
 

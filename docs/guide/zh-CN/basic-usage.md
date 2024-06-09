@@ -3,7 +3,7 @@
 
 打开 Gii 时，首先进入到引导页，此处可以选择一种代码生成器。
 
-![Gii entry page](images/gii-entry.png)
+![Gii entry page](../../images/gii-entry.png)
 
 默认有以下生成器可用：
 
@@ -16,12 +16,12 @@
 
 通过单击 "Start" 按钮选择生成器后，将看到一个表单，允许配置生成器的参数。 根据需要填写表单，然后按 "Preview" 按钮获取 Gii 将要生成的代码的预览。 根据选择的生成器以及文件是否已经存在，将得到类似于下图所示的输出：
 
-![Gii preview](images/gii-preview.png)
+![Gii preview](../../images/gii-preview.png)
 
 单击文件名可以查看将为该文件生成的代码的预览。
 当文件已经存在时，Gii 还提供了一个 diff 视图，它显示了存在的代码和将要生成的代码之间的区别。 在这种情况下，还可以选择应覆盖哪些文件，哪些不覆盖。
 
-> 提示：在使用模型生成器在数据库更改后更新模型时，可以从 Gii 预览复制代码，并将更改与您自己的代码合并。可以使用IDE功能，如 PHPStorms [compare with clipboard（与剪贴板比较）](https://www.jetbrains.com/help/phpstorm/comparing-files-and-folders.html)，[Aptana Studio](http://www.aptana.com/products/studio3/download) 或者使用 [Eclipse](https://www.eclipse.org/pdt/) 通过 [AnyEdit tools plugin](https://andrei.gmxhome.de/anyedit/) 也允许 [compare with clipboard（与剪贴板比较）](https://andrei.gmxhome.de/anyedit/examples.html)，这样可以合并相关的更改，并省略其他可能被自己还原的代码。
+> 提示：在使用模型生成器在数据库更改后更新模型时，可以从 Gii 预览复制代码，并将更改与您自己的代码合并。可以使用IDE功能，如 PHPStorms [compare with clipboard（与剪贴板比较）](https://www.jetbrains.com/help/phpstorm/comparing-files-and-folders.html)，[Aptana Studio](https://www.aptana.com/products/studio3/download) 或者使用 [Eclipse](https://www.eclipse.org/pdt/) 通过 [AnyEdit tools plugin](https://andrei.gmxhome.de/anyedit/) 也允许 [compare with clipboard（与剪贴板比较）](https://andrei.gmxhome.de/anyedit/examples.html)，这样可以合并相关的更改，并省略其他可能被自己还原的代码。
 
 在检查代码并选择要生成的文件后，可以单击 "Generate" 按钮创建文件即可。 如果看到Gii无法生成文件的错误时，则需调整目录权限，以便的Web服务器能够写入目录并创建文件。
 

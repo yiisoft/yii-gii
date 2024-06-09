@@ -3,7 +3,7 @@ Basic Usage
 
 When you open Gii you first see the entry page that lets you choose a generator.
 
-![Gii entry page](images/gii-entry.png)
+![Gii entry page](../../images/gii-entry.png)
 
 By default there are the following generators available:
 
@@ -22,7 +22,7 @@ parameters of the generator. Fill out the form according to your needs and press
 preview of the code that Gii is about to generate. Depending on the generator you chose and whether the files
 already existed or not, you will get an output similar to what you see in the following picture:
 
-![Gii preview](images/gii-preview.png)
+![Gii preview](../../images/gii-preview.png)
 
 Clicking on the file name you can view a preview of the code that will be generated for that file.
 When the file already exists, Gii also provides a diff view that shows what is different between the code that exists
@@ -30,9 +30,8 @@ and the one that will be generated. In this case you can also choose which files
 
 > Tip: When using the Model Generator to update models after database change, you can copy the code from Gii preview
   and merge the changes with your own code. You can use IDE features like PHPStorms
-  [compare with clipboard](https://www.jetbrains.com/help/phpstorm/comparing-files-and-folders.html), [Aptana Studio](http://www.aptana.com/products/studio3/download) or [Eclipse](https://www.eclipse.org/pdt/) based editor also allows [compare with clipboard](https://andrei.gmxhome.de/anyedit/examples.html) by using [AnyEdit tools plugin](https://andrei.gmxhome.de/anyedit/) for this, which allows you to merge in relevant changes and leave out others that may revert your own code.
+  [compare with clipboard](https://www.jetbrains.com/help/phpstorm/comparing-files-and-folders.html), [Aptana Studio](https://www.aptana.com/products/studio3/download) or [Eclipse](https://www.eclipse.org/pdt/) based editor also allows [compare with clipboard](https://andrei.gmxhome.de/anyedit/examples.html) by using [AnyEdit tools plugin](https://andrei.gmxhome.de/anyedit/) for this, which allows you to merge in relevant changes and leave out others that may revert your own code.
   
-
 After you have reviewed the code and selected the files to be generated you can click the "Generate" button to create
 the files. If all went fine you are done. When you see errors that Gii is not able to generate the files you have to
 adjust directory permissions so that your webserver is able to write to the directories and create the files.
