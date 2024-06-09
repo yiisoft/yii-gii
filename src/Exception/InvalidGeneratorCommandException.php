@@ -9,7 +9,7 @@ use Yiisoft\Validator\Result;
 
 final class InvalidGeneratorCommandException extends Exception
 {
-    public function __construct(private Result $result)
+    public function __construct(private readonly Result $result)
     {
         parent::__construct('Invalid generator data.');
     }

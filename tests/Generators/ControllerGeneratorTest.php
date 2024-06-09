@@ -6,20 +6,17 @@ namespace Yiisoft\Yii\Gii\Tests\Generators;
 
 use Yiisoft\Injector\Injector;
 use Yiisoft\Yii\Gii\Exception\InvalidGeneratorCommandException;
-use Yiisoft\Yii\Gii\Generator\Controller\ControllerCommand;
-use Yiisoft\Yii\Gii\Generator\Controller\ControllerGenerator as ControllerGenerator;
+use Yiisoft\Yii\Gii\Generator\Controller\Command;
+use Yiisoft\Yii\Gii\Generator\Controller\Generator;
 use Yiisoft\Yii\Gii\ParametersProvider;
 use Yiisoft\Yii\Gii\Tests\TestCase;
 
-/**
- * ControllerGeneratorTest checks that Gii controller generator produces valid results
- */
-class ControllerGeneratorTest extends TestCase
+final class ControllerGeneratorTest extends TestCase
 {
     public function testValidGenerator(): void
     {
         $generator = $this->createGenerator();
-        $command = new ControllerCommand(
+        $command = new Command(
             controllerClass: 'TestController',
             actions: ['index', 'edit', 'view'],
             template: 'default',
@@ -30,14 +27,14 @@ class ControllerGeneratorTest extends TestCase
         $this->assertNotEmpty($files);
     }
 
-    public function testInvalidGenerator(): void
+    public function testInvalidGenerator(): never
     {
         $generator = $this->createGenerator(
             templates: [
                 'default' => dirname(__DIR__ . '../templates'),
             ],
         );
-        $command = new ControllerCommand(
+        $command = new Command(
             controllerClass: 'Wr0ngContr0ller',
             actions: ['index', 'ed1t', 'view'],
             template: 'test',
@@ -58,25 +55,32 @@ class ControllerGeneratorTest extends TestCase
     {
         $generator = $this->createGenerator(
             templates: [
-                'custom' => '@src/templates/custom',
+                Generator::getId() => [
+                    'custom' => '@src/templates/controller',
+                ],
             ],
         );
-        $command = new ControllerCommand(
+        $command = new Command(
             controllerClass: 'TestController',
             actions: ['index', 'edit', 'view'],
             template: 'custom',
         );
 
-        $this->expectException(InvalidGeneratorCommandException::class);
-        $generator->generate($command);
+        $files = $generator->generate($command);
+        $this->assertNotEmpty($files);
+        foreach ($files as $file) {
+            $this->assertEmpty($file->getContent());
+        }
     }
 
-    private function createGenerator(...$params): ControllerGenerator
+    private function createGenerator(...$params): Generator
     {
-        $injector = new Injector($this->getContainer());
+        $injector = new Injector(
+            $this->getContainer([
+                ParametersProvider::class => new ParametersProvider(...$params),
+            ])
+        );
 
-        return $injector->make(ControllerGenerator::class, [
-            new ParametersProvider(...$params),
-        ]);
+        return $injector->make(Generator::class);
     }
 }

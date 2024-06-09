@@ -9,7 +9,7 @@ use Yiisoft\Yii\Gii\Exception\GeneratorNotFoundException;
 interface GiiInterface
 {
     /**
-     * @param GeneratorInterface $generator
+     * @psalm-param GeneratorInterface $generator
      */
     public function addGenerator(GeneratorInterface $generator): void;
 
@@ -19,7 +19,7 @@ interface GiiInterface
     public function getGenerator(string $id): GeneratorInterface;
 
     /**
-     * @return GeneratorInterface[]
+     * @return GeneratorInterface[]|GeneratorProxy[]
      */
     public function getGenerators(): array;
 }

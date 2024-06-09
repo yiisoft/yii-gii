@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii\Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Yii\Gii\Component\CodeFile\CodeFile;
 use Yiisoft\Yii\Gii\Component\CodeFile\CodeFileWriteOperationEnum;
 use Yiisoft\Yii\Gii\Component\CodeFile\CodeFileWriteStatusEnum;
 
-class CodeFileTest extends TestCase
+final class CodeFileTest extends TestCase
 {
     private ?Aliases $aliases = null;
 
@@ -132,7 +133,7 @@ class CodeFileTest extends TestCase
         ];
     }
 
-    public function dataProviderPreview(): array
+    public static function dataProviderPreview(): array
     {
         return [
             [
@@ -153,7 +154,7 @@ class CodeFileTest extends TestCase
         ];
     }
 
-    public function dataProviderConstruct(): array
+    public static function dataProviderConstruct(): array
     {
         return [
             [
@@ -171,7 +172,7 @@ class CodeFileTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataProviderConstruct */
+    #[DataProvider('dataProviderConstruct')]
     public function testConstruct(string $path, CodeFileWriteOperationEnum $expectedOperation): void
     {
         $codeFile = new CodeFile($this->aliases->get($path), '');
@@ -206,7 +207,7 @@ class CodeFileTest extends TestCase
         $this->assertEquals($codeFile->diff(), '');
     }
 
-    /** @dataProvider dataProviderPreview */
+    #[DataProvider('dataProviderPreview')]
     public function testPreview(string $path, string $content, $result): void
     {
         $codeFile = new CodeFile($this->aliases->get($path), $content);

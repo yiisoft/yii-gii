@@ -10,8 +10,8 @@ use ReflectionParameter;
 use Yiisoft\DataResponse\DataResponse;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Http\Status;
-use Yiisoft\RequestModel\Attribute\Query;
-use Yiisoft\Validator\RulesDumper;
+use Yiisoft\Input\Http\Attribute\Parameter\Query;
+use Yiisoft\Validator\Helper\RulesDumper;
 use Yiisoft\Validator\RulesProvider\AttributesRulesProvider;
 use Yiisoft\Yii\Gii\Component\CodeFile\CodeFile;
 use Yiisoft\Yii\Gii\Component\CodeFile\CodeFileWriteOperationEnum;
@@ -20,6 +20,7 @@ use Yiisoft\Yii\Gii\Exception\InvalidGeneratorCommandException;
 use Yiisoft\Yii\Gii\Generator\CommandHydrator;
 use Yiisoft\Yii\Gii\GeneratorCommandInterface;
 use Yiisoft\Yii\Gii\GeneratorInterface;
+use Yiisoft\Yii\Gii\GeneratorProxy;
 use Yiisoft\Yii\Gii\GiiInterface;
 use Yiisoft\Yii\Gii\ParametersProvider;
 use Yiisoft\Yii\Gii\Request\GeneratorRequest;
@@ -27,8 +28,8 @@ use Yiisoft\Yii\Gii\Request\GeneratorRequest;
 final class DefaultController
 {
     public function __construct(
-        private DataResponseFactoryInterface $responseFactory,
-        private ParametersProvider $parametersProvider,
+        private readonly DataResponseFactoryInterface $responseFactory,
+        private readonly ParametersProvider $parametersProvider,
     ) {
     }
 
@@ -37,7 +38,17 @@ final class DefaultController
         $generators = $gii->getGenerators();
 
         return $this->responseFactory->createResponse([
-            'generators' => array_map($this->serializeGenerator(...), array_values($generators)),
+            'generators' => array_map(
+                $this->serializeGenerator(...),
+                array_values(
+                    array_map(
+                        fn (GeneratorInterface|GeneratorProxy $generator) => $generator instanceof GeneratorProxy
+                            ? $generator->getClass()
+                            : $generator::class,
+                        $generators
+                    )
+                ),
+            ),
         ]);
     }
 
@@ -46,7 +57,7 @@ final class DefaultController
         $generator = $request->getGenerator();
 
         return $this->responseFactory->createResponse(
-            $this->serializeGenerator($generator)
+            $this->serializeGenerator($generator::class)
         );
     }
 
@@ -150,12 +161,12 @@ final class DefaultController
         ];
     }
 
-    private function serializeGenerator(GeneratorInterface $generator): array
+    /**
+     * @psalm-param class-string<GeneratorCommandInterface> $generatorClass
+     */
+    private function serializeGenerator(string $generatorClass): array
     {
-        /**
-         * @psalm-var class-string<GeneratorCommandInterface> $commandClass
-         */
-        $commandClass = $generator::getCommandClass();
+        $commandClass = $generatorClass::getCommandClass();
 
         $dataset = new AttributesRulesProvider($commandClass);
         $rules = $dataset->getRules();
@@ -182,12 +193,12 @@ final class DefaultController
         }
 
         return [
-            'id' => $generator::getId(),
-            'name' => $generator::getName(),
-            'description' => $generator::getDescription(),
+            'id' => $generatorClass::getId(),
+            'name' => $generatorClass::getName(),
+            'description' => $generatorClass::getDescription(),
             'commandClass' => $commandClass,
             'attributes' => $attributesResult,
-            'templates' => $this->parametersProvider->getTemplates($generator::getId()),
+            'templates' => $this->parametersProvider->getTemplates($generatorClass::getId()),
         ];
     }
 

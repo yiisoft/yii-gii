@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<phpunit bootstrap="vendor/autoload.php"
-         colors="true"
-         verbose="true"
-         failOnRisky="true"
-         failOnWarning="true"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
-         stopOnFailure="false"
-         executionOrder="random"
-         resolveDependencies="true">
+<phpunit
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.2/phpunit.xsd"
+    bootstrap="vendor/autoload.php"
+    colors="true"
+    failOnRisky="true"
+    failOnWarning="true"
+    displayDetailsOnTestsThatTriggerWarnings="true"
+    stopOnFailure="false"
+    executionOrder="random"
+    resolveDependencies="true"
+    cacheDirectory=".phpunit.cache"
+>
     <php>
         <ini name="error_reporting" value="-1"/>
     </php>
@@ -21,9 +22,9 @@
         </testsuite>
     </testsuites>
 
-    <coverage>
+    <source>
         <include>
-            <directory>./src</directory>
+            <directory suffix=".php">./src</directory>
         </include>
-    </coverage>
+    </source>
 </phpunit>

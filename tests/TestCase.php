@@ -9,7 +9,12 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
+use Psr\SimpleCache\CacheInterface;
 use Yiisoft\Aliases\Aliases;
+use Yiisoft\Cache\NullCache;
+use Yiisoft\Db\Connection\ConnectionInterface;
+use Yiisoft\Db\Sqlite\Connection as SqliteConnection;
+use Yiisoft\Db\Sqlite\Driver;
 use Yiisoft\Definitions\Reference;
 use Yiisoft\Di\Container;
 use Yiisoft\Di\ContainerConfig;
@@ -18,61 +23,23 @@ use Yiisoft\EventDispatcher\Provider\Provider;
 use Yiisoft\Files\FileHelper;
 use Yiisoft\Translator\Translator;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Validator\RuleHandlerContainer;
+use Yiisoft\Validator\RuleHandlerResolver\RuleHandlerContainer;
 use Yiisoft\Validator\RuleHandlerResolverInterface;
 use Yiisoft\Validator\Validator;
 use Yiisoft\Validator\ValidatorInterface;
-use Yiisoft\Yii\Gii\Generator\Controller\ControllerGenerator;
+use Yiisoft\Yii\Gii\Generator as Generators;
+use Yiisoft\Yii\Gii\GeneratorProxy;
 use Yiisoft\Yii\Gii\Gii;
 use Yiisoft\Yii\Gii\GiiInterface;
 
-/**
- * GiiTestCase is the base class for all gii related test cases
- */
-class TestCase extends \PHPUnit\Framework\TestCase
+abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
-    private ?ContainerInterface $container;
+    private ?ContainerInterface $container = null;
 
     protected function setUp(): void
     {
         parent::setUp();
         FileHelper::ensureDirectory(__DIR__ . '/runtime');
-
-        $config = ContainerConfig::create()
-            ->withDefinitions([
-                GiiInterface::class => function (ContainerInterface $container) {
-                    $generators = [
-                        'controller' => ControllerGenerator::class,
-                    ];
-                    $generatorsInstances = [];
-                    foreach ($generators as $class) {
-                        $generatorsInstances[] = $container->get($class);
-                    }
-                    return new Gii($generatorsInstances);
-                },
-                Aliases::class => new Aliases(
-                    [
-                        '@src' => __DIR__,
-                        '@views' => '@src/runtime',
-                        '@view' => '@src/runtime',
-                        '@root' => '@src/runtime',
-                    ]
-                ),
-                EventDispatcherInterface::class => Dispatcher::class,
-                ListenerProviderInterface::class => Provider::class,
-                LoggerInterface::class => NullLogger::class,
-                TranslatorInterface::class => [
-                    'class' => Translator::class,
-                    '__construct()' => [
-                        'en',
-                        'en',
-                        Reference::to(EventDispatcherInterface::class),
-                    ],
-                ],
-                RuleHandlerResolverInterface::class => RuleHandlerContainer::class,
-                ValidatorInterface::class => Validator::class,
-            ]);
-        $this->container = new Container($config);
     }
 
     protected function tearDown(): void
@@ -82,8 +49,55 @@ class TestCase extends \PHPUnit\Framework\TestCase
         $this->container = null;
     }
 
-    protected function getContainer(): ContainerInterface
+    protected function getContainer(array $definitions = []): ContainerInterface
     {
+        if ($this->container === null) {
+            $config = ContainerConfig::create()
+                ->withDefinitions([
+                    GiiInterface::class => function (ContainerInterface $container) {
+                        $proxies = [
+                            Generators\Controller\Generator::getId() => new GeneratorProxy(
+                                fn() => $container->get(Generators\Controller\Generator::class),
+                                Generators\Controller\Generator::class,
+                            ),
+                        ];
+                        $instances = [
+                            Generators\ActiveRecord\Generator::getId() => $container->get(Generators\ActiveRecord\Generator::class),
+                        ];
+                        return new Gii($proxies, $instances);
+                    },
+                    Aliases::class => new Aliases(
+                        [
+                            '@src' => __DIR__,
+                            '@views' => '@src/runtime',
+                            '@view' => '@src/runtime',
+                            '@root' => '@src/runtime',
+                        ]
+                    ),
+                    EventDispatcherInterface::class => Dispatcher::class,
+                    ListenerProviderInterface::class => Provider::class,
+                    LoggerInterface::class => NullLogger::class,
+                    TranslatorInterface::class => [
+                        'class' => Translator::class,
+                        '__construct()' => [
+                            'locale' => 'en',
+                            'fallbackLocale' => 'en',
+                            'eventDispatcher' => Reference::to(EventDispatcherInterface::class),
+                        ],
+                    ],
+                    RuleHandlerResolverInterface::class => RuleHandlerContainer::class,
+                    ValidatorInterface::class => Validator::class,
+                    CacheInterface::class => NullCache::class,
+                    ConnectionInterface::class => [
+                        'class' => SqliteConnection::class,
+                        '__construct()' => [
+                            new Driver('sqlite:' . __DIR__ . '/Support/test.db'),
+                        ],
+                    ],
+                    ...$definitions,
+                ]);
+            $this->container = new Container($config);
+        }
         return $this->container;
     }
 }

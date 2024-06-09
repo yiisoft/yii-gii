@@ -5,49 +5,67 @@
     "keywords": [
         "yii",
         "gii",
-        "code generator"
+        "code generator",
+        "dev"
     ],
     "license": "BSD-3-Clause",
     "support": {
+        "issues": "https://github.com/yiisoft/yii-gii/issues?state=open",
         "source": "https://github.com/yiisoft/yii-gii",
-        "issues": "https://github.com/yiisoft/yii-gii/issues",
         "forum": "https://www.yiiframework.com/forum/",
         "wiki": "https://www.yiiframework.com/wiki/",
-        "irc": "irc://irc.freenode.net/yii",
+        "irc": "ircs://irc.libera.chat:6697/yii",
         "chat": "https://t.me/yii3en"
     },
+    "funding": [
+        {
+            "type": "opencollective",
+            "url": "https://opencollective.com/yiisoft"
+        },
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/yiisoft"
+        }
+    ],
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
         "php": "^8.1",
+        "httpsoft/http-basis": "^1.1",
         "phpspec/php-diff": "^1.1.3",
-        "yiisoft/aliases": "^2.0",
-        "yiisoft/arrays": "^2.1",
-        "yiisoft/data-response": "^1.0",
+        "yiisoft/aliases": "^3.0",
+        "yiisoft/arrays": "^2.1|^3.0",
+        "yiisoft/data-response": "^2.0",
         "yiisoft/http": "^1.2",
+        "yiisoft/hydrator": "^1.0",
         "yiisoft/injector": "^1.1",
+        "yiisoft/input-http": "^1.0",
         "yiisoft/json": "^1.0",
-        "yiisoft/request-model": "dev-master",
-        "yiisoft/router": "^1.2",
+        "yiisoft/router": "^3.0",
         "yiisoft/strings": "^2.1",
-        "yiisoft/validator": "^3.0@dev",
-        "yiisoft/yii-console": "^1.3",
-        "yiisoft/yii-middleware": "dev-master"
+        "yiisoft/validator": "^1.0",
+        "yiisoft/yii-console": "^2.0",
+        "yiisoft/yii-middleware": "^1.0"
     },
     "require-dev": {
         "maglnet/composer-require-checker": "^4.2",
         "jetbrains/phpstorm-attributes": "^1.0",
         "nyholm/psr7": "^1.5",
-        "phpunit/phpunit": "^9.5",
-        "rector/rector": "^0.14.3",
+        "phpunit/phpunit": "^10.2",
+        "rector/rector": "^1.0.0",
         "roave/infection-static-analysis-plugin": "^1.23",
         "spatie/phpunit-watcher": "^1.23",
-        "vimeo/psalm": "^4.27",
+        "vimeo/psalm": "^5.13",
+        "yiisoft/active-record": "dev-master",
+        "yiisoft/cache": "^3.0",
+        "yiisoft/db": "1.2 as dev-master",
+        "yiisoft/db-sqlite": "^1.0",
         "yiisoft/di": "^1.1",
+        "yiisoft/dummy-provider": "^1.0",
         "yiisoft/event-dispatcher": "^1.0",
         "yiisoft/files": "^2.0",
         "yiisoft/log": "^2.0",
-        "yiisoft/router-fastroute": "^1.0"
+        "yiisoft/translator": "^3.0"
     },
     "autoload": {
         "psr-4": {
@@ -68,11 +86,7 @@
         },
         "config-plugin": {
             "params": "params.php",
-            "console": [
-                "$common",
-                "console.php"
-            ],
-            "common": "common.php",
+            "di": "di.php",
             "routes": "routes.php"
         }
     },
@@ -86,7 +100,8 @@
         "sort-packages": true,
         "allow-plugins": {
             "infection/extension-installer": true,
-            "composer/package-versions-deprecated": true
+            "composer/package-versions-deprecated": true,
+            "php-http/discovery": false
         }
     },
     "scripts": {

@@ -9,32 +9,32 @@ use Yiisoft\Yii\Gii\Exception\GeneratorNotFoundException;
 final class Gii implements GiiInterface
 {
     /**
-     * @param array<string, GeneratorInterface> $generators
+     * @param array<string, GeneratorInterface|GeneratorProxy> $proxies
+     * @param array<string, GeneratorInterface> $instances
      */
-    public function __construct(private array $generators)
-    {
-        $this->generators = array_combine(
-            array_map(fn (GeneratorInterface $generator) => $generator::getId(), $generators),
-            array_values($this->generators)
-        );
+    public function __construct(
+        private readonly array $proxies,
+        private array $instances,
+    ) {
     }
 
     public function addGenerator(GeneratorInterface $generator): void
     {
-        $this->generators[$generator::getId()] = $generator;
+        $this->instances[$generator::getId()] = $generator;
     }
 
     public function getGenerator(string $id): GeneratorInterface
     {
-        if (!isset($this->generators[$id])) {
-            throw new GeneratorNotFoundException('Generator "' . $id . '" not found');
-        }
-
-        return $this->generators[$id];
+        return $this->instances[$id] ?? (isset($this->proxies[$id])
+            ? $this->proxies[$id]->loadGenerator()
+            : throw new GeneratorNotFoundException('Generator "' . $id . '" not found'));
     }
 
     public function getGenerators(): array
     {
-        return $this->generators;
+        return [
+            ...$this->instances,
+            ...$this->proxies,
+        ];
     }
 }

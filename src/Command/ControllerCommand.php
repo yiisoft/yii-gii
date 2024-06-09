@@ -6,7 +6,7 @@ namespace Yiisoft\Yii\Gii\Command;
 
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Yiisoft\Yii\Gii\Generator\Controller\ControllerGenerator;
+use Yiisoft\Yii\Gii\Generator\Controller\Generator;
 use Yiisoft\Yii\Gii\GeneratorCommandInterface;
 use Yiisoft\Yii\Gii\GeneratorInterface;
 
@@ -36,7 +36,7 @@ final class ControllerCommand extends BaseGenerateCommand
 
     public function getGenerator(): GeneratorInterface
     {
-        return $this->gii->getGenerator(ControllerGenerator::getId());
+        return $this->gii->getGenerator(Generator::getId());
     }
 
     protected function createGeneratorCommand(InputInterface $input): GeneratorCommandInterface
@@ -47,7 +47,7 @@ final class ControllerCommand extends BaseGenerateCommand
         $template = $input->getOption('template');
         $template ??= 'default';
 
-        return new \Yiisoft\Yii\Gii\Generator\Controller\ControllerCommand(
+        return new \Yiisoft\Yii\Gii\Generator\Controller\Command(
             controllerClass: $input->getArgument('controllerClass'),
             viewsPath: (string)$input->getOption('viewsPath'),
             baseClass: (string)$input->getOption('baseClass'),
