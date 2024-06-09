@@ -6,6 +6,7 @@
     colors="true"
     failOnRisky="true"
     failOnWarning="true"
+    displayDetailsOnTestsThatTriggerWarnings="true"
     stopOnFailure="false"
     executionOrder="random"
     resolveDependencies="true"

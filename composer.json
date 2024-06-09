@@ -55,8 +55,9 @@
         "roave/infection-static-analysis-plugin": "^1.23",
         "spatie/phpunit-watcher": "^1.23",
         "vimeo/psalm": "^5.13",
-        "yiisoft/active-record": "^3.0@dev",
+        "yiisoft/active-record": "dev-master",
         "yiisoft/cache": "^3.0",
+        "yiisoft/db": "1.2 as dev-master",
         "yiisoft/db-sqlite": "^1.0",
         "yiisoft/di": "^1.1",
         "yiisoft/dummy-provider": "^1.0",
@@ -98,7 +99,8 @@
         "sort-packages": true,
         "allow-plugins": {
             "infection/extension-installer": true,
-            "composer/package-versions-deprecated": true
+            "composer/package-versions-deprecated": true,
+            "php-http/discovery": false
         }
     },
     "scripts": {

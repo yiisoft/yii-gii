@@ -10,6 +10,7 @@ use HttpSoft\Basis\Middleware\BodyParamsMiddleware;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Yiisoft\Csrf\CsrfMiddleware;
 use Yiisoft\DataResponse\Middleware\FormatDataResponseAsJson;
+use Yiisoft\RequestProvider\RequestCatcherMiddleware;
 use Yiisoft\Router\Group;
 use Yiisoft\Router\Route;
 use Yiisoft\Validator\ValidatorInterface;
@@ -47,14 +48,17 @@ return [
                         ->name('generator'),
                     Route::post('/{generator}/preview')
                         ->middleware(BodyParamsMiddleware::class)
+                        ->middleware(RequestCatcherMiddleware::class)
                         ->action([DefaultController::class, 'preview'])
                         ->name('preview'),
                     Route::post('/{generator}/generate')
                         ->middleware(BodyParamsMiddleware::class)
+                        ->middleware(RequestCatcherMiddleware::class)
                         ->action([DefaultController::class, 'generate'])
                         ->name('generate'),
                     Route::post('/{generator}/diff')
                         ->middleware(BodyParamsMiddleware::class)
+                        ->middleware(RequestCatcherMiddleware::class)
                         ->action([DefaultController::class, 'diff'])
                         ->name('diff')
                 )
