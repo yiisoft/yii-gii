@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii\Component\CodeFile;
 
-use JetBrains\PhpStorm\ArrayShape;
-
 class CodeFileWriteResult
 {
     private array $results = [];
@@ -28,11 +26,6 @@ class CodeFileWriteResult
         ];
     }
 
-    #[ArrayShape([
-        'id' => 'string',
-        'status' => 'string',
-        'error' => 'null|string',
-    ])]
     public function getResults(): array
     {
         return $this->results;
