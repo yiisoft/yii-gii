@@ -48,9 +48,9 @@
         "yiisoft/json": "^1.0",
         "yiisoft/router": "^3.0",
         "yiisoft/strings": "^2.1",
-        "yiisoft/validator": "^1.0",
+        "yiisoft/validator": "^2.0",
         "yiisoft/yii-console": "^2.0",
-        "yiisoft/yii-middleware": "^1.0"
+        "rossaddison/yii-middleware": "^1.0"
     },
     "require-dev": {
         "maglnet/composer-require-checker": "^4.2",
