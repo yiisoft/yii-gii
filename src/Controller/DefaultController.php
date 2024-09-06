@@ -142,7 +142,7 @@ final class DefaultController
     private function createErrorResponse(InvalidGeneratorCommandException $e): DataResponse
     {
         return $this->responseFactory->createResponse(
-            ['errors' => $e->getResult()->getErrorMessagesIndexedByAttribute()],
+            ['errors' => $e->getResult()->getErrorMessagesIndexedByProperty()],
             Status::UNPROCESSABLE_ENTITY
         );
     }
