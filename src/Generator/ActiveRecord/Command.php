@@ -24,7 +24,7 @@ final class Command extends AbstractGeneratorCommand
         private readonly string $namespace = 'App\\Model',
         #[Required]
         #[Regex(
-            pattern: '/^[a-z_][a-z0-9_]*$/i',
+            pattern: '/^[\w-]+(?:\.[\w-]+)?$/i',
             message: 'Invalid table name'
         )]
         #[TableExistsRule]
