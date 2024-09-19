@@ -30,7 +30,7 @@ final class TableExistsHandler implements RuleHandlerInterface
 
         try {
             $tableSchema = $this->connection->getTableSchema($value);
-        } catch (\Yiisoft\Db\Exception\Exception $e) {
+        } catch (\Yiisoft\Db\Exception\Exception) {
             $tableSchema = null;
         }
 
