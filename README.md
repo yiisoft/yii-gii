@@ -6,9 +6,9 @@
     <br>
 </p>
 
-[![Latest Stable Version](https://poser.pugx.org/yiisoft/yii-gii/v/stable.png)](https://packagist.org/packages/yiisoft/yii-gii)
-[![Total Downloads](https://poser.pugx.org/yiisoft/yii-gii/downloads.png)](https://packagist.org/packages/yiisoft/yii-gii)
-[![Build Status](https://github.com/yiisoft/yii-gii/workflows/build/badge.svg)](https://github.com/yiisoft/yii-gii/actions?query=workflow%3Abuild)
+[![Latest Stable Version](https://poser.pugx.org/yiisoft/yii-gii/v)](https://packagist.org/packages/yiisoft/yii-gii)
+[![Total Downloads](https://poser.pugx.org/yiisoft/yii-gii/downloads)](https://packagist.org/packages/yiisoft/yii-gii)
+[![Build status](https://github.com/yiisoft/yii-gii/actions/workflows/build.yml/badge.svg)](https://github.com/yiisoft/yii-gii/actions/workflows/build.yml)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/yiisoft/yii-gii/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/yiisoft/yii-gii/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/yiisoft/yii-gii/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/yiisoft/yii-gii/?branch=master)
 [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fyiisoft%2Fyii-gii%2Fmaster)](https://dashboard.stryker-mutator.io/reports/github.com/yiisoft/yii-gii/master)
