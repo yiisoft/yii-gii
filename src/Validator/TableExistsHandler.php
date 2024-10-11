@@ -28,7 +28,12 @@ final class TableExistsHandler implements RuleHandlerInterface
 
         $result = new Result();
 
-        $tableSchema = $this->connection->getTableSchema($value);
+        try {
+            $tableSchema = $this->connection->getTableSchema($value);
+        } catch (\Yiisoft\Db\Exception\Exception $e) {
+            $result->addError($e->getMessage());
+            return $result;
+        }
 
         if ($tableSchema === null) {
             $result->addError(sprintf('Table "%s" does not exist.', $value));
