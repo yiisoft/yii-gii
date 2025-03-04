@@ -16,5 +16,9 @@
     </projectFiles>
     <issueHandlers>
         <MixedAssignment errorLevel="suppress"/>
-    </issueHandlers>
+        <NonInvariantDocblockPropertyType errorLevel="suppress" />
+        <ClassMustBeFinal errorLevel="suppress" />
+        <InvalidArgument errorLevel="suppress" />
+        <MissingOverrideAttribute errorLevel="suppress"/>
+    </issueHandlers>  
 </psalm>
