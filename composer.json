@@ -47,10 +47,10 @@
         "yiisoft/injector": "^1.2",
         "yiisoft/input-http": "^1.0.1",
         "yiisoft/json": "^1.0",
-        "yiisoft/router": "^3.0||^4.0",
-        "yiisoft/strings": "^2.6",
-        "yiisoft/validator": "^2.2",
-        "yiisoft/yii-console": "^2.3",
+        "yiisoft/router": "^3.0",
+        "yiisoft/strings": "^2.1",
+        "yiisoft/validator": "^2.0",
+        "yiisoft/yii-console": "^2.0",
         "rossaddison/yii-middleware": "dev-master"
     },
     "require-dev": {
