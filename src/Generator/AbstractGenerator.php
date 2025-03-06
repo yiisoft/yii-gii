@@ -76,7 +76,9 @@ abstract class AbstractGenerator implements GeneratorInterface
      * @param GeneratorCommandInterface $command
      *
      * @throws InvalidGeneratorCommandException
-     *
+     * 
+     * @psalm-suppress MixedReturnTypeCoercion CodeFile[]
+     * 
      * @return CodeFile[]
      */
     final public function generate(GeneratorCommandInterface $command): array
@@ -86,7 +88,6 @@ abstract class AbstractGenerator implements GeneratorInterface
         if (!$result->isValid()) {
             throw new InvalidGeneratorCommandException($result);
         }
-
         return $this->doGenerate($command);
     }
 
@@ -102,9 +103,9 @@ abstract class AbstractGenerator implements GeneratorInterface
      *
      * @throws Throwable
      *
-     * @return string the generated code
+     * @return false|string the generated code
      */
-    protected function render(GeneratorCommandInterface $command, string $templateFile, array $params = []): string
+    protected function render(GeneratorCommandInterface $command, string $templateFile, array $params = []): false|string
     {
         $file = sprintf(
             '%s/%s',

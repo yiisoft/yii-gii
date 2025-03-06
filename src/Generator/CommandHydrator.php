@@ -6,7 +6,7 @@ namespace Yiisoft\Yii\Gii\Generator;
 
 use Yiisoft\Yii\Gii\GeneratorCommandInterface;
 
-class CommandHydrator
+final class CommandHydrator
 {
     public function __construct()
     {

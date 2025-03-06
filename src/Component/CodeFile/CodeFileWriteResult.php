@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii\Component\CodeFile;
 
-class CodeFileWriteResult
+final class CodeFileWriteResult
 {
     private array $results = [];
 

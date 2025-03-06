@@ -22,7 +22,7 @@ use Yiisoft\Yii\Gii\GeneratorInterface;
  */
 final class ControllerCommand extends BaseGenerateCommand
 {
-    protected static $defaultName = 'gii/controller';
+    protected static string $defaultName = 'gii/controller';
 
     protected function configure(): void
     {

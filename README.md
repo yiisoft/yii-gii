@@ -18,7 +18,7 @@ You can use Gii to quickly generate models, forms, modules, CRUD, etc.
 
 ## Requirements
 
-- PHP 8.1 or higher.
+- PHP 8.3 or higher.
 
 ## Installation
 
