@@ -49,9 +49,9 @@ final class Generator extends AbstractGenerator
         ];
     }
 
-    /** 
+    /**
      * @psalm-suppress DocblockTypeContradiction 'integer' => 'int'
-     * @psalm-suppress DeprecatedMethod $columnSchema->isAllowNull()   
+     * @psalm-suppress DeprecatedMethod $columnSchema->isAllowNull()
      */
     public function doGenerate(GeneratorCommandInterface $command): array
     {
