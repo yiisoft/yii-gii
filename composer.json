@@ -1,5 +1,5 @@
 {
-    "name": "rossaddison/yii-gii",
+    "name": "yiisoft/yii-gii",
     "type": "library",
     "description": "Yii Framework Code Generator Extension",
     "keywords": [
