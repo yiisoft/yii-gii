@@ -18,6 +18,9 @@ on:
       - '.gitattributes'
       - 'infection.json.dist'
       - 'psalm.xml'
+      
+  schedule:
+    - cron: '0 0 * * *'    
 
 name: build
 
@@ -28,4 +31,4 @@ jobs:
       os: >-
         ['ubuntu-latest', 'windows-latest']
       php: >-
-        ['8.1']
+        ['8.3']
