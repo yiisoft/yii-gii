@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\Gii;
 
 use Yiisoft\Yii\Gii\Exception\GeneratorNotFoundException;
-use Yiisoft\Yii\Gii\GeneratorProxy;
-use Yiisoft\Yii\Gii\GeneratorInterface;
 
 final class Gii implements GiiInterface
 {

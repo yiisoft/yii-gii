@@ -76,9 +76,9 @@ abstract class AbstractGenerator implements GeneratorInterface
      * @param GeneratorCommandInterface $command
      *
      * @throws InvalidGeneratorCommandException
-     * 
+     *
      * @psalm-suppress MixedReturnTypeCoercion CodeFile[]
-     * 
+     *
      * @return CodeFile[]
      */
     final public function generate(GeneratorCommandInterface $command): array
