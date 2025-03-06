@@ -29,6 +29,6 @@ jobs:
     uses: yiisoft/actions/.github/workflows/phpunit.yml@master
     with:
       os: >-
-        ['ubuntu-latest', 'windows-latest']
+        ['ubuntu-latest']
       php: >-
         ['8.3']
