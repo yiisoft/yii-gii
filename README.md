@@ -10,10 +10,10 @@
 [![Total Downloads](https://poser.pugx.org/rossaddison/yii-gii/downloads)](https://packagist.org/packages/yiisoft/yii-gii)
 [![Monthly Downloads](https://poser.pugx.org/rossaddison/yii-gii/d/monthly)](https://packagist.org/packages/rossaddison/yii-auth-client)
 [![Daily Downloads](https://poser.pugx.org/rossaddison/yii-gii/d/daily)](https://packagist.org/packages/rossaddison/yii-auth-client)
-[![Build status](https://github.com/yiisoft/yii-gii/actions/workflows/build.yml/badge.svg)](https://github.com/yiisoft/yii-gii/actions/workflows/build.yml)
-[![Code coverage](https://codecov.io/gh/yiisoft/yii-gii/graph/badge.svg?token=JWRONWSQ5P)](https://codecov.io/gh/yiisoft/yii-gii)
+[![Build status](https://github.com/rossaddison/yii-gii/actions/workflows/build.yml/badge.svg)](https://github.com/yiisoft/yii-gii/actions/workflows/build.yml)
+[![Code coverage](https://codecov.io/gh/rossaddison/yii-gii/graph/badge.svg?token=JWRONWSQ5P)](https://codecov.io/gh/yiisoft/yii-gii)
 [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fyiisoft%2Fyii-gii%2Fmaster)](https://dashboard.stryker-mutator.io/reports/github.com/yiisoft/yii-gii/master)
-[![static analysis](https://github.com/yiisoft/yii-gii/workflows/static%20analysis/badge.svg)](https://github.com/yiisoft/yii-gii/actions?query=workflow%3A%22static+analysis%22)
+[![static analysis](https://github.com/rossaddison/yii-gii/workflows/static%20analysis/badge.svg)](https://github.com/yiisoft/yii-gii/actions?query=workflow%3A%22static+analysis%22)
 
 This extension provides a Web-based code generator, called Gii, for [Yii framework](https://www.yiiframework.com) applications.
 You can use Gii to quickly generate models, forms, modules, CRUD, etc.
