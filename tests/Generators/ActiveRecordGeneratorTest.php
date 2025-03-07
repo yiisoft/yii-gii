@@ -69,7 +69,7 @@ final class ActiveRecordGeneratorTest extends TestCase
             ],
         );
         $command = new Command(
-            namespace: 'App\Model',
+            namespace: 'App\\Model',
             tableName: 'user',
             baseClass: ActiveRecord::class,
             template: 'custom',
