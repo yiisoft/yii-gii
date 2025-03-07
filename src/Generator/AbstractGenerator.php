@@ -103,9 +103,9 @@ abstract class AbstractGenerator implements GeneratorInterface
      *
      * @throws Throwable
      *
-     * @return false|string the generated code
+     * @return string the generated code
      */
-    protected function render(GeneratorCommandInterface $command, string $templateFile, array $params = []): false|string
+    protected function render(GeneratorCommandInterface $command, string $templateFile, array $params = []): string
     {
         $file = sprintf(
             '%s/%s',
@@ -125,7 +125,7 @@ abstract class AbstractGenerator implements GeneratorInterface
         try {
             /** @psalm-suppress PossiblyNullFunctionCall */
             $renderer->bindTo($this)($file, array_merge($params, ['command' => $command]));
-            return ob_get_clean();
+            return (string)ob_get_clean();
         } catch (Throwable $e) {
             while (ob_get_level() > $obInitialLevel) {
                 if (!@ob_end_clean()) {
