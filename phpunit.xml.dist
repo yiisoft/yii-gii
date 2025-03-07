@@ -7,7 +7,6 @@
     failOnRisky="true"
     failOnWarning="true"
     displayDetailsOnTestsThatTriggerWarnings="true"
-    displayDetailsOnPhpunitDeprecations="false"
     stopOnFailure="false"
     executionOrder="random"
     resolveDependencies="true"
