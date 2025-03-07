@@ -57,7 +57,7 @@
         "maglnet/composer-require-checker": "^3||^4",
         "jetbrains/phpstorm-attributes": "^1.2",
         "nyholm/psr7": "^1.8.2",
-        "phpunit/phpunit": "^10||^11",
+        "phpunit/phpunit": "^10||^11||^12",
         "rector/rector": "^2.0.10",
         "roave/infection-static-analysis-plugin": ">1.23",
         "spatie/phpunit-watcher": "^1.24",
