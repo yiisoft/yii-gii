@@ -20,7 +20,7 @@ final class DiffRendererHtmlInline extends Diff_Renderer_Html_Array
      * @psalm-suppress ImplementedReturnTypeMismatch
      *
      * @return string The generated inline diff.
-     */    
+     */
     #[\Override]
     public function render(): string
     {
@@ -56,15 +56,15 @@ HTML;
 
             foreach ($blocks as $change) {
                 $changeTag = is_array($change) ? (string)$change['tag'] : '';
-                
+
                 $changeBase = is_array($change) ? (array)$change['base'] : [];
                 $changeBaseOffset = !empty($changeBase['offset']) ? (int)$changeBase['offset'] : 0;
                 $changeBaseLines = is_array($changeBase['lines']) ? $changeBase['lines'] : [];
-                
+
                 $changeChanged = is_array($change) ? (array)$change['changed'] : '';
                 $changeChangedOffset = !empty($changeChanged['offset']) ? (int)$changeChanged['offset'] : 0;
                 $changeChangedLines = !empty($changeChanged['lines']) ? $changeChanged['lines'] : [];
-                
+
                 $tag = ucfirst($changeTag);
                 $html .= <<<HTML
     <tbody class="Change{$tag}">
@@ -132,7 +132,7 @@ HTML;
                     }
                     /**
                      * @var int $no
-                     */        
+                     */
                     foreach ($changeChangedLines as $no => $line) {
                         $toLine = $changeChangedOffset + $no + 1;
                         $html .= <<<HTML

@@ -121,9 +121,9 @@ abstract class BaseGenerateCommand extends Command
             $output->writeln("\n<fg=cyan>No files were found to be generated.</>");
             return;
         }
-        
+
         $confirm = $this->confirm($input, $output);
-        if (null==$confirm || $confirm == false) {
+        if (null == $confirm || $confirm == false) {
             $output->writeln("\n<fg=cyan>No file was generated.</>");
             return;
         }

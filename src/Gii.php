@@ -24,8 +24,8 @@ final class Gii implements GiiInterface
         $this->instances[$generator::getId()] = $generator;
     }
 
-    /** 
-     * @psalm-suppress PossiblyUndefinedMethod $proxy->loadGenerator() 
+    /**
+     * @psalm-suppress PossiblyUndefinedMethod $proxy->loadGenerator()
      */
     #[\Override]
     public function getGenerator(string $id): GeneratorInterface
