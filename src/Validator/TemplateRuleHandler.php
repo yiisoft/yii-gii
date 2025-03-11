@@ -56,7 +56,7 @@ final class TemplateRuleHandler implements RuleHandlerInterface
         if ($templates === []) {
             return $result;
         }
-        
+
         /**
          * @psalm-var string $templates[$value]
          */

@@ -112,7 +112,7 @@ final class Generator extends AbstractGenerator
             ),
         );
     }
-    
+
     #[\Override]
     public static function getCommandClass(): string
     {

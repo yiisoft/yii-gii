@@ -24,7 +24,7 @@ final class NewClassHandler implements RuleHandlerInterface
      *
      * @param mixed $value being validated
      */
-    
+
     #[\Override]
     public function validate(mixed $value, object $rule, ValidationContext $context): Result
     {
