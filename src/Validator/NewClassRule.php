@@ -11,6 +11,7 @@ use Yiisoft\Validator\RuleInterface;
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::IS_REPEATABLE)]
 final class NewClassRule implements RuleInterface
 {
+    #[\Override]
     public function getHandler(): string|RuleHandlerInterface
     {
         return NewClassHandler::class;

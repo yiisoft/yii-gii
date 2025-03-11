@@ -14,22 +14,26 @@ use Yiisoft\Yii\Gii\GeneratorCommandInterface;
  */
 final class Generator extends AbstractGenerator
 {
+    #[\Override]
     public static function getId(): string
     {
         return 'controller';
     }
 
+    #[\Override]
     public static function getName(): string
     {
         return 'Controller';
     }
 
+    #[\Override]
     public static function getDescription(): string
     {
         return 'This generator helps you to quickly generate a new controller class with
             one or several controller actions and their corresponding views.';
     }
 
+    #[\Override]
     public function getRequiredTemplates(): array
     {
         return [
@@ -38,6 +42,7 @@ final class Generator extends AbstractGenerator
         ];
     }
 
+    #[\Override]
     public function doGenerate(GeneratorCommandInterface $command): array
     {
         if (!$command instanceof Command) {
@@ -107,7 +112,8 @@ final class Generator extends AbstractGenerator
             ),
         );
     }
-
+    
+    #[\Override]
     public static function getCommandClass(): string
     {
         return Command::class;

@@ -25,6 +25,7 @@ final class ControllerCommand extends BaseGenerateCommand
     /** @psalm-suppress MissingPropertyType */
     protected static $defaultName = 'gii/controller';
 
+    #[\Override]
     protected function configure(): void
     {
         $this->setDescription('Gii controller generator')
@@ -35,11 +36,13 @@ final class ControllerCommand extends BaseGenerateCommand
         parent::configure();
     }
 
+    #[\Override]
     public function getGenerator(): GeneratorInterface
     {
         return $this->gii->getGenerator(Generator::getId());
     }
 
+    #[\Override]
     protected function createGeneratorCommand(InputInterface $input): GeneratorCommandInterface
     {
         $actions = $input->getOption('actions');

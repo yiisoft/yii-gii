@@ -34,12 +34,14 @@ abstract class BaseGenerateCommand extends Command
         parent::__construct();
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this->addOption('overwrite', 'o', InputArgument::OPTIONAL, '')
             ->addOption('template', 't', InputArgument::OPTIONAL, '');
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $generator = $this->getGenerator();
@@ -119,8 +121,9 @@ abstract class BaseGenerateCommand extends Command
             $output->writeln("\n<fg=cyan>No files were found to be generated.</>");
             return;
         }
-
-        if (!$this->confirm($input, $output)) {
+        
+        $confirm = $this->confirm($input, $output);
+        if (null==$confirm || $confirm == false) {
             $output->writeln("\n<fg=cyan>No file was generated.</>");
             return;
         }
@@ -130,7 +133,9 @@ abstract class BaseGenerateCommand extends Command
         $hasError = false;
         foreach ($result->getResults() as $fileId => $result) {
             $file = $files[$fileId];
-            $color = match ($result['status']) {
+            $resultStatus = is_array($result) ? ($result['status'] ?? '') : '';
+            $resultError = is_array($result) ? ($result['error'] ?? '') : '';
+            $color = match ($resultStatus) {
                 CodeFileWriteStatusEnum::CREATED->value => 'green',
                 CodeFileWriteStatusEnum::OVERWROTE->value => 'blue',
                 CodeFileWriteStatusEnum::ERROR->value => 'red',
@@ -140,16 +145,16 @@ abstract class BaseGenerateCommand extends Command
                 sprintf(
                     '<fg=%s>%s</>: %s',
                     $color,
-                    $result['status'],
+                    $resultStatus,
                     $file->getRelativePath(),
                 )
             );
-            if (CodeFileWriteStatusEnum::ERROR->value === $result['status']) {
+            if (CodeFileWriteStatusEnum::ERROR->value === $resultStatus) {
                 $hasError = true;
                 $output->writeln(
                     sprintf(
                         '<fg=red>%s</>',
-                        $result['error']
+                        $resultError
                     )
                 );
             }

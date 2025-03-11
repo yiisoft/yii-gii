@@ -14,6 +14,7 @@ use Yiisoft\Validator\ValidationContext;
  */
 final class ClassExistsHandler implements RuleHandlerInterface
 {
+    #[\Override]
     public function validate(mixed $value, object $rule, ValidationContext $context): Result
     {
         if (!$rule instanceof ClassExistsRule) {

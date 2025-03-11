@@ -94,6 +94,7 @@ final class ReservedKeywordHandler implements RuleHandlerInterface
         'fn',
     ];
 
+    #[\Override]
     public function validate(mixed $value, object $rule, ValidationContext $context): Result
     {
         if (!$rule instanceof ReservedKeywordRule) {

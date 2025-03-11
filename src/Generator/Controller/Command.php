@@ -100,6 +100,7 @@ final class Command extends AbstractGeneratorCommand
         return $this->controllerPath;
     }
 
+    #[\Override]
     public static function getAttributeLabels(): array
     {
         return [
@@ -113,6 +114,7 @@ final class Command extends AbstractGeneratorCommand
         ];
     }
 
+    #[\Override]
     public static function getHints(): array
     {
         return [
@@ -133,6 +135,7 @@ final class Command extends AbstractGeneratorCommand
         ];
     }
 
+    #[\Override]
     public static function getAttributes(): array
     {
         return [

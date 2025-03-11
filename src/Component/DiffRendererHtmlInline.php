@@ -20,7 +20,8 @@ final class DiffRendererHtmlInline extends Diff_Renderer_Html_Array
      * @psalm-suppress ImplementedReturnTypeMismatch
      *
      * @return string The generated inline diff.
-     */
+     */    
+    #[\Override]
     public function render(): string
     {
         $changes = parent::render();
@@ -54,15 +55,28 @@ HTML;
             }
 
             foreach ($blocks as $change) {
-                $tag = ucfirst($change['tag']);
+                $changeTag = is_array($change) ? (string)$change['tag'] : '';
+                
+                $changeBase = is_array($change) ? (array)$change['base'] : [];
+                $changeBaseOffset = !empty($changeBase['offset']) ? (int)$changeBase['offset'] : 0;
+                $changeBaseLines = is_array($changeBase['lines']) ? $changeBase['lines'] : [];
+                
+                $changeChanged = is_array($change) ? (array)$change['changed'] : '';
+                $changeChangedOffset = !empty($changeChanged['offset']) ? (int)$changeChanged['offset'] : 0;
+                $changeChangedLines = !empty($changeChanged['lines']) ? $changeChanged['lines'] : [];
+                
+                $tag = ucfirst($changeTag);
                 $html .= <<<HTML
     <tbody class="Change{$tag}">
 HTML;
                 // Equal changes should be shown on both sides of the diff
-                if ($change['tag'] === 'equal') {
-                    foreach ($change['base']['lines'] as $no => $line) {
-                        $fromLine = $change['base']['offset'] + $no + 1;
-                        $toLine = $change['changed']['offset'] + $no + 1;
+                if ($changeTag === 'equal') {
+                    /**
+                     * @var int $no
+                     */
+                    foreach ($changeBaseLines as $no => $line) {
+                        $fromLine = $changeBaseOffset + $no + 1;
+                        $toLine = $changeChangedOffset + $no + 1;
                         $html .= <<<HTML
         <tr>
             <th data-line-number="{$fromLine}"></th>
@@ -72,9 +86,12 @@ HTML;
 HTML;
                     }
                 } // Added lines only on the right side
-                elseif ($change['tag'] === 'insert') {
-                    foreach ($change['changed']['lines'] as $no => $line) {
-                        $toLine = $change['changed']['offset'] + $no + 1;
+                elseif ($changeTag === 'insert') {
+                    /**
+                     * @var int $no
+                     */
+                    foreach ($changeChangedLines as $no => $line) {
+                        $toLine = $changeChangedOffset + $no + 1;
                         $html .= <<<HTML
         <tr>
             <th data-line-number="&nbsp;"></th>
@@ -84,9 +101,12 @@ HTML;
 HTML;
                     }
                 } // Show deleted lines only on the left side
-                elseif ($change['tag'] === 'delete') {
-                    foreach ($change['base']['lines'] as $no => $line) {
-                        $fromLine = $change['base']['offset'] + $no + 1;
+                elseif ($changeTag === 'delete') {
+                    /**
+                     * @var int $no
+                     */
+                    foreach ($changeBaseLines as $no => $line) {
+                        $fromLine = $changeBaseOffset + $no + 1;
                         $html .= <<<HTML
         <tr>
             <th data-line-number="{$fromLine}"></th>
@@ -96,9 +116,12 @@ HTML;
 HTML;
                     }
                 } // Show modified lines on both sides
-                elseif ($change['tag'] === 'replace') {
-                    foreach ($change['base']['lines'] as $no => $line) {
-                        $fromLine = $change['base']['offset'] + $no + 1;
+                elseif ($changeTag === 'replace') {
+                    /**
+                     * @var int $no
+                     */
+                    foreach ($changeBaseLines as $no => $line) {
+                        $fromLine = $changeBaseOffset + $no + 1;
                         $html .= <<<HTML
         <tr>
             <th data-line-number="{$fromLine}"></th>
@@ -107,9 +130,11 @@ HTML;
         </tr>
 HTML;
                     }
-
-                    foreach ($change['changed']['lines'] as $no => $line) {
-                        $toLine = $change['changed']['offset'] + $no + 1;
+                    /**
+                     * @var int $no
+                     */        
+                    foreach ($changeChangedLines as $no => $line) {
+                        $toLine = $changeChangedOffset + $no + 1;
                         $html .= <<<HTML
         <tr>
             <th data-line-number="{$toLine}"></th>

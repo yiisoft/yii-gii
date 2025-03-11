@@ -63,6 +63,7 @@ final class Command extends AbstractGeneratorCommand
         return (new Inflector())->tableToClass($this->tableName);
     }
 
+    #[\Override]
     public static function getAttributeLabels(): array
     {
         return [
@@ -73,6 +74,7 @@ final class Command extends AbstractGeneratorCommand
         ];
     }
 
+    #[\Override]
     public static function getHints(): array
     {
         return [
@@ -82,6 +84,7 @@ final class Command extends AbstractGeneratorCommand
         ];
     }
 
+    #[\Override]
     public static function getAttributes(): array
     {
         return [

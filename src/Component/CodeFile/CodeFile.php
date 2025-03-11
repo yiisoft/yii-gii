@@ -201,7 +201,8 @@ final class CodeFile
         }
 
         $renderer = new Diff_Renderer_Text_Unified();
-        return (new Diff($lines1, $lines2))->render($renderer);
+        $diff = new Diff($lines1, $lines2);
+        return $diff->render($renderer);
     }
 
     public function getId(): string

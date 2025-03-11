@@ -17,6 +17,7 @@ abstract class AbstractGeneratorCommand implements GeneratorCommandInterface
     ) {
     }
 
+    #[\Override]
     public function getTemplate(): string
     {
         return $this->template;

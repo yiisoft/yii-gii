@@ -20,6 +20,7 @@ final class TableExistsHandler implements RuleHandlerInterface
     ) {
     }
 
+    #[\Override]
     public function validate(mixed $value, object $rule, ValidationContext $context): Result
     {
         if (!$rule instanceof TableExistsRule) {

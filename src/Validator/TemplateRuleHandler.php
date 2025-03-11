@@ -32,6 +32,7 @@ final class TemplateRuleHandler implements RuleHandlerInterface
      *
      * @psalm-suppress MixedArgumentTypeCoercion ['template' => $value, 'templates' => implode(', ', array_keys($templates)),]
      */
+    #[\Override]
     public function validate(mixed $value, object $rule, ValidationContext $context): Result
     {
         if (!$rule instanceof TemplateRule) {
@@ -55,6 +56,10 @@ final class TemplateRuleHandler implements RuleHandlerInterface
         if ($templates === []) {
             return $result;
         }
+        
+        /**
+         * @psalm-var string $templates[$value]
+         */
         if (!isset($templates[$value])) {
             $result->addError(
                 message: 'Template "{template}" does not exist. Known templates: {templates}',

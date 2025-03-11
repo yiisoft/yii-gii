@@ -38,6 +38,7 @@ abstract class AbstractGenerator implements GeneratorInterface
     ) {
     }
 
+    #[\Override]
     public function getRequiredTemplates(): array
     {
         return [];
@@ -59,6 +60,7 @@ abstract class AbstractGenerator implements GeneratorInterface
         return dirname($class->getFileName()) . '/default';
     }
 
+    #[\Override]
     public function getTemplatePath(GeneratorCommandInterface $command): string
     {
         $template = $command->getTemplate();
@@ -81,6 +83,7 @@ abstract class AbstractGenerator implements GeneratorInterface
      *
      * @return CodeFile[]
      */
+    #[\Override]
     final public function generate(GeneratorCommandInterface $command): array
     {
         $result = $this->validator->validate($command);
@@ -114,9 +117,13 @@ abstract class AbstractGenerator implements GeneratorInterface
         );
 
         $renderer = function (): void {
-            extract(func_get_arg(1));
-            /** @psalm-suppress UnresolvableInclude */
-            require func_get_arg(0);
+            $templateParams = func_get_arg(1); 
+            is_array($templateParams) ? extract($templateParams) : false;
+            $templateFile = func_get_arg(0);
+            if (null!==$templateFile && is_string($templateFile)) {
+                /** @psalm-suppress UnresolvableInclude */
+                strlen($templateFile) > 0 ? require $templateFile : false;
+            }    
         };
 
         $obInitialLevel = ob_get_level();

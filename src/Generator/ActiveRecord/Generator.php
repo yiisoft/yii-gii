@@ -27,21 +27,25 @@ final class Generator extends AbstractGenerator
         parent::__construct($aliases, $validator, $parametersProvider);
     }
 
+    #[\Override]
     public static function getId(): string
     {
         return 'active-record';
     }
 
+    #[\Override]
     public static function getName(): string
     {
         return 'Active Record';
     }
 
+    #[\Override]
     public static function getDescription(): string
     {
         return '';
     }
 
+    #[\Override]
     public function getRequiredTemplates(): array
     {
         return [
@@ -53,6 +57,7 @@ final class Generator extends AbstractGenerator
      * @psalm-suppress DocblockTypeContradiction 'integer' => 'int'
      * @psalm-suppress DeprecatedMethod $columnSchema->isAllowNull()
      */
+    #[\Override]
     public function doGenerate(GeneratorCommandInterface $command): array
     {
         if (!$command instanceof Command) {
@@ -107,6 +112,7 @@ final class Generator extends AbstractGenerator
         );
     }
 
+    #[\Override]
     public static function getCommandClass(): string
     {
         return Command::class;

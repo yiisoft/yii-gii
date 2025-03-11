@@ -20,7 +20,11 @@ use <?= $command->getBaseClass() ?>;
 
 final class <?= $command->getModelName(); ?> extends <?= StringHelper::baseName($command->getBaseClass()) . PHP_EOL ?>
 {
-<?php foreach ($properties as $property): ?>
+<?php
+    /**
+     * @psalm-var array $property
+     */
+    foreach ($properties as $property): ?>
     private <?=sprintf(
         '%s%s $%s',
         $property['isAllowNull'] ? '?' : '',
