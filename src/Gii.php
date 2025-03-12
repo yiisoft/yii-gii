@@ -26,8 +26,8 @@ final class Gii implements GiiInterface
 
     /**
      * @param string $id
-     * @return GeneratorInterface
      * @throws GeneratorNotFoundException
+     * @return GeneratorInterface
      */
     #[\Override]
     public function getGenerator(string $id): GeneratorInterface
@@ -35,9 +35,9 @@ final class Gii implements GiiInterface
         if (isset($this->instances[$id])) {
             return $this->instances[$id];
         }
-        
+
         $proxies = $this->proxies;
-        $proxy = $proxies[$id] instanceof GeneratorProxy ? $proxies[$id] : [];   
+        $proxy = $proxies[$id] instanceof GeneratorProxy ? $proxies[$id] : [];
         if (!empty($proxy)) {
             return $proxy->loadGenerator();
         }

@@ -56,7 +56,7 @@ HTML;
     </tbody>
 HTML;
             }
-            
+
             /**
              * @var array $change
              */

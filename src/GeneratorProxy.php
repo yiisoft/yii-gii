@@ -29,7 +29,7 @@ final class GeneratorProxy
     {
         if ($this->generator === null) {
             /**
-             * @var GeneratorInterface ($this->loader)() 
+             * @var GeneratorInterface ($this->loader)()
              */
             $loaded = ($this->loader)();
             $this->generator = $loaded;
