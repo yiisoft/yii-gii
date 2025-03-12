@@ -193,14 +193,14 @@ final class CodeFile
         if (!is_array($lines2)) {
             $lines2 = explode("\n", (string)$lines2);
         }
-        
+
         /**
          * @var string $line
          */
         foreach ($lines1 as $i => $line) {
             $lines1[$i] = rtrim($line, "\r\n");
         }
-        
+
         /**
          * @var string $line
          */
@@ -210,7 +210,7 @@ final class CodeFile
 
         $renderer = new Diff_Renderer_Text_Unified();
         $diff = new Diff($lines1, $lines2);
-        
+
         return (string)$diff->render($renderer);
     }
 
