@@ -191,8 +191,8 @@ final class CodeFile
      */
     private function renderDiff(array|false $lines1, string $lines2): string
     {
-         $differ = new Differ(new UnifiedDiffOutputBuilder);
-         return $differ->diff(implode("\n", (array)$lines1), implode("\n", (array)$lines2));
+        $differ = new Differ(new UnifiedDiffOutputBuilder());
+        return $differ->diff(implode("\n", (array)$lines1), implode("\n", (array)$lines2));
     }
 
     public function getId(): string

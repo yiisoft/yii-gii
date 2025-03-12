@@ -121,7 +121,7 @@ abstract class BaseGenerateCommand extends Command
             $output->writeln("\n<fg=cyan>No files were found to be generated.</>");
             return;
         }
-        
+
         if ($this->confirm($input, $output) !== true) {
             $output->writeln("\n<fg=cyan>No file was generated.</>");
             return;
@@ -211,7 +211,8 @@ abstract class BaseGenerateCommand extends Command
             $answers,
             /**
              * @see Explanation for casting `(string)answer`  `::from` expects either an int or string as argument. An answer should be a string only.
-             */    
-            fn ($answer) => CodeFileWriteOperationEnum::from((string)$answer) !== CodeFileWriteOperationEnum::SKIP);
+             */
+            fn ($answer) => CodeFileWriteOperationEnum::from((string)$answer) !== CodeFileWriteOperationEnum::SKIP
+        );
     }
 }
