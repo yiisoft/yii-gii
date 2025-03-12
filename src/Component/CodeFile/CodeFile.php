@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii\Component\CodeFile;
 
-use Diff;
-use Diff_Renderer_Text_Unified;
 use RuntimeException;
+use SebastianBergmann\Diff\Differ;
+use SebastianBergmann\Diff\Output\UnifiedDiffOutputBuilder;
 
 /**
  * CodeFile represents a code file to be generated.
@@ -184,32 +184,15 @@ final class CodeFile
 
     /**
      * Renders diff between two sets of lines
+     *
+     * @param false|string[] $lines1
+     *
+     * @psalm-param false|list<string> $lines1
      */
-    private function renderDiff(mixed $lines1, mixed $lines2): string
+    private function renderDiff(array|false $lines1, string $lines2): string
     {
-        if (!is_array($lines1)) {
-            $lines1 = explode("\n", (string)$lines1);
-        }
-        if (!is_array($lines2)) {
-            $lines2 = explode("\n", (string)$lines2);
-        }
-        /**
-         * @var string $line
-         */
-        foreach ($lines1 as $i => $line) {
-            $lines1[$i] = rtrim($line, "\r\n");
-        }
-        
-        /**
-         * @var string $line
-         */
-        foreach ($lines2 as $i => $line) {
-            $lines2[$i] = rtrim($line, "\r\n");
-        }
-
-        $renderer = new Diff_Renderer_Text_Unified();
-        $diff = new Diff($lines1, $lines2);
-        return $diff->render($renderer);
+         $differ = new Differ(new UnifiedDiffOutputBuilder);
+         return $differ->diff(implode("\n", (array)$lines1), implode("\n", (array)$lines2));
     }
 
     public function getId(): string

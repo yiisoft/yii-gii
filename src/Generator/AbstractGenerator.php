@@ -69,9 +69,16 @@ abstract class AbstractGenerator implements GeneratorInterface
             return $this->defaultTemplate();
         }
 
+        /**
+         * @var array<string, string> $templates
+         */
         $templates = $this->parametersProvider->getTemplates(static::getId());
 
-        return $templates[$template] ?? throw new InvalidConfigException("Unknown template: \"{$template}\"");
+        if (!isset($templates[$template])) {
+            throw new InvalidConfigException("Unknown template: \"{$template}\"");
+        }
+
+        return $templates[$template];
     }
 
     /**

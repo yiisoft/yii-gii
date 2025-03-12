@@ -25,14 +25,24 @@ final class Gii implements GiiInterface
     }
 
     /**
-     * @psalm-suppress PossiblyUndefinedMethod $proxy->loadGenerator()
+     * @param string $id
+     * @return GeneratorInterface
+     * @throws GeneratorNotFoundException
      */
     #[\Override]
     public function getGenerator(string $id): GeneratorInterface
     {
-        return $this->instances[$id] ?? (isset($this->proxies[$id])
-            ? $this->proxies[$id]->loadGenerator()
-            : throw new GeneratorNotFoundException('Generator "' . $id . '" not found'));
+        if (isset($this->instances[$id])) {
+            return $this->instances[$id];
+        }
+        
+        $proxies = $this->proxies;
+        $proxy = $proxies[$id] instanceof GeneratorProxy ? $proxies[$id] : [];   
+        if (!empty($proxy)) {
+            return $proxy->loadGenerator();
+        }
+
+        throw new GeneratorNotFoundException('Generator "' . $id . '" not found');
     }
 
     #[\Override]
