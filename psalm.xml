@@ -15,8 +15,6 @@
         </ignoreFiles>
     </projectFiles>
     <issueHandlers>
-        <MixedArgument errorLevel="suppress" />
-        <MixedAssignment errorLevel="suppress" />
         <MixedReturnStatement errorLevel="suppress" />
     </issueHandlers>  
 </psalm>

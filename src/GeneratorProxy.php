@@ -27,6 +27,7 @@ final class GeneratorProxy
 
     public function loadGenerator(): GeneratorInterface
     {
+        /** @psalm-suppress MixedAssignment */
         return $this->generator ??= ($this->loader)();
     }
 }

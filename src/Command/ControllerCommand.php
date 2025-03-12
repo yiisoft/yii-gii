@@ -45,18 +45,19 @@ final class ControllerCommand extends BaseGenerateCommand
     #[\Override]
     protected function createGeneratorCommand(InputInterface $input): GeneratorCommandInterface
     {
+        /** @psalm-suppress MixedAssignment $actions */
         $actions = $input->getOption('actions');
-        $actions = $actions !== null ? explode(',', $actions) : ['index'];
+        $actions = $actions !== null ? explode(',', (string)$actions) : ['index'];
 
-        $template = $input->getOption('template');
-        $template ??= 'default';
+        /** @psalm-suppress MixedAssignment $input->getOption('template') */
+        $template = $input->getOption('template') ?? 'default';
 
         return new \Yiisoft\Yii\Gii\Generator\Controller\Command(
-            controllerClass: $input->getArgument('controllerClass'),
+            controllerClass: (string)$input->getArgument('controllerClass'),
             viewsPath: (string)$input->getOption('viewsPath'),
             baseClass: (string)$input->getOption('baseClass'),
             actions: $actions,
-            template: $template,
+            template: (string)$template,
         );
     }
 }

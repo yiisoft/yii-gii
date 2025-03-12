@@ -58,7 +58,7 @@ final class Generator extends AbstractGenerator
             $this->render($command, 'controller.php')
         ))->withBasePath($rootPath);
         $files[$codeFile->getId()] = $codeFile;
-
+        /** @var string $action */
         foreach ($command->getActions() as $action) {
             $codeFile = (new CodeFile(
                 $this->getViewFile($command, $action),

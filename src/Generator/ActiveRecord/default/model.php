@@ -28,8 +28,8 @@ final class <?= $command->getModelName(); ?> extends <?= StringHelper::baseName(
     private <?=sprintf(
         '%s%s $%s',
         $property['isAllowNull'] ? '?' : '',
-        $property['type'],
-        $property['name'],
+        (string)$property['type'],
+        (string)$property['name'],
     )?>;
 <?php endforeach; ?>
 <?php if (!empty($properties)) {

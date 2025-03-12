@@ -40,6 +40,9 @@ final class DiffRendererHtmlInline extends Diff_Renderer_Html_Array
         </tr>
     </thead>
 HTML;
+        /**
+         * @var array $blocks
+         */
         foreach ($changes as $i => $blocks) {
             // If this is a separate block, we're condensing code so output ...,
             // indicating a significant portion of the code has been collapsed as
@@ -53,17 +56,20 @@ HTML;
     </tbody>
 HTML;
             }
-
+            
+            /**
+             * @var array $change
+             */
             foreach ($blocks as $change) {
-                $changeTag = is_array($change) ? (string)$change['tag'] : '';
+                $changeTag = (string)$change['tag'] ?: '';
 
-                $changeBase = is_array($change) ? (array)$change['base'] : [];
+                $changeBase = (array)$change['base'] ?: [];
                 $changeBaseOffset = !empty($changeBase['offset']) ? (int)$changeBase['offset'] : 0;
-                $changeBaseLines = is_array($changeBase['lines']) ? $changeBase['lines'] : [];
+                $changeBaseLines = (array)($changeBase['lines']) ?: [];
 
-                $changeChanged = is_array($change) ? (array)$change['changed'] : '';
+                $changeChanged = (array)$change['changed'] ?: '';
                 $changeChangedOffset = !empty($changeChanged['offset']) ? (int)$changeChanged['offset'] : 0;
-                $changeChangedLines = !empty($changeChanged['lines']) ? $changeChanged['lines'] : [];
+                $changeChangedLines = !empty($changeChanged['lines']) ? (array)$changeChanged['lines'] : [];
 
                 $tag = ucfirst($changeTag);
                 $html .= <<<HTML
@@ -73,6 +79,7 @@ HTML;
                 if ($changeTag === 'equal') {
                     /**
                      * @var int $no
+                     * @var string $line
                      */
                     foreach ($changeBaseLines as $no => $line) {
                         $fromLine = $changeBaseOffset + $no + 1;
@@ -89,6 +96,7 @@ HTML;
                 elseif ($changeTag === 'insert') {
                     /**
                      * @var int $no
+                     * @var string $line
                      */
                     foreach ($changeChangedLines as $no => $line) {
                         $toLine = $changeChangedOffset + $no + 1;
@@ -104,6 +112,7 @@ HTML;
                 elseif ($changeTag === 'delete') {
                     /**
                      * @var int $no
+                     * @var string $line
                      */
                     foreach ($changeBaseLines as $no => $line) {
                         $fromLine = $changeBaseOffset + $no + 1;
@@ -119,6 +128,7 @@ HTML;
                 elseif ($changeTag === 'replace') {
                     /**
                      * @var int $no
+                     * @var string $line
                      */
                     foreach ($changeBaseLines as $no => $line) {
                         $fromLine = $changeBaseOffset + $no + 1;
@@ -132,6 +142,7 @@ HTML;
                     }
                     /**
                      * @var int $no
+                     * @var string $line
                      */
                     foreach ($changeChangedLines as $no => $line) {
                         $toLine = $changeChangedOffset + $no + 1;

@@ -22,7 +22,7 @@ final class ClassExistsHandler implements RuleHandlerInterface
         }
 
         $result = new Result();
-        if (!class_exists($value)) {
+        if (!class_exists((string)$value)) {
             $result->addError("Class '$value' does not exist or has syntax error.");
         }
 

@@ -104,7 +104,7 @@ abstract class BaseGenerateCommand extends Command
                 if ($skipAll !== null) {
                     $answers[$file->getId()] = CodeFileWriteOperationEnum::SAVE->value;
                 } else {
-                    $answer = $this->choice($input, $output);
+                    $answer = (string)$this->choice($input, $output);
                     $answers[$file->getId()] = ($answer === 'y' || $answer === 'ya')
                         ? CodeFileWriteOperationEnum::SAVE->value
                         : CodeFileWriteOperationEnum::SKIP->value;
@@ -121,9 +121,8 @@ abstract class BaseGenerateCommand extends Command
             $output->writeln("\n<fg=cyan>No files were found to be generated.</>");
             return;
         }
-
-        $confirm = $this->confirm($input, $output);
-        if (null == $confirm || $confirm == false) {
+        
+        if ($this->confirm($input, $output) !== true) {
             $output->writeln("\n<fg=cyan>No file was generated.</>");
             return;
         }
@@ -131,10 +130,13 @@ abstract class BaseGenerateCommand extends Command
         $result = $this->codeFileWriter->write($files, $answers);
 
         $hasError = false;
-        foreach ($result->getResults() as $fileId => $result) {
+        /**
+         * @var array $individualResult
+         */
+        foreach ($result->getResults() as $fileId => $individualResult) {
             $file = $files[$fileId];
-            $resultStatus = is_array($result) ? ($result['status'] ?? '') : '';
-            $resultError = is_array($result) ? ($result['error'] ?? '') : '';
+            $resultStatus = (string)$individualResult['status'];
+            $resultError = (string)$individualResult['error'];
             $color = match ($resultStatus) {
                 CodeFileWriteStatusEnum::CREATED->value => 'green',
                 CodeFileWriteStatusEnum::OVERWROTE->value => 'blue',
@@ -207,7 +209,9 @@ abstract class BaseGenerateCommand extends Command
     {
         return [] === array_filter(
             $answers,
-            fn ($answer) => CodeFileWriteOperationEnum::from($answer) !== CodeFileWriteOperationEnum::SKIP
-        );
+            /**
+             * @see Explanation for casting `(string)answer`  `::from` expects either an int or string as argument. An answer should be a string only.
+             */    
+            fn ($answer) => CodeFileWriteOperationEnum::from((string)$answer) !== CodeFileWriteOperationEnum::SKIP);
     }
 }
