@@ -64,10 +64,10 @@ final class ActiveRecordGeneratorTest extends TestCase
         $generator = $this->createGenerator(
             templates: [
                 Generator::getId() => [
-                    'custom' => dirname(__DIR__, 2) . 
-                    DIRECTORY_SEPARATOR . 'tests' . 
-                    DIRECTORY_SEPARATOR . 'templates' . 
-                    DIRECTORY_SEPARATOR. 'active-record'
+                    'custom' => dirname(__DIR__, 2) .
+                    DIRECTORY_SEPARATOR . 'tests' .
+                    DIRECTORY_SEPARATOR . 'templates' .
+                    DIRECTORY_SEPARATOR . 'active-record',
                 ],
             ],
         );
