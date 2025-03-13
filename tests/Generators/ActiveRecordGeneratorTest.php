@@ -64,7 +64,7 @@ final class ActiveRecordGeneratorTest extends TestCase
         $generator = $this->createGenerator(
             templates: [
                 Generator::getId() => [
-                    'custom' => '@src/templates/active-record',
+                    'custom' => dirname(__DIR__, 2) . '/tests/templates/active-record'
                 ],
             ],
         );
