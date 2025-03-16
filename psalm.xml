@@ -15,16 +15,7 @@
         </ignoreFiles>
     </projectFiles>
     <issueHandlers>
-        <InvalidArgument errorLevel="suppress" />
-        <InvalidArrayOffset errorLevel="suppress" />
         <MissingOverrideAttribute errorLevel="suppress" />
-        <MixedArgument errorLevel="suppress" />
-        <MixedArrayAccess errorLevel="suppress" />
-        <MixedArrayOffset errorLevel="suppress" />
         <MixedAssignment errorLevel="suppress" />
-        <MixedOperand errorLevel="suppress" />
-        <MixedReturnStatement errorLevel="suppress" />
-        <NonInvariantDocblockPropertyType errorLevel="suppress" />
-        <RiskyTruthyFalsyComparison errorLevel="suppress" />
-    </issueHandlers>  
+    </issueHandlers>
 </psalm>

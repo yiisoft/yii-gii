@@ -42,6 +42,10 @@ final class TemplateRuleHandler implements RuleHandlerInterface
         if ($value === 'default') {
             return $result;
         }
+        if (!is_string($value)) {
+            $result->addError(sprintf('Value must be a string, %s given.".', gettype($value)));
+            return $result;
+        }
         $command = $context->getRawData();
         if (!$command instanceof GeneratorCommandInterface) {
             throw new RuntimeException(sprintf(

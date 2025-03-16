@@ -66,15 +66,15 @@ final class Generator extends AbstractGenerator
         $properties = [];
         if ($schema = $this->connection->getTableSchema($command->getTableName(), true)) {
             foreach ($schema->getColumns() as $columnSchema) {
-                $properties[] = [
-                    'name' => $columnSchema->getName(),
-                    'type' => match ($columnSchema->getPhpType()) {
+                $properties[] = new Column(
+                    name: (string)$columnSchema->getName(),
+                    type: match ($columnSchema->getPhpType()) {
                         'integer' => 'int',
                         default => 'string',
                     },
-                    'isAllowNull' => $columnSchema->isAllowNull(),
-                    'defaultValue' => $columnSchema->getDefaultValue(),
-                ];
+                    isAllowNull: $columnSchema->isAllowNull(),
+                    defaultValue: $columnSchema->getDefaultValue(),
+                );
             }
         }
         $path = $this->getControllerFile($command);

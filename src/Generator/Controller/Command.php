@@ -15,14 +15,20 @@ use Yiisoft\Yii\Gii\Validator\TemplateRule;
 
 final class Command extends AbstractGeneratorCommand
 {
+    /**
+     * @var string[]
+     */
     #[Each([
         new Regex(
             pattern: '/^[a-z][a-z0-9]*$/',
             message: 'Only a-z, 0-9, dashes (-), spaces and commas are allowed.'
         ),
     ])]
-    private readonly array $actions;
+    private array $actions;
 
+    /**
+     * @param string[] $actions
+     */
     public function __construct(
         #[Required]
         #[Regex(
@@ -75,6 +81,9 @@ final class Command extends AbstractGeneratorCommand
         return $this->controllerClass;
     }
 
+    /**
+     * @return string[]
+     */
     public function getActions(): array
     {
         return $this->actions;

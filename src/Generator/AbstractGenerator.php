@@ -114,6 +114,7 @@ abstract class AbstractGenerator implements GeneratorInterface
         );
 
         $renderer = function (): void {
+            /** @psalm-suppress MixedArgument,PossiblyFalseArgument */
             extract(func_get_arg(1));
             /** @psalm-suppress UnresolvableInclude */
             require func_get_arg(0);

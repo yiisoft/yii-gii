@@ -105,7 +105,7 @@ final class DefaultController
             if ($generatedFile->getId() === $file) {
                 $content = $generatedFile->preview();
                 return $this->responseFactory->createResponse(
-                    ['content' => $content ?: 'Preview is not available for this file type.']
+                    ['content' => is_string($content) ? $content : 'Preview is not available for this file type.']
                 );
             }
         }
