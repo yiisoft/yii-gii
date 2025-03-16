@@ -14,7 +14,7 @@ final class InvalidGeneratorCommandException extends Exception
         parent::__construct(
             sprintf(
                 'Generator data validation failed: %s.',
-                implode(", ", $this->result->getErrorMessages()),
+                implode(', ', $this->result->getErrorMessages()),
             )
         );
     }

@@ -184,8 +184,8 @@ final class CodeFile
 
     /**
      * Renders diff between two sets of lines
-     * @param string|bool|array<int, string> $lines1
-     * @param string|bool|array<int, string> $lines2
+     * @param array<int, string>|bool|string $lines1
+     * @param array<int, string>|bool|string $lines2
      */
     private function renderDiff(mixed $lines1, mixed $lines2): string
     {
