@@ -35,7 +35,7 @@ final class TableExistsHandler implements RuleHandlerInterface
         try {
             $tableSchema = $this->connection->getTableSchema($value);
         } catch (\Yiisoft\Db\Exception\Exception $e) {
-            $result->addError($e->getMessage());
+            $result->addError(sprintf('The error occurred during fetching table schema: "%s".', $e));
             return $result;
         }
 
