@@ -24,7 +24,7 @@ final class Command extends AbstractGeneratorCommand
             message: 'Only a-z, 0-9, dashes (-), spaces and commas are allowed.'
         ),
     ])]
-    private array $actions;
+    private readonly array $actions;
 
     /**
      * @param string[] $actions
