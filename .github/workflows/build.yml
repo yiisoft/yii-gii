@@ -26,7 +26,7 @@ jobs:
     uses: yiisoft/actions/.github/workflows/phpunit.yml@master
     with:
       extensions: >-
-        ['sqlite3']
+        ['pdo_sqlite']
       os: >-
         ['ubuntu-latest', 'windows-latest']
       php: >-
