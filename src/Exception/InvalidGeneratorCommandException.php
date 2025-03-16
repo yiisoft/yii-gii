@@ -11,7 +11,7 @@ final class InvalidGeneratorCommandException extends Exception
 {
     public function __construct(private readonly Result $result)
     {
-        parent::__construct('Invalid generator data.');
+        parent::__construct('Invalid generator data.' . implode(", ", $this->result->getErrorMessages()));
     }
 
     public function getResult(): Result
