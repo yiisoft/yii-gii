@@ -4,8 +4,14 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii\Component\CodeFile;
 
-class CodeFileWriteResult
+/**
+ * @psalm-type Results array<string, array{'id': string, 'status': string, 'error': null|string}>
+ */
+final class CodeFileWriteResult
 {
+    /**
+     * @psalm-var Results
+     */
     private array $results = [];
 
     public function addResult(CodeFile $file, CodeFileWriteStatusEnum $status): void
@@ -26,6 +32,9 @@ class CodeFileWriteResult
         ];
     }
 
+    /**
+     * @psalm-return Results
+     */
     public function getResults(): array
     {
         return $this->results;

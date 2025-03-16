@@ -184,15 +184,25 @@ final class CodeFile
 
     /**
      * Renders diff between two sets of lines
+     * @param array<int, string>|bool|string $lines1
+     * @param array<int, string>|bool|string $lines2
      */
     private function renderDiff(mixed $lines1, mixed $lines2): string
     {
-        if (!is_array($lines1)) {
+        if (is_string($lines1)) {
             $lines1 = explode("\n", $lines1);
+        } elseif (is_bool($lines1)) {
+            $lines1 = [];
         }
-        if (!is_array($lines2)) {
+        if (is_string($lines2)) {
             $lines2 = explode("\n", $lines2);
+        } elseif (is_bool($lines2)) {
+            $lines2 = [];
         }
+        /**
+         * @var array<int, string> $lines1
+         * @var array<int, string> $lines2
+         */
         foreach ($lines1 as $i => $line) {
             $lines1[$i] = rtrim($line, "\r\n");
         }
@@ -201,7 +211,7 @@ final class CodeFile
         }
 
         $renderer = new Diff_Renderer_Text_Unified();
-        return (new Diff($lines1, $lines2))->render($renderer);
+        return (string)(new Diff($lines1, $lines2))->render($renderer);
     }
 
     public function getId(): string

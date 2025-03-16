@@ -3,10 +3,11 @@
 declare(strict_types=1);
 
 use Yiisoft\Strings\StringHelper;
+use Yiisoft\Yii\Gii\Generator\ActiveRecord\Column;
 
 /**
  * @var Yiisoft\Yii\Gii\Generator\ActiveRecord\Command $command
- * @var array<string, string> $properties
+ * @var list<Column> $properties
  */
 
 echo "<?php\n";
@@ -23,9 +24,9 @@ final class <?= $command->getModelName(); ?> extends <?= StringHelper::baseName(
 <?php foreach ($properties as $property): ?>
     private <?=sprintf(
         '%s%s $%s',
-        $property['isAllowNull'] ? '?' : '',
-        $property['type'],
-        $property['name'],
+        $property->isAllowNull ? '?' : '',
+        $property->type,
+        $property->name,
     )?>;
 <?php endforeach; ?>
 <?php if (!empty($properties)) {

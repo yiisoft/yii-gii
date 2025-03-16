@@ -7,7 +7,7 @@ namespace Yiisoft\Yii\Gii\Exception;
 use Exception;
 use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 
-class GeneratorNotFoundException extends Exception implements FriendlyExceptionInterface
+final class GeneratorNotFoundException extends Exception implements FriendlyExceptionInterface
 {
     public function getName(): string
     {

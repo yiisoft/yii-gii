@@ -32,10 +32,7 @@ final class CodeFileWriter
                     try {
                         $status = $file->save();
                     } catch (Exception $e) {
-                        $result->addError(
-                            $file,
-                            $e->getMessage()
-                        );
+                        $result->addError($file, (string)$e);
                         break;
                     }
 

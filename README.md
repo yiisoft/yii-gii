@@ -8,6 +8,8 @@
 
 [![Latest Stable Version](https://poser.pugx.org/yiisoft/yii-gii/v)](https://packagist.org/packages/yiisoft/yii-gii)
 [![Total Downloads](https://poser.pugx.org/yiisoft/yii-gii/downloads)](https://packagist.org/packages/yiisoft/yii-gii)
+[![Monthly Downloads](https://poser.pugx.org/yiisoft/yii-gii/d/monthly)](https://packagist.org/packages/rossaddison/yii-auth-client)
+[![Daily Downloads](https://poser.pugx.org/yiisoft/yii-gii/d/daily)](https://packagist.org/packages/rossaddison/yii-auth-client)
 [![Build status](https://github.com/yiisoft/yii-gii/actions/workflows/build.yml/badge.svg)](https://github.com/yiisoft/yii-gii/actions/workflows/build.yml)
 [![Code coverage](https://codecov.io/gh/yiisoft/yii-gii/graph/badge.svg?token=JWRONWSQ5P)](https://codecov.io/gh/yiisoft/yii-gii)
 [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fyiisoft%2Fyii-gii%2Fmaster)](https://dashboard.stryker-mutator.io/reports/github.com/yiisoft/yii-gii/master)
