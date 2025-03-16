@@ -29,6 +29,8 @@ final class TemplateRuleHandler implements RuleHandlerInterface
      * Validates the template selection.
      * This method validates whether the user selects an existing template
      * and the template contains all required template files as specified in {@see requiredTemplates()}.
+     *
+     * @psalm-suppress MixedArgumentTypeCoercion ['template' => $value, 'templates' => implode(', ', array_keys($templates)),]
      */
     public function validate(mixed $value, object $rule, ValidationContext $context): Result
     {
@@ -38,6 +40,10 @@ final class TemplateRuleHandler implements RuleHandlerInterface
         $result = new Result();
 
         if ($value === 'default') {
+            return $result;
+        }
+        if (!is_string($value)) {
+            $result->addError(sprintf('Value must be a string, %s given.".', gettype($value)));
             return $result;
         }
         $command = $context->getRawData();

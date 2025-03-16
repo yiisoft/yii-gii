@@ -144,7 +144,7 @@ abstract class BaseGenerateCommand extends Command
                     $file->getRelativePath(),
                 )
             );
-            if (CodeFileWriteStatusEnum::ERROR->value === $result['status']) {
+            if (CodeFileWriteStatusEnum::ERROR->value === $result['status'] && $result['error'] !== null) {
                 $hasError = true;
                 $output->writeln(
                     sprintf(
@@ -164,17 +164,17 @@ abstract class BaseGenerateCommand extends Command
 
     abstract protected function createGeneratorCommand(InputInterface $input): GeneratorCommandInterface;
 
-    /**
-     * @return bool|mixed|string|null
-     */
-    protected function confirm(InputInterface $input, OutputInterface $output)
+    protected function confirm(InputInterface $input, OutputInterface $output): bool
     {
         $question = new ConfirmationQuestion("\nReady to generate the selected files? (yes|no) [yes]:", true);
         /**
          * @var QuestionHelper $helper
          */
         $helper = $this->getHelper('question');
-        return $helper->ask($input, $output, $question);
+        return match ($helper->ask($input, $output, $question)) {
+            true, 'Y', 'y', 'yes' => true,
+            default => false,
+        };
     }
 
     /**
@@ -198,6 +198,9 @@ abstract class BaseGenerateCommand extends Command
         return $helper->ask($input, $output, $question);
     }
 
+    /**
+     * @param array<string> $answers
+     */
     private function areAllFilesSkipped(array $answers): bool
     {
         return [] === array_filter(

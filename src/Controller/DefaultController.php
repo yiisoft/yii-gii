@@ -18,7 +18,6 @@ use Yiisoft\Yii\Gii\Component\CodeFile\CodeFileWriteOperationEnum;
 use Yiisoft\Yii\Gii\Component\CodeFile\CodeFileWriter;
 use Yiisoft\Yii\Gii\Exception\InvalidGeneratorCommandException;
 use Yiisoft\Yii\Gii\Generator\CommandHydrator;
-use Yiisoft\Yii\Gii\GeneratorCommandInterface;
 use Yiisoft\Yii\Gii\GeneratorInterface;
 use Yiisoft\Yii\Gii\GeneratorProxy;
 use Yiisoft\Yii\Gii\GiiInterface;
@@ -74,6 +73,9 @@ final class DefaultController
         } catch (InvalidGeneratorCommandException $e) {
             return $this->createErrorResponse($e);
         }
+        /**
+         * @psalm-suppress MixedArgumentTypeCoercion $answers
+         */
         $result = $codeFileWriter->write($files, $answers);
 
         return $this->responseFactory->createResponse(array_values($result->getResults()));
@@ -103,7 +105,7 @@ final class DefaultController
             if ($generatedFile->getId() === $file) {
                 $content = $generatedFile->preview();
                 return $this->responseFactory->createResponse(
-                    ['content' => $content ?: 'Preview is not available for this file type.']
+                    ['content' => is_string($content) ? $content : 'Preview is not available for this file type.']
                 );
             }
         }
@@ -162,7 +164,7 @@ final class DefaultController
     }
 
     /**
-     * @psalm-param class-string<GeneratorCommandInterface> $generatorClass
+     * @psalm-param class-string<GeneratorInterface> $generatorClass
      */
     private function serializeGenerator(string $generatorClass): array
     {

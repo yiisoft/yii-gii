@@ -19,6 +19,6 @@ jobs:
     with:
       repository: ${{ github.event.pull_request.head.repo.full_name }}
       os: >-
-        ['ubuntu-latest']
+        ['ubuntu-latest', 'windows-latest']
       php: >-
-        ['8.3']
+        ['8.1', '8.2', '8.3', '8.4']

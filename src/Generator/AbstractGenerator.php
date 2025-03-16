@@ -77,6 +77,8 @@ abstract class AbstractGenerator implements GeneratorInterface
      *
      * @throws InvalidGeneratorCommandException
      *
+     * @psalm-suppress MixedReturnTypeCoercion CodeFile[]
+     *
      * @return CodeFile[]
      */
     final public function generate(GeneratorCommandInterface $command): array
@@ -86,7 +88,6 @@ abstract class AbstractGenerator implements GeneratorInterface
         if (!$result->isValid()) {
             throw new InvalidGeneratorCommandException($result);
         }
-
         return $this->doGenerate($command);
     }
 
@@ -113,6 +114,7 @@ abstract class AbstractGenerator implements GeneratorInterface
         );
 
         $renderer = function (): void {
+            /** @psalm-suppress MixedArgument,PossiblyFalseArgument */
             extract(func_get_arg(1));
             /** @psalm-suppress UnresolvableInclude */
             require func_get_arg(0);
@@ -124,7 +126,7 @@ abstract class AbstractGenerator implements GeneratorInterface
         try {
             /** @psalm-suppress PossiblyNullFunctionCall */
             $renderer->bindTo($this)($file, array_merge($params, ['command' => $command]));
-            return ob_get_clean();
+            return (string)ob_get_clean();
         } catch (Throwable $e) {
             while (ob_get_level() > $obInitialLevel) {
                 if (!@ob_end_clean()) {
