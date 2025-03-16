@@ -8,7 +8,7 @@ A maneira preferida para instalar essa extensão é via [composer](https://getco
 Então rode
 
 ```
-php composer.phar require --dev --prefer-dist yiisoft/yii2-gii
+composer require --dev yiisoft/yii-gii
 ```
 
 ou adicione

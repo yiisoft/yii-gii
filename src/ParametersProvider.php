@@ -15,9 +15,12 @@ final class ParametersProvider
     ) {
     }
 
+    /**
+     * @psalm-return array<string, string>
+     */
     public function getTemplates(string $generator): array
     {
         $templates = $this->templates[$generator] ?? [];
-        return ['default' => true, ...$templates];
+        return ['default' => 'true', ...$templates];
     }
 }

@@ -8,7 +8,7 @@
 下記のコマンドを実行してください。
 
 ```
-php composer.phar require --dev --prefer-dist yiisoft/yii-gii
+composer require --dev yiisoft/yii-gii
 ```
 
 または、あなたの `composer.json` ファイルの `require` セクションに、下記を追加してください。

@@ -11,11 +11,6 @@ use Yiisoft\Validator\RuleInterface;
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::IS_REPEATABLE)]
 final class TemplateRule implements RuleInterface
 {
-    public function getName(): string
-    {
-        return 'gii_template_rule';
-    }
-
     public function getHandler(): string|RuleHandlerInterface
     {
         return TemplateRuleHandler::class;

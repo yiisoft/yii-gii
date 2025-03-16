@@ -18,7 +18,7 @@ use Yiisoft\Yii\Gii\Component\CodeFile\CodeFileWriteOperationEnum;
 use Yiisoft\Yii\Gii\Component\CodeFile\CodeFileWriter;
 use Yiisoft\Yii\Gii\Exception\InvalidGeneratorCommandException;
 use Yiisoft\Yii\Gii\Generator\CommandHydrator;
-use Yiisoft\Yii\Gii\GeneratorCommandInterface;
+use Yiisoft\Yii\Gii\GeneratorInterface;
 use Yiisoft\Yii\Gii\GeneratorProxy;
 use Yiisoft\Yii\Gii\GiiInterface;
 use Yiisoft\Yii\Gii\ParametersProvider;
@@ -39,7 +39,14 @@ final class DefaultController
         return $this->responseFactory->createResponse([
             'generators' => array_map(
                 $this->serializeGenerator(...),
-                array_values(array_map(fn(GeneratorProxy $proxy) => $proxy->getClass(), $generators)),
+                array_values(
+                    array_map(
+                        fn (GeneratorInterface|GeneratorProxy $generator) => $generator instanceof GeneratorProxy
+                            ? $generator->getClass()
+                            : $generator::class,
+                        $generators
+                    )
+                ),
             ),
         ]);
     }
@@ -66,6 +73,9 @@ final class DefaultController
         } catch (InvalidGeneratorCommandException $e) {
             return $this->createErrorResponse($e);
         }
+        /**
+         * @psalm-suppress MixedArgumentTypeCoercion $answers
+         */
         $result = $codeFileWriter->write($files, $answers);
 
         return $this->responseFactory->createResponse(array_values($result->getResults()));
@@ -95,7 +105,7 @@ final class DefaultController
             if ($generatedFile->getId() === $file) {
                 $content = $generatedFile->preview();
                 return $this->responseFactory->createResponse(
-                    ['content' => $content ?: 'Preview is not available for this file type.']
+                    ['content' => is_string($content) ? $content : 'Preview is not available for this file type.']
                 );
             }
         }
@@ -134,7 +144,7 @@ final class DefaultController
     private function createErrorResponse(InvalidGeneratorCommandException $e): DataResponse
     {
         return $this->responseFactory->createResponse(
-            ['errors' => $e->getResult()->getErrorMessagesIndexedByAttribute()],
+            ['errors' => $e->getResult()->getErrorMessagesIndexedByProperty()],
             Status::UNPROCESSABLE_ENTITY
         );
     }
@@ -154,7 +164,7 @@ final class DefaultController
     }
 
     /**
-     * @psalm-param class-string<GeneratorCommandInterface> $generatorClass
+     * @psalm-param class-string<GeneratorInterface> $generatorClass
      */
     private function serializeGenerator(string $generatorClass): array
     {

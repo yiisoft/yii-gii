@@ -15,7 +15,7 @@ use Yiisoft\Yii\Gii\ParametersProvider;
 
 return [
     GiiInterface::class => function (Injector $injector) use ($params): GiiInterface {
-        $generatorsInstances = [];
+        $proxies = [];
         $generators = $params['yiisoft/yii-gii']['generators'];
 
         foreach ($generators as $generator) {
@@ -27,9 +27,9 @@ return [
                 fn() => $injector->make($class, $generator['parameters'] ?? []),
                 $class,
             );
-            $generatorsInstances[$class::getId()] = $loader;
+            $proxies[$class::getId()] = $loader;
         }
-        return new Gii($generatorsInstances);
+        return new Gii($proxies, []);
     },
     ParametersProvider::class => [
         'class' => ParametersProvider::class,

@@ -8,7 +8,7 @@
 执行
 
 ```
-php composer.phar require --dev --prefer-dist yiisoft/yii-gii
+composer require --dev yiisoft/yii-gii
 ```
 
 或者在项目的 `composer.json` 中的 require-dev 部分添加如下代码
