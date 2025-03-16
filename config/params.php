@@ -33,6 +33,10 @@ return [
                 'class' => Generators\ActiveRecord\Generator::class,
                 'parameters' => [],
             ],
+            [
+                'class' => Generators\Gemini\Generator::class,
+                'parameters' => [],
+            ],
         ],
         'parameters' => [
             'templates' => [],
