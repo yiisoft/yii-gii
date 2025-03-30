@@ -51,7 +51,7 @@
         "yiisoft/strings": "^2.1",
         "yiisoft/validator": "^2.0",
         "yiisoft/yii-console": "^2.0",
-        "yiisoft/yii-middleware": "dev-master"
+        "yiisoft/yii-middleware": "^1.0"
     },
     "require-dev": {
         "maglnet/composer-require-checker": "^4.7.1",
