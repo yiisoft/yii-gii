@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\Gii\Component\CodeFile;
 
 /**
- * @psalm-type Results array<string, array{'id': string, 'status': string, 'error': null|string}>
+ * @psalm-type Results = array<string, array{'id': string, 'status': string, 'error': null|string}>
  */
 final class CodeFileWriteResult
 {
