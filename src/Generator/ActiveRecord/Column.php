@@ -37,7 +37,7 @@ final class Column
         return match (true) {
             is_string($this->defaultValue) => "'" . addslashes($this->defaultValue) . "'",
             is_bool($this->defaultValue) => $this->defaultValue ? 'true' : 'false',
-            is_null($this->defaultValue) => 'null',
+            null === $this->defaultValue => 'null',
             is_array($this->defaultValue) => '[]',
             default => (string)$this->defaultValue,
         };
