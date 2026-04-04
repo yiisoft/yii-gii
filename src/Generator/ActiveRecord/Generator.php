@@ -7,6 +7,8 @@ namespace Yiisoft\Yii\Gii\Generator\ActiveRecord;
 use InvalidArgumentException;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Db\Connection\ConnectionInterface;
+use Yiisoft\Db\Constraint\ForeignKeyConstraint;
+use Yiisoft\Strings\Inflector;
 use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\Yii\Gii\Component\CodeFile\CodeFile;
 use Yiisoft\Yii\Gii\Generator\AbstractGenerator;
@@ -64,27 +66,165 @@ final class Generator extends AbstractGenerator
         $rootPath = $this->aliases->get('@root');
 
         $properties = [];
+        $relations = [];
+
         if ($schema = $this->connection->getTableSchema($command->getTableName(), true)) {
+            $primaryKeys = $schema->getPrimaryKey();
+
             foreach ($schema->getColumns() as $columnSchema) {
+                $columnName = (string)$columnSchema->getName();
+                $phpType = $this->getPhpType($columnSchema);
+                $defaultValue = $columnSchema->getDefaultValue();
+
+                // Check if the column has a DB default expression (like CURRENT_TIMESTAMP, NOW(), etc.)
+                $hasDbDefaultExpression = $this->hasDbDefaultExpression($columnSchema);
+
                 $properties[] = new Column(
-                    name: (string)$columnSchema->getName(),
-                    type: match ($columnSchema->getPhpType()) {
-                        'integer' => 'int',
-                        default => 'string',
-                    },
+                    name: $columnName,
+                    type: $phpType,
                     isAllowNull: $columnSchema->isAllowNull(),
-                    defaultValue: $columnSchema->getDefaultValue(),
+                    defaultValue: $defaultValue,
+                    isPrimaryKey: in_array($columnName, $primaryKeys, true),
+                    isAutoIncrement: $columnSchema->isAutoIncrement(),
+                    hasDbDefaultExpression: $hasDbDefaultExpression,
                 );
             }
+
+            // Generate relations if requested
+            if ($command->isGenerateRelations()) {
+                $relations = $this->generateRelations($command, $schema);
+            }
         }
+
         $path = $this->getControllerFile($command);
         $codeFile = (new CodeFile(
             $path,
-            $this->render($command, 'model.php', ['properties' => $properties])
+            $this->render($command, 'model.php', [
+                'properties' => $properties,
+                'relations' => $relations,
+            ])
         ))->withBasePath($rootPath);
         $files[$codeFile->getId()] = $codeFile;
 
         return $files;
+    }
+
+    /**
+     * Gets the PHP type for a column, with improved type mapping.
+     */
+    private function getPhpType($columnSchema): string
+    {
+        $phpType = $columnSchema->getPhpType();
+
+        return match ($phpType) {
+            'integer' => 'int',
+            'boolean' => 'bool',
+            'double' => 'float',
+            'resource' => 'string', // Binary data often represented as string
+            default => 'string',
+        };
+    }
+
+    /**
+     * Checks if a column has a database default expression.
+     */
+    private function hasDbDefaultExpression($columnSchema): bool
+    {
+        $defaultValue = $columnSchema->getDefaultValue();
+
+        if ($defaultValue === null) {
+            return false;
+        }
+
+        // Common database expressions
+        $expressions = [
+            'CURRENT_TIMESTAMP',
+            'NOW()',
+            'CURRENT_DATE',
+            'CURRENT_TIME',
+            'UUID()',
+            'NEWID()',
+        ];
+
+        if (is_string($defaultValue)) {
+            $upperDefault = strtoupper(trim($defaultValue));
+            foreach ($expressions as $expr) {
+                if (str_contains($upperDefault, $expr)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Generates relations based on foreign keys.
+     *
+     * @return array<Relation>
+     */
+    private function generateRelations(Command $command, $schema): array
+    {
+        $relations = [];
+        $inflector = new Inflector();
+        $tableName = $command->getTableName();
+
+        // Get foreign keys from this table to other tables
+        try {
+            $foreignKeys = $schema->getForeignKeys();
+
+            foreach ($foreignKeys as $fk) {
+                if (!$fk instanceof ForeignKeyConstraint) {
+                    continue;
+                }
+
+                $foreignTableName = $fk->getForeignTableName();
+                $relatedModelName = $inflector->tableToClass($foreignTableName);
+                $relatedModelClass = $command->getNamespace() . '\\' . $relatedModelName;
+
+                // Create relation name from foreign key columns
+                $relationName = $this->generateRelationName($fk->getColumnNames(), $relatedModelName);
+
+                // Build link array [foreign_column => local_column]
+                $link = [];
+                foreach ($fk->getColumnNames() as $index => $columnName) {
+                    $foreignColumnName = $fk->getForeignColumnNames()[$index] ?? 'id';
+                    $link[$foreignColumnName] = $columnName;
+                }
+
+                $relations[] = new Relation(
+                    name: $relationName,
+                    relatedModel: $relatedModelName,
+                    type: 'hasOne',
+                    link: $link,
+                    inverseOf: strtolower($inflector->toPlural($command->getModelName())),
+                );
+            }
+        } catch (\Throwable $e) {
+            // If we can't get foreign keys, just skip relations
+        }
+
+        return $relations;
+    }
+
+    /**
+     * Generates a relation name from foreign key columns.
+     */
+    private function generateRelationName(array $columns, string $relatedModelName): string
+    {
+        $inflector = new Inflector();
+
+        // If the FK column is like 'user_id', use 'user'
+        // If the FK column is like 'profile_id', use 'profile'
+        if (count($columns) === 1) {
+            $column = $columns[0];
+            if (str_ends_with($column, '_id')) {
+                return substr($column, 0, -3);
+            }
+        }
+
+        // Default to using the related model name in camelCase
+        return lcfirst($relatedModelName);
     }
 
     /**

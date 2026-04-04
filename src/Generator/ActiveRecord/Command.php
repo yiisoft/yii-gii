@@ -39,6 +39,11 @@ final class Command extends AbstractGeneratorCommand
         #[Required(message: 'A code template must be selected.')]
         #[TemplateRule]
         protected string $template = 'default',
+        private readonly string $propertyVisibility = 'protected',
+        private readonly bool $generateGettersSetters = true,
+        private readonly bool $generateRelations = true,
+        private readonly bool $useRepositoryTrait = false,
+        private readonly bool $usePrivatePropertiesTrait = false,
     ) {
         parent::__construct($template);
     }
@@ -63,6 +68,31 @@ final class Command extends AbstractGeneratorCommand
         return (new Inflector())->tableToClass($this->tableName);
     }
 
+    public function getPropertyVisibility(): string
+    {
+        return $this->propertyVisibility;
+    }
+
+    public function isGenerateGettersSetters(): bool
+    {
+        return $this->generateGettersSetters;
+    }
+
+    public function isGenerateRelations(): bool
+    {
+        return $this->generateRelations;
+    }
+
+    public function isUseRepositoryTrait(): bool
+    {
+        return $this->useRepositoryTrait;
+    }
+
+    public function isUsePrivatePropertiesTrait(): bool
+    {
+        return $this->usePrivatePropertiesTrait;
+    }
+
     public static function getAttributeLabels(): array
     {
         return [
@@ -70,6 +100,11 @@ final class Command extends AbstractGeneratorCommand
             'baseClass' => 'Base class',
             'tableName' => 'Table name',
             'template' => 'Template',
+            'propertyVisibility' => 'Property visibility',
+            'generateGettersSetters' => 'Generate getters and setters',
+            'generateRelations' => 'Generate relations',
+            'useRepositoryTrait' => 'Use RepositoryTrait',
+            'usePrivatePropertiesTrait' => 'Use PrivatePropertiesTrait',
         ];
     }
 
@@ -79,6 +114,11 @@ final class Command extends AbstractGeneratorCommand
             'namespace' => 'Namespace for the model class to store it in the related directory.',
             'baseClass' => 'Parent class for the new model class.',
             'tableName' => 'Corresponded table name for the model class.',
+            'propertyVisibility' => 'Visibility for properties: private, protected, or public.',
+            'generateGettersSetters' => 'Whether to generate getter and setter methods for properties.',
+            'generateRelations' => 'Whether to generate relation methods based on foreign keys.',
+            'useRepositoryTrait' => 'Whether to include RepositoryTrait in the generated model.',
+            'usePrivatePropertiesTrait' => 'Whether to include PrivatePropertiesTrait (required for private properties).',
         ];
     }
 
@@ -89,6 +129,11 @@ final class Command extends AbstractGeneratorCommand
             'tableName',
             'baseClass',
             'template',
+            'propertyVisibility',
+            'generateGettersSetters',
+            'generateRelations',
+            'useRepositoryTrait',
+            'usePrivatePropertiesTrait',
         ];
     }
 }
