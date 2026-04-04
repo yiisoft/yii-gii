@@ -63,6 +63,27 @@ final class <?= $command->getModelName(); ?> extends <?= StringHelper::baseName(
 <?php if (!empty($properties)): ?>
 
 <?php endif; ?>
+<?php
+// Check if we need a constructor for DB expression initialization
+$needsConstructor = false;
+foreach ($properties as $property) {
+    if ($property->hasDbDefaultExpression) {
+        $needsConstructor = true;
+        break;
+    }
+}
+?>
+<?php if ($needsConstructor): ?>
+    public function __construct()
+    {
+<?php foreach ($properties as $property): ?>
+<?php if ($property->hasDbDefaultExpression): ?>
+        $this-><?= $property->name ?> = <?= $property->getDbExpressionInitializer() ?>;
+<?php endif; ?>
+<?php endforeach; ?>
+    }
+
+<?php endif; ?>
     public function tableName(): string
     {
         return '<?= $command->getTableName() ?>';

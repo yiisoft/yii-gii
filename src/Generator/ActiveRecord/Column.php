@@ -35,13 +35,45 @@ final class Column
             return '';
         }
 
-        return match (true) {
-            is_string($this->defaultValue) => "'" . addslashes($this->defaultValue) . "'",
-            is_bool($this->defaultValue) => $this->defaultValue ? 'true' : 'false',
-            null === $this->defaultValue => 'null',
-            is_array($this->defaultValue) => var_export($this->defaultValue, true),
-            default => (string)$this->defaultValue,
+        return match (gettype($this->defaultValue)) {
+            'string' => "'" . addslashes($this->defaultValue) . "'",
+            'boolean' => $this->defaultValue ? 'true' : 'false',
+            'NULL' => 'null',
+            'array' => var_export($this->defaultValue, true),
+            'integer', 'double' => (string)$this->defaultValue,
+            default => var_export($this->defaultValue, true),
         };
+    }
+
+    /**
+     * Returns the PHP code to initialize a DB expression in the constructor.
+     */
+    public function getDbExpressionInitializer(): string
+    {
+        if (!$this->hasDbDefaultExpression) {
+            return '';
+        }
+
+        // Get the actual expression class
+        $className = get_class($this->defaultValue);
+
+        // Get the SQL expression string by converting the object to string
+        $expressionSql = (string)$this->defaultValue;
+
+        // Return the code to create a new instance of the expression
+        return 'new \\' . $className . '(' . var_export($expressionSql, true) . ')';
+    }
+
+    /**
+     * Returns the fully qualified class name of the DB expression.
+     */
+    public function getDbExpressionClassName(): string
+    {
+        if (!$this->hasDbDefaultExpression) {
+            return '';
+        }
+
+        return '\\' . get_class($this->defaultValue);
     }
 
     /**
@@ -49,16 +81,16 @@ final class Column
      */
     public function shouldUseNullCoalescing(): bool
     {
-        return !$this->hasDefaultValue() && !$this->isAutoIncrement;
+        return $this->canBeUninitialized();
     }
 
     /**
      * Returns true if the property can be uninitialized.
-     * This happens when the property has no default value and is not auto-increment.
+     * This happens when the property is auto-increment or has no default value.
      */
     public function canBeUninitialized(): bool
     {
-        return !$this->hasDefaultValue() && !$this->isAutoIncrement;
+        return $this->isAutoIncrement || !$this->hasDefaultValue();
     }
 
     /**
