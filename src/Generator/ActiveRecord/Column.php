@@ -14,6 +14,7 @@ final class Column
         public bool $isPrimaryKey = false,
         public bool $isAutoIncrement = false,
         public bool $hasDbDefaultExpression = false,
+        public bool $isUsedInRelation = false,
     ) {
     }
 
@@ -38,7 +39,7 @@ final class Column
             is_string($this->defaultValue) => "'" . addslashes($this->defaultValue) . "'",
             is_bool($this->defaultValue) => $this->defaultValue ? 'true' : 'false',
             null === $this->defaultValue => 'null',
-            is_array($this->defaultValue) => '[]',
+            is_array($this->defaultValue) => var_export($this->defaultValue, true),
             default => (string)$this->defaultValue,
         };
     }
@@ -49,5 +50,14 @@ final class Column
     public function shouldUseNullCoalescing(): bool
     {
         return !$this->hasDefaultValue() && !$this->isAutoIncrement;
+    }
+
+    /**
+     * Returns true if setter should use ActiveRecord::set() method.
+     * This is needed for primary keys and columns used in relationships.
+     */
+    public function shouldUseSetMethod(): bool
+    {
+        return $this->isPrimaryKey || $this->isUsedInRelation;
     }
 }

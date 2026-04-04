@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\Gii\Generator\ActiveRecord;
 
 use InvalidArgumentException;
+use ReflectionNamedType;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Db\Connection\ConnectionInterface;
 use Yiisoft\Db\Constraint\ForeignKeyConstraint;
+use Yiisoft\Db\Expression\ExpressionInterface;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\Yii\Gii\Component\CodeFile\CodeFile;
@@ -71,6 +73,8 @@ final class Generator extends AbstractGenerator
         if ($schema = $this->connection->getTableSchema($command->getTableName(), true)) {
             $primaryKeys = $schema->getPrimaryKey();
 
+            // First pass: create columns
+            $columnsMap = [];
             foreach ($schema->getColumns() as $columnSchema) {
                 $columnName = (string)$columnSchema->getName();
                 $phpType = $this->getPhpType($columnSchema);
@@ -79,7 +83,7 @@ final class Generator extends AbstractGenerator
                 // Check if the column has a DB default expression (like CURRENT_TIMESTAMP, NOW(), etc.)
                 $hasDbDefaultExpression = $this->hasDbDefaultExpression($columnSchema);
 
-                $properties[] = new Column(
+                $column = new Column(
                     name: $columnName,
                     type: $phpType,
                     isAllowNull: $columnSchema->isAllowNull(),
@@ -87,12 +91,25 @@ final class Generator extends AbstractGenerator
                     isPrimaryKey: in_array($columnName, $primaryKeys, true),
                     isAutoIncrement: $columnSchema->isAutoIncrement(),
                     hasDbDefaultExpression: $hasDbDefaultExpression,
+                    isUsedInRelation: false,
                 );
+
+                $columnsMap[$columnName] = $column;
+                $properties[] = $column;
             }
 
             // Generate relations if requested
             if ($command->isGenerateRelations()) {
                 $relations = $this->generateRelations($command, $schema);
+
+                // Mark columns used in relations
+                foreach ($relations as $relation) {
+                    foreach ($relation->link as $foreignColumn => $localColumn) {
+                        if (isset($columnsMap[$localColumn])) {
+                            $columnsMap[$localColumn]->isUsedInRelation = true;
+                        }
+                    }
+                }
             }
         }
 
@@ -110,10 +127,32 @@ final class Generator extends AbstractGenerator
     }
 
     /**
-     * Gets the PHP type for a column, with improved type mapping.
+     * Gets the PHP type for a column using reflection of phpTypecast() return type.
      */
     private function getPhpType($columnSchema): string
     {
+        try {
+            $reflection = new \ReflectionMethod($columnSchema, 'phpTypecast');
+            $returnType = $reflection->getReturnType();
+
+            if ($returnType instanceof ReflectionNamedType) {
+                $typeName = $returnType->getName();
+
+                // Map PHP type names to their short forms
+                return match ($typeName) {
+                    'integer', 'int' => 'int',
+                    'boolean', 'bool' => 'bool',
+                    'double', 'float' => 'float',
+                    'string' => 'string',
+                    'array' => 'array',
+                    default => 'mixed',
+                };
+            }
+        } catch (\ReflectionException) {
+            // Fall back to getPhpType() if reflection fails
+        }
+
+        // Fallback to using getPhpType() method
         $phpType = $columnSchema->getPhpType();
 
         return match ($phpType) {
@@ -132,30 +171,8 @@ final class Generator extends AbstractGenerator
     {
         $defaultValue = $columnSchema->getDefaultValue();
 
-        if ($defaultValue === null) {
-            return false;
-        }
-
-        // Common database expressions
-        $expressions = [
-            'CURRENT_TIMESTAMP',
-            'NOW()',
-            'CURRENT_DATE',
-            'CURRENT_TIME',
-            'UUID()',
-            'NEWID()',
-        ];
-
-        if (is_string($defaultValue)) {
-            $upperDefault = strtoupper(trim($defaultValue));
-            foreach ($expressions as $expr) {
-                if (str_contains($upperDefault, $expr)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        // Check if default value is an expression object
+        return $defaultValue instanceof ExpressionInterface;
     }
 
     /**

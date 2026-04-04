@@ -81,7 +81,7 @@ final class <?= $command->getModelName(); ?> extends <?= StringHelper::baseName(
 
     public function set<?= ucfirst($property->name) ?>(<?= ($property->isAllowNull ? '?' : '') . $property->type ?> $<?= $property->name ?>): void
     {
-<?php if ($property->isPrimaryKey): ?>
+<?php if ($property->shouldUseSetMethod()): ?>
         $this->set('<?= $property->name ?>', $<?= $property->name ?>);
 <?php else: ?>
         $this-><?= $property->name ?> = $<?= $property->name ?>;
