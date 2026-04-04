@@ -55,7 +55,7 @@ final class Column
         }
 
         // Get the actual expression class
-        $className = get_class($this->defaultValue);
+        $className = $this->defaultValue::class;
 
         // Get the SQL expression string by converting the object to string
         $expressionSql = (string)$this->defaultValue;
@@ -73,7 +73,7 @@ final class Column
             return '';
         }
 
-        return '\\' . get_class($this->defaultValue);
+        return '\\' . $this->defaultValue::class;
     }
 
     /**
