@@ -200,7 +200,7 @@ final class Generator extends AbstractGenerator
                     inverseOf: strtolower($inflector->toPlural($command->getModelName())),
                 );
             }
-        } catch (\Throwable $e) {
+        } catch (\Throwable) {
             // If we can't get foreign keys, just skip relations
         }
 
