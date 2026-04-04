@@ -70,9 +70,9 @@ final class <?= $command->getModelName(); ?> extends <?= StringHelper::baseName(
 <?php if ($command->isGenerateGettersSetters()): ?>
 <?php foreach ($properties as $property): ?>
 
-    public function get<?= ucfirst($property->name) ?>(): <?= ($property->isAllowNull ? '?' : '') . $property->type . PHP_EOL ?>
+    public function get<?= ucfirst($property->name) ?>(): <?= ($property->isAllowNull || $property->canBeUninitialized() ? '?' : '') . $property->type . PHP_EOL ?>
     {
-<?php if ($property->shouldUseNullCoalescing() && $property->isAllowNull): ?>
+<?php if ($property->shouldUseNullCoalescing()): ?>
         return $this-><?= $property->name ?> ?? null;
 <?php else: ?>
         return $this-><?= $property->name ?>;

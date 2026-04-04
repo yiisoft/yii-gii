@@ -53,6 +53,15 @@ final class Column
     }
 
     /**
+     * Returns true if the property can be uninitialized.
+     * This happens when the property has no default value and is not auto-increment.
+     */
+    public function canBeUninitialized(): bool
+    {
+        return !$this->hasDefaultValue() && !$this->isAutoIncrement;
+    }
+
+    /**
      * Returns true if setter should use ActiveRecord::set() method.
      * This is needed for primary keys and columns used in relationships.
      */
