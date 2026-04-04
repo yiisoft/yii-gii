@@ -84,12 +84,15 @@ final class Generator extends AbstractGenerator
                 // Check if the column has a DB default expression (like CURRENT_TIMESTAMP, NOW(), etc.)
                 $hasDbDefaultExpression = $this->hasDbDefaultExpression($columnSchema);
 
+                $isPrimaryKey = in_array($columnName, $primaryKeys, true);
+
                 $column = new Column(
                     name: $columnName,
                     type: $phpType,
-                    isAllowNull: !$columnSchema->isNotNull(),
+                    // Primary keys are never NULL, even if not explicitly marked as NOT NULL
+                    isAllowNull: !$isPrimaryKey && !$columnSchema->isNotNull(),
                     defaultValue: $defaultValue,
-                    isPrimaryKey: in_array($columnName, $primaryKeys, true),
+                    isPrimaryKey: $isPrimaryKey,
                     isAutoIncrement: $columnSchema->isAutoIncrement(),
                     hasDbDefaultExpression: $hasDbDefaultExpression,
                     isUsedInRelation: false,

@@ -88,12 +88,13 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
                     RuleHandlerResolverInterface::class => RuleHandlerContainer::class,
                     ValidatorInterface::class => Validator::class,
                     CacheInterface::class => NullCache::class,
-                    ConnectionInterface::class => [
-                        'class' => SqliteConnection::class,
-                        '__construct()' => [
-                            new Driver('sqlite:' . __DIR__ . '/Support/test.db'),
-                        ],
-                    ],
+                    ConnectionInterface::class => function () {
+                        $connection = new SqliteConnection(new Driver('sqlite:' . __DIR__ . '/Support/test.db'));
+                        // Enable foreign key constraints for schema introspection
+                        $connection->open();
+                        $connection->createCommand('PRAGMA foreign_keys = ON')->execute();
+                        return $connection;
+                    },
                     ...$definitions,
                 ]);
             $this->container = new Container($config);
