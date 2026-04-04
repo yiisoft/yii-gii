@@ -10,6 +10,7 @@ use Yiisoft\Aliases\Aliases;
 use Yiisoft\Db\Connection\ConnectionInterface;
 use Yiisoft\Db\Constraint\ForeignKeyConstraint;
 use Yiisoft\Db\Expression\ExpressionInterface;
+use Yiisoft\Db\Schema\Column\ColumnInterface;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\Yii\Gii\Component\CodeFile\CodeFile;
@@ -86,7 +87,7 @@ final class Generator extends AbstractGenerator
                 $column = new Column(
                     name: $columnName,
                     type: $phpType,
-                    isAllowNull: $columnSchema->isAllowNull(),
+                    isAllowNull: !$columnSchema->isNotNull(),
                     defaultValue: $defaultValue,
                     isPrimaryKey: in_array($columnName, $primaryKeys, true),
                     isAutoIncrement: $columnSchema->isAutoIncrement(),
@@ -129,7 +130,7 @@ final class Generator extends AbstractGenerator
     /**
      * Gets the PHP type for a column using reflection of phpTypecast() return type.
      */
-    private function getPhpType($columnSchema): string
+    private function getPhpType(ColumnInterface $columnSchema): string
     {
         try {
             $reflection = new \ReflectionMethod($columnSchema, 'phpTypecast');
@@ -192,7 +193,7 @@ final class Generator extends AbstractGenerator
     /**
      * Checks if a column has a database default expression.
      */
-    private function hasDbDefaultExpression($columnSchema): bool
+    private function hasDbDefaultExpression(ColumnInterface $columnSchema): bool
     {
         $defaultValue = $columnSchema->getDefaultValue();
 
