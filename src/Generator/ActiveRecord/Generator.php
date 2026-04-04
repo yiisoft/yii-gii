@@ -148,20 +148,45 @@ final class Generator extends AbstractGenerator
                     default => 'mixed',
                 };
             }
+
+            // Handle union types (e.g., int|string|null)
+            if ($returnType instanceof \ReflectionUnionType) {
+                $types = [];
+                foreach ($returnType->getTypes() as $type) {
+                    if ($type instanceof ReflectionNamedType) {
+                        $types[] = $type->getName();
+                    }
+                }
+
+                // If union contains null, filter it out for now and mark as nullable
+                $types = array_filter($types, fn($t) => $t !== 'null');
+
+                // Return the first non-null type, or 'mixed' if multiple non-null types
+                if (count($types) === 1) {
+                    $typeName = reset($types);
+                    return match ($typeName) {
+                        'integer', 'int' => 'int',
+                        'boolean', 'bool' => 'bool',
+                        'double', 'float' => 'float',
+                        'string' => 'string',
+                        'array' => 'array',
+                        default => 'mixed',
+                    };
+                }
+
+                return 'mixed';
+            }
+
+            // Handle intersection types (e.g., Countable&Iterator)
+            if ($returnType instanceof \ReflectionIntersectionType) {
+                // For intersection types, we can't represent them simply, use 'mixed'
+                return 'mixed';
+            }
         } catch (\ReflectionException) {
-            // Fall back to getPhpType() if reflection fails
+            // If reflection fails, default to 'string'
         }
 
-        // Fallback to using getPhpType() method
-        $phpType = $columnSchema->getPhpType();
-
-        return match ($phpType) {
-            'integer' => 'int',
-            'boolean' => 'bool',
-            'double' => 'float',
-            'resource' => 'string', // Binary data often represented as string
-            default => 'string',
-        };
+        return 'string';
     }
 
     /**
