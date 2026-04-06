@@ -76,7 +76,7 @@ final class ActiveRecordGeneratorTest extends TestCase
         $content = reset($files)->getContent();
 
         // Should have default value for is_verified column
-        $this->assertStringContainsString("\$is_verified = false;", $content);
+        $this->assertStringContainsString('$is_verified = false;', $content);
     }
 
     public function testGenerateWithPrivateProperties(): void
