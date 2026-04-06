@@ -35,6 +35,7 @@ final class Column
             return '';
         }
 
+        /** @psalm-suppress MixedArgument */
         return match (gettype($this->defaultValue)) {
             'string' => "'" . addslashes($this->defaultValue) . "'",
             'boolean' => $this->defaultValue ? 'true' : 'false',

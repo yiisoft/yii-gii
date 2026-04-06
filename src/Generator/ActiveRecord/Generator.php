@@ -8,9 +8,9 @@ use InvalidArgumentException;
 use ReflectionNamedType;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Db\Connection\ConnectionInterface;
-use Yiisoft\Db\Constraint\ForeignKeyConstraint;
 use Yiisoft\Db\Expression\ExpressionInterface;
 use Yiisoft\Db\Schema\Column\ColumnInterface;
+use Yiisoft\Db\Schema\TableSchemaInterface;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\Yii\Gii\Component\CodeFile\CodeFile;
@@ -179,9 +179,7 @@ final class Generator extends AbstractGenerator
             if ($returnType instanceof \ReflectionIntersectionType) {
                 $types = [];
                 foreach ($returnType->getTypes() as $type) {
-                    if ($type instanceof ReflectionNamedType) {
-                        $types[] = $type->getName();
-                    }
+                    $types[] = $type->getName();
                 }
 
                 // Return the intersection type string
@@ -210,7 +208,7 @@ final class Generator extends AbstractGenerator
      *
      * @return array<Relation>
      */
-    private function generateRelations(Command $command, $schema): array
+    private function generateRelations(Command $command, TableSchemaInterface $schema): array
     {
         $relations = [];
         $inflector = new Inflector();
@@ -221,21 +219,17 @@ final class Generator extends AbstractGenerator
             $foreignKeys = $schema->getForeignKeys();
 
             foreach ($foreignKeys as $fk) {
-                if (!$fk instanceof ForeignKeyConstraint) {
-                    continue;
-                }
-
-                $foreignTableName = $fk->getForeignTableName();
+                $foreignTableName = $fk->foreignTableName;
                 $relatedModelName = $inflector->tableToClass($foreignTableName);
                 $relatedModelClass = $command->getNamespace() . '\\' . $relatedModelName;
 
                 // Create relation name from foreign key columns
-                $relationName = $this->generateRelationName($fk->getColumnNames(), $relatedModelName);
+                $relationName = $this->generateRelationName($fk->columnNames, $relatedModelName);
 
                 // Build link array [foreign_column => local_column]
                 $link = [];
-                foreach ($fk->getColumnNames() as $index => $columnName) {
-                    $foreignColumnName = $fk->getForeignColumnNames()[$index] ?? 'id';
+                foreach ($fk->columnNames as $index => $columnName) {
+                    $foreignColumnName = $fk->foreignColumnNames[$index] ?? 'id';
                     $link[$foreignColumnName] = $columnName;
                 }
 

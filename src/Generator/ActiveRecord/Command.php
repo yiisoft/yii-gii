@@ -16,9 +16,8 @@ use Yiisoft\Yii\Gii\Validator\TemplateRule;
 final class Command extends AbstractGeneratorCommand
 {
     public function __construct(
-        #[Required(message: 'A code template must be selected.')]
-        #[TemplateRule]
-        $template = 'default',
+
+        string $template = 'default',
         #[Required]
         #[Regex(
             pattern: '/^[a-z][a-z0-9]*(?:\\[a-z][a-z0-9]*)*$/i',
