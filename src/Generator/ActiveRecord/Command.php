@@ -16,9 +16,12 @@ use Yiisoft\Yii\Gii\Validator\TemplateRule;
 final class Command extends AbstractGeneratorCommand
 {
     public function __construct(
+        #[Required(message: 'A code template must be selected.')]
+        #[TemplateRule]
+        $template = 'default',
         #[Required]
         #[Regex(
-            pattern: '/^(?:[a-z][a-z0-9]*)(?:\\\\[a-z][a-z0-9]*)*$/i',
+            pattern: '/^[a-z][a-z0-9]*(?:\\[a-z][a-z0-9]*)*$/i',
             message: 'Invalid namespace'
         )]
         private readonly string $namespace = 'App\\Model',
@@ -36,9 +39,6 @@ final class Command extends AbstractGeneratorCommand
         )]
         #[ClassExistsRule]
         private readonly string $baseClass = ActiveRecord::class,
-        #[Required(message: 'A code template must be selected.')]
-        #[TemplateRule]
-        protected string $template = 'default',
         private readonly string $propertyVisibility = 'protected',
         private readonly bool $generateGettersSetters = true,
         private readonly bool $generateRelations = true,
