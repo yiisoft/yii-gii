@@ -7,13 +7,13 @@ namespace Yiisoft\Yii\Gii\Generator\ActiveRecord;
 final class Column
 {
     public function __construct(
-        public string $name,
-        public string $type,
-        public bool $isAllowNull,
-        public mixed $defaultValue,
-        public bool $isPrimaryKey = false,
-        public bool $isAutoIncrement = false,
-        public bool $hasDbDefaultExpression = false,
+        public readonly string $name,
+        public readonly string $type,
+        public readonly bool $isAllowNull,
+        public readonly mixed $defaultValue,
+        public readonly bool $isPrimaryKey = false,
+        public readonly bool $isAutoIncrement = false,
+        public readonly bool $hasDbDefaultExpression = false,
         public bool $isUsedInRelation = false,
     ) {
     }

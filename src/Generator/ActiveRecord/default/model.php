@@ -17,16 +17,16 @@ echo "<?php\n";
 
 declare(strict_types=1);
 
-namespace <?= $command->getNamespace() ?>;
+namespace <?= $command->namespace ?>;
 
-use <?= $command->getBaseClass() ?>;
-<?php if ($command->isUseRepositoryTrait()): ?>
+use <?= $command->baseClass ?>;
+<?php if ($command->useRepositoryTrait): ?>
 use Yiisoft\ActiveRecord\Trait\RepositoryTrait;
 <?php endif; ?>
-<?php if ($command->isUsePrivatePropertiesTrait()): ?>
+<?php if ($command->usePrivatePropertiesTrait): ?>
 use Yiisoft\ActiveRecord\Trait\PrivatePropertiesTrait;
 <?php endif; ?>
-<?php if ($command->isGenerateRelations() && !empty($relations)): ?>
+<?php if ($command->generateRelations && !empty($relations)): ?>
 use Yiisoft\ActiveRecord\ActiveQueryInterface;
 <?php endif; ?>
 <?php
@@ -37,22 +37,22 @@ foreach ($relations as $relation) {
 }
 foreach (array_keys($relatedModels) as $relatedModel):
 ?>
-use <?= $command->getNamespace() . '\\' . $relatedModel ?>;
+use <?= $command->namespace . '\\' . $relatedModel ?>;
 <?php endforeach; ?>
 
-final class <?= $command->getModelName(); ?> extends <?= StringHelper::baseName($command->getBaseClass()) . PHP_EOL ?>
+final class <?= $command->getModelName(); ?> extends <?= StringHelper::baseName($command->baseClass) . PHP_EOL ?>
 {
-<?php if ($command->isUseRepositoryTrait()): ?>
+<?php if ($command->useRepositoryTrait): ?>
     use RepositoryTrait;
 <?php endif; ?>
-<?php if ($command->isUsePrivatePropertiesTrait()): ?>
+<?php if ($command->usePrivatePropertiesTrait): ?>
     use PrivatePropertiesTrait;
 <?php endif; ?>
-<?php if ($command->isUseRepositoryTrait() || $command->isUsePrivatePropertiesTrait()): ?>
+<?php if ($command->useRepositoryTrait || $command->usePrivatePropertiesTrait): ?>
 
 <?php endif; ?>
 <?php foreach ($properties as $property): ?>
-    <?= $command->getPropertyVisibility() ?> <?=sprintf(
+    <?= $command->propertyVisibility ?> <?=sprintf(
         '%s%s $%s%s',
         $property->isAllowNull ? '?' : '',
         $property->type,
@@ -86,9 +86,9 @@ foreach ($properties as $property) {
 <?php endif; ?>
     public function tableName(): string
     {
-        return '<?= $command->getTableName() ?>';
+        return '<?= $command->tableName ?>';
     }
-<?php if ($command->isGenerateGettersSetters()): ?>
+<?php if ($command->generateGettersSetters): ?>
 <?php foreach ($properties as $property): ?>
 
     public function get<?= ucfirst($property->name) ?>(): <?= ($property->isAllowNull || $property->canBeUninitialized() ? '?' : '') . $property->type . PHP_EOL ?>
@@ -110,7 +110,7 @@ foreach ($properties as $property) {
     }
 <?php endforeach; ?>
 <?php endif; ?>
-<?php if ($command->isGenerateRelations() && !empty($relations)): ?>
+<?php if ($command->generateRelations && !empty($relations)): ?>
 
     public function relationQuery(string $name): ActiveQueryInterface
     {

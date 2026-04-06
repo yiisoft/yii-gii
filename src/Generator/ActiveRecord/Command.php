@@ -18,76 +18,36 @@ final class Command extends AbstractGeneratorCommand
         string $template = 'default',
         #[Required]
         #[Regex(
-            pattern: '/^(?:[a-z][a-z0-9]*)(?:\\\\[a-z][a-z0-9]*)*$/i',
+            pattern: '/^[a-z][a-z0-9]*(?:\\\\[a-z][a-z0-9]*)*$/i',
             message: 'Invalid namespace'
         )]
-        private readonly string $namespace = 'App\\Model',
+        public readonly string $namespace = 'App\\Model',
         #[Required]
         #[Regex(
             pattern: '/^[\w\-.]+$/i',
             message: 'Invalid table name'
         )]
         #[TableExistsRule]
-        private readonly string $tableName = 'user',
+        public readonly string $tableName = 'user',
         #[Regex(
             pattern: '/^[a-z\\\\]*$/i',
             message: 'Only word characters and backslashes are allowed.',
             skipOnEmpty: true,
         )]
         #[ClassExistsRule]
-        private readonly string $baseClass = ActiveRecord::class,
-        private readonly string $propertyVisibility = 'protected',
-        private readonly bool $generateGettersSetters = true,
-        private readonly bool $generateRelations = true,
-        private readonly bool $useRepositoryTrait = false,
-        private readonly bool $usePrivatePropertiesTrait = false,
+        public readonly string $baseClass = ActiveRecord::class,
+        public readonly string $propertyVisibility = 'protected',
+        public readonly bool $generateGettersSetters = true,
+        public readonly bool $generateRelations = true,
+        public readonly bool $useRepositoryTrait = false,
+        public readonly bool $usePrivatePropertiesTrait = false,
     ) {
         parent::__construct($template);
-    }
-
-    public function getNamespace(): string
-    {
-        return $this->namespace;
-    }
-
-    public function getBaseClass(): string
-    {
-        return $this->baseClass;
-    }
-
-    public function getTableName(): string
-    {
-        return $this->tableName;
     }
 
     public function getModelName(): string
     {
         return (new Inflector())->tableToClass($this->tableName);
-    }
-
-    public function getPropertyVisibility(): string
-    {
-        return $this->propertyVisibility;
-    }
-
-    public function isGenerateGettersSetters(): bool
-    {
-        return $this->generateGettersSetters;
-    }
-
-    public function isGenerateRelations(): bool
-    {
-        return $this->generateRelations;
-    }
-
-    public function isUseRepositoryTrait(): bool
-    {
-        return $this->useRepositoryTrait;
-    }
-
-    public function isUsePrivatePropertiesTrait(): bool
-    {
-        return $this->usePrivatePropertiesTrait;
     }
 
     public static function getAttributeLabels(): array

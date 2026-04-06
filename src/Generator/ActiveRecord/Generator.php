@@ -74,7 +74,7 @@ final class Generator extends AbstractGenerator
         $properties = [];
         $relations = [];
 
-        if ($schema = $this->connection->getTableSchema($command->getTableName(), true)) {
+        if ($schema = $this->connection->getTableSchema($command->tableName, true)) {
             $primaryKeys = $schema->getPrimaryKey();
 
             // First pass: create columns
@@ -106,7 +106,7 @@ final class Generator extends AbstractGenerator
             }
 
             // Generate relations if requested
-            if ($command->isGenerateRelations()) {
+            if ($command->generateRelations) {
                 $relations = $this->generateRelations($command, $schema);
 
                 // Mark columns used in relations
@@ -194,7 +194,7 @@ final class Generator extends AbstractGenerator
     {
         $relations = [];
         $inflector = new Inflector();
-        $tableName = $command->getTableName();
+        $tableName = $command->tableName;
 
         // Get foreign keys from this table to other tables
         try {
@@ -203,7 +203,7 @@ final class Generator extends AbstractGenerator
             foreach ($foreignKeys as $fk) {
                 $foreignTableName = $fk->foreignTableName;
                 $relatedModelName = $inflector->tableToClass($foreignTableName);
-                $relatedModelClass = $command->getNamespace() . '\\' . $relatedModelName;
+                $relatedModelClass = $command->namespace . '\\' . $relatedModelName;
 
                 // Create relation name from foreign key columns
                 $relationName = $this->generateRelationName($fk->columnNames, $relatedModelName);
