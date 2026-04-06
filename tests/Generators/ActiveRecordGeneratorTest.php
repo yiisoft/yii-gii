@@ -36,7 +36,8 @@ final class ActiveRecordGeneratorTest extends TestCase
             template: 'default',
             namespace: 'App\\Model',
             tableName: 'user',
-            baseClass: ActiveRecord::class, generateGettersSetters: true,
+            baseClass: ActiveRecord::class,
+            generateGettersSetters: true,
         );
 
         $files = $generator->generate($command);
@@ -172,7 +173,8 @@ final class ActiveRecordGeneratorTest extends TestCase
             template: 'default',
             namespace: 'App\\Model',
             tableName: 'user_profile',
-            baseClass: ActiveRecord::class, generateRelations: true,
+            baseClass: ActiveRecord::class,
+            generateRelations: true,
         );
 
         $files = $generator->generate($command);
