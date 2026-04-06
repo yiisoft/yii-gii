@@ -11,12 +11,10 @@ use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Yii\Gii\Generator\AbstractGeneratorCommand;
 use Yiisoft\Yii\Gii\Validator\ClassExistsRule;
 use Yiisoft\Yii\Gii\Validator\TableExistsRule;
-use Yiisoft\Yii\Gii\Validator\TemplateRule;
 
 final class Command extends AbstractGeneratorCommand
 {
     public function __construct(
-
         string $template = 'default',
         #[Required]
         #[Regex(
