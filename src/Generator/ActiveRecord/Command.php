@@ -18,7 +18,7 @@ final class Command extends AbstractGeneratorCommand
         string $template = 'default',
         #[Required]
         #[Regex(
-            pattern: '/^[a-z][a-z0-9]*(?:\\[a-z][a-z0-9]*)*$/i',
+            pattern: '/^(?:[a-z][a-z0-9]*)(?:\\\\[a-z][a-z0-9]*)*$/i',
             message: 'Invalid namespace'
         )]
         private readonly string $namespace = 'App\\Model',

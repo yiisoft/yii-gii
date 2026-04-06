@@ -18,10 +18,10 @@ final class ActiveRecordGeneratorTest extends TestCase
     {
         $generator = $this->createGenerator();
         $command = new Command(
+            template: 'default',
             namespace: 'App\\Model',
             tableName: 'user',
             baseClass: ActiveRecord::class,
-            template: 'default',
         );
 
         $files = $generator->generate($command);
@@ -33,10 +33,10 @@ final class ActiveRecordGeneratorTest extends TestCase
     {
         $generator = $this->createGenerator();
         $command = new Command(
+            template: 'default',
             namespace: 'App\\Model',
             tableName: 'user',
             baseClass: ActiveRecord::class,
-            template: 'default',
             generateGettersSetters: true,
         );
 
@@ -44,75 +44,100 @@ final class ActiveRecordGeneratorTest extends TestCase
         $content = reset($files)->getContent();
 
         $this->assertStringContainsString('public function getId(): ?int', $content);
-        $this->assertStringContainsString('public function setId(?int $id): void', $content);
-        $this->assertStringContainsString('public function getUsername(): string', $content);
-        $this->assertStringContainsString('public function setUsername(string $username): void', $content);
-        $this->assertStringContainsString('public function getStatus(): string', $content);
+        $this->assertStringContainsString('public function setId(int $id): void', $content);
+        $this->assertStringContainsString('public function getEmail(): ?string', $content);
+        $this->assertStringContainsString('public function setEmail(string $email): void', $content);
+        $this->assertStringContainsString('public function getName(): ?string', $content);
+        $this->assertStringContainsString('public function setName(?string $name): void', $content);
+        $this->assertStringContainsString('public function getAddress(): ?string', $content);
+        $this->assertStringContainsString('public function setAddress(?string $address): void', $content);
+        $this->assertStringContainsString('public function getAge(): ?int', $content);
+        $this->assertStringContainsString('public function setAge(?int $age): void', $content);
+        $this->assertStringContainsString('public function getProfile_id(): ?int', $content);
+        $this->assertStringContainsString('public function setProfile_id(?int $profile_id): void', $content);
+        $this->assertStringContainsString('public function getScore(): ?float', $content);
+        $this->assertStringContainsString('public function setScore(?float $score): void', $content);
+        $this->assertStringContainsString('public function getIs_verified(): bool', $content);
+        $this->assertStringContainsString('public function setIs_verified(bool $is_verified): void', $content);
+        $this->assertStringContainsString('public function getCreated_at(): ?\\DateTimeImmutable', $content);
+        $this->assertStringContainsString('public function setCreated_at(\\DateTimeImmutable $created_at): void', $content);
     }
 
     public function testGenerateWithDefaultValues(): void
     {
         $generator = $this->createGenerator();
         $command = new Command(
+            template: 'default',
             namespace: 'App\\Model',
             tableName: 'user',
             baseClass: ActiveRecord::class,
-            template: 'default',
         );
 
         $files = $generator->generate($command);
         $content = reset($files)->getContent();
 
-        // Should have default value for status column
-        $this->assertStringContainsString("\$status = 'active'", $content);
-        // Should have default value for is_active column
-        $this->assertStringContainsString('$is_active = 1', $content);
+        // Should have default value for is_verified column
+        $this->assertStringContainsString("\$is_verified = false;", $content);
     }
 
     public function testGenerateWithPrivateProperties(): void
     {
         $generator = $this->createGenerator();
         $command = new Command(
+            template: 'default',
             namespace: 'App\\Model',
             tableName: 'user',
             baseClass: ActiveRecord::class,
-            template: 'default',
             propertyVisibility: 'private',
         );
 
         $files = $generator->generate($command);
         $content = reset($files)->getContent();
 
-        $this->assertStringContainsString('private int $id', $content);
-        $this->assertStringContainsString('private string $username', $content);
+        $this->assertStringContainsString('private int $id;', $content);
+        $this->assertStringContainsString('private string $email;', $content);
+        $this->assertStringContainsString('private ?string $name;', $content);
+        $this->assertStringContainsString('private ?string $address;', $content);
+        $this->assertStringContainsString('private ?int $age;', $content);
+        $this->assertStringContainsString('private ?int $profile_id;', $content);
+        $this->assertStringContainsString('private ?float $score;', $content);
+        $this->assertStringContainsString('private bool $is_verified', $content);
+        $this->assertStringContainsString('private \\DateTimeImmutable $created_at;', $content);
     }
 
     public function testGenerateWithPublicProperties(): void
     {
         $generator = $this->createGenerator();
         $command = new Command(
+            template: 'default',
             namespace: 'App\\Model',
             tableName: 'user',
             baseClass: ActiveRecord::class,
-            template: 'default',
             propertyVisibility: 'public',
         );
 
         $files = $generator->generate($command);
         $content = reset($files)->getContent();
 
-        $this->assertStringContainsString('public int $id', $content);
-        $this->assertStringContainsString('public string $username', $content);
+        $this->assertStringContainsString('public int $id;', $content);
+        $this->assertStringContainsString('public string $email;', $content);
+        $this->assertStringContainsString('public ?string $name;', $content);
+        $this->assertStringContainsString('public ?string $address;', $content);
+        $this->assertStringContainsString('public ?int $age;', $content);
+        $this->assertStringContainsString('public ?int $profile_id;', $content);
+        $this->assertStringContainsString('public ?float $score;', $content);
+        $this->assertStringContainsString('public bool $is_verified', $content);
+        $this->assertStringContainsString('public \\DateTimeImmutable $created_at;', $content);
     }
 
     public function testGenerateWithRepositoryTrait(): void
     {
         $generator = $this->createGenerator();
         $command = new Command(
+            template: 'default',
             namespace: 'App\\Model',
             tableName: 'user',
             baseClass: ActiveRecord::class,
-            template: 'default',
             useRepositoryTrait: true,
         );
 
@@ -127,10 +152,10 @@ final class ActiveRecordGeneratorTest extends TestCase
     {
         $generator = $this->createGenerator();
         $command = new Command(
+            template: 'default',
             namespace: 'App\\Model',
             tableName: 'user',
             baseClass: ActiveRecord::class,
-            template: 'default',
             usePrivatePropertiesTrait: true,
         );
 
@@ -145,10 +170,10 @@ final class ActiveRecordGeneratorTest extends TestCase
     {
         $generator = $this->createGenerator();
         $command = new Command(
+            template: 'default',
             namespace: 'App\\Model',
             tableName: 'user_profile',
             baseClass: ActiveRecord::class,
-            template: 'default',
             generateRelations: true,
         );
 
@@ -166,49 +191,54 @@ final class ActiveRecordGeneratorTest extends TestCase
     {
         $generator = $this->createGenerator();
         $command = new Command(
+            template: 'default',
             namespace: 'App\\Model',
             tableName: 'user',
             baseClass: ActiveRecord::class,
-            template: 'default',
         );
 
         $files = $generator->generate($command);
         $content = reset($files)->getContent();
 
-        // Email column is nullable
-        $this->assertStringContainsString('?string $email', $content);
-        // Username is not nullable
-        $this->assertStringContainsString('string $username', $content);
+        // Email column is not nullable
+        $this->assertStringContainsString('string $email;', $content);
+        // Name is nullable
+        $this->assertStringContainsString('?string $name;', $content);
     }
 
     public function testGenerateWithDifferentTypes(): void
     {
         $generator = $this->createGenerator();
         $command = new Command(
+            template: 'default',
             namespace: 'App\\Model',
             tableName: 'user',
             baseClass: ActiveRecord::class,
-            template: 'default',
         );
 
         $files = $generator->generate($command);
         $content = reset($files)->getContent();
 
         // Test various PHP types
-        $this->assertStringContainsString('int $id', $content);
-        $this->assertStringContainsString('string $username', $content);
-        $this->assertStringContainsString('?int $age', $content);
-        $this->assertStringContainsString('?float $balance', $content);
+        $this->assertStringContainsString('int $id;', $content);
+        $this->assertStringContainsString('string $email;', $content);
+        $this->assertStringContainsString('?string $name;', $content);
+        $this->assertStringContainsString('?string $address;', $content);
+        $this->assertStringContainsString('?int $age;', $content);
+        $this->assertStringContainsString('?int $profile_id;', $content);
+        $this->assertStringContainsString('?float $score;', $content);
+        $this->assertStringContainsString('bool $is_verified', $content);
+        $this->assertStringContainsString('\\DateTimeImmutable $created_at;', $content);
     }
 
     public function testInvalidTableName(): void
     {
         $generator = $this->createGenerator();
         $command = new Command(
+            template: 'default',
             namespace: 'App\\Model',
             tableName: 'user2',
             baseClass: ActiveRecord::class,
-            template: 'default',
         );
 
         $this->expectException(InvalidGeneratorCommandException::class);
@@ -223,8 +253,8 @@ final class ActiveRecordGeneratorTest extends TestCase
             ],
         );
         $command = new Command(
-            namespace: '0App',
             template: 'test',
+            namespace: '0App',
         );
 
         $this->expectException(InvalidGeneratorCommandException::class);
@@ -241,10 +271,10 @@ final class ActiveRecordGeneratorTest extends TestCase
             ],
         );
         $command = new Command(
+            template: 'custom',
             namespace: 'App\\Model',
             tableName: 'user',
             baseClass: ActiveRecord::class,
-            template: 'custom',
         );
 
         $files = $generator->generate($command);

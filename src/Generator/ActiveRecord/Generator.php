@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\Gii\Generator\ActiveRecord;
 
 use InvalidArgumentException;
+use ReflectionIntersectionType;
+use ReflectionMethod;
 use ReflectionNamedType;
+use ReflectionUnionType;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Db\Connection\ConnectionInterface;
 use Yiisoft\Db\Expression\ExpressionInterface;
@@ -136,39 +139,18 @@ final class Generator extends AbstractGenerator
     private function getPhpType(ColumnInterface $columnSchema): string
     {
         try {
-            $reflection = new \ReflectionMethod($columnSchema, 'phpTypecast');
+            $reflection = new ReflectionMethod($columnSchema, 'phpTypecast');
             $returnType = $reflection->getReturnType();
 
             if ($returnType instanceof ReflectionNamedType) {
-                $typeName = $returnType->getName();
-
-                // Map PHP type names to their short forms, or return the class name
-                return match ($typeName) {
-                    'integer', 'int' => 'int',
-                    'boolean', 'bool' => 'bool',
-                    'double', 'float' => 'float',
-                    'string' => 'string',
-                    'array' => 'array',
-                    default => $typeName, // Return the actual type/class name
-                };
+                return ($returnType->isBuiltin() ? '' : '\\') . $returnType->getName();
             }
 
             // Handle union types (e.g., int|string|null)
-            if ($returnType instanceof \ReflectionUnionType) {
+            if ($returnType instanceof ReflectionUnionType) {
                 $types = [];
                 foreach ($returnType->getTypes() as $type) {
-                    if ($type instanceof ReflectionNamedType) {
-                        $typeName = $type->getName();
-                        // Map type names to their short forms
-                        $types[] = match ($typeName) {
-                            'integer', 'int' => 'int',
-                            'boolean', 'bool' => 'bool',
-                            'double', 'float' => 'float',
-                            'string' => 'string',
-                            'array' => 'array',
-                            default => $typeName,
-                        };
-                    }
+                    $types[] = ($type->isBuiltin() ? '' : '\\') . $type->getName();
                 }
 
                 // Return the union type string
@@ -176,10 +158,10 @@ final class Generator extends AbstractGenerator
             }
 
             // Handle intersection types (e.g., Countable&Iterator)
-            if ($returnType instanceof \ReflectionIntersectionType) {
+            if ($returnType instanceof ReflectionIntersectionType) {
                 $types = [];
                 foreach ($returnType->getTypes() as $type) {
-                    $types[] = $type->getName();
+                    $types[] = ($type->isBuiltin() ? '' : '\\') . $type->getName();
                 }
 
                 // Return the intersection type string
