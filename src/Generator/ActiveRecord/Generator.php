@@ -142,14 +142,14 @@ final class Generator extends AbstractGenerator
             if ($returnType instanceof ReflectionNamedType) {
                 $typeName = $returnType->getName();
 
-                // Map PHP type names to their short forms
+                // Map PHP type names to their short forms, or return the class name
                 return match ($typeName) {
                     'integer', 'int' => 'int',
                     'boolean', 'bool' => 'bool',
                     'double', 'float' => 'float',
                     'string' => 'string',
                     'array' => 'array',
-                    default => 'mixed',
+                    default => $typeName, // Return the actual type/class name
                 };
             }
 
@@ -158,33 +158,34 @@ final class Generator extends AbstractGenerator
                 $types = [];
                 foreach ($returnType->getTypes() as $type) {
                     if ($type instanceof ReflectionNamedType) {
-                        $types[] = $type->getName();
+                        $typeName = $type->getName();
+                        // Map type names to their short forms
+                        $types[] = match ($typeName) {
+                            'integer', 'int' => 'int',
+                            'boolean', 'bool' => 'bool',
+                            'double', 'float' => 'float',
+                            'string' => 'string',
+                            'array' => 'array',
+                            default => $typeName,
+                        };
                     }
                 }
 
-                // If union contains null, filter it out for now and mark as nullable
-                $types = array_filter($types, fn($t) => $t !== 'null');
-
-                // Return the first non-null type, or 'mixed' if multiple non-null types
-                if (count($types) === 1) {
-                    $typeName = reset($types);
-                    return match ($typeName) {
-                        'integer', 'int' => 'int',
-                        'boolean', 'bool' => 'bool',
-                        'double', 'float' => 'float',
-                        'string' => 'string',
-                        'array' => 'array',
-                        default => 'mixed',
-                    };
-                }
-
-                return 'mixed';
+                // Return the union type string
+                return implode('|', $types);
             }
 
             // Handle intersection types (e.g., Countable&Iterator)
             if ($returnType instanceof \ReflectionIntersectionType) {
-                // For intersection types, we can't represent them simply, use 'mixed'
-                return 'mixed';
+                $types = [];
+                foreach ($returnType->getTypes() as $type) {
+                    if ($type instanceof ReflectionNamedType) {
+                        $types[] = $type->getName();
+                    }
+                }
+
+                // Return the intersection type string
+                return implode('&', $types);
             }
         } catch (\ReflectionException) {
             // If reflection fails, default to 'string'
