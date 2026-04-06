@@ -91,7 +91,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
                     ConnectionInterface::class => [
                         'class' => SqliteConnection::class,
                         '__construct()' => [
-                            new Driver('sqlite::memory:'),
+                            new Driver('sqlite:' . __DIR__ . '/Support/test.db'),
                         ],
                     ],
                     ...$definitions,
