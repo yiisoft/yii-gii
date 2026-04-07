@@ -11,7 +11,6 @@ use ReflectionNamedType;
 use ReflectionUnionType;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Db\Connection\ConnectionInterface;
-use Yiisoft\Db\Expression\ExpressionInterface;
 use Yiisoft\Db\Schema\Column\ColumnInterface;
 use Yiisoft\Db\Schema\TableSchemaInterface;
 use Yiisoft\Strings\Inflector;
