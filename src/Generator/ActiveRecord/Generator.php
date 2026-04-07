@@ -5,11 +5,8 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\Gii\Generator\ActiveRecord;
 
 use InvalidArgumentException;
-use Throwable;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Db\Connection\ConnectionInterface;
-use Yiisoft\Db\Schema\TableSchemaInterface;
-use Yiisoft\Strings\Inflector;
 use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\Yii\Gii\Component\CodeFile\CodeFile;
 use Yiisoft\Yii\Gii\Generator\AbstractGenerator;
