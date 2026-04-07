@@ -100,7 +100,9 @@ abstract class BaseGenerateCommand extends Command
             } else {
                 $output->writeln("    <fg=$color>[changed]</>   <fg=blue>$path</>");
                 if ($skipAll !== null) {
-                    $answers[$file->getId()] = CodeFileWriteOperationEnum::SAVE->value;
+                    $answers[$file->getId()] = $skipAll
+                        ? CodeFileWriteOperationEnum::SKIP->value
+                        : CodeFileWriteOperationEnum::SAVE->value;
                 } else {
                     $answer = $this->choice($input, $output);
                     $answers[$file->getId()] = ($answer === 'y' || $answer === 'ya')
