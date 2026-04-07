@@ -18,7 +18,7 @@ final class Property
     public bool $usedInRelation = false;
 
     public function __construct(
-        private ColumnInterface $column,
+        private readonly ColumnInterface $column,
     ) {
     }
 
