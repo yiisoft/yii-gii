@@ -12,6 +12,8 @@ use Yiisoft\Yii\Gii\Component\CodeFile\CodeFileWriter;
 use Yiisoft\Yii\Gii\GiiInterface;
 use Yiisoft\Yii\Gii\Tests\TestCase;
 
+use function file_exists;
+
 final class ActiveRecordCommandTest extends TestCase
 {
     public function setUp(): void

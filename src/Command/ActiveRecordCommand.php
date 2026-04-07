@@ -15,6 +15,9 @@ use Yiisoft\Yii\Gii\GeneratorInterface;
 
 use function filter_var;
 
+use function in_array;
+use function strtolower;
+
 use const FILTER_VALIDATE_BOOL;
 
 /**
@@ -76,6 +79,6 @@ final class ActiveRecordCommand extends BaseGenerateCommand
             return $default;
         }
 
-        return filter_var($value, FILTER_VALIDATE_BOOL);
+        return in_array(strtolower((string) $value), ['1', 't', 'true', 'y', 'yes', 'on'], true);
     }
 }
