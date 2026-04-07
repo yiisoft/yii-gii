@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii\Generator\ActiveRecord;
 
+use Yiisoft\Db\Expression\ExpressionInterface;
 use Yiisoft\Strings\Inflector;
 
 final class Column
@@ -15,7 +16,6 @@ final class Column
         public readonly mixed $defaultValue,
         public readonly bool $isPrimaryKey = false,
         public readonly bool $isAutoIncrement = false,
-        public readonly bool $hasDbDefaultExpression = false,
         public bool $isUsedInRelation = false,
     ) {
     }
@@ -26,11 +26,16 @@ final class Column
     }
 
     /**
-     * Returns true if the property should have a default value in the generated code.
+     * Returns true if the property has a default value with a built-in type.
      */
-    public function hasDefaultValue(): bool
+    public function isDefaultValueBuiltinType(): bool
     {
-        return $this->defaultValue !== null && !$this->hasDbDefaultExpression && !$this->isAutoIncrement;
+        return $this->defaultValue !== null && !$this->isAutoIncrement && !$this->isDefaultValueExpression();
+    }
+
+    public function isDefaultValueExpression(): bool
+    {
+        return $this->defaultValue instanceof ExpressionInterface;
     }
 
     /**
@@ -38,7 +43,7 @@ final class Column
      */
     public function getPhpDefaultValue(): string
     {
-        if (!$this->hasDefaultValue()) {
+        if (!$this->isDefaultValueBuiltinType()) {
             return '';
         }
 
@@ -58,7 +63,7 @@ final class Column
      */
     public function getDbExpressionInitializer(): string
     {
-        if (!$this->hasDbDefaultExpression) {
+        if (!$this->isDefaultValueExpression()) {
             return '';
         }
 
@@ -70,18 +75,6 @@ final class Column
 
         // Return the code to create a new instance of the expression
         return 'new \\' . $className . '(' . var_export($expressionSql, true) . ')';
-    }
-
-    /**
-     * Returns the fully qualified class name of the DB expression.
-     */
-    public function getDbExpressionClassName(): string
-    {
-        if (!$this->hasDbDefaultExpression) {
-            return '';
-        }
-
-        return '\\' . $this->defaultValue::class;
     }
 
     /**
@@ -98,7 +91,7 @@ final class Column
      */
     public function canBeUninitialized(): bool
     {
-        return $this->isAutoIncrement || !$this->hasDefaultValue();
+        return $this->isAutoIncrement || !$this->isDefaultValueBuiltinType();
     }
 
     /**

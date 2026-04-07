@@ -80,24 +80,17 @@ final class Generator extends AbstractGenerator
             // First pass: create columns
             $columnsMap = [];
             foreach ($schema->getColumns() as $columnSchema) {
-                $columnName = (string)$columnSchema->getName();
-                $phpType = $this->getPhpType($columnSchema);
-                $defaultValue = $columnSchema->getDefaultValue();
-
-                // Check if the column has a DB default expression (like CURRENT_TIMESTAMP, NOW(), etc.)
-                $hasDbDefaultExpression = $this->hasDbDefaultExpression($columnSchema);
-
+                $columnName = (string) $columnSchema->getName();
                 $isPrimaryKey = in_array($columnName, $primaryKeys, true);
 
                 $column = new Column(
                     name: $columnName,
-                    type: $phpType,
+                    type: $this->getPhpType($columnSchema),
                     // Primary keys are never NULL, even if not explicitly marked as NOT NULL
                     isAllowNull: !$isPrimaryKey && !$columnSchema->isNotNull(),
-                    defaultValue: $defaultValue,
+                    defaultValue: $columnSchema->getDefaultValue(),
                     isPrimaryKey: $isPrimaryKey,
                     isAutoIncrement: $columnSchema->isAutoIncrement(),
-                    hasDbDefaultExpression: $hasDbDefaultExpression,
                     isUsedInRelation: false,
                 );
 
@@ -172,17 +165,6 @@ final class Generator extends AbstractGenerator
         }
 
         return 'string';
-    }
-
-    /**
-     * Checks if a column has a database default expression.
-     */
-    private function hasDbDefaultExpression(ColumnInterface $columnSchema): bool
-    {
-        $defaultValue = $columnSchema->getDefaultValue();
-
-        // Check if default value is an expression object
-        return $defaultValue instanceof ExpressionInterface;
     }
 
     /**

@@ -57,7 +57,7 @@ final class <?= $command->getModelName(); ?> extends <?= StringHelper::baseName(
         $property->isAllowNull ? '?' : '',
         $property->type,
         $property->name,
-        $property->hasDefaultValue() ? ' = ' . $property->getPhpDefaultValue() : '',
+        $property->isDefaultValueBuiltinType() ? ' = ' . $property->getPhpDefaultValue() : '',
     )?>;
 <?php endforeach; ?>
 <?php if (!empty($properties)): ?>
@@ -67,7 +67,7 @@ final class <?= $command->getModelName(); ?> extends <?= StringHelper::baseName(
 // Check if we need a constructor for DB expression initialization
 $needsConstructor = false;
 foreach ($properties as $property) {
-    if ($property->hasDbDefaultExpression) {
+    if ($property->isDefaultValueExpression()) {
         $needsConstructor = true;
         break;
     }
@@ -77,7 +77,7 @@ foreach ($properties as $property) {
     public function __construct()
     {
 <?php foreach ($properties as $property): ?>
-<?php if ($property->hasDbDefaultExpression): ?>
+<?php if ($property->isDefaultValueExpression()): ?>
         $this-><?= $property->name ?> = <?= $property->getDbExpressionInitializer() ?>;
 <?php endif; ?>
 <?php endforeach; ?>
