@@ -19,7 +19,8 @@ final class Property
 
     public function __construct(
         private ColumnInterface $column,
-    ) {}
+    ) {
+    }
 
     public function getName(): string
     {
