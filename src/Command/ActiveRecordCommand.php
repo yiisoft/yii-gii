@@ -13,12 +13,8 @@ use Yiisoft\Yii\Gii\Generator\ActiveRecord\Generator;
 use Yiisoft\Yii\Gii\GeneratorCommandInterface;
 use Yiisoft\Yii\Gii\GeneratorInterface;
 
-use function filter_var;
-
 use function in_array;
 use function strtolower;
-
-use const FILTER_VALIDATE_BOOL;
 
 /**
  * This is the command line version of Gii - a code generator.
