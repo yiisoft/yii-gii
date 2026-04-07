@@ -78,7 +78,7 @@ final class Generator extends AbstractGenerator
 
                 // Mark columns used in relations
                 foreach ($relations as $relation) {
-                    foreach ($relation->link as $columnName) {
+                    foreach ($relation->getLink() as $columnName) {
                         if (isset($properties[$columnName])) {
                             $properties[$columnName]->usedInRelation = true;
                         }
@@ -114,24 +114,8 @@ final class Generator extends AbstractGenerator
         try {
             $foreignKeys = $schema->getForeignKeys();
 
-            foreach ($foreignKeys as $fk) {
-                $foreignTableName = $fk->foreignTableName;
-                $relatedModelName = $inflector->tableToClass($foreignTableName);
-
-                // Build link array [foreign_column => local_column]
-                $link = [];
-                foreach ($fk->columnNames as $index => $columnName) {
-                    $foreignColumnName = $fk->foreignColumnNames[$index] ?? 'id';
-                    $link[$foreignColumnName] = $columnName;
-                }
-
-                $relations[] = new Relation(
-                    name: lcfirst($relatedModelName),
-                    relatedModel: $relatedModelName,
-                    type: 'hasOne',
-                    link: $link,
-                    inverseOf: lcfirst($command->getModelName()),
-                );
+            foreach ($foreignKeys as $foreignKey) {
+                $relations[] = new Relation($foreignKey, $command->getModelName());
             }
         } catch (Throwable) {
             // If we can't get foreign keys, just skip relations

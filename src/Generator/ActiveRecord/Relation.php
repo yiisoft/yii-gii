@@ -4,18 +4,50 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii\Generator\ActiveRecord;
 
+use Yiisoft\Db\Constraint\ForeignKey;
+use Yiisoft\Strings\Inflector;
+
+use function lcfirst;
+
 final class Relation
 {
-    /**
-     * @param array<string, string> $link
-     */
     public function __construct(
-        public string $name,
-        public string $relatedModel,
-        public string $type,
-        public array $link,
-        public ?string $inverseOf = null,
+        private readonly ForeignKey $foreignKey,
+        private readonly string $modelName,
     ) {
+    }
+
+    public function getName(): string
+    {
+        return lcfirst($this->getRelatedModel());
+    }
+
+    public function getRelatedModel(): string
+    {
+        $foreignTableName = $this->foreignKey->foreignTableName;
+        return (new Inflector())->tableToClass($foreignTableName);
+    }
+
+    /**
+     * Build link array [foreign_column => local_column]
+     *
+     * @return string[]
+     */
+    public function getLink(): array
+    {
+        $link = [];
+
+        foreach ($this->foreignKey->columnNames as $index => $columnName) {
+            $foreignColumnName = $this->foreignKey->foreignColumnNames[$index] ?? 'id';
+            $link[$foreignColumnName] = $columnName;
+        }
+
+        return $link;
+    }
+
+    public function getInverseOf(): string
+    {
+        return lcfirst($this->modelName);
     }
 
     /**
@@ -23,7 +55,7 @@ final class Relation
      */
     public function getQueryMethodName(): string
     {
-        return 'get' . ucfirst($this->name) . 'Query';
+        return 'get' . $this->getRelatedModel() . 'Query';
     }
 
     /**
@@ -31,7 +63,7 @@ final class Relation
      */
     public function getGetterMethodName(): string
     {
-        return 'get' . ucfirst($this->name);
+        return 'get' . $this->getRelatedModel();
     }
 
     /**
@@ -39,7 +71,7 @@ final class Relation
      */
     public function isHasOne(): bool
     {
-        return $this->type === 'hasOne';
+        return true;
     }
 
     /**
@@ -47,7 +79,7 @@ final class Relation
      */
     public function isHasMany(): bool
     {
-        return $this->type === 'hasMany';
+        return false;
     }
 
     /**
@@ -59,6 +91,6 @@ final class Relation
             return 'array';
         }
 
-        return '?' . $this->relatedModel;
+        return '?' . $this->getRelatedModel();
     }
 }

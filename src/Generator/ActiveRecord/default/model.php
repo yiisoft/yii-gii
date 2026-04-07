@@ -33,7 +33,7 @@ use Yiisoft\ActiveRecord\ActiveQueryInterface;
 // Collect unique related model names for use statements
 $relatedModels = [];
 foreach ($relations as $relation) {
-    $relatedModels[$relation->relatedModel] = true;
+    $relatedModels[$relation->getRelatedModel()] = true;
 }
 foreach (array_keys($relatedModels) as $relatedModel):
 ?>
@@ -116,7 +116,7 @@ foreach ($properties as $property) {
     {
         return match ($name) {
 <?php foreach ($relations as $relation): ?>
-            '<?= $relation->name ?>' => $this-><?= $relation->getQueryMethodName() ?>(),
+            '<?= $relation->getName() ?>' => $this-><?= $relation->getQueryMethodName() ?>(),
 <?php endforeach; ?>
             default => parent::relationQuery($name),
         };
@@ -125,12 +125,12 @@ foreach ($properties as $property) {
 
     public function <?= $relation->getGetterMethodName() ?>(): <?= $relation->getGetterReturnType() . PHP_EOL ?>
     {
-        return $this->relation('<?= $relation->name ?>');
+        return $this->relation('<?= $relation->getName() ?>');
     }
 
     public function <?= $relation->getQueryMethodName() ?>(): ActiveQueryInterface
     {
-        return $this-><?= $relation->isHasOne() ? 'hasOne' : 'hasMany' ?>(<?= $relation->relatedModel ?>::class, <?= var_export($relation->link, true) ?>)<?= $relation->inverseOf !== null ? "->inverseOf('" . $relation->inverseOf . "')" : '' ?>;
+        return $this-><?= $relation->isHasOne() ? 'hasOne' : 'hasMany' ?>(<?= $relation->getRelatedModel() ?>::class, <?= var_export($relation->getLink(), true) ?>)<?= "->inverseOf('" . $relation->getInverseOf() . "')" ?>;
     }
 <?php endforeach; ?>
 <?php endif; ?>
