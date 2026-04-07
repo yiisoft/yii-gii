@@ -16,8 +16,6 @@ use Yiisoft\Yii\Gii\Generator\AbstractGenerator;
 use Yiisoft\Yii\Gii\GeneratorCommandInterface;
 use Yiisoft\Yii\Gii\ParametersProvider;
 
-use function lcfirst;
-
 /**
  * This generator will generate a controller and one or a few action view files.
  */
