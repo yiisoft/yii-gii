@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii\Generator\ActiveRecord;
 
-use ReflectionException;
 use ReflectionMethod;
 use ReflectionNamedType;
 use ReflectionUnionType;
