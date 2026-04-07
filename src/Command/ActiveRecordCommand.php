@@ -57,9 +57,9 @@ final class ActiveRecordCommand extends BaseGenerateCommand
         $template ??= 'default';
 
         return new Command(
+            tableName: (string) $input->getArgument('tableName'),
             template: $template,
             namespace: (string) ($input->getOption('namespace') ?: 'App\\Model'),
-            tableName: (string) $input->getArgument('tableName'),
             baseClass: (string) ($input->getOption('baseClass') ?: ActiveRecord::class),
             propertyVisibility: (string) ($input->getOption('propertyVisibility') ?: 'protected'),
             generateGettersSetters: $this->parseBoolOption($input, 'generateGettersSetters', true),

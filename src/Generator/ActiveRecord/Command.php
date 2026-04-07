@@ -15,6 +15,13 @@ use Yiisoft\Yii\Gii\Validator\TableExistsRule;
 final class Command extends AbstractGeneratorCommand
 {
     public function __construct(
+        #[Required]
+        #[Regex(
+            pattern: '/^[\w\-]+$/',
+            message: 'Invalid table name'
+        )]
+        #[TableExistsRule]
+        public readonly string $tableName,
         string $template = 'default',
         #[Required]
         #[Regex(
@@ -22,13 +29,6 @@ final class Command extends AbstractGeneratorCommand
             message: 'Invalid namespace'
         )]
         public readonly string $namespace = 'App\\Model',
-        #[Required]
-        #[Regex(
-            pattern: '/^[\w\-.]+$/i',
-            message: 'Invalid table name'
-        )]
-        #[TableExistsRule]
-        public readonly string $tableName = 'user',
         #[Regex(
             pattern: '/^[a-z\\\\]*$/i',
             message: 'Only word characters and backslashes are allowed.',

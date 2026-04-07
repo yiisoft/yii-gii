@@ -18,9 +18,9 @@ final class ActiveRecordGeneratorTest extends TestCase
     {
         $generator = $this->createGenerator();
         $command = new Command(
+            tableName: 'user',
             template: 'default',
             namespace: 'App\\Model',
-            tableName: 'user',
             baseClass: ActiveRecord::class,
         );
 
@@ -33,9 +33,9 @@ final class ActiveRecordGeneratorTest extends TestCase
     {
         $generator = $this->createGenerator();
         $command = new Command(
+            tableName: 'user',
             template: 'default',
             namespace: 'App\\Model',
-            tableName: 'user',
             baseClass: ActiveRecord::class,
             generateGettersSetters: true,
         );
@@ -67,9 +67,9 @@ final class ActiveRecordGeneratorTest extends TestCase
     {
         $generator = $this->createGenerator();
         $command = new Command(
+            tableName: 'user',
             template: 'default',
             namespace: 'App\\Model',
-            tableName: 'user',
             baseClass: ActiveRecord::class,
         );
 
@@ -89,9 +89,9 @@ final class ActiveRecordGeneratorTest extends TestCase
     {
         $generator = $this->createGenerator();
         $command = new Command(
+            tableName: 'user',
             template: 'default',
             namespace: 'App\\Model',
-            tableName: 'user',
             baseClass: ActiveRecord::class,
             propertyVisibility: 'private',
         );
@@ -114,9 +114,9 @@ final class ActiveRecordGeneratorTest extends TestCase
     {
         $generator = $this->createGenerator();
         $command = new Command(
+            tableName: 'user',
             template: 'default',
             namespace: 'App\\Model',
-            tableName: 'user',
             baseClass: ActiveRecord::class,
             propertyVisibility: 'public',
         );
@@ -139,9 +139,9 @@ final class ActiveRecordGeneratorTest extends TestCase
     {
         $generator = $this->createGenerator();
         $command = new Command(
+            tableName: 'user',
             template: 'default',
             namespace: 'App\\Model',
-            tableName: 'user',
             baseClass: ActiveRecord::class,
             useRepositoryTrait: true,
         );
@@ -157,9 +157,9 @@ final class ActiveRecordGeneratorTest extends TestCase
     {
         $generator = $this->createGenerator();
         $command = new Command(
+            tableName: 'user',
             template: 'default',
             namespace: 'App\\Model',
-            tableName: 'user',
             baseClass: ActiveRecord::class,
             propertyVisibility: 'private',
         );
@@ -175,9 +175,9 @@ final class ActiveRecordGeneratorTest extends TestCase
     {
         $generator = $this->createGenerator();
         $command = new Command(
+            tableName: 'user_profile',
             template: 'default',
             namespace: 'App\\Model',
-            tableName: 'user_profile',
             baseClass: ActiveRecord::class,
             generateRelations: true,
         );
@@ -196,9 +196,9 @@ final class ActiveRecordGeneratorTest extends TestCase
     {
         $generator = $this->createGenerator();
         $command = new Command(
+            tableName: 'user',
             template: 'default',
             namespace: 'App\\Model',
-            tableName: 'user',
             baseClass: ActiveRecord::class,
         );
 
@@ -219,9 +219,9 @@ final class ActiveRecordGeneratorTest extends TestCase
     {
         $generator = $this->createGenerator();
         $command = new Command(
+            tableName: 'user',
             template: 'default',
             namespace: 'App\\Model',
-            tableName: 'user',
             baseClass: ActiveRecord::class,
         );
 
@@ -244,9 +244,9 @@ final class ActiveRecordGeneratorTest extends TestCase
     {
         $generator = $this->createGenerator();
         $command = new Command(
+            tableName: 'user2',
             template: 'default',
             namespace: 'App\\Model',
-            tableName: 'user2',
             baseClass: ActiveRecord::class,
         );
 
@@ -262,6 +262,7 @@ final class ActiveRecordGeneratorTest extends TestCase
             ],
         );
         $command = new Command(
+            tableName: 'user',
             template: 'test',
             namespace: '0App',
         );
@@ -280,9 +281,9 @@ final class ActiveRecordGeneratorTest extends TestCase
             ],
         );
         $command = new Command(
+            tableName: 'user',
             template: 'custom',
             namespace: 'App\\Model',
-            tableName: 'user',
             baseClass: ActiveRecord::class,
         );
 
