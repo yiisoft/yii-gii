@@ -24,7 +24,6 @@ use Yiisoft\Yii\Gii\GeneratorInterface;
 #[AsCommand(name: 'gii/controller')]
 final class ControllerCommand extends BaseGenerateCommand
 {
-
     protected function configure(): void
     {
         $this->setDescription('Gii controller generator')

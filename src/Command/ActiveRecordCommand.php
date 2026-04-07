@@ -30,7 +30,6 @@ use const FILTER_VALIDATE_BOOL;
 #[AsCommand(name: 'gii/active-record')]
 final class ActiveRecordCommand extends BaseGenerateCommand
 {
-
     protected function configure(): void
     {
         $this->setDescription('Gii ActiveRecord model generator')
