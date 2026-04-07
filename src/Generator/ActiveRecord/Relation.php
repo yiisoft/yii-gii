@@ -6,6 +6,9 @@ namespace Yiisoft\Yii\Gii\Generator\ActiveRecord;
 
 final class Relation
 {
+    /**
+     * @param array<string, string> $link
+     */
     public function __construct(
         public string $name,
         public string $relatedModel,

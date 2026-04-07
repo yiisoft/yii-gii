@@ -23,7 +23,7 @@ use <?= $command->baseClass ?>;
 <?php if ($command->useRepositoryTrait): ?>
 use Yiisoft\ActiveRecord\Trait\RepositoryTrait;
 <?php endif; ?>
-<?php if ($command->usePrivatePropertiesTrait): ?>
+<?php if ($command->usePrivatePropertiesTrait()): ?>
 use Yiisoft\ActiveRecord\Trait\PrivatePropertiesTrait;
 <?php endif; ?>
 <?php if ($command->generateRelations && !empty($relations)): ?>
@@ -45,10 +45,10 @@ final class <?= $command->getModelName(); ?> extends <?= StringHelper::baseName(
 <?php if ($command->useRepositoryTrait): ?>
     use RepositoryTrait;
 <?php endif; ?>
-<?php if ($command->usePrivatePropertiesTrait): ?>
+<?php if ($command->usePrivatePropertiesTrait()): ?>
     use PrivatePropertiesTrait;
 <?php endif; ?>
-<?php if ($command->useRepositoryTrait || $command->usePrivatePropertiesTrait): ?>
+<?php if ($command->useRepositoryTrait || $command->usePrivatePropertiesTrait()): ?>
 
 <?php endif; ?>
 <?php foreach ($properties as $property): ?>
@@ -130,7 +130,7 @@ foreach ($properties as $property) {
 
     public function <?= $relation->getQueryMethodName() ?>(): ActiveQueryInterface
     {
-        return $this-><?= $relation->isHasOne() ? 'hasOne' : 'hasMany' ?>(<?= $relation->relatedModel ?>::class, <?= var_export($relation->link, true) ?>)<?= $relation->inverseOf ? "->inverseOf('" . $relation->inverseOf . "')" : '' ?>;
+        return $this-><?= $relation->isHasOne() ? 'hasOne' : 'hasMany' ?>(<?= $relation->relatedModel ?>::class, <?= var_export($relation->link, true) ?>)<?= $relation->inverseOf !== null ? "->inverseOf('" . $relation->inverseOf . "')" : '' ?>;
     }
 <?php endforeach; ?>
 <?php endif; ?>

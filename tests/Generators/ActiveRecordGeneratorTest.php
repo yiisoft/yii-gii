@@ -156,7 +156,7 @@ final class ActiveRecordGeneratorTest extends TestCase
             namespace: 'App\\Model',
             tableName: 'user',
             baseClass: ActiveRecord::class,
-            usePrivatePropertiesTrait: true,
+            propertyVisibility: 'private',
         );
 
         $files = $generator->generate($command);

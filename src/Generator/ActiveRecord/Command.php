@@ -50,6 +50,11 @@ final class Command extends AbstractGeneratorCommand
         return (new Inflector())->tableToClass($this->tableName);
     }
 
+    public function usePrivatePropertiesTrait(): bool
+    {
+        return $this->propertyVisibility === 'private';
+    }
+
     public static function getAttributeLabels(): array
     {
         return [
@@ -61,7 +66,6 @@ final class Command extends AbstractGeneratorCommand
             'generateGettersSetters' => 'Generate getters and setters',
             'generateRelations' => 'Generate relations',
             'useRepositoryTrait' => 'Use RepositoryTrait',
-            'usePrivatePropertiesTrait' => 'Use PrivatePropertiesTrait',
         ];
     }
 
@@ -75,7 +79,6 @@ final class Command extends AbstractGeneratorCommand
             'generateGettersSetters' => 'Whether to generate getter and setter methods for properties.',
             'generateRelations' => 'Whether to generate relation methods based on foreign keys.',
             'useRepositoryTrait' => 'Whether to include RepositoryTrait in the generated model.',
-            'usePrivatePropertiesTrait' => 'Whether to include PrivatePropertiesTrait (required for private properties).',
         ];
     }
 
@@ -90,7 +93,6 @@ final class Command extends AbstractGeneratorCommand
             'generateGettersSetters',
             'generateRelations',
             'useRepositoryTrait',
-            'usePrivatePropertiesTrait',
         ];
     }
 }

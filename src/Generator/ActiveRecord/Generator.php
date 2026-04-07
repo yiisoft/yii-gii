@@ -111,9 +111,9 @@ final class Generator extends AbstractGenerator
 
                 // Mark columns used in relations
                 foreach ($relations as $relation) {
-                    foreach ($relation->link as $foreignColumn => $localColumn) {
-                        if (isset($columnsMap[$localColumn])) {
-                            $columnsMap[$localColumn]->isUsedInRelation = true;
+                    foreach ($relation->link as $columnName) {
+                        if (isset($columnsMap[$columnName])) {
+                            $columnsMap[$columnName]->isUsedInRelation = true;
                         }
                     }
                 }
@@ -232,6 +232,8 @@ final class Generator extends AbstractGenerator
 
     /**
      * Generates a relation name from foreign key columns.
+     *
+     * @param string[] $columns
      */
     private function generateRelationName(array $columns, string $relatedModelName): string
     {
