@@ -5,13 +5,9 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\Gii\Generator\ActiveRecord;
 
 use InvalidArgumentException;
-use ReflectionIntersectionType;
-use ReflectionMethod;
-use ReflectionNamedType;
-use ReflectionUnionType;
+use Throwable;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Db\Connection\ConnectionInterface;
-use Yiisoft\Db\Schema\Column\ColumnInterface;
 use Yiisoft\Db\Schema\TableSchemaInterface;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Validator\ValidatorInterface;
@@ -56,10 +52,6 @@ final class Generator extends AbstractGenerator
         ];
     }
 
-    /**
-     * @psalm-suppress DocblockTypeContradiction 'integer' => 'int'
-     * @psalm-suppress DeprecatedMethod $columnSchema->isAllowNull()
-     */
     public function doGenerate(GeneratorCommandInterface $command): array
     {
         if (!$command instanceof Command) {
@@ -74,27 +66,8 @@ final class Generator extends AbstractGenerator
         $relations = [];
 
         if ($schema = $this->connection->getTableSchema($command->tableName, true)) {
-            $primaryKeys = $schema->getPrimaryKey();
-
-            // First pass: create columns
-            $columnsMap = [];
-            foreach ($schema->getColumns() as $columnSchema) {
-                $columnName = (string) $columnSchema->getName();
-                $isPrimaryKey = in_array($columnName, $primaryKeys, true);
-
-                $column = new Column(
-                    name: $columnName,
-                    type: $this->getPhpType($columnSchema),
-                    // Primary keys are never NULL, even if not explicitly marked as NOT NULL
-                    isAllowNull: !$isPrimaryKey && !$columnSchema->isNotNull(),
-                    defaultValue: $columnSchema->getDefaultValue(),
-                    isPrimaryKey: $isPrimaryKey,
-                    isAutoIncrement: $columnSchema->isAutoIncrement(),
-                    isUsedInRelation: false,
-                );
-
-                $columnsMap[$columnName] = $column;
-                $properties[] = $column;
+            foreach ($schema->getColumns() as $column) {
+                $properties[(string) $column->getName()] = new Property($column);
             }
 
             // Generate relations if requested
@@ -104,8 +77,8 @@ final class Generator extends AbstractGenerator
                 // Mark columns used in relations
                 foreach ($relations as $relation) {
                     foreach ($relation->link as $columnName) {
-                        if (isset($columnsMap[$columnName])) {
-                            $columnsMap[$columnName]->isUsedInRelation = true;
+                        if (isset($properties[$columnName])) {
+                            $properties[$columnName]->usedInRelation = true;
                         }
                     }
                 }
@@ -126,47 +99,6 @@ final class Generator extends AbstractGenerator
     }
 
     /**
-     * Gets the PHP type for a column using reflection of phpTypecast() return type.
-     */
-    private function getPhpType(ColumnInterface $columnSchema): string
-    {
-        try {
-            $reflection = new ReflectionMethod($columnSchema, 'phpTypecast');
-            $returnType = $reflection->getReturnType();
-
-            if ($returnType instanceof ReflectionNamedType) {
-                return ($returnType->isBuiltin() ? '' : '\\') . $returnType->getName();
-            }
-
-            // Handle union types (e.g., int|string|null)
-            if ($returnType instanceof ReflectionUnionType) {
-                $types = [];
-                foreach ($returnType->getTypes() as $type) {
-                    $types[] = ($type->isBuiltin() ? '' : '\\') . $type->getName();
-                }
-
-                // Return the union type string
-                return implode('|', $types);
-            }
-
-            // Handle intersection types (e.g., Countable&Iterator)
-            if ($returnType instanceof ReflectionIntersectionType) {
-                $types = [];
-                foreach ($returnType->getTypes() as $type) {
-                    $types[] = ($type->isBuiltin() ? '' : '\\') . $type->getName();
-                }
-
-                // Return the intersection type string
-                return implode('&', $types);
-            }
-        } catch (\ReflectionException) {
-            // If reflection fails, default to 'string'
-        }
-
-        return 'string';
-    }
-
-    /**
      * Generates relations based on foreign keys.
      *
      * @return array<Relation>
@@ -175,7 +107,6 @@ final class Generator extends AbstractGenerator
     {
         $relations = [];
         $inflector = new Inflector();
-        $tableName = $command->tableName;
 
         // Get foreign keys from this table to other tables
         try {
@@ -184,7 +115,6 @@ final class Generator extends AbstractGenerator
             foreach ($foreignKeys as $fk) {
                 $foreignTableName = $fk->foreignTableName;
                 $relatedModelName = $inflector->tableToClass($foreignTableName);
-                $relatedModelClass = $command->namespace . '\\' . $relatedModelName;
 
                 // Create relation name from foreign key columns
                 $relationName = $this->generateRelationName($fk->columnNames, $relatedModelName);
@@ -204,7 +134,7 @@ final class Generator extends AbstractGenerator
                     inverseOf: strtolower($inflector->toPlural($command->getModelName())),
                 );
             }
-        } catch (\Throwable) {
+        } catch (Throwable) {
             // If we can't get foreign keys, just skip relations
         }
 

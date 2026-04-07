@@ -77,6 +77,11 @@ final class ActiveRecordGeneratorTest extends TestCase
         $content = reset($files)->getContent();
 
         // Should have default value for is_verified column
+        $this->assertStringContainsString('$name = null;', $content);
+        $this->assertStringContainsString('$address = null;', $content);
+        $this->assertStringContainsString('$age = null;', $content);
+        $this->assertStringContainsString('$profile_id = null;', $content);
+        $this->assertStringContainsString('$score = null;', $content);
         $this->assertStringContainsString('$is_verified = false;', $content);
     }
 
@@ -94,15 +99,15 @@ final class ActiveRecordGeneratorTest extends TestCase
         $files = $generator->generate($command);
         $content = reset($files)->getContent();
 
-        $this->assertStringContainsString('private int $id;', $content);
-        $this->assertStringContainsString('private string $email;', $content);
-        $this->assertStringContainsString('private ?string $name;', $content);
-        $this->assertStringContainsString('private ?string $address;', $content);
-        $this->assertStringContainsString('private ?int $age;', $content);
-        $this->assertStringContainsString('private ?int $profile_id;', $content);
-        $this->assertStringContainsString('private ?float $score;', $content);
+        $this->assertStringContainsString('private int $id', $content);
+        $this->assertStringContainsString('private string $email', $content);
+        $this->assertStringContainsString('private ?string $name', $content);
+        $this->assertStringContainsString('private ?string $address', $content);
+        $this->assertStringContainsString('private ?int $age', $content);
+        $this->assertStringContainsString('private ?int $profile_id', $content);
+        $this->assertStringContainsString('private ?float $score', $content);
         $this->assertStringContainsString('private bool $is_verified', $content);
-        $this->assertStringContainsString('private \\DateTimeImmutable $created_at;', $content);
+        $this->assertStringContainsString('private \\DateTimeImmutable $created_at', $content);
     }
 
     public function testGenerateWithPublicProperties(): void
@@ -119,15 +124,15 @@ final class ActiveRecordGeneratorTest extends TestCase
         $files = $generator->generate($command);
         $content = reset($files)->getContent();
 
-        $this->assertStringContainsString('public int $id;', $content);
-        $this->assertStringContainsString('public string $email;', $content);
-        $this->assertStringContainsString('public ?string $name;', $content);
-        $this->assertStringContainsString('public ?string $address;', $content);
-        $this->assertStringContainsString('public ?int $age;', $content);
-        $this->assertStringContainsString('public ?int $profile_id;', $content);
-        $this->assertStringContainsString('public ?float $score;', $content);
+        $this->assertStringContainsString('public int $id', $content);
+        $this->assertStringContainsString('public string $email', $content);
+        $this->assertStringContainsString('public ?string $name', $content);
+        $this->assertStringContainsString('public ?string $address', $content);
+        $this->assertStringContainsString('public ?int $age', $content);
+        $this->assertStringContainsString('public ?int $profile_id', $content);
+        $this->assertStringContainsString('public ?float $score', $content);
         $this->assertStringContainsString('public bool $is_verified', $content);
-        $this->assertStringContainsString('public \\DateTimeImmutable $created_at;', $content);
+        $this->assertStringContainsString('public \\DateTimeImmutable $created_at', $content);
     }
 
     public function testGenerateWithRepositoryTrait(): void
@@ -203,7 +208,11 @@ final class ActiveRecordGeneratorTest extends TestCase
         // Email column is not nullable
         $this->assertStringContainsString('string $email;', $content);
         // Name is nullable
-        $this->assertStringContainsString('?string $name;', $content);
+        $this->assertStringContainsString('?string $name = null;', $content);
+        $this->assertStringContainsString('?string $address = null;', $content);
+        $this->assertStringContainsString('?int $age = null;', $content);
+        $this->assertStringContainsString('?int $profile_id = null;', $content);
+        $this->assertStringContainsString('?float $score = null;', $content);
     }
 
     public function testGenerateWithDifferentTypes(): void
@@ -220,15 +229,15 @@ final class ActiveRecordGeneratorTest extends TestCase
         $content = reset($files)->getContent();
 
         // Test various PHP types
-        $this->assertStringContainsString('int $id;', $content);
-        $this->assertStringContainsString('string $email;', $content);
-        $this->assertStringContainsString('?string $name;', $content);
-        $this->assertStringContainsString('?string $address;', $content);
-        $this->assertStringContainsString('?int $age;', $content);
-        $this->assertStringContainsString('?int $profile_id;', $content);
-        $this->assertStringContainsString('?float $score;', $content);
+        $this->assertStringContainsString('int $id', $content);
+        $this->assertStringContainsString('string $email', $content);
+        $this->assertStringContainsString('?string $name', $content);
+        $this->assertStringContainsString('?string $address', $content);
+        $this->assertStringContainsString('?int $age', $content);
+        $this->assertStringContainsString('?int $profile_id', $content);
+        $this->assertStringContainsString('?float $score', $content);
         $this->assertStringContainsString('bool $is_verified', $content);
-        $this->assertStringContainsString('\\DateTimeImmutable $created_at;', $content);
+        $this->assertStringContainsString('\\DateTimeImmutable $created_at', $content);
     }
 
     public function testInvalidTableName(): void

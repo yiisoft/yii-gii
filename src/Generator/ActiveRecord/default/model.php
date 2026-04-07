@@ -3,12 +3,12 @@
 declare(strict_types=1);
 
 use Yiisoft\Strings\StringHelper;
-use Yiisoft\Yii\Gii\Generator\ActiveRecord\Column;
+use Yiisoft\Yii\Gii\Generator\ActiveRecord\Property;
 use Yiisoft\Yii\Gii\Generator\ActiveRecord\Relation;
 
 /**
  * @var Yiisoft\Yii\Gii\Generator\ActiveRecord\Command $command
- * @var list<Column> $properties
+ * @var list<Property> $properties
  * @var list<Relation> $relations
  */
 
@@ -52,13 +52,13 @@ final class <?= $command->getModelName(); ?> extends <?= StringHelper::baseName(
 
 <?php endif; ?>
 <?php foreach ($properties as $property): ?>
-    <?= $command->propertyVisibility ?> <?=sprintf(
-        '%s%s $%s%s',
-        $property->isAllowNull ? '?' : '',
-        $property->type,
-        $property->name,
-        $property->isDefaultValueBuiltinType() ? ' = ' . $property->getPhpDefaultValue() : '',
-    )?>;
+    <?= sprintf(
+        '%s %s $%s%s',
+        $command->propertyVisibility,
+        $property->getType(),
+        $property->getName(),
+        $property->isDefaultValueConstant() ? ' = ' . $property->getDefaultValueConstant() : '',
+    ) ?>;
 <?php endforeach; ?>
 <?php if (!empty($properties)): ?>
 
@@ -78,7 +78,7 @@ foreach ($properties as $property) {
     {
 <?php foreach ($properties as $property): ?>
 <?php if ($property->isDefaultValueExpression()): ?>
-        $this-><?= $property->name ?> = <?= $property->getDbExpressionInitializer() ?>;
+        $this-><?= $property->getName() ?> = <?= $property->getDbExpressionInitializer() ?>;
 <?php endif; ?>
 <?php endforeach; ?>
     }
@@ -91,21 +91,21 @@ foreach ($properties as $property) {
 <?php if ($command->generateGettersSetters): ?>
 <?php foreach ($properties as $property): ?>
 
-    public function get<?= $property->getPascalCaseName() ?>(): <?= ($property->isAllowNull || $property->canBeUninitialized() ? '?' : '') . $property->type . PHP_EOL ?>
+    public function get<?= $property->getPascalCaseName() ?>(): <?= $property->getReturnType() . PHP_EOL ?>
     {
-<?php if ($property->shouldUseNullCoalescing()): ?>
-        return $this-><?= $property->name ?> ?? null;
+<?php if ($property->isUninitialized()): ?>
+        return $this-><?= $property->getName() ?> ?? null;
 <?php else: ?>
-        return $this-><?= $property->name ?>;
+        return $this-><?= $property->getName() ?>;
 <?php endif; ?>
     }
 
-    public function set<?= $property->getPascalCaseName() ?>(<?= ($property->isAllowNull ? '?' : '') . $property->type ?> $<?= $property->name ?>): void
+    public function set<?= $property->getPascalCaseName() ?>(<?= $property->getType() ?> $<?= $property->getName() ?>): void
     {
 <?php if ($property->shouldUseSetMethod()): ?>
-        $this->set('<?= $property->name ?>', $<?= $property->name ?>);
+        $this->set('<?= $property->getName() ?>', $<?= $property->getName() ?>);
 <?php else: ?>
-        $this-><?= $property->name ?> = $<?= $property->name ?>;
+        $this-><?= $property->getName() ?> = $<?= $property->getName() ?>;
 <?php endif; ?>
     }
 <?php endforeach; ?>
