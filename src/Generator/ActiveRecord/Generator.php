@@ -64,15 +64,17 @@ final class Generator extends AbstractGenerator
 
         $properties = [];
         $relations = [];
+        $schema = $this->connection->getTableSchema($command->tableName, true);
 
-        if ($schema = $this->connection->getTableSchema($command->tableName, true)) {
-            foreach ($schema->getColumns() as $column) {
-                $properties[(string) $column->getName()] = new Property($column);
+        if ($schema !== null) {
+            foreach ($schema->getColumns() as $columnName => $column) {
+                $properties[$columnName] = new Property($column);
             }
 
-            // Generate relations if requested
             if ($command->generateRelations) {
-                $relations = $this->generateRelations($command, $schema);
+                foreach ($schema->getForeignKeys() as $foreignKey) {
+                    $relations[] = new Relation($foreignKey, $command->getModelName());
+                }
 
                 // Mark columns used in relations
                 foreach ($relations as $relation) {
@@ -85,7 +87,7 @@ final class Generator extends AbstractGenerator
             }
         }
 
-        $path = $this->getControllerFile($command);
+        $path = $this->getModelFile($command);
         $codeFile = (new CodeFile(
             $path,
             $this->render($command, 'model.php', [
@@ -99,33 +101,9 @@ final class Generator extends AbstractGenerator
     }
 
     /**
-     * Generates relations based on foreign keys.
-     *
-     * @return array<Relation>
+     * @return string the model class file path
      */
-    private function generateRelations(Command $command, TableSchemaInterface $schema): array
-    {
-        $relations = [];
-        $inflector = new Inflector();
-
-        // Get foreign keys from this table to other tables
-        try {
-            $foreignKeys = $schema->getForeignKeys();
-
-            foreach ($foreignKeys as $foreignKey) {
-                $relations[] = new Relation($foreignKey, $command->getModelName());
-            }
-        } catch (Throwable) {
-            // If we can't get foreign keys, just skip relations
-        }
-
-        return $relations;
-    }
-
-    /**
-     * @return string the controller class file path
-     */
-    private function getControllerFile(Command $command): string
+    private function getModelFile(Command $command): string
     {
         $directory = '@src/Model/';
 

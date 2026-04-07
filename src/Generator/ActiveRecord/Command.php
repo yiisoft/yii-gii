@@ -40,7 +40,6 @@ final class Command extends AbstractGeneratorCommand
         public readonly bool $generateGettersSetters = true,
         public readonly bool $generateRelations = true,
         public readonly bool $useRepositoryTrait = false,
-        public readonly bool $usePrivatePropertiesTrait = false,
     ) {
         parent::__construct($template);
     }
