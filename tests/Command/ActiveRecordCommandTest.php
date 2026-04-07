@@ -62,7 +62,7 @@ final class ActiveRecordCommandTest extends TestCase
         $commandTester->execute(
             [
                 'tableName' => 'user',
-                '--baseClass' => 'Yiisoft\\ActiveRecord\\ActiveRecord',
+                '--baseClass' => \Yiisoft\ActiveRecord\ActiveRecord::class,
             ],
             ['interactive' => false],
         );
@@ -125,7 +125,7 @@ final class ActiveRecordCommandTest extends TestCase
             [
                 'tableName' => 'user',
                 '--namespace' => 'App\\Model',
-                '--baseClass' => 'Yiisoft\\ActiveRecord\\ActiveRecord',
+                '--baseClass' => \Yiisoft\ActiveRecord\ActiveRecord::class,
                 '--propertyVisibility' => 'protected',
                 '--generateGettersSetters' => 'true',
                 '--generateRelations' => 'true',
