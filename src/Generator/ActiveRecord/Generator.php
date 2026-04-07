@@ -16,6 +16,8 @@ use Yiisoft\Yii\Gii\Generator\AbstractGenerator;
 use Yiisoft\Yii\Gii\GeneratorCommandInterface;
 use Yiisoft\Yii\Gii\ParametersProvider;
 
+use function lcfirst;
+
 /**
  * This generator will generate a controller and one or a few action view files.
  */
@@ -116,9 +118,6 @@ final class Generator extends AbstractGenerator
                 $foreignTableName = $fk->foreignTableName;
                 $relatedModelName = $inflector->tableToClass($foreignTableName);
 
-                // Create relation name from foreign key columns
-                $relationName = $this->generateRelationName($fk->columnNames, $relatedModelName);
-
                 // Build link array [foreign_column => local_column]
                 $link = [];
                 foreach ($fk->columnNames as $index => $columnName) {
@@ -127,11 +126,11 @@ final class Generator extends AbstractGenerator
                 }
 
                 $relations[] = new Relation(
-                    name: $relationName,
+                    name: lcfirst($relatedModelName),
                     relatedModel: $relatedModelName,
                     type: 'hasOne',
                     link: $link,
-                    inverseOf: strtolower($inflector->toPlural($command->getModelName())),
+                    inverseOf: lcfirst($command->getModelName()),
                 );
             }
         } catch (Throwable) {
@@ -139,28 +138,6 @@ final class Generator extends AbstractGenerator
         }
 
         return $relations;
-    }
-
-    /**
-     * Generates a relation name from foreign key columns.
-     *
-     * @param string[] $columns
-     */
-    private function generateRelationName(array $columns, string $relatedModelName): string
-    {
-        $inflector = new Inflector();
-
-        // If the FK column is like 'user_id', use 'user'
-        // If the FK column is like 'profile_id', use 'profile'
-        if (count($columns) === 1) {
-            $column = $columns[0];
-            if (str_ends_with($column, '_id')) {
-                return substr($column, 0, -3);
-            }
-        }
-
-        // Default to using the related model name in camelCase
-        return lcfirst($relatedModelName);
     }
 
     /**
