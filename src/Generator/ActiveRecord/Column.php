@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii\Generator\ActiveRecord;
 
+use Yiisoft\Strings\Inflector;
+
 final class Column
 {
     public function __construct(
@@ -16,6 +18,11 @@ final class Column
         public readonly bool $hasDbDefaultExpression = false,
         public bool $isUsedInRelation = false,
     ) {
+    }
+
+    public function getPascalCaseName(): string
+    {
+        return (new Inflector())->toPascalCase($this->name);
     }
 
     /**

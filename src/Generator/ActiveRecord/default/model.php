@@ -91,7 +91,7 @@ foreach ($properties as $property) {
 <?php if ($command->generateGettersSetters): ?>
 <?php foreach ($properties as $property): ?>
 
-    public function get<?= ucfirst($property->name) ?>(): <?= ($property->isAllowNull || $property->canBeUninitialized() ? '?' : '') . $property->type . PHP_EOL ?>
+    public function get<?= $property->getPascalCaseName() ?>(): <?= ($property->isAllowNull || $property->canBeUninitialized() ? '?' : '') . $property->type . PHP_EOL ?>
     {
 <?php if ($property->shouldUseNullCoalescing()): ?>
         return $this-><?= $property->name ?> ?? null;
@@ -100,7 +100,7 @@ foreach ($properties as $property) {
 <?php endif; ?>
     }
 
-    public function set<?= ucfirst($property->name) ?>(<?= ($property->isAllowNull ? '?' : '') . $property->type ?> $<?= $property->name ?>): void
+    public function set<?= $property->getPascalCaseName() ?>(<?= ($property->isAllowNull ? '?' : '') . $property->type ?> $<?= $property->name ?>): void
     {
 <?php if ($property->shouldUseSetMethod()): ?>
         $this->set('<?= $property->name ?>', $<?= $property->name ?>);

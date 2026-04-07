@@ -80,7 +80,7 @@ abstract class BaseGenerateCommand extends Command
             return;
         }
         $output->writeln("<fg=magenta>The following files will be generated</>:\n");
-        $skipAll = $input->isInteractive() ? null : !$input->getArgument('overwrite');
+        $skipAll = $input->isInteractive() ? null : !$input->getOption('overwrite');
         $answers = [];
         foreach ($files as $file) {
             $path = $file->getRelativePath();
@@ -120,7 +120,7 @@ abstract class BaseGenerateCommand extends Command
             return;
         }
 
-        if (!$this->confirm($input, $output)) {
+        if ($input->isInteractive() && !$this->confirm($input, $output)) {
             $output->writeln("\n<fg=cyan>No file was generated.</>");
             return;
         }

@@ -53,14 +53,14 @@ final class ActiveRecordGeneratorTest extends TestCase
         $this->assertStringContainsString('public function setAddress(?string $address): void', $content);
         $this->assertStringContainsString('public function getAge(): ?int', $content);
         $this->assertStringContainsString('public function setAge(?int $age): void', $content);
-        $this->assertStringContainsString('public function getProfile_id(): ?int', $content);
-        $this->assertStringContainsString('public function setProfile_id(?int $profile_id): void', $content);
+        $this->assertStringContainsString('public function getProfileId(): ?int', $content);
+        $this->assertStringContainsString('public function setProfileId(?int $profile_id): void', $content);
         $this->assertStringContainsString('public function getScore(): ?float', $content);
         $this->assertStringContainsString('public function setScore(?float $score): void', $content);
-        $this->assertStringContainsString('public function getIs_verified(): bool', $content);
-        $this->assertStringContainsString('public function setIs_verified(bool $is_verified): void', $content);
-        $this->assertStringContainsString('public function getCreated_at(): ?\\DateTimeImmutable', $content);
-        $this->assertStringContainsString('public function setCreated_at(\\DateTimeImmutable $created_at): void', $content);
+        $this->assertStringContainsString('public function getIsVerified(): bool', $content);
+        $this->assertStringContainsString('public function setIsVerified(bool $is_verified): void', $content);
+        $this->assertStringContainsString('public function getCreatedAt(): ?\\DateTimeImmutable', $content);
+        $this->assertStringContainsString('public function setCreatedAt(\\DateTimeImmutable $created_at): void', $content);
     }
 
     public function testGenerateWithDefaultValues(): void

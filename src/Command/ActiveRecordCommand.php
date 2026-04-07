@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Yiisoft\ActiveRecord\ActiveRecord;
@@ -26,10 +27,9 @@ use const FILTER_VALIDATE_BOOL;
  * $ ./yii gii/active-record user
  * ```
  */
+#[AsCommand(name: 'gii/active-record')]
 final class ActiveRecordCommand extends BaseGenerateCommand
 {
-    /** @psalm-suppress MissingPropertyType */
-    protected static $defaultName = 'gii/active-record';
 
     protected function configure(): void
     {
