@@ -6,6 +6,7 @@ namespace Yiisoft\Yii\Gii\Generator\ActiveRecord;
 
 use Yiisoft\ActiveRecord\ActiveRecord;
 use Yiisoft\Strings\Inflector;
+use Yiisoft\Validator\Rule\In;
 use Yiisoft\Validator\Rule\Regex;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Yii\Gii\Generator\AbstractGeneratorCommand;
@@ -29,6 +30,7 @@ final class Command extends AbstractGeneratorCommand
             message: 'Invalid namespace'
         )]
         public readonly string $namespace = 'App\\Model',
+        #[Required]
         #[Regex(
             pattern: '/^[a-z\\\\]*$/i',
             message: 'Only word characters and backslashes are allowed.',
@@ -36,6 +38,8 @@ final class Command extends AbstractGeneratorCommand
         )]
         #[ClassExistsRule]
         public readonly string $baseClass = ActiveRecord::class,
+        #[Required]
+        #[In(['private', 'protected', 'public'])]
         public readonly string $propertyVisibility = 'protected',
         public readonly bool $generateGettersSetters = true,
         public readonly bool $generateRelations = true,

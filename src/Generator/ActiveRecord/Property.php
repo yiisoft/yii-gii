@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\Gii\Generator\ActiveRecord;
 
 use ReflectionException;
-use ReflectionIntersectionType;
 use ReflectionMethod;
 use ReflectionNamedType;
 use ReflectionUnionType;
@@ -34,12 +33,16 @@ final class Property
 
     public function getType(): string
     {
-        return ($this->column->isNotNull() ? '' : '?') . $this->getPhpType();
+        $isNullable = !$this->column->isNotNull();
+
+        return $this->getPhpType($isNullable);
     }
 
     public function getReturnType(): string
     {
-        return ($this->column->isNotNull() && !$this->isUninitialized() ? '' : '?') . $this->getPhpType();
+        $isNullable = !$this->column->isNotNull() || $this->isUninitialized();
+
+        return $this->getPhpType($isNullable);
     }
 
     /**
@@ -126,14 +129,14 @@ final class Property
         return $this->column->isPrimaryKey() || $this->usedInRelation;
     }
 
-    private function getPhpType(): string
+    private function getPhpType(bool $isNullable): string
     {
         try {
             $reflection = new ReflectionMethod($this->column, 'phpTypecast');
             $returnType = $reflection->getReturnType();
 
             if ($returnType instanceof ReflectionNamedType) {
-                return ($returnType->isBuiltin() ? '' : '\\') . $returnType->getName();
+                return ($isNullable ? '?' : '') . ($returnType->isBuiltin() ? '' : '\\') . $returnType->getName();
             }
 
             // Handle union types (e.g., int|string|null)
@@ -146,21 +149,10 @@ final class Property
                 // Return the union type string
                 return implode('|', $types);
             }
-
-            // Handle intersection types (e.g., Countable&Iterator)
-            if ($returnType instanceof ReflectionIntersectionType) {
-                $types = [];
-                foreach ($returnType->getTypes() as $type) {
-                    $types[] = ($type->isBuiltin() ? '' : '\\') . $type->getName();
-                }
-
-                // Return the intersection type string
-                return implode('&', $types);
-            }
         } catch (ReflectionException) {
             // If reflection fails, default to 'string'
         }
 
-        return 'string';
+        return ($isNullable ? '?' : '') . 'string';
     }
 }

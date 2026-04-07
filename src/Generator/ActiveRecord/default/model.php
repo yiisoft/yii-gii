@@ -8,7 +8,7 @@ use Yiisoft\Yii\Gii\Generator\ActiveRecord\Relation;
 
 /**
  * @var Yiisoft\Yii\Gii\Generator\ActiveRecord\Command $command
- * @var list<Property> $properties
+ * @var array<string, Property> $properties
  * @var list<Relation> $relations
  */
 
