@@ -12,6 +12,26 @@ use Yiisoft\Yii\Gii\Generator\ActiveRecord\Relation;
  * @var list<Relation> $relations
  */
 
+
+$needsConstructor = false;
+$useExpression = false;
+
+foreach ($properties as $property) {
+    if (!$needsConstructor && $property->isDefaultValueNotConstant()) {
+        $needsConstructor = true;
+    }
+
+    if (!$useExpression && $property->isDefaultValueExpression()) {
+        $useExpression = true;
+    }
+}
+
+// Collect unique related model names for use statements
+$relatedModels = [];
+foreach ($relations as $relation) {
+    $relatedModels[$relation->getRelatedModel()] = true;
+}
+
 echo "<?php\n";
 ?>
 
@@ -29,14 +49,10 @@ use Yiisoft\ActiveRecord\Trait\PrivatePropertiesTrait;
 <?php if ($command->generateRelations && !empty($relations)): ?>
 use Yiisoft\ActiveRecord\ActiveQueryInterface;
 <?php endif; ?>
-<?php
-// Collect unique related model names for use statements
-$relatedModels = [];
-foreach ($relations as $relation) {
-    $relatedModels[$relation->getRelatedModel()] = true;
-}
-foreach (array_keys($relatedModels) as $relatedModel):
-?>
+<?php if ($useExpression): ?>
+use Yiisoft\Db\Expression\Expression;
+<?php endif; ?>
+<?php foreach (array_keys($relatedModels) as $relatedModel): ?>
 use <?= $command->namespace . '\\' . $relatedModel ?>;
 <?php endforeach; ?>
 
@@ -63,16 +79,6 @@ final class <?= $command->getModelName(); ?> extends <?= StringHelper::baseName(
 <?php if (!empty($properties)): ?>
 
 <?php endif; ?>
-<?php
-// Check if we need a constructor for default values
-$needsConstructor = false;
-foreach ($properties as $property) {
-    if ($property->isDefaultValueNotConstant()) {
-        $needsConstructor = true;
-        break;
-    }
-}
-?>
 <?php if ($needsConstructor): ?>
     public function __construct()
     {

@@ -19,9 +19,6 @@ final class ActiveRecordGeneratorTest extends TestCase
         $generator = $this->createGenerator();
         $command = new Command(
             tableName: 'user',
-            template: 'default',
-            namespace: 'App\\Model',
-            baseClass: ActiveRecord::class,
         );
 
         $files = $generator->generate($command);
@@ -34,10 +31,6 @@ final class ActiveRecordGeneratorTest extends TestCase
         $generator = $this->createGenerator();
         $command = new Command(
             tableName: 'user',
-            template: 'default',
-            namespace: 'App\\Model',
-            baseClass: ActiveRecord::class,
-            generateGettersSetters: true,
         );
 
         $files = $generator->generate($command);
@@ -70,9 +63,6 @@ final class ActiveRecordGeneratorTest extends TestCase
         $generator = $this->createGenerator();
         $command = new Command(
             tableName: 'user',
-            template: 'default',
-            namespace: 'App\\Model',
-            baseClass: ActiveRecord::class,
         );
 
         $files = $generator->generate($command);
@@ -93,9 +83,6 @@ final class ActiveRecordGeneratorTest extends TestCase
         $generator = $this->createGenerator();
         $command = new Command(
             tableName: 'user',
-            template: 'default',
-            namespace: 'App\\Model',
-            baseClass: ActiveRecord::class,
             propertyVisibility: 'private',
         );
 
@@ -119,9 +106,6 @@ final class ActiveRecordGeneratorTest extends TestCase
         $generator = $this->createGenerator();
         $command = new Command(
             tableName: 'user',
-            template: 'default',
-            namespace: 'App\\Model',
-            baseClass: ActiveRecord::class,
             propertyVisibility: 'public',
         );
 
@@ -145,9 +129,6 @@ final class ActiveRecordGeneratorTest extends TestCase
         $generator = $this->createGenerator();
         $command = new Command(
             tableName: 'user',
-            template: 'default',
-            namespace: 'App\\Model',
-            baseClass: ActiveRecord::class,
             useRepositoryTrait: true,
         );
 
@@ -163,9 +144,6 @@ final class ActiveRecordGeneratorTest extends TestCase
         $generator = $this->createGenerator();
         $command = new Command(
             tableName: 'user',
-            template: 'default',
-            namespace: 'App\\Model',
-            baseClass: ActiveRecord::class,
             propertyVisibility: 'private',
         );
 
@@ -181,10 +159,6 @@ final class ActiveRecordGeneratorTest extends TestCase
         $generator = $this->createGenerator();
         $command = new Command(
             tableName: 'user_profile',
-            template: 'default',
-            namespace: 'App\\Model',
-            baseClass: ActiveRecord::class,
-            generateRelations: true,
         );
 
         $files = $generator->generate($command);
@@ -202,9 +176,6 @@ final class ActiveRecordGeneratorTest extends TestCase
         $generator = $this->createGenerator();
         $command = new Command(
             tableName: 'user',
-            template: 'default',
-            namespace: 'App\\Model',
-            baseClass: ActiveRecord::class,
         );
 
         $files = $generator->generate($command);
@@ -225,9 +196,6 @@ final class ActiveRecordGeneratorTest extends TestCase
         $generator = $this->createGenerator();
         $command = new Command(
             tableName: 'user',
-            template: 'default',
-            namespace: 'App\\Model',
-            baseClass: ActiveRecord::class,
         );
 
         $files = $generator->generate($command);
@@ -251,9 +219,6 @@ final class ActiveRecordGeneratorTest extends TestCase
         $generator = $this->createGenerator();
         $command = new Command(
             tableName: 'user2',
-            template: 'default',
-            namespace: 'App\\Model',
-            baseClass: ActiveRecord::class,
         );
 
         $this->expectException(InvalidGeneratorCommandException::class);
@@ -289,13 +254,33 @@ final class ActiveRecordGeneratorTest extends TestCase
         $command = new Command(
             tableName: 'user',
             template: 'custom',
-            namespace: 'App\\Model',
-            baseClass: ActiveRecord::class,
         );
 
         $files = $generator->generate($command);
         $this->assertNotEmpty($files);
         $this->assertMatchesRegularExpression('/final custom class/', reset($files)->getContent());
+    }
+
+    public function testGenerateConstructor(): void
+    {
+        $generator = $this->createGenerator();
+        $command = new Command(
+            tableName: 'user',
+        );
+
+        $files = $generator->generate($command);
+        $content = reset($files)->getContent();
+
+        $this->assertStringContainsStringIgnoringLineEndings(
+            <<<'CODE'
+                public function __construct()
+                {
+                    $this->created_at = new Expression('CURRENT_TIMESTAMP', []);
+                }
+            CODE,
+            $content,
+        );
+
     }
 
     private function createGenerator(...$params): Generator
