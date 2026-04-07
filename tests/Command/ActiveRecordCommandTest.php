@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\Gii\Tests\Command;
 
 use Symfony\Component\Console\Tester\CommandTester;
+use Yiisoft\Files\FileHelper;
 use Yiisoft\Yii\Console\ExitCode;
 use Yiisoft\Yii\Gii\Command\ActiveRecordCommand;
 use Yiisoft\Yii\Gii\Component\CodeFile\CodeFileWriter;
@@ -13,6 +14,17 @@ use Yiisoft\Yii\Gii\Tests\TestCase;
 
 final class ActiveRecordCommandTest extends TestCase
 {
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $file = __DIR__ . '/../Model/User.php';
+
+        if (file_exists($file)) {
+            FileHelper::unlink($file);
+        }
+    }
+
     public function testExecuteWithValidTable(): void
     {
         $commandTester = $this->createCommandTester();
