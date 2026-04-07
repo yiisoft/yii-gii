@@ -131,28 +131,22 @@ final class Property
 
     private function getPhpType(bool $isNullable): string
     {
-        try {
-            $reflection = new ReflectionMethod($this->column, 'phpTypecast');
-            $returnType = $reflection->getReturnType();
+        $reflection = new ReflectionMethod($this->column, 'phpTypecast');
+        $returnType = $reflection->getReturnType();
 
-            if ($returnType instanceof ReflectionNamedType) {
-                return ($isNullable ? '?' : '') . ($returnType->isBuiltin() ? '' : '\\') . $returnType->getName();
-            }
-
-            // Handle union types (e.g., int|string|null)
-            if ($returnType instanceof ReflectionUnionType) {
-                $types = [];
-                foreach ($returnType->getTypes() as $type) {
-                    $types[] = ($type->isBuiltin() ? '' : '\\') . $type->getName();
-                }
-
-                // Return the union type string
-                return implode('|', $types);
-            }
-        } catch (ReflectionException) {
-            // If reflection fails, default to 'string'
+        if ($returnType instanceof ReflectionNamedType) {
+            return ($isNullable ? '?' : '') . ($returnType->isBuiltin() ? '' : '\\') . $returnType->getName();
         }
 
-        return ($isNullable ? '?' : '') . 'string';
+        if ($returnType instanceof ReflectionUnionType) {
+            $types = [];
+            foreach ($returnType->getTypes() as $type) {
+                $types[] = ($type->isBuiltin() ? '' : '\\') . $type->getName();
+            }
+
+            return implode('|', $types);
+        }
+
+        return ($isNullable ? '?' : '') . 'mixed';
     }
 }
