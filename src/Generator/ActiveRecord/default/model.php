@@ -57,17 +57,17 @@ final class <?= $command->getModelName(); ?> extends <?= StringHelper::baseName(
         $command->propertyVisibility,
         $property->getType(),
         $property->getName(),
-        $property->isDefaultValueConstant() ? ' = ' . $property->getDefaultValueConstant() : '',
+        $property->isDefaultValueConstant() ? ' = ' . $property->getDefaultValue() : '',
     ) ?>;
 <?php endforeach; ?>
 <?php if (!empty($properties)): ?>
 
 <?php endif; ?>
 <?php
-// Check if we need a constructor for DB expression initialization
+// Check if we need a constructor for default values
 $needsConstructor = false;
 foreach ($properties as $property) {
-    if ($property->isDefaultValueExpression()) {
+    if ($property->isDefaultValueNotConstant()) {
         $needsConstructor = true;
         break;
     }
@@ -77,8 +77,8 @@ foreach ($properties as $property) {
     public function __construct()
     {
 <?php foreach ($properties as $property): ?>
-<?php if ($property->isDefaultValueExpression()): ?>
-        $this-><?= $property->getName() ?> = <?= $property->getDbExpressionInitializer() ?>;
+<?php if ($property->isDefaultValueNotConstant()): ?>
+        $this-><?= $property->getName() ?> = <?= $property->getDefaultValue() ?>;
 <?php endif; ?>
 <?php endforeach; ?>
     }

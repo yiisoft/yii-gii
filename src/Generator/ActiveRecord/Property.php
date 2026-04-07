@@ -7,9 +7,9 @@ namespace Yiisoft\Yii\Gii\Generator\ActiveRecord;
 use ReflectionMethod;
 use ReflectionNamedType;
 use ReflectionUnionType;
-use Yiisoft\Db\Expression\ExpressionInterface;
 use Yiisoft\Db\Schema\Column\ColumnInterface;
 use Yiisoft\Strings\Inflector;
+use Yiisoft\VarDumper\VarDumper;
 
 final class Property
 {
@@ -44,70 +44,32 @@ final class Property
         return $this->getPhpType($isNullable);
     }
 
+    public function hasDefaultValue(): bool
+    {
+        return $this->column->hasDefaultValue() && !$this->column->isAutoIncrement();
+    }
+
     /**
      * Returns true if the property has a default value as a constant.
      */
     public function isDefaultValueConstant(): bool
     {
-        if (!$this->column->hasDefaultValue() || $this->column->isAutoIncrement()) {
-            return false;
-        }
-
-        $defaultValue = $this->column->getDefaultValue();
-
-        if ($defaultValue === null) {
-            return !$this->column->isNotNull();
-        }
-
-        return is_scalar($defaultValue) || is_array($defaultValue);
+        return $this->hasDefaultValue() && $this->isDefaultValueConstantInternal();
     }
 
-    public function isDefaultValueExpression(): bool
+    public function isDefaultValueNotConstant(): bool
     {
-        return $this->column->getDefaultValue() instanceof ExpressionInterface;
+        return $this->hasDefaultValue() && !$this->isDefaultValueConstantInternal();
     }
 
     /**
      * Returns the PHP representation of the default value for use in generated code.
      */
-    public function getDefaultValueConstant(): string
+    public function getDefaultValue(): string
     {
-        if (!$this->isDefaultValueConstant()) {
-            return '';
-        }
-
         $defaultValue = $this->column->getDefaultValue();
 
-        /** @psalm-suppress MixedArgument */
-        return match (gettype($defaultValue)) {
-            'string' => "'" . addslashes($defaultValue) . "'",
-            'boolean' => $defaultValue ? 'true' : 'false',
-            'NULL' => 'null',
-            'array' => var_export($defaultValue, true),
-            'integer', 'double' => (string) $defaultValue,
-            default => var_export($defaultValue, true),
-        };
-    }
-
-    /**
-     * Returns the PHP code to initialize a DB expression in the constructor.
-     */
-    public function getDbExpressionInitializer(): string
-    {
-        if (!$this->isDefaultValueExpression()) {
-            return '';
-        }
-
-        $defaultValue = $this->column->getDefaultValue();
-
-        // Get the actual expression class
-        $className = $defaultValue::class;
-
-        // Get the SQL expression string by converting the object to string
-        $expressionSql = (string) $defaultValue;
-
-        // Return the code to create a new instance of the expression
-        return 'new \\' . $className . '(' . var_export($expressionSql, true) . ')';
+        return VarDumper::create($defaultValue)->export(false);
     }
 
     /**
@@ -128,12 +90,29 @@ final class Property
         return $this->column->isPrimaryKey() || $this->usedInRelation;
     }
 
+    private function isDefaultValueConstantInternal(): bool
+    {
+        $defaultValue = $this->column->getDefaultValue();
+
+        if ($defaultValue === null) {
+            return !$this->column->isNotNull();
+        }
+
+        return is_scalar($defaultValue) || is_array($defaultValue);
+    }
+
     private function getPhpType(bool $isNullable): string
     {
         $reflection = new ReflectionMethod($this->column, 'phpTypecast');
         $returnType = $reflection->getReturnType();
 
         if ($returnType instanceof ReflectionNamedType) {
+            $typeName = $returnType->getName();
+
+            if ($typeName === 'mixed') {
+                return 'mixed';
+            }
+
             return ($isNullable ? '?' : '') . ($returnType->isBuiltin() ? '' : '\\') . $returnType->getName();
         }
 

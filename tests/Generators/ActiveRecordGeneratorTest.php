@@ -61,6 +61,8 @@ final class ActiveRecordGeneratorTest extends TestCase
         $this->assertStringContainsString('public function setIsVerified(bool $is_verified): void', $content);
         $this->assertStringContainsString('public function getCreatedAt(): ?\\DateTimeImmutable', $content);
         $this->assertStringContainsString('public function setCreatedAt(\\DateTimeImmutable $created_at): void', $content);
+        $this->assertStringContainsString('public function getLuckyNumbers(): mixed', $content);
+        $this->assertStringContainsString('public function setLuckyNumbers(mixed $lucky_numbers): void', $content);
     }
 
     public function testGenerateWithDefaultValues(): void
@@ -83,6 +85,7 @@ final class ActiveRecordGeneratorTest extends TestCase
         $this->assertStringContainsString('$profile_id = null;', $content);
         $this->assertStringContainsString('$score = null;', $content);
         $this->assertStringContainsString('$is_verified = false;', $content);
+        $this->assertStringContainsString('$lucky_numbers = [1,2,3];', $content);
     }
 
     public function testGenerateWithPrivateProperties(): void
@@ -108,6 +111,7 @@ final class ActiveRecordGeneratorTest extends TestCase
         $this->assertStringContainsString('private ?float $score', $content);
         $this->assertStringContainsString('private bool $is_verified', $content);
         $this->assertStringContainsString('private \\DateTimeImmutable $created_at', $content);
+        $this->assertStringContainsString('private mixed $lucky_numbers', $content);
     }
 
     public function testGenerateWithPublicProperties(): void
@@ -133,6 +137,7 @@ final class ActiveRecordGeneratorTest extends TestCase
         $this->assertStringContainsString('public ?float $score', $content);
         $this->assertStringContainsString('public bool $is_verified', $content);
         $this->assertStringContainsString('public \\DateTimeImmutable $created_at', $content);
+        $this->assertStringContainsString('public mixed $lucky_numbers', $content);
     }
 
     public function testGenerateWithRepositoryTrait(): void
@@ -238,6 +243,7 @@ final class ActiveRecordGeneratorTest extends TestCase
         $this->assertStringContainsString('?float $score', $content);
         $this->assertStringContainsString('bool $is_verified', $content);
         $this->assertStringContainsString('\\DateTimeImmutable $created_at', $content);
+        $this->assertStringContainsString('mixed $lucky_numbers', $content);
     }
 
     public function testInvalidTableName(): void
