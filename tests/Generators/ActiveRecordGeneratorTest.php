@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii\Tests\Generators;
 
-use Yiisoft\ActiveRecord\ActiveRecord;
 use Yiisoft\Injector\Injector;
 use Yiisoft\Yii\Gii\Exception\InvalidGeneratorCommandException;
 use Yiisoft\Yii\Gii\Generator\ActiveRecord\Command;
@@ -280,7 +279,6 @@ final class ActiveRecordGeneratorTest extends TestCase
             CODE,
             $content,
         );
-
     }
 
     private function createGenerator(...$params): Generator
