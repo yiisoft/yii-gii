@@ -84,7 +84,7 @@ final class <?= $command->getModelName(); ?> extends <?= StringHelper::baseName(
 <?php endif; ?>
     public function tableName(): string
     {
-        return '<?= $command->tableName ?>';
+        return '<?= $command->table ?>';
     }
 <?php if ($command->generateGettersSetters): ?>
 <?php foreach ($properties as $property): ?>

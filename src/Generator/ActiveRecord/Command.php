@@ -22,17 +22,17 @@ final class Command extends AbstractGeneratorCommand
             message: 'Invalid table name'
         )]
         #[TableExistsRule]
-        public readonly string $tableName,
+        public readonly string $table,
         #[Required]
         #[Regex(
-            pattern: '/^[a-z][a-z0-9]*(?:\\\\[a-z][a-z0-9]*)*$/i',
+            pattern: '/^[a-z_]\w*(?:\\\\[a-z_]\w*)*$/i',
             message: 'Invalid namespace'
         )]
         public readonly string $namespace = 'App\\Model',
         #[Required]
         #[Regex(
-            pattern: '/^[a-z\\\\]*$/i',
-            message: 'Only word characters and backslashes are allowed.',
+            pattern: '/^\\\\?[a-z_]\w*(?:\\\\[a-z_]\w*)*$/i',
+            message: 'Invalid base class name',
             skipOnEmpty: true,
         )]
         #[ClassExistsRule]
@@ -50,7 +50,7 @@ final class Command extends AbstractGeneratorCommand
 
     public function getModelName(): string
     {
-        return (new Inflector())->tableToClass($this->tableName);
+        return (new Inflector())->tableToClass($this->table);
     }
 
     public function usePrivatePropertiesTrait(): bool
@@ -63,21 +63,21 @@ final class Command extends AbstractGeneratorCommand
         return [
             'namespace' => 'Model namespace',
             'baseClass' => 'Base class',
-            'tableName' => 'Table name',
-            'template' => 'Template',
+            'table' => 'Table name',
             'propertyVisibility' => 'Property visibility',
             'generateGettersSetters' => 'Generate getters and setters',
             'generateRelations' => 'Generate relations',
             'useRepositoryTrait' => 'Use RepositoryTrait',
+            'template' => 'Template',
         ];
     }
 
     public static function getHints(): array
     {
         return [
+            'table' => 'Corresponded table name for the model class.',
             'namespace' => 'Namespace for the model class to store it in the related directory.',
-            'baseClass' => 'Parent class for the new model class.',
-            'tableName' => 'Corresponded table name for the model class.',
+            'baseClass' => 'Parent active record class for the new model class.',
             'propertyVisibility' => 'Visibility for properties: private, protected, or public.',
             'generateGettersSetters' => 'Whether to generate getter and setter methods for properties.',
             'generateRelations' => 'Whether to generate relation methods based on foreign keys.',
@@ -89,7 +89,7 @@ final class Command extends AbstractGeneratorCommand
     {
         return [
             'namespace',
-            'tableName',
+            'table',
             'baseClass',
             'template',
             'propertyVisibility',

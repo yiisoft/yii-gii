@@ -67,7 +67,7 @@ final class Generator extends AbstractGenerator
 
         $properties = [];
         $relations = [];
-        $schema = $this->connection->getTableSchema($command->tableName, true);
+        $schema = $this->connection->getTableSchema($command->table, true);
 
         if ($schema !== null) {
             foreach ($schema->getColumns() as $columnName => $column) {

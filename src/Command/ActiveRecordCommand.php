@@ -49,7 +49,7 @@ final class ActiveRecordCommand extends BaseGenerateCommand
     protected function createGeneratorCommand(InputInterface $input): GeneratorCommandInterface
     {
         return new Command(
-            tableName: (string) $input->getArgument('table'),
+            table: (string) $input->getArgument('table'),
             namespace: (string) $input->getOption('namespace'),
             baseClass: (string) $input->getOption('base'),
             propertyVisibility: (string) $input->getOption('visibility'),

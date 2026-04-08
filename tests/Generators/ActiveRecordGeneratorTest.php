@@ -17,7 +17,7 @@ final class ActiveRecordGeneratorTest extends TestCase
     {
         $generator = $this->createGenerator();
         $command = new Command(
-            tableName: 'user',
+            table: 'user',
             namespace: 'Yiisoft\\Yii\\Gii\\Tests\\Model',
         );
 
@@ -30,7 +30,7 @@ final class ActiveRecordGeneratorTest extends TestCase
     {
         $generator = $this->createGenerator();
         $command = new Command(
-            tableName: 'user',
+            table: 'user',
             namespace: 'Yiisoft\\Yii\\Gii\\Tests\\Model',
         );
 
@@ -63,7 +63,7 @@ final class ActiveRecordGeneratorTest extends TestCase
     {
         $generator = $this->createGenerator();
         $command = new Command(
-            tableName: 'user',
+            table: 'user',
             namespace: 'Yiisoft\\Yii\\Gii\\Tests\\Model',
         );
 
@@ -84,7 +84,7 @@ final class ActiveRecordGeneratorTest extends TestCase
     {
         $generator = $this->createGenerator();
         $command = new Command(
-            tableName: 'user',
+            table: 'user',
             namespace: 'Yiisoft\\Yii\\Gii\\Tests\\Model',
             propertyVisibility: 'private',
         );
@@ -108,7 +108,7 @@ final class ActiveRecordGeneratorTest extends TestCase
     {
         $generator = $this->createGenerator();
         $command = new Command(
-            tableName: 'user',
+            table: 'user',
             namespace: 'Yiisoft\\Yii\\Gii\\Tests\\Model',
             propertyVisibility: 'public',
         );
@@ -132,7 +132,7 @@ final class ActiveRecordGeneratorTest extends TestCase
     {
         $generator = $this->createGenerator();
         $command = new Command(
-            tableName: 'user',
+            table: 'user',
             namespace: 'Yiisoft\\Yii\\Gii\\Tests\\Model',
             useRepositoryTrait: true,
         );
@@ -148,7 +148,7 @@ final class ActiveRecordGeneratorTest extends TestCase
     {
         $generator = $this->createGenerator();
         $command = new Command(
-            tableName: 'user',
+            table: 'user',
             namespace: 'Yiisoft\\Yii\\Gii\\Tests\\Model',
             propertyVisibility: 'private',
         );
@@ -164,7 +164,7 @@ final class ActiveRecordGeneratorTest extends TestCase
     {
         $generator = $this->createGenerator();
         $command = new Command(
-            tableName: 'user_profile',
+            table: 'user_profile',
             namespace: 'Yiisoft\\Yii\\Gii\\Tests\\Model',
         );
 
@@ -182,7 +182,7 @@ final class ActiveRecordGeneratorTest extends TestCase
     {
         $generator = $this->createGenerator();
         $command = new Command(
-            tableName: 'user',
+            table: 'user',
             namespace: 'Yiisoft\\Yii\\Gii\\Tests\\Model',
         );
 
@@ -203,7 +203,7 @@ final class ActiveRecordGeneratorTest extends TestCase
     {
         $generator = $this->createGenerator();
         $command = new Command(
-            tableName: 'user',
+            table: 'user',
             namespace: 'Yiisoft\\Yii\\Gii\\Tests\\Model',
         );
 
@@ -227,7 +227,7 @@ final class ActiveRecordGeneratorTest extends TestCase
     {
         $generator = $this->createGenerator();
         $command = new Command(
-            tableName: 'user2',
+            table: 'user2',
         );
 
         $this->expectException(InvalidGeneratorCommandException::class);
@@ -242,7 +242,7 @@ final class ActiveRecordGeneratorTest extends TestCase
             ],
         );
         $command = new Command(
-            tableName: 'user',
+            table: 'user',
             namespace: '0App',
             template: 'test',
         );
@@ -261,7 +261,7 @@ final class ActiveRecordGeneratorTest extends TestCase
             ],
         );
         $command = new Command(
-            tableName: 'user',
+            table: 'user',
             namespace: 'Yiisoft\\Yii\\Gii\\Tests\\Model',
             template: 'custom',
         );
@@ -275,7 +275,7 @@ final class ActiveRecordGeneratorTest extends TestCase
     {
         $generator = $this->createGenerator();
         $command = new Command(
-            tableName: 'user',
+            table: 'user',
             namespace: 'Yiisoft\\Yii\\Gii\\Tests\\Model',
         );
 
@@ -297,7 +297,7 @@ final class ActiveRecordGeneratorTest extends TestCase
     {
         $generator = $this->createGenerator();
         $command = new Command(
-            tableName: 'user',
+            table: 'user',
             namespace: 'Yiisoft\\Yii\\Gii\\Tests\\Model',
         );
 
@@ -322,7 +322,7 @@ final class ActiveRecordGeneratorTest extends TestCase
     {
         $generator = $this->createGenerator();
         $command = new Command(
-            tableName: 'user',
+            table: 'user',
             namespace: 'Yiisoft\\Yii\\Gii\\Tests\\Model',
         );
 
@@ -344,7 +344,7 @@ final class ActiveRecordGeneratorTest extends TestCase
     {
         $generator = $this->createGenerator();
         $command = new Command(
-            tableName: 'user',
+            table: 'user',
             namespace: 'Yiisoft\\Yii\\Gii\\Tests\\Model',
         );
 
