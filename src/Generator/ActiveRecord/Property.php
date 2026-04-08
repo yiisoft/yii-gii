@@ -12,6 +12,14 @@ use Yiisoft\Db\Schema\Column\ColumnInterface;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\VarDumper\VarDumper;
 
+use function array_diff;
+use function array_unique;
+use function count;
+use function get_debug_type;
+use function implode;
+use function in_array;
+use function is_object;
+use function reset;
 use function sprintf;
 use function var_export;
 
@@ -124,6 +132,20 @@ final class Property
 
     private function getPhpType(bool $isNullable): string
     {
+        $types = [];
+
+        if ($isNullable) {
+            $types[] = 'null';
+        }
+
+        $defaultValue = $this->column->getDefaultValue();
+
+        if ($defaultValue !== null) {
+            $defaultValueType = get_debug_type($defaultValue);
+
+            $types[] = (is_object($defaultValue) ? '\\' : '') . $defaultValueType;
+        }
+
         $reflection = new ReflectionMethod($this->column, 'phpTypecast');
         $returnType = $reflection->getReturnType();
 
@@ -134,18 +156,24 @@ final class Property
                 return 'mixed';
             }
 
-            return ($isNullable ? '?' : '') . ($returnType->isBuiltin() ? '' : '\\') . $returnType->getName();
-        }
-
-        if ($returnType instanceof ReflectionUnionType) {
-            $types = [];
+            $types[] = ($returnType->isBuiltin() ? '' : '\\') . $returnType->getName();
+        } elseif ($returnType instanceof ReflectionUnionType) {
             foreach ($returnType->getTypes() as $type) {
                 $types[] = ($type->isBuiltin() ? '' : '\\') . $type->getName();
             }
-
-            return implode('|', $types);
+        } else {
+            return 'mixed';
         }
 
-        return ($isNullable ? '?' : '') . 'mixed';
+        $types = array_unique($types);
+
+        if (count($types) === 2 && in_array('null', $types, true)) {
+            $types = array_diff($types, ['null']);
+
+            /** @psalm-suppress PossiblyFalseOperand */
+            return '?' . reset($types);
+        }
+
+        return implode('|', $types);
     }
 }

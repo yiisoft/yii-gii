@@ -51,8 +51,8 @@ final class ActiveRecordGeneratorTest extends TestCase
         $this->assertStringContainsString('public function setScore(?float $score): void', $content);
         $this->assertStringContainsString('public function getIsVerified(): bool', $content);
         $this->assertStringContainsString('public function setIsVerified(bool $is_verified): void', $content);
-        $this->assertStringContainsString('public function getCreatedAt(): ?\\DateTimeImmutable', $content);
-        $this->assertStringContainsString('public function setCreatedAt(\\DateTimeImmutable $created_at): void', $content);
+        $this->assertStringContainsString('public function getCreatedAt(): null|\\Yiisoft\\Db\\Expression\\Expression|\\DateTimeImmutable', $content);
+        $this->assertStringContainsString('public function setCreatedAt(\\Yiisoft\\Db\\Expression\\Expression|\\DateTimeImmutable $created_at): void', $content);
         $this->assertStringContainsString('public function getLuckyNumbers(): mixed', $content);
         $this->assertStringContainsString('public function setLuckyNumbers(mixed $lucky_numbers): void', $content);
     }
@@ -96,7 +96,7 @@ final class ActiveRecordGeneratorTest extends TestCase
         $this->assertStringContainsString('private ?int $profile_id', $content);
         $this->assertStringContainsString('private ?float $score', $content);
         $this->assertStringContainsString('private bool $is_verified', $content);
-        $this->assertStringContainsString('private \\DateTimeImmutable $created_at', $content);
+        $this->assertStringContainsString('private \\Yiisoft\\Db\\Expression\\Expression|\\DateTimeImmutable $created_at', $content);
         $this->assertStringContainsString('private mixed $lucky_numbers', $content);
     }
 
@@ -119,7 +119,7 @@ final class ActiveRecordGeneratorTest extends TestCase
         $this->assertStringContainsString('public ?int $profile_id', $content);
         $this->assertStringContainsString('public ?float $score', $content);
         $this->assertStringContainsString('public bool $is_verified', $content);
-        $this->assertStringContainsString('public \\DateTimeImmutable $created_at', $content);
+        $this->assertStringContainsString('public \\Yiisoft\\Db\\Expression\\Expression|\\DateTimeImmutable $created_at', $content);
         $this->assertStringContainsString('public mixed $lucky_numbers', $content);
     }
 
@@ -134,7 +134,7 @@ final class ActiveRecordGeneratorTest extends TestCase
         $files = $generator->generate($command);
         $content = reset($files)->getContent();
 
-        $this->assertStringContainsString('use Yiisoft\ActiveRecord\Trait\RepositoryTrait;', $content);
+        $this->assertStringContainsString('use Yiisoft\\ActiveRecord\\Trait\\RepositoryTrait;', $content);
         $this->assertStringContainsString('use RepositoryTrait;', $content);
     }
 
@@ -149,7 +149,7 @@ final class ActiveRecordGeneratorTest extends TestCase
         $files = $generator->generate($command);
         $content = reset($files)->getContent();
 
-        $this->assertStringContainsString('use Yiisoft\ActiveRecord\Trait\PrivatePropertiesTrait;', $content);
+        $this->assertStringContainsString('use Yiisoft\\ActiveRecord\\Trait\\PrivatePropertiesTrait;', $content);
         $this->assertStringContainsString('use PrivatePropertiesTrait;', $content);
     }
 
@@ -167,7 +167,7 @@ final class ActiveRecordGeneratorTest extends TestCase
         $this->assertStringContainsString('public function relationQuery(string $name): ActiveQueryInterface', $content);
         $this->assertStringContainsString('public function getUser()', $content);
         $this->assertStringContainsString('public function getUserQuery(): ActiveQueryInterface', $content);
-        $this->assertStringContainsString('use Yiisoft\ActiveRecord\ActiveQueryInterface;', $content);
+        $this->assertStringContainsString('use Yiisoft\\ActiveRecord\\ActiveQueryInterface;', $content);
     }
 
     public function testGenerateWithNullableColumns(): void
@@ -209,7 +209,7 @@ final class ActiveRecordGeneratorTest extends TestCase
         $this->assertStringContainsString('?int $profile_id', $content);
         $this->assertStringContainsString('?float $score', $content);
         $this->assertStringContainsString('bool $is_verified', $content);
-        $this->assertStringContainsString('\\DateTimeImmutable $created_at', $content);
+        $this->assertStringContainsString('\\Yiisoft\\Db\\Expression\\Expression|\\DateTimeImmutable $created_at', $content);
         $this->assertStringContainsString('mixed $lucky_numbers', $content);
     }
 
@@ -271,16 +271,98 @@ final class ActiveRecordGeneratorTest extends TestCase
         $content = reset($files)->getContent();
 
         $this->assertStringContainsStringIgnoringLineEndings(
-            <<<'CODE'
+            <<<'PHP'
                 public function __construct()
                 {
                     $this->created_at = new Expression('CURRENT_TIMESTAMP', []);
                 }
-            CODE,
+            PHP,
             $content,
         );
     }
 
+    public function testGenerateRelations(): void
+    {
+        $generator = $this->createGenerator();
+        $command = new Command(
+            tableName: 'user',
+        );
+
+        $files = $generator->generate($command);
+        $content = reset($files)->getContent();
+
+        $this->assertStringContainsStringIgnoringLineEndings(
+            <<<'PHP'
+                public function relationQuery(string $name): ActiveQueryInterface
+                {
+                    return match ($name) {
+                        'userProfile' => $this->getUserProfileQuery(),
+                        default => parent::relationQuery($name),
+                    };
+                }
+            PHP,
+            $content,
+        );
+    }
+
+    public function testGenerateRelationGetter(): void
+    {
+        $generator = $this->createGenerator();
+        $command = new Command(
+            tableName: 'user',
+        );
+
+        $files = $generator->generate($command);
+        $content = reset($files)->getContent();
+
+        $this->assertStringContainsStringIgnoringLineEndings(
+            <<<'PHP'
+                public function getUserProfile(): ?UserProfile
+                {
+                    return $this->relation('userProfile');
+                }
+            PHP,
+            $content,
+        );
+    }
+
+    public function testGenerateRelationQueryGetter(): void
+    {
+        $generator = $this->createGenerator();
+        $command = new Command(
+            tableName: 'user',
+        );
+
+        $files = $generator->generate($command);
+        $content = reset($files)->getContent();
+
+        $this->assertStringContainsStringIgnoringLineEndings(
+            <<<'PHP'
+                public function getUserProfileQuery(): ActiveQueryInterface
+                {
+                    return $this->hasOne(UserProfile::class, ['id' => 'profile_id'])->inverseOf('user');
+                }
+            PHP,
+            $content,
+        );
+    }
+    public function relationQuery(string $name): ActiveQueryInterface
+    {
+        return match ($name) {
+            'userProfile' => $this->getUserProfileQuery(),
+            default => parent::relationQuery($name),
+        };
+    }
+
+    public function getUserProfile(): ?UserProfile
+    {
+        return $this->relation('userProfile');
+    }
+
+    public function getUserProfileQuery(): ActiveQueryInterface
+    {
+        return $this->hasOne(UserProfile::class, ['id' => 'profile_id'])->inverseOf('user');
+    }
     private function createGenerator(...$params): Generator
     {
         $injector = new Injector(

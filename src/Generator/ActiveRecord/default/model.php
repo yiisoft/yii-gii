@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Yiisoft\Strings\StringHelper;
+use Yiisoft\VarDumper\VarDumper;
 use Yiisoft\Yii\Gii\Generator\ActiveRecord\Property;
 use Yiisoft\Yii\Gii\Generator\ActiveRecord\Relation;
 
@@ -26,12 +27,6 @@ foreach ($properties as $property) {
     }
 }
 
-// Collect unique related model names for use statements
-$relatedModels = [];
-foreach ($relations as $relation) {
-    $relatedModels[$relation->getRelatedModel()] = true;
-}
-
 echo "<?php\n";
 ?>
 
@@ -52,9 +47,6 @@ use Yiisoft\ActiveRecord\ActiveQueryInterface;
 <?php if ($useExpression): ?>
 use Yiisoft\Db\Expression\Expression;
 <?php endif; ?>
-<?php foreach (array_keys($relatedModels) as $relatedModel): ?>
-use <?= $command->namespace . '\\' . $relatedModel ?>;
-<?php endforeach; ?>
 
 final class <?= $command->getModelName(); ?> extends <?= StringHelper::baseName($command->baseClass) . PHP_EOL ?>
 {
@@ -136,7 +128,7 @@ final class <?= $command->getModelName(); ?> extends <?= StringHelper::baseName(
 
     public function <?= $relation->getQueryMethodName() ?>(): ActiveQueryInterface
     {
-        return $this-><?= $relation->isHasOne() ? 'hasOne' : 'hasMany' ?>(<?= $relation->getRelatedModel() ?>::class, <?= var_export($relation->getLink(), true) ?>)<?= "->inverseOf('" . $relation->getInverseOf() . "')" ?>;
+        return $this-><?= $relation->isHasOne() ? 'hasOne' : 'hasMany' ?>(<?= $relation->getRelatedModel() ?>::class, <?= VarDumper::create($relation->getLink())->export(false) ?>)<?= "->inverseOf('" . $relation->getInverseOf() . "')" ?>;
     }
 <?php endforeach; ?>
 <?php endif; ?>
