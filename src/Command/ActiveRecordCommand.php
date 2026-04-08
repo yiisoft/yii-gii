@@ -50,13 +50,13 @@ final class ActiveRecordCommand extends BaseGenerateCommand
     {
         return new Command(
             tableName: (string) $input->getArgument('table'),
-            template: (string) $input->getOption('template'),
             namespace: (string) $input->getOption('namespace'),
             baseClass: (string) $input->getOption('base'),
             propertyVisibility: (string) $input->getOption('visibility'),
             generateGettersSetters: !$input->getOption('no-get-set'),
             generateRelations: !$input->getOption('no-relations'),
             useRepositoryTrait: (bool) $input->getOption('repository'),
+            template: (string) $input->getOption('template'),
         );
     }
 }

@@ -23,7 +23,6 @@ final class Command extends AbstractGeneratorCommand
         )]
         #[TableExistsRule]
         public readonly string $tableName,
-        string $template = 'default',
         #[Required]
         #[Regex(
             pattern: '/^[a-z][a-z0-9]*(?:\\\\[a-z][a-z0-9]*)*$/i',
@@ -44,6 +43,7 @@ final class Command extends AbstractGeneratorCommand
         public readonly bool $generateGettersSetters = true,
         public readonly bool $generateRelations = true,
         public readonly bool $useRepositoryTrait = false,
+        string $template = 'default',
     ) {
         parent::__construct($template);
     }
