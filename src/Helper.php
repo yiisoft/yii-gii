@@ -22,7 +22,7 @@ use function trim;
 final class Helper
 {
     /**
-     * Returns the file path matching the give namespace.
+     * Returns the file path matching the given namespace.
      *
      * @param string $namespace Namespace.
      *
@@ -32,6 +32,7 @@ final class Helper
     {
         $classLoaderReflection = new ReflectionClass(ClassLoader::class);
         $vendorDir = dirname($classLoaderReflection->getFileName(), 2);
+        $namespaceWithBackSlash = "$namespace\\";
 
         /**
          * @psalm-suppress UnresolvableInclude
@@ -40,7 +41,7 @@ final class Helper
         $map = require "$vendorDir/composer/autoload_psr4.php";
 
         foreach ($map as $mapNamespace => $mapDirectories) {
-            if (str_starts_with($namespace, trim($mapNamespace, '\\'))) {
+            if (str_starts_with($namespaceWithBackSlash, trim($mapNamespace, '\\') . '\\')) {
                 /** @var string $mapDirectory */
                 $mapDirectory = reset($mapDirectories);
                 return $mapDirectory . '/' . str_replace('\\', '/', substr($namespace, strlen($mapNamespace)));

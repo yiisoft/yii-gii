@@ -18,7 +18,7 @@ final class Command extends AbstractGeneratorCommand
     public function __construct(
         #[Required]
         #[Regex(
-            pattern: '/^[\w\-]+$/',
+            pattern: '/^[\w\-.]+$/',
             message: 'Invalid table name'
         )]
         #[TableExistsRule]
