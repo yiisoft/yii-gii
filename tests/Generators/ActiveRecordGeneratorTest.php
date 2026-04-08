@@ -346,6 +346,7 @@ final class ActiveRecordGeneratorTest extends TestCase
             $content,
         );
     }
+
     public function relationQuery(string $name): ActiveQueryInterface
     {
         return match ($name) {
@@ -363,6 +364,7 @@ final class ActiveRecordGeneratorTest extends TestCase
     {
         return $this->hasOne(UserProfile::class, ['id' => 'profile_id'])->inverseOf('user');
     }
+
     private function createGenerator(...$params): Generator
     {
         $injector = new Injector(
