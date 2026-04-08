@@ -347,24 +347,6 @@ final class ActiveRecordGeneratorTest extends TestCase
         );
     }
 
-    public function relationQuery(string $name): ActiveQueryInterface
-    {
-        return match ($name) {
-            'userProfile' => $this->getUserProfileQuery(),
-            default => parent::relationQuery($name),
-        };
-    }
-
-    public function getUserProfile(): ?UserProfile
-    {
-        return $this->relation('userProfile');
-    }
-
-    public function getUserProfileQuery(): ActiveQueryInterface
-    {
-        return $this->hasOne(UserProfile::class, ['id' => 'profile_id'])->inverseOf('user');
-    }
-
     private function createGenerator(...$params): Generator
     {
         $injector = new Injector(
