@@ -37,7 +37,7 @@ abstract class BaseGenerateCommand extends Command
     protected function configure(): void
     {
         $this->addOption('overwrite', 'o', InputOption::VALUE_NONE, 'Overwrite existing files')
-            ->addOption('template', 't', InputOption::VALUE_OPTIONAL, 'Model template', 'default');
+            ->addOption('template', 't', InputOption::VALUE_OPTIONAL, 'Code template', 'default');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
