@@ -31,7 +31,7 @@ final class Relation
     /**
      * Build link array [foreign_column => local_column]
      *
-     * @return string[]
+     * @return array<string, string>
      */
     public function getLink(): array
     {

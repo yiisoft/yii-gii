@@ -158,6 +158,7 @@ final class Property
 
             $types[] = ($returnType->isBuiltin() ? '' : '\\') . $returnType->getName();
         } elseif ($returnType instanceof ReflectionUnionType) {
+            /** @var ReflectionNamedType $type */
             foreach ($returnType->getTypes() as $type) {
                 $types[] = ($type->isBuiltin() ? '' : '\\') . $type->getName();
             }

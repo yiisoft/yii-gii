@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\Gii\Tests\Command;
 
 use Symfony\Component\Console\Tester\CommandTester;
+use Yiisoft\ActiveRecord\ActiveRecord;
 use Yiisoft\Files\FileHelper;
 use Yiisoft\Yii\Console\ExitCode;
 use Yiisoft\Yii\Gii\Command\ActiveRecordCommand;
@@ -32,7 +33,7 @@ final class ActiveRecordCommandTest extends TestCase
         $commandTester = $this->createCommandTester();
 
         $commandTester->execute(
-            ['tableName' => 'user'],
+            ['table' => 'user'],
             ['interactive' => false],
         );
 
@@ -46,7 +47,7 @@ final class ActiveRecordCommandTest extends TestCase
         $commandTester = $this->createCommandTester();
 
         $exitCode = $commandTester->execute(
-            ['tableName' => 'non_existent_table'],
+            ['table' => 'non_existent_table'],
             ['interactive' => false],
         );
 
@@ -60,7 +61,7 @@ final class ActiveRecordCommandTest extends TestCase
 
         $commandTester->execute(
             [
-                'tableName' => 'user',
+                'table' => 'user',
                 '--namespace' => 'App\\Entity',
             ],
             ['interactive' => false],
@@ -75,8 +76,8 @@ final class ActiveRecordCommandTest extends TestCase
 
         $commandTester->execute(
             [
-                'tableName' => 'user',
-                '--baseClass' => \Yiisoft\ActiveRecord\ActiveRecord::class,
+                'table' => 'user',
+                '--base' => ActiveRecord::class,
             ],
             ['interactive' => false],
         );
@@ -90,8 +91,8 @@ final class ActiveRecordCommandTest extends TestCase
 
         $commandTester->execute(
             [
-                'tableName' => 'user',
-                '--propertyVisibility' => 'private',
+                'table' => 'user',
+                '--visibility' => 'private',
             ],
             ['interactive' => false],
         );
@@ -105,10 +106,10 @@ final class ActiveRecordCommandTest extends TestCase
 
         $commandTester->execute(
             [
-                'tableName' => 'user',
-                '--generateGettersSetters' => 'false',
-                '--generateRelations' => 'false',
-                '--useRepositoryTrait' => 'true',
+                'table' => 'user',
+                '--no-get-set' => '',
+                '--no-relations' => '',
+                '--repository' => '',
             ],
             ['interactive' => false],
         );
@@ -122,7 +123,7 @@ final class ActiveRecordCommandTest extends TestCase
 
         $commandTester->execute(
             [
-                'tableName' => 'user',
+                'table' => 'user',
                 '--template' => 'default',
             ],
             ['interactive' => false],
@@ -137,13 +138,13 @@ final class ActiveRecordCommandTest extends TestCase
 
         $commandTester->execute(
             [
-                'tableName' => 'user',
+                'table' => 'user',
                 '--namespace' => 'App\\Model',
-                '--baseClass' => \Yiisoft\ActiveRecord\ActiveRecord::class,
-                '--propertyVisibility' => 'protected',
-                '--generateGettersSetters' => 'true',
-                '--generateRelations' => 'true',
-                '--useRepositoryTrait' => 'false',
+                '--base' => ActiveRecord::class,
+                '--visibility' => 'protected',
+                '--no-get-set' => '',
+                '--no-relations' => '',
+                '--repository' => '',
                 '--template' => 'default',
             ],
             ['interactive' => false],
@@ -159,7 +160,7 @@ final class ActiveRecordCommandTest extends TestCase
 
         $exitCode = $commandTester->execute(
             [
-                'tableName' => 'user',
+                'table' => 'user',
                 '--namespace' => '0Invalid',
             ],
             ['interactive' => false],
