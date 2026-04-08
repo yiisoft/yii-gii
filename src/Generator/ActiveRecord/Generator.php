@@ -4,14 +4,20 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii\Generator\ActiveRecord;
 
+use Composer\Autoload\ClassLoader;
 use InvalidArgumentException;
+use LogicException;
+use ReflectionClass;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Db\Connection\ConnectionInterface;
 use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\Yii\Gii\Component\CodeFile\CodeFile;
 use Yiisoft\Yii\Gii\Generator\AbstractGenerator;
 use Yiisoft\Yii\Gii\GeneratorCommandInterface;
+use Yiisoft\Yii\Gii\Helper;
 use Yiisoft\Yii\Gii\ParametersProvider;
+
+use function dirname;
 
 /**
  * This generator will generate a controller and one or a few action view files.
@@ -25,6 +31,11 @@ final class Generator extends AbstractGenerator
         private readonly ConnectionInterface $connection,
     ) {
         parent::__construct($aliases, $validator, $parametersProvider);
+    }
+
+    public static function getCommandClass(): string
+    {
+        return Command::class;
     }
 
     public static function getId(): string
@@ -102,7 +113,7 @@ final class Generator extends AbstractGenerator
      */
     private function getModelFile(Command $command): string
     {
-        $directory = '@src/Model/';
+        $directory = Helper::getNamespacePath($command->namespace);
 
         return $this->aliases->get(
             str_replace(
@@ -115,10 +126,5 @@ final class Generator extends AbstractGenerator
                 ),
             ),
         );
-    }
-
-    public static function getCommandClass(): string
-    {
-        return Command::class;
     }
 }

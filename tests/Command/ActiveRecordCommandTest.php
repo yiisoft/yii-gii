@@ -33,7 +33,10 @@ final class ActiveRecordCommandTest extends TestCase
         $commandTester = $this->createCommandTester();
 
         $commandTester->execute(
-            ['table' => 'user'],
+            [
+                'table' => 'user',
+                '--namespace' => 'Yiisoft\\Yii\\Gii\\Tests\\Model',
+            ],
             ['interactive' => false],
         );
 
@@ -62,7 +65,7 @@ final class ActiveRecordCommandTest extends TestCase
         $commandTester->execute(
             [
                 'table' => 'user',
-                '--namespace' => 'App\\Entity',
+                '--namespace' => 'Yiisoft\\Yii\\Gii\\Tests\\Model',
             ],
             ['interactive' => false],
         );
@@ -78,6 +81,7 @@ final class ActiveRecordCommandTest extends TestCase
             [
                 'table' => 'user',
                 '--base' => ActiveRecord::class,
+                '--namespace' => 'Yiisoft\\Yii\\Gii\\Tests\\Model',
             ],
             ['interactive' => false],
         );
@@ -92,6 +96,7 @@ final class ActiveRecordCommandTest extends TestCase
         $commandTester->execute(
             [
                 'table' => 'user',
+                '--namespace' => 'Yiisoft\\Yii\\Gii\\Tests\\Model',
                 '--visibility' => 'private',
             ],
             ['interactive' => false],
@@ -107,9 +112,10 @@ final class ActiveRecordCommandTest extends TestCase
         $commandTester->execute(
             [
                 'table' => 'user',
-                '--no-get-set' => '',
-                '--no-relations' => '',
-                '--repository' => '',
+                '--namespace' => 'Yiisoft\\Yii\\Gii\\Tests\\Model',
+                '--no-get-set' => true,
+                '--no-relations' => true,
+                '--repository' => true,
             ],
             ['interactive' => false],
         );
@@ -124,6 +130,7 @@ final class ActiveRecordCommandTest extends TestCase
         $commandTester->execute(
             [
                 'table' => 'user',
+                '--namespace' => 'Yiisoft\\Yii\\Gii\\Tests\\Model',
                 '--template' => 'default',
             ],
             ['interactive' => false],
@@ -139,12 +146,12 @@ final class ActiveRecordCommandTest extends TestCase
         $commandTester->execute(
             [
                 'table' => 'user',
-                '--namespace' => 'App\\Model',
+                '--namespace' => 'Yiisoft\\Yii\\Gii\\Tests\\Model',
                 '--base' => ActiveRecord::class,
                 '--visibility' => 'protected',
-                '--no-get-set' => '',
-                '--no-relations' => '',
-                '--repository' => '',
+                '--no-get-set' => true,
+                '--no-relations' => true,
+                '--repository' => true,
                 '--template' => 'default',
             ],
             ['interactive' => false],
