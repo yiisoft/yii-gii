@@ -30,6 +30,7 @@ final class ClassExistsHandler implements RuleHandlerInterface
 
         if (!class_exists($value)) {
             $result->addError("Class '$value' does not exist or has syntax error.");
+            return $result;
         }
 
         if ($rule->parent !== null && !is_subclass_of($value, $rule->parent)) {
