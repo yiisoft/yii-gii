@@ -14,13 +14,6 @@ use Yiisoft\Yii\Gii\Validator\ClassExistsRule;
 
 final class ClassExistsHandlerTest extends TestCase
 {
-    private ClassExistsHandler $handler;
-
-    protected function setUp(): void
-    {
-        $this->handler = new ClassExistsHandler();
-    }
-
     public function testValidClassWithoutParentConstraint(): void
     {
         $rule = new ClassExistsRule();
@@ -90,7 +83,8 @@ final class ClassExistsHandlerTest extends TestCase
 
     private function validate(mixed $value, ClassExistsRule $rule): Result
     {
+        $handler = new ClassExistsHandler();
         $context = new ValidationContext();
-        return $this->handler->validate($value, $rule, $context);
+        return $handler->validate($value, $rule, $context);
     }
 }
