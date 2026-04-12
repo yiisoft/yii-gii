@@ -6,8 +6,8 @@ namespace Yiisoft\Yii\Gii\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
@@ -36,8 +36,8 @@ abstract class BaseGenerateCommand extends Command
 
     protected function configure(): void
     {
-        $this->addOption('overwrite', 'o', InputArgument::OPTIONAL, '')
-            ->addOption('template', 't', InputArgument::OPTIONAL, '');
+        $this->addOption('overwrite', 'o', InputOption::VALUE_NONE, 'Overwrite existing files')
+            ->addOption('template', 't', InputOption::VALUE_OPTIONAL, 'Code template', 'default');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -80,7 +80,7 @@ abstract class BaseGenerateCommand extends Command
             return;
         }
         $output->writeln("<fg=magenta>The following files will be generated</>:\n");
-        $skipAll = $input->isInteractive() ? null : !$input->getArgument('overwrite');
+        $skipAll = $input->isInteractive() ? null : !$input->getOption('overwrite');
         $answers = [];
         foreach ($files as $file) {
             $path = $file->getRelativePath();
@@ -100,7 +100,9 @@ abstract class BaseGenerateCommand extends Command
             } else {
                 $output->writeln("    <fg=$color>[changed]</>   <fg=blue>$path</>");
                 if ($skipAll !== null) {
-                    $answers[$file->getId()] = CodeFileWriteOperationEnum::SAVE->value;
+                    $answers[$file->getId()] = $skipAll
+                        ? CodeFileWriteOperationEnum::SKIP->value
+                        : CodeFileWriteOperationEnum::SAVE->value;
                 } else {
                     $answer = $this->choice($input, $output);
                     $answers[$file->getId()] = ($answer === 'y' || $answer === 'ya')
@@ -120,7 +122,7 @@ abstract class BaseGenerateCommand extends Command
             return;
         }
 
-        if (!$this->confirm($input, $output)) {
+        if ($input->isInteractive() && !$this->confirm($input, $output)) {
             $output->writeln("\n<fg=cyan>No file was generated.</>");
             return;
         }

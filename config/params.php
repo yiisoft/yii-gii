@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Yiisoft\Yii\Gii\Command\ActiveRecordCommand;
 use Yiisoft\Yii\Gii\Command\ControllerCommand;
 use Yiisoft\Yii\Gii\Generator as Generators;
 
@@ -18,7 +19,8 @@ return [
     ],
     'yiisoft/yii-console' => [
         'commands' => [
-            'gii/controller' => ControllerCommand::class,
+            'gii:controller' => ControllerCommand::class,
+            'gii:active-record' => ActiveRecordCommand::class,
         ],
     ],
     'yiisoft/yii-gii' => [

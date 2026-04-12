@@ -17,9 +17,9 @@ final class ControllerGeneratorTest extends TestCase
     {
         $generator = $this->createGenerator();
         $command = new Command(
+            template: 'default',
             controllerClass: 'TestController',
             actions: ['index', 'edit', 'view'],
-            template: 'default',
         );
 
         $files = $generator->generate($command);
@@ -35,9 +35,9 @@ final class ControllerGeneratorTest extends TestCase
             ],
         );
         $command = new Command(
+            template: 'test',
             controllerClass: 'Wr0ngContr0ller',
             actions: ['index', 'ed1t', 'view'],
-            template: 'test',
         );
 
         $this->expectException(InvalidGeneratorCommandException::class);
@@ -61,9 +61,9 @@ final class ControllerGeneratorTest extends TestCase
             ],
         );
         $command = new Command(
+            template: 'custom',
             controllerClass: 'TestController',
             actions: ['index', 'edit', 'view'],
-            template: 'custom',
         );
 
         $files = $generator->generate($command);

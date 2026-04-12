@@ -11,6 +11,7 @@ use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\Yii\Gii\Component\CodeFile\CodeFile;
 use Yiisoft\Yii\Gii\Generator\AbstractGenerator;
 use Yiisoft\Yii\Gii\GeneratorCommandInterface;
+use Yiisoft\Yii\Gii\Helper;
 use Yiisoft\Yii\Gii\ParametersProvider;
 
 /**
@@ -25,6 +26,11 @@ final class Generator extends AbstractGenerator
         private readonly ConnectionInterface $connection,
     ) {
         parent::__construct($aliases, $validator, $parametersProvider);
+    }
+
+    public static function getCommandClass(): string
+    {
+        return Command::class;
     }
 
     public static function getId(): string
@@ -49,10 +55,6 @@ final class Generator extends AbstractGenerator
         ];
     }
 
-    /**
-     * @psalm-suppress DocblockTypeContradiction 'integer' => 'int'
-     * @psalm-suppress DeprecatedMethod $columnSchema->isAllowNull()
-     */
     public function doGenerate(GeneratorCommandInterface $command): array
     {
         if (!$command instanceof Command) {
@@ -64,23 +66,37 @@ final class Generator extends AbstractGenerator
         $rootPath = $this->aliases->get('@root');
 
         $properties = [];
-        if ($schema = $this->connection->getTableSchema($command->getTableName(), true)) {
-            foreach ($schema->getColumns() as $columnSchema) {
-                $properties[] = new Column(
-                    name: (string)$columnSchema->getName(),
-                    type: match ($columnSchema->getPhpType()) {
-                        'integer' => 'int',
-                        default => 'string',
-                    },
-                    isAllowNull: $columnSchema->isAllowNull(),
-                    defaultValue: $columnSchema->getDefaultValue(),
-                );
+        $relations = [];
+        $schema = $this->connection->getTableSchema($command->table, true);
+
+        if ($schema !== null) {
+            foreach ($schema->getColumns() as $columnName => $column) {
+                $properties[$columnName] = new Property($column);
+            }
+
+            if ($command->generateRelations) {
+                foreach ($schema->getForeignKeys() as $foreignKey) {
+                    $relations[] = new Relation($foreignKey, $command->getModelName());
+                }
+
+                // Mark columns used in relations
+                foreach ($relations as $relation) {
+                    foreach ($relation->getLink() as $columnName) {
+                        if (isset($properties[$columnName])) {
+                            $properties[$columnName]->usedInRelation = true;
+                        }
+                    }
+                }
             }
         }
-        $path = $this->getControllerFile($command);
+
+        $path = $this->getModelFile($command);
         $codeFile = (new CodeFile(
             $path,
-            $this->render($command, 'model.php', ['properties' => $properties])
+            $this->render($command, 'model.php', [
+                'properties' => $properties,
+                'relations' => $relations,
+            ])
         ))->withBasePath($rootPath);
         $files[$codeFile->getId()] = $codeFile;
 
@@ -88,11 +104,11 @@ final class Generator extends AbstractGenerator
     }
 
     /**
-     * @return string the controller class file path
+     * @return string the model class file path
      */
-    private function getControllerFile(Command $command): string
+    private function getModelFile(Command $command): string
     {
-        $directory = '@src/Model/';
+        $directory = Helper::getNamespacePath($command->namespace);
 
         return $this->aliases->get(
             str_replace(
@@ -105,10 +121,5 @@ final class Generator extends AbstractGenerator
                 ),
             ),
         );
-    }
-
-    public static function getCommandClass(): string
-    {
-        return Command::class;
     }
 }

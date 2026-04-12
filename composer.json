@@ -50,6 +50,7 @@
         "yiisoft/router": "^4.0",
         "yiisoft/strings": "^2.1",
         "yiisoft/validator": "^2.0",
+        "yiisoft/var-dumper": "^1.7",
         "yiisoft/yii-console": "^2.0",
         "yiisoft/yii-middleware": "^1.1"
     },

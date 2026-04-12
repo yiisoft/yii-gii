@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Yiisoft\Yii\Gii\Generator\Controller\Generator;
@@ -17,14 +18,12 @@ use Yiisoft\Yii\Gii\GeneratorInterface;
  * to generate a controller with some actions, you can run:
  *
  * ```
- * $ ./yii gii/controller OrderController --actions=index,view,edit
+ * $ ./yii gii:controller OrderController --actions=index,view,edit
  * ```
  */
+#[AsCommand(name: 'gii:controller')]
 final class ControllerCommand extends BaseGenerateCommand
 {
-    /** @psalm-suppress MissingPropertyType */
-    protected static $defaultName = 'gii/controller';
-
     protected function configure(): void
     {
         $this->setDescription('Gii controller generator')
