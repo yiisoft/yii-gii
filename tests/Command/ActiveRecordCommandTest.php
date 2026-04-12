@@ -177,6 +177,40 @@ final class ActiveRecordCommandTest extends TestCase
         $this->assertStringContainsString('Code not generated', $commandTester->getDisplay());
     }
 
+    public function testExecuteWithInvalidParentClass(): void
+    {
+        $commandTester = $this->createCommandTester();
+
+        $exitCode = $commandTester->execute(
+            [
+                'table' => 'user',
+                '--namespace' => 'Yiisoft\\Yii\\Gii\\Tests\\Model',
+                '--parent' => \stdClass::class,
+            ],
+            ['interactive' => false],
+        );
+
+        $this->assertSame(ExitCode::UNSPECIFIED_ERROR, $exitCode);
+        $this->assertStringContainsString('Code not generated', $commandTester->getDisplay());
+    }
+
+    public function testExecuteWithNonExistentParentClass(): void
+    {
+        $commandTester = $this->createCommandTester();
+
+        $exitCode = $commandTester->execute(
+            [
+                'table' => 'user',
+                '--namespace' => 'Yiisoft\\Yii\\Gii\\Tests\\Model',
+                '--parent' => 'NonExistent\\ParentClass',
+            ],
+            ['interactive' => false],
+        );
+
+        $this->assertSame(ExitCode::UNSPECIFIED_ERROR, $exitCode);
+        $this->assertStringContainsString('Code not generated', $commandTester->getDisplay());
+    }
+
     public function testCommandName(): void
     {
         $container = $this->getContainer();
