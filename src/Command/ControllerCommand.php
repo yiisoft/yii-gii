@@ -18,10 +18,10 @@ use Yiisoft\Yii\Gii\GeneratorInterface;
  * to generate a controller with some actions, you can run:
  *
  * ```
- * $ ./yii gii/controller OrderController --actions=index,view,edit
+ * $ ./yii gii:controller OrderController --actions=index,view,edit
  * ```
  */
-#[AsCommand(name: 'gii/controller')]
+#[AsCommand(name: 'gii:controller')]
 final class ControllerCommand extends BaseGenerateCommand
 {
     protected function configure(): void

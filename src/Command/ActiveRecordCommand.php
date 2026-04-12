@@ -24,7 +24,7 @@ use Yiisoft\Yii\Gii\GeneratorInterface;
  * $ ./yii gii/active-record user
  * ```
  */
-#[AsCommand(name: 'gii/active-record')]
+#[AsCommand(name: 'gii:active-record')]
 final class ActiveRecordCommand extends BaseGenerateCommand
 {
     protected function configure(): void

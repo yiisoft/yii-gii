@@ -185,7 +185,7 @@ final class ActiveRecordCommandTest extends TestCase
             $container->get(CodeFileWriter::class),
         );
 
-        $this->assertSame('gii/active-record', $command->getName());
+        $this->assertSame('gii:active-record', $command->getName());
     }
 
     public function testCommandDescription(): void
