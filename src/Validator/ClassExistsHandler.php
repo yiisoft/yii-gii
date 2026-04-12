@@ -24,7 +24,7 @@ final class ClassExistsHandler implements RuleHandlerInterface
 
         $result = new Result();
         if (!is_string($value)) {
-            $result->addError(sprintf('Value must be a string, %s given.".', gettype($value)));
+            $result->addError(sprintf('Value must be a string, "%s" given.', gettype($value)));
             return $result;
         }
 
