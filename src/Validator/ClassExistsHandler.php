@@ -9,7 +9,11 @@ use Yiisoft\Validator\Result;
 use Yiisoft\Validator\RuleHandlerInterface;
 use Yiisoft\Validator\ValidationContext;
 
+use function class_exists;
+use function gettype;
+use function is_string;
 use function is_subclass_of;
+use function sprintf;
 
 /**
  * An inline validator that checks if the attribute value refers to an existing class name.
