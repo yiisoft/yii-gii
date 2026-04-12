@@ -20,7 +20,7 @@ use Yiisoft\Yii\Gii\GeneratorInterface;
  * You can use this command to generate ActiveRecord models. For example,
  * to generate a model for a table, you can run:
  *
- * ```
+ * ```shell
  * $ ./yii gii:active-record user
  * ```
  */
@@ -32,7 +32,7 @@ final class ActiveRecordCommand extends BaseGenerateCommand
         $this->setDescription('Gii ActiveRecord model generator')
             ->addArgument('table', InputArgument::REQUIRED, 'Name of the database table')
             ->addOption('namespace', 'ns', InputOption::VALUE_OPTIONAL, 'Model namespace', 'App\\Model')
-            ->addOption('base', 'c', InputOption::VALUE_OPTIONAL, 'Model base class', ActiveRecord::class)
+            ->addOption('parent', 'p', InputOption::VALUE_OPTIONAL, 'Model parent class', ActiveRecord::class)
             ->addOption('visibility', 'v', InputOption::VALUE_OPTIONAL, 'Property visibility (private, protected, public)', 'protected')
             ->addOption('no-get-set', 'nogs', InputOption::VALUE_NONE, 'Do not generate getters and setters')
             ->addOption('no-relations', 'norel', InputOption::VALUE_NONE, 'Do not generate relations')
@@ -51,7 +51,7 @@ final class ActiveRecordCommand extends BaseGenerateCommand
         return new Command(
             table: (string) $input->getArgument('table'),
             namespace: (string) $input->getOption('namespace'),
-            baseClass: (string) $input->getOption('base'),
+            parentClass: (string) $input->getOption('parent'),
             propertyVisibility: (string) $input->getOption('visibility'),
             generateGettersSetters: !$input->getOption('no-get-set'),
             generateRelations: !$input->getOption('no-relations'),

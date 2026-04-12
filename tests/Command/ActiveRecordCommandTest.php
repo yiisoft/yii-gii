@@ -73,14 +73,14 @@ final class ActiveRecordCommandTest extends TestCase
         $commandTester->assertCommandIsSuccessful();
     }
 
-    public function testExecuteWithBaseClassOption(): void
+    public function testExecuteWithParentClassOption(): void
     {
         $commandTester = $this->createCommandTester();
 
         $commandTester->execute(
             [
                 'table' => 'user',
-                '--base' => ActiveRecord::class,
+                '--parent' => ActiveRecord::class,
                 '--namespace' => 'Yiisoft\\Yii\\Gii\\Tests\\Model',
             ],
             ['interactive' => false],
@@ -147,7 +147,7 @@ final class ActiveRecordCommandTest extends TestCase
             [
                 'table' => 'user',
                 '--namespace' => 'Yiisoft\\Yii\\Gii\\Tests\\Model',
-                '--base' => ActiveRecord::class,
+                '--parent' => ActiveRecord::class,
                 '--visibility' => 'protected',
                 '--no-get-set' => true,
                 '--no-relations' => true,

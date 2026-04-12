@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\Gii\Generator\ActiveRecord;
 
 use Yiisoft\ActiveRecord\ActiveRecord;
+use Yiisoft\ActiveRecord\ActiveRecordInterface;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Validator\Rule\In;
 use Yiisoft\Validator\Rule\Regex;
@@ -35,8 +36,8 @@ final class Command extends AbstractGeneratorCommand
             message: 'Invalid base class name',
             skipOnEmpty: true,
         )]
-        #[ClassExistsRule]
-        public readonly string $baseClass = ActiveRecord::class,
+        #[ClassExistsRule(ActiveRecordInterface::class)]
+        public readonly string $parentClass = ActiveRecord::class,
         #[Required]
         #[In(['private', 'protected', 'public'])]
         public readonly string $propertyVisibility = 'protected',

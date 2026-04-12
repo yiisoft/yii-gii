@@ -9,6 +9,8 @@ use Yiisoft\Validator\Result;
 use Yiisoft\Validator\RuleHandlerInterface;
 use Yiisoft\Validator\ValidationContext;
 
+use function is_subclass_of;
+
 /**
  * An inline validator that checks if the attribute value refers to an existing class name.
  */
@@ -28,6 +30,10 @@ final class ClassExistsHandler implements RuleHandlerInterface
 
         if (!class_exists($value)) {
             $result->addError("Class '$value' does not exist or has syntax error.");
+        }
+
+        if ($rule->parent !== null && !is_subclass_of($value, $rule->parent)) {
+            $result->addError("Class '$value' is not a subclass of '$rule->parent'.");
         }
 
         return $result;
