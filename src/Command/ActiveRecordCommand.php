@@ -21,7 +21,7 @@ use Yiisoft\Yii\Gii\GeneratorInterface;
  * to generate a model for a table, you can run:
  *
  * ```
- * $ ./yii gii/active-record user
+ * $ ./yii gii:active-record user
  * ```
  */
 #[AsCommand(name: 'gii:active-record')]
