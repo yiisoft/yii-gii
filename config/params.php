@@ -19,8 +19,6 @@ return [
     ],
     'yiisoft/yii-console' => [
         'commands' => [
-            'gii/controller' => ControllerCommand::class,
-            'gii/active-record' => ActiveRecordCommand::class,
             'gii:controller' => ControllerCommand::class,
             'gii:active-record' => ActiveRecordCommand::class,
         ],
