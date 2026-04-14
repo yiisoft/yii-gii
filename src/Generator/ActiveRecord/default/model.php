@@ -34,7 +34,7 @@ declare(strict_types=1);
 
 namespace <?= $command->namespace ?>;
 
-use <?= $command->baseClass ?>;
+use <?= $command->parentClass ?>;
 <?php if ($command->useRepositoryTrait): ?>
 use Yiisoft\ActiveRecord\Trait\RepositoryTrait;
 <?php endif; ?>
@@ -48,7 +48,7 @@ use Yiisoft\ActiveRecord\ActiveQueryInterface;
 use Yiisoft\Db\Expression\Expression;
 <?php endif; ?>
 
-final class <?= $command->getModelName(); ?> extends <?= StringHelper::baseName($command->baseClass) . PHP_EOL ?>
+final class <?= $command->getModelName(); ?> extends <?= StringHelper::baseName($command->parentClass) . PHP_EOL ?>
 {
 <?php if ($command->useRepositoryTrait): ?>
     use RepositoryTrait;

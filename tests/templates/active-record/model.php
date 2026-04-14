@@ -13,6 +13,6 @@ declare(strict_types=1);
 
 namespace <?= $command->namespace ?>;
 
-use <?= $command->baseClass ?>;
+use <?= $command->parentClass ?>;
 
 final custom class <?= $command->getModelName(); ?>

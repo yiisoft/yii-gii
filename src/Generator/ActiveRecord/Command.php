@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\Gii\Generator\ActiveRecord;
 
 use Yiisoft\ActiveRecord\ActiveRecord;
+use Yiisoft\ActiveRecord\ActiveRecordInterface;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Validator\Rule\In;
 use Yiisoft\Validator\Rule\Regex;
@@ -32,11 +33,11 @@ final class Command extends AbstractGeneratorCommand
         #[Required]
         #[Regex(
             pattern: '/^\\\\?[a-z_]\w*(?:\\\\[a-z_]\w*)*$/i',
-            message: 'Invalid base class name',
+            message: 'Invalid parent class name',
             skipOnEmpty: true,
         )]
-        #[ClassExistsRule]
-        public readonly string $baseClass = ActiveRecord::class,
+        #[ClassExistsRule(ActiveRecordInterface::class)]
+        public readonly string $parentClass = ActiveRecord::class,
         #[Required]
         #[In(['private', 'protected', 'public'])]
         public readonly string $propertyVisibility = 'protected',
@@ -62,7 +63,7 @@ final class Command extends AbstractGeneratorCommand
     {
         return [
             'namespace' => 'Model namespace',
-            'baseClass' => 'Base class',
+            'parentClass' => 'Parent class',
             'table' => 'Table name',
             'propertyVisibility' => 'Property visibility',
             'generateGettersSetters' => 'Generate getters and setters',
@@ -77,7 +78,7 @@ final class Command extends AbstractGeneratorCommand
         return [
             'table' => 'Corresponded table name for the model class.',
             'namespace' => 'Namespace for the model class to store it in the related directory.',
-            'baseClass' => 'Parent active record class for the new model class.',
+            'parentClass' => 'Parent active record class for the new model class.',
             'propertyVisibility' => 'Visibility for properties: private, protected, or public.',
             'generateGettersSetters' => 'Whether to generate getter and setter methods for properties.',
             'generateRelations' => 'Whether to generate relation methods based on foreign keys.',
@@ -90,7 +91,7 @@ final class Command extends AbstractGeneratorCommand
         return [
             'namespace',
             'table',
-            'baseClass',
+            'parentClass',
             'template',
             'propertyVisibility',
             'generateGettersSetters',

@@ -234,6 +234,48 @@ final class ActiveRecordGeneratorTest extends TestCase
         $generator->generate($command);
     }
 
+    public function testInvalidParentClass(): void
+    {
+        $generator = $this->createGenerator();
+        $command = new Command(
+            table: 'user',
+            namespace: 'Yiisoft\\Yii\\Gii\\Tests\\Model',
+            parentClass: \stdClass::class,
+        );
+
+        $this->expectException(InvalidGeneratorCommandException::class);
+        $generator->generate($command);
+    }
+
+    public function testNonExistentParentClass(): void
+    {
+        $generator = $this->createGenerator();
+        $command = new Command(
+            table: 'user',
+            namespace: 'Yiisoft\\Yii\\Gii\\Tests\\Model',
+            parentClass: 'NonExistent\\ParentClass',
+        );
+
+        $this->expectException(InvalidGeneratorCommandException::class);
+        $generator->generate($command);
+    }
+
+    public function testGenerateWithCustomParentClass(): void
+    {
+        $generator = $this->createGenerator();
+        $command = new Command(
+            table: 'user',
+            namespace: 'Yiisoft\\Yii\\Gii\\Tests\\Model',
+            parentClass: \Yiisoft\ActiveRecord\ActiveRecord::class,
+        );
+
+        $files = $generator->generate($command);
+        $content = reset($files)->getContent();
+
+        $this->assertStringContainsString('use Yiisoft\\ActiveRecord\\ActiveRecord;', $content);
+        $this->assertStringContainsString('extends ActiveRecord', $content);
+    }
+
     public function testInvalidGenerator(): void
     {
         $generator = $this->createGenerator(

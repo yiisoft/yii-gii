@@ -17,7 +17,7 @@ use Yiisoft\Yii\Gii\GeneratorInterface;
  * You can use this command to generate controllers, actions, etc. For example,
  * to generate a controller with some actions, you can run:
  *
- * ```
+ * ```shell
  * $ ./yii gii:controller OrderController --actions=index,view,edit
  * ```
  */
