@@ -31,3 +31,6 @@ phpunit.phar
 
 # node js
 /node_modules
+
+# AI local settings
+/.claude
