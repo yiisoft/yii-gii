@@ -176,8 +176,8 @@ final class Generator extends AbstractGenerator
      * Remove duplicate relations with the same name.
      * Keeps the first occurrence (outgoing relations take precedence over inverse relations).
      *
-     * @param list<Relation|InverseRelation> $relations
-     * @return list<Relation|InverseRelation>
+     * @param list<InverseRelation|Relation> $relations
+     * @return list<InverseRelation|Relation>
      */
     private function deduplicateRelations(array $relations): array
     {
