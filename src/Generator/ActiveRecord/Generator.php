@@ -86,6 +86,9 @@ final class Generator extends AbstractGenerator
                     $relations[] = $inverseRelation;
                 }
 
+                // Remove duplicate relation names (keep first occurrence)
+                $relations = $this->deduplicateRelations($relations);
+
                 // Mark columns used in relations
                 foreach ($relations as $relation) {
                     foreach ($relation->getLink() as $columnName) {
@@ -170,6 +173,29 @@ final class Generator extends AbstractGenerator
     }
 
     /**
+     * Remove duplicate relations with the same name.
+     * Keeps the first occurrence (outgoing relations take precedence over inverse relations).
+     *
+     * @param list<Relation|InverseRelation> $relations
+     * @return list<Relation|InverseRelation>
+     */
+    private function deduplicateRelations(array $relations): array
+    {
+        $seen = [];
+        $deduplicated = [];
+
+        foreach ($relations as $relation) {
+            $name = $relation->getName();
+            if (!isset($seen[$name])) {
+                $seen[$name] = true;
+                $deduplicated[] = $relation;
+            }
+        }
+
+        return $deduplicated;
+    }
+
+    /**
      * Check if the foreign key columns form a unique constraint.
      * If they do, this should be a hasOne relation; otherwise hasMany.
      *
@@ -191,13 +217,12 @@ final class Generator extends AbstractGenerator
             }
         }
 
-        // Check unique constraints
-        foreach ($tableSchema->getConstraints() as $constraint) {
-            if ($constraint instanceof \Yiisoft\Db\Constraint\Constraint &&
-                method_exists($constraint, 'columnNames')) {
-                $constraintColumns = $constraint->columnNames;
-                sort($constraintColumns);
-                if ($fkColumns === $constraintColumns) {
+        // Check unique indexes
+        foreach ($tableSchema->getIndexes() as $index) {
+            if ($index->isUnique) {
+                $indexColumns = $index->columnNames;
+                sort($indexColumns);
+                if ($fkColumns === $indexColumns) {
                     return true;
                 }
             }

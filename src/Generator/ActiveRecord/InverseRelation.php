@@ -71,7 +71,14 @@ final class InverseRelation
      */
     public function getQueryMethodName(): string
     {
-        return 'get' . $this->getRelatedModel() . ($this->isHasMany() ? 's' : '') . 'Query';
+        $relatedModel = $this->getRelatedModel();
+
+        if ($this->isHasMany()) {
+            $inflector = new Inflector();
+            $relatedModel = $inflector->toPlural($relatedModel);
+        }
+
+        return 'get' . $relatedModel . 'Query';
     }
 
     /**
@@ -79,7 +86,14 @@ final class InverseRelation
      */
     public function getGetterMethodName(): string
     {
-        return 'get' . $this->getRelatedModel() . ($this->isHasMany() ? 's' : '');
+        $relatedModel = $this->getRelatedModel();
+
+        if ($this->isHasMany()) {
+            $inflector = new Inflector();
+            $relatedModel = $inflector->toPlural($relatedModel);
+        }
+
+        return 'get' . $relatedModel;
     }
 
     /**
