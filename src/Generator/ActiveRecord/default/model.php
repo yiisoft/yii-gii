@@ -6,11 +6,12 @@ use Yiisoft\Strings\StringHelper;
 use Yiisoft\VarDumper\VarDumper;
 use Yiisoft\Yii\Gii\Generator\ActiveRecord\Property;
 use Yiisoft\Yii\Gii\Generator\ActiveRecord\Relation;
+use Yiisoft\Yii\Gii\Generator\ActiveRecord\InverseRelation;
 
 /**
  * @var Yiisoft\Yii\Gii\Generator\ActiveRecord\Command $command
  * @var array<string, Property> $properties
- * @var list<Relation> $relations
+ * @var list<Relation|InverseRelation> $relations
  */
 
 

@@ -75,8 +75,15 @@ final class Generator extends AbstractGenerator
             }
 
             if ($command->generateRelations) {
+                // Generate outgoing relations (this table's FKs to other tables)
                 foreach ($schema->getForeignKeys() as $foreignKey) {
                     $relations[] = new Relation($foreignKey, $command->getModelName());
+                }
+
+                // Generate inverse relations (other tables' FKs to this table)
+                $inverseRelations = $this->findInverseRelations($command->table, $command->getModelName());
+                foreach ($inverseRelations as $inverseRelation) {
+                    $relations[] = $inverseRelation;
                 }
 
                 // Mark columns used in relations
@@ -121,5 +128,81 @@ final class Generator extends AbstractGenerator
                 ),
             ),
         );
+    }
+
+    /**
+     * Find inverse relations by scanning other tables for FKs that reference the current table.
+     *
+     * @return list<InverseRelation>
+     */
+    private function findInverseRelations(string $currentTable, string $modelName): array
+    {
+        $inverseRelations = [];
+        $allTableNames = $this->connection->getSchema()->getTableNames();
+
+        foreach ($allTableNames as $tableName) {
+            // Skip the current table (already processed its outgoing FKs)
+            if ($tableName === $currentTable) {
+                continue;
+            }
+
+            $tableSchema = $this->connection->getTableSchema($tableName, true);
+            if ($tableSchema === null) {
+                continue;
+            }
+
+            // Check each FK in this table to see if it references our current table
+            foreach ($tableSchema->getForeignKeys() as $foreignKey) {
+                if ($foreignKey->foreignTableName === $currentTable) {
+                    // This FK points to our table, so we need an inverse relation
+                    $isUnique = $this->isForeignKeyUnique($tableSchema, $foreignKey);
+                    $inverseRelations[] = new InverseRelation(
+                        $foreignKey,
+                        $tableName,
+                        $modelName,
+                        $isUnique
+                    );
+                }
+            }
+        }
+
+        return $inverseRelations;
+    }
+
+    /**
+     * Check if the foreign key columns form a unique constraint.
+     * If they do, this should be a hasOne relation; otherwise hasMany.
+     *
+     * @param \Yiisoft\Db\Schema\TableSchema $tableSchema
+     * @param \Yiisoft\Db\Constraint\ForeignKey $foreignKey
+     */
+    private function isForeignKeyUnique($tableSchema, $foreignKey): bool
+    {
+        $fkColumns = $foreignKey->columnNames;
+        sort($fkColumns);
+
+        // Check primary key
+        $primaryKey = $tableSchema->getPrimaryKey();
+        if ($primaryKey !== null) {
+            $pkColumns = $primaryKey->columnNames;
+            sort($pkColumns);
+            if ($fkColumns === $pkColumns) {
+                return true;
+            }
+        }
+
+        // Check unique constraints
+        foreach ($tableSchema->getConstraints() as $constraint) {
+            if ($constraint instanceof \Yiisoft\Db\Constraint\Constraint &&
+                method_exists($constraint, 'columnNames')) {
+                $constraintColumns = $constraint->columnNames;
+                sort($constraintColumns);
+                if ($fkColumns === $constraintColumns) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
