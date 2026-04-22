@@ -207,7 +207,7 @@ abstract class BaseGenerateCommand extends Command
     {
         return [] === array_filter(
             $answers,
-            fn ($answer) => CodeFileWriteOperationEnum::from($answer) !== CodeFileWriteOperationEnum::SKIP
+            fn($answer) => CodeFileWriteOperationEnum::from($answer) !== CodeFileWriteOperationEnum::SKIP
         );
     }
 }

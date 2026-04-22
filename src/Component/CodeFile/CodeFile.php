@@ -16,11 +16,11 @@ final class CodeFile
     /**
      * The new file mode
      */
-    private const FILE_MODE = 0666;
+    private const FILE_MODE = 0o666;
     /**
      * The new directory mode
      */
-    private const DIR_MODE = 0777;
+    private const DIR_MODE = 0o777;
 
     /**
      * @var string an ID that uniquely identifies this code file.
@@ -89,7 +89,7 @@ final class CodeFile
                     $result = @mkdir($dir, $this->newDirMode, true);
                     @umask($mask);
                 } else {
-                    $result = @mkdir($dir, 0777, true);
+                    $result = @mkdir($dir, 0o777, true);
                 }
                 if (!$result) {
                     throw new RuntimeException("Unable to create the directory '$dir'.");
@@ -211,7 +211,7 @@ final class CodeFile
         }
 
         $renderer = new Diff_Renderer_Text_Unified();
-        return (string)(new Diff($lines1, $lines2))->render($renderer);
+        return (string) (new Diff($lines1, $lines2))->render($renderer);
     }
 
     public function getId(): string

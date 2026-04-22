@@ -35,8 +35,7 @@ abstract class AbstractGenerator implements GeneratorInterface
         protected Aliases $aliases,
         protected ValidatorInterface $validator,
         protected ParametersProvider $parametersProvider,
-    ) {
-    }
+    ) {}
 
     public function getRequiredTemplates(): array
     {
@@ -126,7 +125,7 @@ abstract class AbstractGenerator implements GeneratorInterface
         try {
             /** @psalm-suppress PossiblyNullFunctionCall */
             $renderer->bindTo($this)($file, array_merge($params, ['command' => $command]));
-            return (string)ob_get_clean();
+            return (string) ob_get_clean();
         } catch (Throwable $e) {
             while (ob_get_level() > $obInitialLevel) {
                 if (!@ob_end_clean()) {

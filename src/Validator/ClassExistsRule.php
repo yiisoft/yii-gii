@@ -16,8 +16,7 @@ final class ClassExistsRule implements RuleInterface
      */
     public function __construct(
         public readonly ?string $parent = null,
-    ) {
-    }
+    ) {}
 
     public function getHandler(): string|RuleHandlerInterface
     {

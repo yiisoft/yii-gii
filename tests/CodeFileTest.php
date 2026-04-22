@@ -27,74 +27,74 @@ final class CodeFileTest extends TestCase
             [
                 '@src/Controllers/EmptyController.php',
                 <<<PHP
-                 <?php
+                    <?php
 
-                 declare(strict_types=1);
+                    declare(strict_types=1);
 
-                 namespace Yiisoft\Yii\Gii\Tests\Controllers;
+                    namespace Yiisoft\Yii\Gii\Tests\Controllers;
 
-                 class EmptyController
-                 {
-                    public function customMethod() {
+                    class EmptyController
+                    {
+                       public function customMethod() {
 
+                       }
                     }
-                 }
-                 PHP,
+                    PHP,
                 <<<HTML
-                <table class="Differences DifferencesInline">
-                    <thead>
-                        <tr>
-                            <th>Old</th>
-                            <th>New</th>
-                            <th>Differences</th>
-                        </tr>
-                    </thead>    <tbody class="ChangeEqual">        <tr>
-                            <th data-line-number="6"></th>
-                            <th data-line-number="6"></th>
-                            <td class="Left"></td>
-                        </tr>        <tr>
-                            <th data-line-number="7"></th>
-                            <th data-line-number="7"></th>
-                            <td class="Left">class EmptyController</td>
-                        </tr>        <tr>
-                            <th data-line-number="8"></th>
-                            <th data-line-number="8"></th>
-                            <td class="Left">{</td>
-                        </tr>    </tbody>    <tbody class="ChangeInsert">        <tr>
-                            <th data-line-number="&nbsp;"></th>
-                            <th data-line-number="9"></th>
-                            <td class="Right"><ins>&nbsp; public function customMethod() {</ins>&nbsp;</td>
-                        </tr>        <tr>
-                            <th data-line-number="&nbsp;"></th>
-                            <th data-line-number="10"></th>
-                            <td class="Right"><ins></ins>&nbsp;</td>
-                        </tr>        <tr>
-                            <th data-line-number="&nbsp;"></th>
-                            <th data-line-number="11"></th>
-                            <td class="Right"><ins>&nbsp; }</ins>&nbsp;</td>
-                        </tr>    </tbody>    <tbody class="ChangeEqual">        <tr>
-                            <th data-line-number="9"></th>
-                            <th data-line-number="12"></th>
-                            <td class="Left">}</td>
-                        </tr>    </tbody></table>
-                HTML,
+                    <table class="Differences DifferencesInline">
+                        <thead>
+                            <tr>
+                                <th>Old</th>
+                                <th>New</th>
+                                <th>Differences</th>
+                            </tr>
+                        </thead>    <tbody class="ChangeEqual">        <tr>
+                                <th data-line-number="6"></th>
+                                <th data-line-number="6"></th>
+                                <td class="Left"></td>
+                            </tr>        <tr>
+                                <th data-line-number="7"></th>
+                                <th data-line-number="7"></th>
+                                <td class="Left">class EmptyController</td>
+                            </tr>        <tr>
+                                <th data-line-number="8"></th>
+                                <th data-line-number="8"></th>
+                                <td class="Left">{</td>
+                            </tr>    </tbody>    <tbody class="ChangeInsert">        <tr>
+                                <th data-line-number="&nbsp;"></th>
+                                <th data-line-number="9"></th>
+                                <td class="Right"><ins>&nbsp; public function customMethod() {</ins>&nbsp;</td>
+                            </tr>        <tr>
+                                <th data-line-number="&nbsp;"></th>
+                                <th data-line-number="10"></th>
+                                <td class="Right"><ins></ins>&nbsp;</td>
+                            </tr>        <tr>
+                                <th data-line-number="&nbsp;"></th>
+                                <th data-line-number="11"></th>
+                                <td class="Right"><ins>&nbsp; }</ins>&nbsp;</td>
+                            </tr>    </tbody>    <tbody class="ChangeEqual">        <tr>
+                                <th data-line-number="9"></th>
+                                <th data-line-number="12"></th>
+                                <td class="Left">}</td>
+                            </tr>    </tbody></table>
+                    HTML,
             ],
             [
                 '',
                 <<<PHP
-                 <?php
+                    <?php
 
-                 declare(strict_types=1);
+                    declare(strict_types=1);
 
-                 namespace Yiisoft\Yii\Gii\Tests\Controllers;
+                    namespace Yiisoft\Yii\Gii\Tests\Controllers;
 
-                 class EmptyController
-                 {
-                    public function customMethod() {
+                    class EmptyController
+                    {
+                       public function customMethod() {
 
+                       }
                     }
-                 }
-                 PHP,
+                    PHP,
                 '',
             ],
             [
@@ -105,19 +105,19 @@ final class CodeFileTest extends TestCase
             [
                 '@src/Controllers/NonExistController.php',
                 <<<PHP
-                 <?php
+                    <?php
 
-                 declare(strict_types=1);
+                    declare(strict_types=1);
 
-                 namespace Yiisoft\Yii\Gii\Tests\Controllers;
+                    namespace Yiisoft\Yii\Gii\Tests\Controllers;
 
-                 class EmptyController
-                 {
-                    public function customMethod() {
+                    class EmptyController
+                    {
+                       public function customMethod() {
 
+                       }
                     }
-                 }
-                 PHP,
+                    PHP,
                 '',
             ],
             [
@@ -190,12 +190,12 @@ final class CodeFileTest extends TestCase
     }
 
     // TODO: test \Yiisoft\Yii\Gii\Component\DiffRendererHtmlInline instead
-//    /** @dataProvider dataProviderDiff */
-//    public function testDiff(string $path, string $content, $result): void
-//    {
-//        $codeFile = new CodeFile($this->aliases->get($path), $content);
-//        $this->assertEquals($codeFile->diff(), $result);
-//    }
+    //    /** @dataProvider dataProviderDiff */
+    //    public function testDiff(string $path, string $content, $result): void
+    //    {
+    //        $codeFile = new CodeFile($this->aliases->get($path), $content);
+    //        $this->assertEquals($codeFile->diff(), $result);
+    //    }
 
     public function testDiffSameContent(): void
     {

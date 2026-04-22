@@ -326,11 +326,11 @@ final class ActiveRecordGeneratorTest extends TestCase
 
         $this->assertStringContainsStringIgnoringLineEndings(
             <<<'PHP'
-                public function __construct()
-                {
-                    $this->created_at = new Expression('CURRENT_TIMESTAMP', []);
-                }
-            PHP,
+                    public function __construct()
+                    {
+                        $this->created_at = new Expression('CURRENT_TIMESTAMP', []);
+                    }
+                PHP,
             $content,
         );
     }
@@ -348,14 +348,14 @@ final class ActiveRecordGeneratorTest extends TestCase
 
         $this->assertStringContainsStringIgnoringLineEndings(
             <<<'PHP'
-                public function relationQuery(string $name): ActiveQueryInterface
-                {
-                    return match ($name) {
-                        'userProfile' => $this->getUserProfileQuery(),
-                        default => parent::relationQuery($name),
-                    };
-                }
-            PHP,
+                    public function relationQuery(string $name): ActiveQueryInterface
+                    {
+                        return match ($name) {
+                            'userProfile' => $this->getUserProfileQuery(),
+                            default => parent::relationQuery($name),
+                        };
+                    }
+                PHP,
             $content,
         );
     }
@@ -373,11 +373,11 @@ final class ActiveRecordGeneratorTest extends TestCase
 
         $this->assertStringContainsStringIgnoringLineEndings(
             <<<'PHP'
-                public function getUserProfile(): ?UserProfile
-                {
-                    return $this->relation('userProfile');
-                }
-            PHP,
+                    public function getUserProfile(): ?UserProfile
+                    {
+                        return $this->relation('userProfile');
+                    }
+                PHP,
             $content,
         );
     }
@@ -395,11 +395,11 @@ final class ActiveRecordGeneratorTest extends TestCase
 
         $this->assertStringContainsStringIgnoringLineEndings(
             <<<'PHP'
-                public function getUserProfileQuery(): ActiveQueryInterface
-                {
-                    return $this->hasOne(UserProfile::class, ['id' => 'profile_id'])->inverseOf('user');
-                }
-            PHP,
+                    public function getUserProfileQuery(): ActiveQueryInterface
+                    {
+                        return $this->hasOne(UserProfile::class, ['id' => 'profile_id'])->inverseOf('user');
+                    }
+                PHP,
             $content,
         );
     }

@@ -42,7 +42,7 @@ final class ControllerCommand extends BaseGenerateCommand
     protected function createGeneratorCommand(InputInterface $input): GeneratorCommandInterface
     {
         $actions = $input->getOption('actions');
-        $actions = $actions !== null ? explode(',', (string)$actions) : ['index'];
+        $actions = $actions !== null ? explode(',', (string) $actions) : ['index'];
 
         /**
          * @var string|null $template
@@ -51,9 +51,9 @@ final class ControllerCommand extends BaseGenerateCommand
         $template ??= 'default';
 
         return new \Yiisoft\Yii\Gii\Generator\Controller\Command(
-            controllerClass: (string)$input->getArgument('controllerClass'),
-            viewsPath: (string)$input->getOption('viewsPath'),
-            baseClass: (string)$input->getOption('baseClass'),
+            controllerClass: (string) $input->getArgument('controllerClass'),
+            viewsPath: (string) $input->getOption('viewsPath'),
+            baseClass: (string) $input->getOption('baseClass'),
             actions: $actions,
             template: $template,
         );

@@ -29,8 +29,7 @@ final class DefaultController
     public function __construct(
         private readonly DataResponseFactoryInterface $responseFactory,
         private readonly ParametersProvider $parametersProvider,
-    ) {
-    }
+    ) {}
 
     public function list(GiiInterface $gii): ResponseInterface
     {
@@ -41,7 +40,7 @@ final class DefaultController
                 $this->serializeGenerator(...),
                 array_values(
                     array_map(
-                        fn (GeneratorInterface|GeneratorProxy $generator) => $generator instanceof GeneratorProxy
+                        fn(GeneratorInterface|GeneratorProxy $generator) => $generator instanceof GeneratorProxy
                             ? $generator->getClass()
                             : $generator::class,
                         $generators
@@ -84,7 +83,8 @@ final class DefaultController
     public function preview(
         GeneratorRequest $request,
         CommandHydrator $commandHydrator,
-        #[Query('file')] ?string $file = null
+        #[Query('file')]
+        ?string $file = null
     ): ResponseInterface {
         $generator = $request->getGenerator();
         $command = $commandHydrator->hydrate($generator::getCommandClass(), $request->getBody());
@@ -119,7 +119,8 @@ final class DefaultController
     public function diff(
         GeneratorRequest $request,
         CommandHydrator $commandHydrator,
-        #[Query('file')] string $file
+        #[Query('file')]
+        string $file
     ): ResponseInterface {
         $generator = $request->getGenerator();
         $command = $commandHydrator->hydrate($generator::getCommandClass(), $request->getBody());
@@ -207,7 +208,7 @@ final class DefaultController
     /**
      * @param ReflectionParameter[] $constructorParameters
      */
-    private function findReflectionParameter(string $name, array $constructorParameters): ReflectionParameter|null
+    private function findReflectionParameter(string $name, array $constructorParameters): ?ReflectionParameter
     {
         foreach ($constructorParameters as $parameter) {
             if ($parameter->getName() === $name) {

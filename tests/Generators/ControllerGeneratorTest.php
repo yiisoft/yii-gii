@@ -43,11 +43,11 @@ final class ControllerGeneratorTest extends TestCase
         $this->expectException(InvalidGeneratorCommandException::class);
         $files = $generator->generate($command);
 
-//        $this->assertFalse($result->isValid(), print_r($result->getErrors(), true));
+        //        $this->assertFalse($result->isValid(), print_r($result->getErrors(), true));
 
         // TODO: fix test
         $this->markTestIncomplete('The template should be incomplete.'); // but why?
-//        $this->assertNotEmpty($result->getAttributeErrorMessages('template'));
+        //        $this->assertNotEmpty($result->getAttributeErrorMessages('template'));
         $this->assertNotEmpty($result->getAttributeErrorMessages('controllerClass'));
     }
 
