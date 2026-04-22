@@ -31,9 +31,9 @@ return [
                 return new IpFilter(
                     validator: $validator,
                     responseFactory: $responseFactory,
-                    ipRanges: $params['yiisoft/yii-gii']['allowedIPs']
+                    ipRanges: $params['yiisoft/yii-gii']['allowedIPs'],
                 );
-            }
+            },
         )
         ->middleware(FormatDataResponseAsJson::class)
         ->namePrefix('gii/api/')
@@ -60,7 +60,7 @@ return [
                         ->middleware(BodyParamsMiddleware::class)
                         ->middleware(RequestCatcherMiddleware::class)
                         ->action([DefaultController::class, 'diff'])
-                        ->name('diff')
-                )
+                        ->name('diff'),
+                ),
         ),
 ];
