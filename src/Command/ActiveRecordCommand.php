@@ -27,6 +27,11 @@ use Yiisoft\Yii\Gii\GeneratorInterface;
 #[AsCommand(name: 'gii:active-record')]
 final class ActiveRecordCommand extends BaseGenerateCommand
 {
+    public function getGenerator(): GeneratorInterface
+    {
+        return $this->gii->getGenerator(Generator::getId());
+    }
+
     protected function configure(): void
     {
         $this->setDescription('Gii ActiveRecord model generator')
@@ -39,11 +44,6 @@ final class ActiveRecordCommand extends BaseGenerateCommand
             ->addOption('repository', 'repo', InputOption::VALUE_NONE, 'Use RepositoryTrait');
 
         parent::configure();
-    }
-
-    public function getGenerator(): GeneratorInterface
-    {
-        return $this->gii->getGenerator(Generator::getId());
     }
 
     protected function createGeneratorCommand(InputInterface $input): GeneratorCommandInterface

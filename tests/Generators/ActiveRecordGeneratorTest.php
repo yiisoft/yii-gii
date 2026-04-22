@@ -10,6 +10,10 @@ use Yiisoft\Yii\Gii\Generator\ActiveRecord\Command;
 use Yiisoft\Yii\Gii\Generator\ActiveRecord\Generator;
 use Yiisoft\Yii\Gii\ParametersProvider;
 use Yiisoft\Yii\Gii\Tests\TestCase;
+use Yiisoft\ActiveRecord\ActiveRecord;
+use stdClass;
+
+use function dirname;
 
 final class ActiveRecordGeneratorTest extends TestCase
 {
@@ -240,7 +244,7 @@ final class ActiveRecordGeneratorTest extends TestCase
         $command = new Command(
             table: 'user',
             namespace: 'Yiisoft\\Yii\\Gii\\Tests\\Model',
-            parentClass: \stdClass::class,
+            parentClass: stdClass::class,
         );
 
         $this->expectException(InvalidGeneratorCommandException::class);
@@ -266,7 +270,7 @@ final class ActiveRecordGeneratorTest extends TestCase
         $command = new Command(
             table: 'user',
             namespace: 'Yiisoft\\Yii\\Gii\\Tests\\Model',
-            parentClass: \Yiisoft\ActiveRecord\ActiveRecord::class,
+            parentClass: ActiveRecord::class,
         );
 
         $files = $generator->generate($command);
@@ -409,7 +413,7 @@ final class ActiveRecordGeneratorTest extends TestCase
         $injector = new Injector(
             $this->getContainer([
                 ParametersProvider::class => new ParametersProvider(...$params),
-            ])
+            ]),
         );
 
         return $injector->make(Generator::class);

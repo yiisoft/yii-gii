@@ -8,6 +8,7 @@ use ReflectionException;
 use Yiisoft\Yii\Gii\Component\CodeFile\CodeFile;
 use Yiisoft\Yii\Gii\Exception\InvalidConfigException;
 use Yiisoft\Yii\Gii\Exception\InvalidGeneratorCommandException;
+use Yiisoft\Yii\Gii\Generator\Controller\Generator;
 
 interface GeneratorInterface
 {
@@ -42,7 +43,7 @@ interface GeneratorInterface
     /**
      * Generates the code based on the current user input and the specified code template files.
      * This is the main method that child classes should implement.
-     * Please refer to {@see \Yiisoft\Yii\Gii\Generator\Controller\Generator::generate()} as an example
+     * Please refer to {@see Generator::generate()} as an example
      * on how to implement this method.
      *
      * @throws InvalidGeneratorCommandException

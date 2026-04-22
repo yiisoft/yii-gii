@@ -24,13 +24,14 @@ use Yiisoft\Yii\Gii\GiiInterface;
 use Yiisoft\Yii\Gii\ParametersProvider;
 use Yiisoft\Yii\Gii\Request\GeneratorRequest;
 
+use function is_string;
+
 final class DefaultController
 {
     public function __construct(
         private readonly DataResponseFactoryInterface $responseFactory,
         private readonly ParametersProvider $parametersProvider,
-    ) {
-    }
+    ) {}
 
     public function list(GiiInterface $gii): ResponseInterface
     {
@@ -41,11 +42,11 @@ final class DefaultController
                 $this->serializeGenerator(...),
                 array_values(
                     array_map(
-                        fn (GeneratorInterface|GeneratorProxy $generator) => $generator instanceof GeneratorProxy
+                        fn(GeneratorInterface|GeneratorProxy $generator) => $generator instanceof GeneratorProxy
                             ? $generator->getClass()
                             : $generator::class,
-                        $generators
-                    )
+                        $generators,
+                    ),
                 ),
             ),
         ]);
@@ -56,14 +57,14 @@ final class DefaultController
         $generator = $request->getGenerator();
 
         return $this->responseFactory->createResponse(
-            $this->serializeGenerator($generator::class)
+            $this->serializeGenerator($generator::class),
         );
     }
 
     public function generate(
         GeneratorRequest $request,
         CodeFileWriter $codeFileWriter,
-        CommandHydrator $commandHydrator
+        CommandHydrator $commandHydrator,
     ): ResponseInterface {
         $generator = $request->getGenerator();
         $command = $commandHydrator->hydrate($generator::getCommandClass(), $request->getBody());
@@ -84,7 +85,8 @@ final class DefaultController
     public function preview(
         GeneratorRequest $request,
         CommandHydrator $commandHydrator,
-        #[Query('file')] ?string $file = null
+        #[Query('file')]
+        ?string $file = null,
     ): ResponseInterface {
         $generator = $request->getGenerator();
         $command = $commandHydrator->hydrate($generator::getCommandClass(), $request->getBody());
@@ -105,21 +107,22 @@ final class DefaultController
             if ($generatedFile->getId() === $file) {
                 $content = $generatedFile->preview();
                 return $this->responseFactory->createResponse(
-                    ['content' => is_string($content) ? $content : 'Preview is not available for this file type.']
+                    ['content' => is_string($content) ? $content : 'Preview is not available for this file type.'],
                 );
             }
         }
 
         return $this->responseFactory->createResponse(
             ['message' => "Code file not found: $file"],
-            Status::UNPROCESSABLE_ENTITY
+            Status::UNPROCESSABLE_ENTITY,
         );
     }
 
     public function diff(
         GeneratorRequest $request,
         CommandHydrator $commandHydrator,
-        #[Query('file')] string $file
+        #[Query('file')]
+        string $file,
     ): ResponseInterface {
         $generator = $request->getGenerator();
         $command = $commandHydrator->hydrate($generator::getCommandClass(), $request->getBody());
@@ -137,7 +140,7 @@ final class DefaultController
         }
         return $this->responseFactory->createResponse(
             ['message' => "Code file not found: $file"],
-            Status::UNPROCESSABLE_ENTITY
+            Status::UNPROCESSABLE_ENTITY,
         );
     }
 
@@ -145,7 +148,7 @@ final class DefaultController
     {
         return $this->responseFactory->createResponse(
             ['errors' => $e->getResult()->getErrorMessagesIndexedByProperty()],
-            Status::UNPROCESSABLE_ENTITY
+            Status::UNPROCESSABLE_ENTITY,
         );
     }
 
@@ -207,7 +210,7 @@ final class DefaultController
     /**
      * @param ReflectionParameter[] $constructorParameters
      */
-    private function findReflectionParameter(string $name, array $constructorParameters): ReflectionParameter|null
+    private function findReflectionParameter(string $name, array $constructorParameters): ?ReflectionParameter
     {
         foreach ($constructorParameters as $parameter) {
             if ($parameter->getName() === $name) {

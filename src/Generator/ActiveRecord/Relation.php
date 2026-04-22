@@ -14,8 +14,7 @@ final class Relation
     public function __construct(
         private readonly ForeignKey $foreignKey,
         private readonly string $modelName,
-    ) {
-    }
+    ) {}
 
     public function getName(): string
     {

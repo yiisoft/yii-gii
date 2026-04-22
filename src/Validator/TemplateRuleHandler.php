@@ -16,14 +16,17 @@ use Yiisoft\Yii\Gii\GeneratorProxy;
 use Yiisoft\Yii\Gii\GiiInterface;
 use Yiisoft\Yii\Gii\ParametersProvider;
 
+use function gettype;
+use function is_string;
+use function sprintf;
+
 final class TemplateRuleHandler implements RuleHandlerInterface
 {
     public function __construct(
         private readonly Aliases $aliases,
         private readonly GiiInterface $gii,
         private readonly ParametersProvider $parametersProvider,
-    ) {
-    }
+    ) {}
 
     /**
      * Validates the template selection.
@@ -50,7 +53,7 @@ final class TemplateRuleHandler implements RuleHandlerInterface
         if (!$command instanceof GeneratorCommandInterface) {
             throw new RuntimeException(sprintf(
                 'Unsupported dataset class "%s".',
-                get_debug_type($command)
+                get_debug_type($command),
             ));
         }
         $generator = $this->getGenerator($command);

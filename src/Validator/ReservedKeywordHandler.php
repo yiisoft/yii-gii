@@ -9,6 +9,11 @@ use Yiisoft\Validator\Result;
 use Yiisoft\Validator\RuleHandlerInterface;
 use Yiisoft\Validator\ValidationContext;
 
+use function gettype;
+use function in_array;
+use function is_string;
+use function sprintf;
+
 final class ReservedKeywordHandler implements RuleHandlerInterface
 {
     private const KEYWORDS = [

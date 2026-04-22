@@ -8,6 +8,17 @@ use Diff;
 use Diff_Renderer_Text_Unified;
 use RuntimeException;
 
+use function dirname;
+use function in_array;
+use function is_bool;
+use function is_string;
+use function strlen;
+
+use const DIRECTORY_SEPARATOR;
+use const ENT_HTML5;
+use const ENT_NOQUOTES;
+use const ENT_SUBSTITUTE;
+
 /**
  * CodeFile represents a code file to be generated.
  */
@@ -157,7 +168,7 @@ final class CodeFile
             $content = htmlspecialchars(
                 $this->content,
                 ENT_NOQUOTES | ENT_SUBSTITUTE | ENT_HTML5,
-                'UTF-8'
+                'UTF-8',
             );
             return nl2br($content);
         }
@@ -180,38 +191,6 @@ final class CodeFile
         }
 
         return '';
-    }
-
-    /**
-     * Renders diff between two sets of lines
-     * @param array<int, string>|bool|string $lines1
-     * @param array<int, string>|bool|string $lines2
-     */
-    private function renderDiff(mixed $lines1, mixed $lines2): string
-    {
-        if (is_string($lines1)) {
-            $lines1 = explode("\n", $lines1);
-        } elseif (is_bool($lines1)) {
-            $lines1 = [];
-        }
-        if (is_string($lines2)) {
-            $lines2 = explode("\n", $lines2);
-        } elseif (is_bool($lines2)) {
-            $lines2 = [];
-        }
-        /**
-         * @var array<int, string> $lines1
-         * @var array<int, string> $lines2
-         */
-        foreach ($lines1 as $i => $line) {
-            $lines1[$i] = rtrim($line, "\r\n");
-        }
-        foreach ($lines2 as $i => $line) {
-            $lines2[$i] = rtrim($line, "\r\n");
-        }
-
-        $renderer = new Diff_Renderer_Text_Unified();
-        return (string)(new Diff($lines1, $lines2))->render($renderer);
     }
 
     public function getId(): string
@@ -261,6 +240,38 @@ final class CodeFile
         $new->newDirMode = $mode;
 
         return $new;
+    }
+
+    /**
+     * Renders diff between two sets of lines
+     * @param array<int, string>|bool|string $lines1
+     * @param array<int, string>|bool|string $lines2
+     */
+    private function renderDiff(mixed $lines1, mixed $lines2): string
+    {
+        if (is_string($lines1)) {
+            $lines1 = explode("\n", $lines1);
+        } elseif (is_bool($lines1)) {
+            $lines1 = [];
+        }
+        if (is_string($lines2)) {
+            $lines2 = explode("\n", $lines2);
+        } elseif (is_bool($lines2)) {
+            $lines2 = [];
+        }
+        /**
+         * @var array<int, string> $lines1
+         * @var array<int, string> $lines2
+         */
+        foreach ($lines1 as $i => $line) {
+            $lines1[$i] = rtrim($line, "\r\n");
+        }
+        foreach ($lines2 as $i => $line) {
+            $lines2[$i] = rtrim($line, "\r\n");
+        }
+
+        $renderer = new Diff_Renderer_Text_Unified();
+        return (string) (new Diff($lines1, $lines2))->render($renderer);
     }
 
     private function preparePath(string $path): string

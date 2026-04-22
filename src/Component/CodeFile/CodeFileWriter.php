@@ -6,6 +6,8 @@ namespace Yiisoft\Yii\Gii\Component\CodeFile;
 
 use Exception;
 
+use function sprintf;
+
 final class CodeFileWriter
 {
     /**
@@ -32,7 +34,7 @@ final class CodeFileWriter
                     try {
                         $status = $file->save();
                     } catch (Exception $e) {
-                        $result->addError($file, (string)$e);
+                        $result->addError($file, (string) $e);
                         break;
                     }
 
@@ -47,9 +49,9 @@ final class CodeFileWriter
                             implode(
                                 ', ',
                                 array_map(
-                                    fn (CodeFileWriteOperationEnum $value) => $value->value,
-                                    CodeFileWriteOperationEnum::cases()
-                                )
+                                    fn(CodeFileWriteOperationEnum $value) => $value->value,
+                                    CodeFileWriteOperationEnum::cases(),
+                                ),
                             ),
                         ),
                     );

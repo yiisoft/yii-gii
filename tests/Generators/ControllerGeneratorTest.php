@@ -11,6 +11,8 @@ use Yiisoft\Yii\Gii\Generator\Controller\Generator;
 use Yiisoft\Yii\Gii\ParametersProvider;
 use Yiisoft\Yii\Gii\Tests\TestCase;
 
+use function dirname;
+
 final class ControllerGeneratorTest extends TestCase
 {
     public function testValidGenerator(): void
@@ -43,11 +45,11 @@ final class ControllerGeneratorTest extends TestCase
         $this->expectException(InvalidGeneratorCommandException::class);
         $files = $generator->generate($command);
 
-//        $this->assertFalse($result->isValid(), print_r($result->getErrors(), true));
+        //        $this->assertFalse($result->isValid(), print_r($result->getErrors(), true));
 
         // TODO: fix test
         $this->markTestIncomplete('The template should be incomplete.'); // but why?
-//        $this->assertNotEmpty($result->getAttributeErrorMessages('template'));
+        //        $this->assertNotEmpty($result->getAttributeErrorMessages('template'));
         $this->assertNotEmpty($result->getAttributeErrorMessages('controllerClass'));
     }
 
@@ -78,7 +80,7 @@ final class ControllerGeneratorTest extends TestCase
         $injector = new Injector(
             $this->getContainer([
                 ParametersProvider::class => new ParametersProvider(...$params),
-            ])
+            ]),
         );
 
         return $injector->make(Generator::class);
