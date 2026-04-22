@@ -15,7 +15,8 @@ final class Gii implements GiiInterface
     public function __construct(
         private readonly array $proxies,
         private array $instances,
-    ) {}
+    ) {
+    }
 
     public function addGenerator(GeneratorInterface $generator): void
     {
