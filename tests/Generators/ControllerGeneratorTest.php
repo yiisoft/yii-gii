@@ -11,6 +11,8 @@ use Yiisoft\Yii\Gii\Generator\Controller\Generator;
 use Yiisoft\Yii\Gii\ParametersProvider;
 use Yiisoft\Yii\Gii\Tests\TestCase;
 
+use function dirname;
+
 final class ControllerGeneratorTest extends TestCase
 {
     public function testValidGenerator(): void
@@ -78,7 +80,7 @@ final class ControllerGeneratorTest extends TestCase
         $injector = new Injector(
             $this->getContainer([
                 ParametersProvider::class => new ParametersProvider(...$params),
-            ])
+            ]),
         );
 
         return $injector->make(Generator::class);

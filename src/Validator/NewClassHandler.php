@@ -11,12 +11,15 @@ use Yiisoft\Validator\Result;
 use Yiisoft\Validator\RuleHandlerInterface;
 use Yiisoft\Validator\ValidationContext;
 
+use function gettype;
+use function is_string;
+use function sprintf;
+
 final class NewClassHandler implements RuleHandlerInterface
 {
     public function __construct(
         private readonly Aliases $aliases,
-    ) {
-    }
+    ) {}
 
     /**
      * An inline validator that checks if the attribute value refers to a valid namespaced class name.

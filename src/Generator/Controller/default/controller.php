@@ -13,7 +13,7 @@ $classDefinitionParts[] = StringHelper::baseName($command->getControllerClass())
 if (!empty($command->getBaseClass())) {
     $classDefinitionParts[] = 'extends \\' . trim($command->getBaseClass(), '\\');
 }
-$classDefinition = implode(' ', $classDefinitionParts) . PHP_EOL;
+$classDefinition = implode(' ', $classDefinitionParts) . \PHP_EOL;
 
 
 echo "<?php\n";

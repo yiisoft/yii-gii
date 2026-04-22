@@ -10,6 +10,8 @@ use Yiisoft\Yii\Gii\Component\CodeFile\CodeFile;
 use Yiisoft\Yii\Gii\Component\CodeFile\CodeFileWriteOperationEnum;
 use Yiisoft\Yii\Gii\Component\CodeFile\CodeFileWriteStatusEnum;
 
+use const DIRECTORY_SEPARATOR;
+
 final class CodeFileTest extends TestCase
 {
     private ?Aliases $aliases = null;
@@ -184,7 +186,7 @@ final class CodeFileTest extends TestCase
         $path = $this->aliases->get('@src/Controllers/EmptyController.php');
         $codeFile = new CodeFile(
             $path,
-            file_get_contents($path)
+            file_get_contents($path),
         );
         $this->assertEquals($codeFile->getOperation(), CodeFileWriteOperationEnum::SKIP);
     }
@@ -202,7 +204,7 @@ final class CodeFileTest extends TestCase
         $path = $this->aliases->get('@src/Controllers/EmptyController.php');
         $codeFile = new CodeFile(
             $path,
-            file_get_contents($path)
+            file_get_contents($path),
         );
         $this->assertEquals($codeFile->diff(), '');
     }

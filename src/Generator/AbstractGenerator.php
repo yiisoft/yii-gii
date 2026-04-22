@@ -16,6 +16,9 @@ use Yiisoft\Yii\Gii\GeneratorCommandInterface;
 use Yiisoft\Yii\Gii\GeneratorInterface;
 use Yiisoft\Yii\Gii\ParametersProvider;
 
+use function dirname;
+use function sprintf;
+
 /**
  * This is the base class for all generator classes.
  *
@@ -35,28 +38,11 @@ abstract class AbstractGenerator implements GeneratorInterface
         protected Aliases $aliases,
         protected ValidatorInterface $validator,
         protected ParametersProvider $parametersProvider,
-    ) {
-    }
+    ) {}
 
     public function getRequiredTemplates(): array
     {
         return [];
-    }
-
-    /**
-     * Returns the root path to the default code template files.
-     * The default implementation will return the "templates" subdirectory of the
-     * directory containing the generator class file.
-     *
-     * @throws ReflectionException
-     *
-     * @return string the root path to the default code template files.
-     */
-    private function defaultTemplate(): string
-    {
-        $class = new ReflectionClass($this);
-
-        return dirname($class->getFileName()) . '/default';
     }
 
     public function getTemplatePath(GeneratorCommandInterface $command): string
@@ -110,7 +96,7 @@ abstract class AbstractGenerator implements GeneratorInterface
         $file = sprintf(
             '%s/%s',
             $this->aliases->get($this->getTemplatePath($command)),
-            $templateFile
+            $templateFile,
         );
 
         $renderer = function (): void {
@@ -135,5 +121,21 @@ abstract class AbstractGenerator implements GeneratorInterface
             }
             throw $e;
         }
+    }
+
+    /**
+     * Returns the root path to the default code template files.
+     * The default implementation will return the "templates" subdirectory of the
+     * directory containing the generator class file.
+     *
+     * @throws ReflectionException
+     *
+     * @return string the root path to the default code template files.
+     */
+    private function defaultTemplate(): string
+    {
+        $class = new ReflectionClass($this);
+
+        return dirname($class->getFileName()) . '/default';
     }
 }

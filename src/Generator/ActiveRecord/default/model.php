@@ -6,9 +6,10 @@ use Yiisoft\Strings\StringHelper;
 use Yiisoft\VarDumper\VarDumper;
 use Yiisoft\Yii\Gii\Generator\ActiveRecord\AbstractRelation;
 use Yiisoft\Yii\Gii\Generator\ActiveRecord\Property;
+use Yiisoft\Yii\Gii\Generator\ActiveRecord\Command;
 
 /**
- * @var Yiisoft\Yii\Gii\Generator\ActiveRecord\Command $command
+ * @var Command $command
  * @var array<string, Property> $properties
  * @var array<string, AbstractRelation> $relations
  */
@@ -48,7 +49,7 @@ use Yiisoft\ActiveRecord\ActiveQueryInterface;
 use Yiisoft\Db\Expression\Expression;
 <?php endif; ?>
 
-final class <?= $command->getModelName(); ?> extends <?= StringHelper::baseName($command->parentClass) . PHP_EOL ?>
+final class <?= $command->getModelName(); ?> extends <?= StringHelper::baseName($command->parentClass) . \PHP_EOL ?>
 {
 <?php if ($command->useRepositoryTrait): ?>
     use RepositoryTrait;
@@ -60,7 +61,7 @@ final class <?= $command->getModelName(); ?> extends <?= StringHelper::baseName(
 
 <?php endif; ?>
 <?php foreach ($properties as $property): ?>
-    <?= sprintf(
+    <?= \sprintf(
         '%s %s $%s%s',
         $command->propertyVisibility,
         $property->getType(),
@@ -89,7 +90,7 @@ final class <?= $command->getModelName(); ?> extends <?= StringHelper::baseName(
 <?php if ($command->generateGettersSetters): ?>
 <?php foreach ($properties as $property): ?>
 
-    public function get<?= $property->getPascalCaseName() ?>(): <?= $property->getReturnType() . PHP_EOL ?>
+    public function get<?= $property->getPascalCaseName() ?>(): <?= $property->getReturnType() . \PHP_EOL ?>
     {
 <?php if ($property->isUninitialized()): ?>
         return $this-><?= $property->getName() ?> ?? null;
@@ -121,7 +122,7 @@ final class <?= $command->getModelName(); ?> extends <?= StringHelper::baseName(
     }
 <?php foreach ($relations as $relation): ?>
 
-    public function <?= $relation->getGetterMethodName() ?>(): <?= $relation->getGetterReturnType() . PHP_EOL ?>
+    public function <?= $relation->getGetterMethodName() ?>(): <?= $relation->getGetterReturnType() . \PHP_EOL ?>
     {
         return $this->relation('<?= $relation->getName() ?>');
     }

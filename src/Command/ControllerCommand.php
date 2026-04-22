@@ -10,6 +10,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Yiisoft\Yii\Gii\Generator\Controller\Generator;
 use Yiisoft\Yii\Gii\GeneratorCommandInterface;
 use Yiisoft\Yii\Gii\GeneratorInterface;
+use Yiisoft\Yii\Gii\Generator\Controller\Command;
 
 /**
  * This is the command line version of Gii - a code generator.
@@ -24,6 +25,11 @@ use Yiisoft\Yii\Gii\GeneratorInterface;
 #[AsCommand(name: 'gii:controller')]
 final class ControllerCommand extends BaseGenerateCommand
 {
+    public function getGenerator(): GeneratorInterface
+    {
+        return $this->gii->getGenerator(Generator::getId());
+    }
+
     protected function configure(): void
     {
         $this->setDescription('Gii controller generator')
@@ -32,11 +38,6 @@ final class ControllerCommand extends BaseGenerateCommand
             ->addOption('baseClass', 'b', InputArgument::OPTIONAL, 'Controller base class')
             ->addOption('actions', 'a', InputArgument::OPTIONAL, 'Name of the controller actions');
         parent::configure();
-    }
-
-    public function getGenerator(): GeneratorInterface
-    {
-        return $this->gii->getGenerator(Generator::getId());
     }
 
     protected function createGeneratorCommand(InputInterface $input): GeneratorCommandInterface
@@ -50,7 +51,7 @@ final class ControllerCommand extends BaseGenerateCommand
         $template = $input->getOption('template');
         $template ??= 'default';
 
-        return new \Yiisoft\Yii\Gii\Generator\Controller\Command(
+        return new Command(
             controllerClass: (string) $input->getArgument('controllerClass'),
             viewsPath: (string) $input->getOption('viewsPath'),
             baseClass: (string) $input->getOption('baseClass'),

@@ -24,13 +24,14 @@ use Yiisoft\Yii\Gii\GiiInterface;
 use Yiisoft\Yii\Gii\ParametersProvider;
 use Yiisoft\Yii\Gii\Request\GeneratorRequest;
 
+use function is_string;
+
 final class DefaultController
 {
     public function __construct(
         private readonly DataResponseFactoryInterface $responseFactory,
         private readonly ParametersProvider $parametersProvider,
-    ) {
-    }
+    ) {}
 
     public function list(GiiInterface $gii): ResponseInterface
     {
@@ -44,8 +45,8 @@ final class DefaultController
                         fn(GeneratorInterface|GeneratorProxy $generator) => $generator instanceof GeneratorProxy
                             ? $generator->getClass()
                             : $generator::class,
-                        $generators
-                    )
+                        $generators,
+                    ),
                 ),
             ),
         ]);
@@ -56,14 +57,14 @@ final class DefaultController
         $generator = $request->getGenerator();
 
         return $this->responseFactory->createResponse(
-            $this->serializeGenerator($generator::class)
+            $this->serializeGenerator($generator::class),
         );
     }
 
     public function generate(
         GeneratorRequest $request,
         CodeFileWriter $codeFileWriter,
-        CommandHydrator $commandHydrator
+        CommandHydrator $commandHydrator,
     ): ResponseInterface {
         $generator = $request->getGenerator();
         $command = $commandHydrator->hydrate($generator::getCommandClass(), $request->getBody());
@@ -85,7 +86,7 @@ final class DefaultController
         GeneratorRequest $request,
         CommandHydrator $commandHydrator,
         #[Query('file')]
-        ?string $file = null
+        ?string $file = null,
     ): ResponseInterface {
         $generator = $request->getGenerator();
         $command = $commandHydrator->hydrate($generator::getCommandClass(), $request->getBody());
@@ -106,14 +107,14 @@ final class DefaultController
             if ($generatedFile->getId() === $file) {
                 $content = $generatedFile->preview();
                 return $this->responseFactory->createResponse(
-                    ['content' => is_string($content) ? $content : 'Preview is not available for this file type.']
+                    ['content' => is_string($content) ? $content : 'Preview is not available for this file type.'],
                 );
             }
         }
 
         return $this->responseFactory->createResponse(
             ['message' => "Code file not found: $file"],
-            Status::UNPROCESSABLE_ENTITY
+            Status::UNPROCESSABLE_ENTITY,
         );
     }
 
@@ -121,7 +122,7 @@ final class DefaultController
         GeneratorRequest $request,
         CommandHydrator $commandHydrator,
         #[Query('file')]
-        string $file
+        string $file,
     ): ResponseInterface {
         $generator = $request->getGenerator();
         $command = $commandHydrator->hydrate($generator::getCommandClass(), $request->getBody());
@@ -139,7 +140,7 @@ final class DefaultController
         }
         return $this->responseFactory->createResponse(
             ['message' => "Code file not found: $file"],
-            Status::UNPROCESSABLE_ENTITY
+            Status::UNPROCESSABLE_ENTITY,
         );
     }
 
@@ -147,7 +148,7 @@ final class DefaultController
     {
         return $this->responseFactory->createResponse(
             ['errors' => $e->getResult()->getErrorMessagesIndexedByProperty()],
-            Status::UNPROCESSABLE_ENTITY
+            Status::UNPROCESSABLE_ENTITY,
         );
     }
 

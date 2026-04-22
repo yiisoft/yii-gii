@@ -6,6 +6,8 @@ namespace Yiisoft\Yii\Gii\Component\CodeFile;
 
 use Exception;
 
+use function sprintf;
+
 final class CodeFileWriter
 {
     /**
@@ -48,8 +50,8 @@ final class CodeFileWriter
                                 ', ',
                                 array_map(
                                     fn(CodeFileWriteOperationEnum $value) => $value->value,
-                                    CodeFileWriteOperationEnum::cases()
-                                )
+                                    CodeFileWriteOperationEnum::cases(),
+                                ),
                             ),
                         ),
                     );

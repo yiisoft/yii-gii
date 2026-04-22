@@ -14,7 +14,7 @@ return [
     ],
     'yiisoft/yii-swagger' => [
         'annotation-paths' => [
-            dirname(__DIR__) . '/src/Controller',
+            \dirname(__DIR__) . '/src/Controller',
         ],
     ],
     'yiisoft/yii-console' => [
