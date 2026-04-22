@@ -209,8 +209,8 @@ final class Generator extends AbstractGenerator
 
         // Check primary key
         $primaryKey = $tableSchema->getPrimaryKey();
-        if ($primaryKey !== null) {
-            $pkColumns = $primaryKey->columnNames;
+        if ($primaryKey !== null && is_array($primaryKey)) {
+            $pkColumns = $primaryKey;
             sort($pkColumns);
             if ($fkColumns === $pkColumns) {
                 return true;
@@ -219,11 +219,13 @@ final class Generator extends AbstractGenerator
 
         // Check unique indexes
         foreach ($tableSchema->getIndexes() as $index) {
-            if ($index->isUnique) {
-                $indexColumns = $index->columnNames;
-                sort($indexColumns);
-                if ($fkColumns === $indexColumns) {
-                    return true;
+            if (is_object($index) && isset($index->isUnique) && $index->isUnique) {
+                $indexColumns = is_array($index->columnNames) ? $index->columnNames : $index;
+                if (is_array($indexColumns)) {
+                    sort($indexColumns);
+                    if ($fkColumns === $indexColumns) {
+                        return true;
+                    }
                 }
             }
         }
