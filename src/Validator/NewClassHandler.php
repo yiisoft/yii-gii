@@ -15,8 +15,7 @@ final class NewClassHandler implements RuleHandlerInterface
 {
     public function __construct(
         private readonly Aliases $aliases,
-    ) {
-    }
+    ) {}
 
     /**
      * An inline validator that checks if the attribute value refers to a valid namespaced class name.
