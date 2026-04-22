@@ -6,6 +6,4 @@ namespace Yiisoft\Yii\Gii\Exception;
 
 use Exception;
 
-final class InvalidConfigException extends Exception
-{
-}
+final class InvalidConfigException extends Exception {}
