@@ -22,6 +22,8 @@ use function is_object;
 use function reset;
 use function sprintf;
 use function var_export;
+use function is_array;
+use function is_scalar;
 
 final class Property
 {
@@ -29,8 +31,7 @@ final class Property
 
     public function __construct(
         private readonly ColumnInterface $column,
-    ) {
-    }
+    ) {}
 
     public function getName(): string
     {

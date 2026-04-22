@@ -18,7 +18,7 @@ use Yiisoft\Yii\Gii\Controller\DefaultController;
 use Yiisoft\Yii\Middleware\CorsAllowAll;
 use Yiisoft\Yii\Middleware\IpFilter;
 
-if (!(bool) ($params['yiisoft/yii-gii']['enabled'] ?? false)) {
+if (empty($params['yiisoft/yii-gii']['enabled'])) {
     return [];
 }
 
@@ -27,13 +27,12 @@ return [
         ->withCors(CorsAllowAll::class)
         ->disableMiddleware(CsrfMiddleware::class)
         ->middleware(
-            static function (ResponseFactoryInterface $responseFactory, ValidatorInterface $validator) use ($params) {
-                return new IpFilter(
+            static fn(ResponseFactoryInterface $responseFactory, ValidatorInterface $validator): IpFilter
+                => new IpFilter(
                     validator: $validator,
                     responseFactory: $responseFactory,
-                    ipRanges: $params['yiisoft/yii-gii']['allowedIPs']
-                );
-            }
+                    ipRanges: $params['yiisoft/yii-gii']['allowedIPs'],
+                ),
         )
         ->middleware(FormatDataResponseAsJson::class)
         ->namePrefix('gii/api/')
@@ -60,7 +59,7 @@ return [
                         ->middleware(BodyParamsMiddleware::class)
                         ->middleware(RequestCatcherMiddleware::class)
                         ->action([DefaultController::class, 'diff'])
-                        ->name('diff')
-                )
+                        ->name('diff'),
+                ),
         ),
 ];

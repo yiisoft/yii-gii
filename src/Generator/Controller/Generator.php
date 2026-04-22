@@ -9,6 +9,8 @@ use Yiisoft\Yii\Gii\Component\CodeFile\CodeFile;
 use Yiisoft\Yii\Gii\Generator\AbstractGenerator;
 use Yiisoft\Yii\Gii\GeneratorCommandInterface;
 
+use function sprintf;
+
 /**
  * This generator will generate a controller and one or a few action view files.
  */
@@ -50,39 +52,19 @@ final class Generator extends AbstractGenerator
 
         $codeFile = (new CodeFile(
             $this->getControllerFile($command),
-            $this->render($command, 'controller.php')
+            $this->render($command, 'controller.php'),
         ))->withBasePath($rootPath);
         $files[$codeFile->getId()] = $codeFile;
 
         foreach ($command->getActions() as $action) {
             $codeFile = (new CodeFile(
                 $this->getViewFile($command, $action),
-                $this->render($command, 'view.php', ['action' => $action])
+                $this->render($command, 'view.php', ['action' => $action]),
             ))->withBasePath($rootPath);
             $files[$codeFile->getId()] = $codeFile;
         }
 
         return $files;
-    }
-
-    /**
-     * @return string the controller class file path
-     */
-    private function getControllerFile(Command $command): string
-    {
-        $directory = empty($command->getDirectory()) ? '@src/Controller/' : $command->getDirectory();
-
-        return $this->aliases->get(
-            str_replace(
-                ['\\', '//'],
-                '/',
-                sprintf(
-                    '%s/%s.php',
-                    $directory,
-                    $command->getControllerClass(),
-                ),
-            ),
-        );
     }
 
     /**
@@ -111,5 +93,25 @@ final class Generator extends AbstractGenerator
     public static function getCommandClass(): string
     {
         return Command::class;
+    }
+
+    /**
+     * @return string the controller class file path
+     */
+    private function getControllerFile(Command $command): string
+    {
+        $directory = empty($command->getDirectory()) ? '@src/Controller/' : $command->getDirectory();
+
+        return $this->aliases->get(
+            str_replace(
+                ['\\', '//'],
+                '/',
+                sprintf(
+                    '%s/%s.php',
+                    $directory,
+                    $command->getControllerClass(),
+                ),
+            ),
+        );
     }
 }

@@ -24,6 +24,7 @@ use Yiisoft\Yii\Gii\GeneratorInterface;
 use Yiisoft\Yii\Gii\GiiInterface;
 
 use function count;
+use function sprintf;
 
 abstract class BaseGenerateCommand extends Command
 {
@@ -73,7 +74,7 @@ abstract class BaseGenerateCommand extends Command
     protected function generateCode(
         array $files,
         InputInterface $input,
-        OutputInterface $output
+        OutputInterface $output,
     ): void {
         if (count($files) === 0) {
             $output->writeln('<fg=cyan>No code to be generated.</>');
@@ -144,15 +145,15 @@ abstract class BaseGenerateCommand extends Command
                     $color,
                     $result['status'],
                     $file->getRelativePath(),
-                )
+                ),
             );
             if (CodeFileWriteStatusEnum::ERROR->value === $result['status'] && $result['error'] !== null) {
                 $hasError = true;
                 $output->writeln(
                     sprintf(
                         '<fg=red>%s</>',
-                        $result['error']
-                    )
+                        $result['error'],
+                    ),
                 );
             }
         }
@@ -191,7 +192,7 @@ abstract class BaseGenerateCommand extends Command
                 'n' => 'Skip this file.',
                 'ya' => 'Overwrite this and the rest of the changed files.',
                 'na' => 'Skip this and the rest of the changed files.',
-            ]
+            ],
         );
         /**
          * @var QuestionHelper $helper
@@ -207,7 +208,7 @@ abstract class BaseGenerateCommand extends Command
     {
         return [] === array_filter(
             $answers,
-            fn ($answer) => CodeFileWriteOperationEnum::from($answer) !== CodeFileWriteOperationEnum::SKIP
+            fn($answer) => CodeFileWriteOperationEnum::from($answer) !== CodeFileWriteOperationEnum::SKIP,
         );
     }
 }

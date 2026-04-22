@@ -14,6 +14,8 @@ use Yiisoft\Yii\Gii\GeneratorCommandInterface;
 use Yiisoft\Yii\Gii\Helper;
 use Yiisoft\Yii\Gii\ParametersProvider;
 
+use function sprintf;
+
 /**
  * This generator will generate a controller and one or a few action view files.
  */
@@ -96,7 +98,7 @@ final class Generator extends AbstractGenerator
             $this->render($command, 'model.php', [
                 'properties' => $properties,
                 'relations' => $relations,
-            ])
+            ]),
         ))->withBasePath($rootPath);
         $files[$codeFile->getId()] = $codeFile;
 

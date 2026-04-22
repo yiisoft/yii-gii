@@ -7,6 +7,8 @@ namespace Yiisoft\Yii\Gii\Exception;
 use Exception;
 use Yiisoft\Validator\Result;
 
+use function sprintf;
+
 final class InvalidGeneratorCommandException extends Exception
 {
     public function __construct(private readonly Result $result)
@@ -15,7 +17,7 @@ final class InvalidGeneratorCommandException extends Exception
             sprintf(
                 'Generator data validation failed: %s.',
                 implode(', ', $this->result->getErrorMessages()),
-            )
+            ),
         );
     }
 

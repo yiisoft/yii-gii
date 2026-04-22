@@ -11,6 +11,7 @@ use Yiisoft\Validator\Result;
 use Yiisoft\Validator\ValidationContext;
 use Yiisoft\Yii\Gii\Validator\ClassExistsHandler;
 use Yiisoft\Yii\Gii\Validator\ClassExistsRule;
+use stdClass;
 
 final class ClassExistsHandlerTest extends TestCase
 {
@@ -51,7 +52,7 @@ final class ClassExistsHandlerTest extends TestCase
     public function testNonSubclassFailsParentConstraint(): void
     {
         $rule = new ClassExistsRule(ActiveRecordInterface::class);
-        $result = $this->validate(\stdClass::class, $rule);
+        $result = $this->validate(stdClass::class, $rule);
 
         $this->assertFalse($result->isValid());
         $this->assertStringContainsString('is not a subclass of', $result->getErrorMessages()[0]);
