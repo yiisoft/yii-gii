@@ -14,9 +14,7 @@ final class GeneratorProxy
      * @psalm-param Closure(): GeneratorInterface $loader
      * @psalm-param class-string<GeneratorInterface> $class
      */
-    public function __construct(private readonly Closure $loader, private readonly string $class)
-    {
-    }
+    public function __construct(private readonly Closure $loader, private readonly string $class) {}
 
     /**
      * @return class-string<GeneratorInterface>
