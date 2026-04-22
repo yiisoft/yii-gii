@@ -12,8 +12,7 @@ final class ParametersProvider
          * and the array values are the corresponding template paths or path aliases.
          */
         private readonly array $templates = [],
-    ) {
-    }
+    ) {}
 
     /**
      * @psalm-return array<string, string>
