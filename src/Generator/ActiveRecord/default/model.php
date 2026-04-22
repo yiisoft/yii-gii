@@ -6,7 +6,6 @@ use Yiisoft\Strings\StringHelper;
 use Yiisoft\VarDumper\VarDumper;
 use Yiisoft\Yii\Gii\Generator\ActiveRecord\AbstractRelation;
 use Yiisoft\Yii\Gii\Generator\ActiveRecord\Property;
-use Yiisoft\Yii\Gii\Generator\ActiveRecord\Relation;
 use Yiisoft\Yii\Gii\Generator\ActiveRecord\Command;
 
 /**
