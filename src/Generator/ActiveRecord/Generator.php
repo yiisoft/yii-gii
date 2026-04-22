@@ -14,6 +14,8 @@ use Yiisoft\Yii\Gii\GeneratorCommandInterface;
 use Yiisoft\Yii\Gii\Helper;
 use Yiisoft\Yii\Gii\ParametersProvider;
 
+use Throwable;
+
 use function sprintf;
 
 /**
@@ -154,18 +156,22 @@ final class Generator extends AbstractGenerator
                 continue;
             }
 
-            $tableSchema = $this->connection->getTableSchema($tableName);
-            if ($tableSchema === null) {
-                continue;
-            }
-
-            foreach ($tableSchema->getForeignKeys() as $foreignKey) {
-                if ($foreignKey->foreignTableName === $currentTable) {
-                    $inverseRelations[] = new InverseRelation(
-                        $foreignKey,
-                        $tableName,
-                    );
+            try {
+                $tableSchema = $this->connection->getTableSchema($tableName);
+                if ($tableSchema === null) {
+                    continue;
                 }
+
+                foreach ($tableSchema->getForeignKeys() as $foreignKey) {
+                    if ($foreignKey->foreignTableName === $currentTable) {
+                        $inverseRelations[] = new InverseRelation(
+                            $foreignKey,
+                            $tableName,
+                        );
+                    }
+                }
+            } catch (Throwable) {
+                continue;
             }
         }
 

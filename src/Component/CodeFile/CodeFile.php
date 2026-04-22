@@ -100,7 +100,7 @@ final class CodeFile
                     $result = @mkdir($dir, $this->newDirMode, true);
                     @umask($mask);
                 } else {
-                    $result = @mkdir($dir, 0o777, true);
+                    $result = @mkdir($dir, self::DIR_MODE, true);
                 }
                 if (!$result) {
                     throw new RuntimeException("Unable to create the directory '$dir'.");
