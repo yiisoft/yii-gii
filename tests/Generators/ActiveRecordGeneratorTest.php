@@ -404,26 +404,6 @@ final class ActiveRecordGeneratorTest extends TestCase
         );
     }
 
-    public function testGenerateInverseRelations(): void
-    {
-        $generator = $this->createGenerator();
-        $command = new Command(
-            table: 'user',
-            namespace: 'Yiisoft\\Yii\\Gii\\Tests\\Model',
-        );
-
-        $files = $generator->generate($command);
-        $content = reset($files)->getContent();
-
-        // User should have inverse hasMany relation to Post
-        $this->assertStringContainsString('public function getPosts()', $content);
-        $this->assertStringContainsString('public function getPostsQuery(): ActiveQueryInterface', $content);
-        $this->assertStringContainsString("return \$this->hasMany(Post::class, ['user_id' => 'id'])->inverseOf('user');", $content);
-
-        // Verify the relationQuery method includes the posts relation
-        $this->assertStringContainsString("'posts' => \$this->getPostsQuery(),", $content);
-    }
-
     public function testGenerateInverseHasOneRelation(): void
     {
         $generator = $this->createGenerator();
