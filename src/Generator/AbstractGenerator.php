@@ -38,7 +38,8 @@ abstract class AbstractGenerator implements GeneratorInterface
         protected Aliases $aliases,
         protected ValidatorInterface $validator,
         protected ParametersProvider $parametersProvider,
-    ) {}
+    ) {
+    }
 
     public function getRequiredTemplates(): array
     {
