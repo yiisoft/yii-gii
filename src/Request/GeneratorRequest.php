@@ -21,7 +21,9 @@ final class GeneratorRequest implements RequestInputInterface
     #[Body('parameters')]
     private array $parameters = [];
 
-    public function __construct(private readonly GiiInterface $gii) {}
+    public function __construct(private readonly GiiInterface $gii)
+    {
+    }
 
     public function getGenerator(): GeneratorInterface
     {
