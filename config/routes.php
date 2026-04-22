@@ -27,13 +27,11 @@ return [
         ->withCors(CorsAllowAll::class)
         ->disableMiddleware(CsrfMiddleware::class)
         ->middleware(
-            static function (ResponseFactoryInterface $responseFactory, ValidatorInterface $validator) use ($params) {
-                return new IpFilter(
-                    validator: $validator,
-                    responseFactory: $responseFactory,
-                    ipRanges: $params['yiisoft/yii-gii']['allowedIPs'],
-                );
-            },
+            static fn(ResponseFactoryInterface $responseFactory, ValidatorInterface $validator) => new IpFilter(
+                validator: $validator,
+                responseFactory: $responseFactory,
+                ipRanges: $params['yiisoft/yii-gii']['allowedIPs'],
+            ),
         )
         ->middleware(FormatDataResponseAsJson::class)
         ->namePrefix('gii/api/')
