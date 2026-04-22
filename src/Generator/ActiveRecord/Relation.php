@@ -14,8 +14,7 @@ final class Relation extends AbstractRelation
     public function __construct(
         private readonly ForeignKey $foreignKey,
         private readonly string $modelName,
-    ) {
-    }
+    ) {}
 
     public function getRelatedModel(): string
     {
