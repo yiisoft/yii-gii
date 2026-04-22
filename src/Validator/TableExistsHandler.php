@@ -22,7 +22,8 @@ final class TableExistsHandler implements RuleHandlerInterface
 {
     public function __construct(
         private readonly ConnectionInterface $connection,
-    ) {}
+    ) {
+    }
 
     public function validate(mixed $value, object $rule, ValidationContext $context): Result
     {
