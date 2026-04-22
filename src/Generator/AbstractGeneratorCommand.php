@@ -14,7 +14,8 @@ abstract class AbstractGeneratorCommand implements GeneratorCommandInterface
         #[Required(message: 'A code template must be selected.')]
         #[TemplateRule]
         protected string $template = 'default',
-    ) {}
+    ) {
+    }
 
     public function getTemplate(): string
     {
