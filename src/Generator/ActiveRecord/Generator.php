@@ -14,6 +14,8 @@ use Yiisoft\Yii\Gii\GeneratorCommandInterface;
 use Yiisoft\Yii\Gii\Helper;
 use Yiisoft\Yii\Gii\ParametersProvider;
 
+use Throwable;
+
 use function sprintf;
 
 /**
@@ -168,7 +170,7 @@ final class Generator extends AbstractGenerator
                         );
                     }
                 }
-            } catch (\Throwable) {
+            } catch (Throwable) {
                 continue;
             }
         }
