@@ -53,8 +53,9 @@
         "yiisoft/yii-middleware": "^1.1.2"
     },
     "require-dev": {
-        "maglnet/composer-require-checker": "^4.7.1",
+        "friendsofphp/php-cs-fixer": "^3.95",
         "jetbrains/phpstorm-attributes": "^1.2",
+        "maglnet/composer-require-checker": "^4.7.1",
         "nyholm/psr7": "^1.8.2",
         "phpunit/phpunit": "^10.5.63",
         "rector/rector": "^2.4.2",
