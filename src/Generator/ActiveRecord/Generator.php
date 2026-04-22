@@ -78,13 +78,19 @@ final class Generator extends AbstractGenerator
                 // Generate outgoing relations (this table's FKs to other tables)
                 foreach ($schema->getForeignKeys() as $foreignKey) {
                     $relation = new Relation($foreignKey, $command->getModelName());
-                    $relations[$relation->getName()] = new Relation($foreignKey, $command->getModelName());
+                    $relations[$relation->getName()] = $relation;
                 }
 
                 // Generate inverse relations (other tables' FKs to this table)
                 $inverseRelations = $this->findInverseRelations($command->table);
                 foreach ($inverseRelations as $inverseRelation) {
-                    $relations[$inverseRelation->getName()] = $inverseRelation;
+                    $inverseRelationName = $inverseRelation->getName();
+
+                    if (isset($relations[$inverseRelationName])) {
+                        continue;
+                    }
+
+                    $relations[$inverseRelationName] = $inverseRelation;
                 }
 
                 // Mark columns used in relations

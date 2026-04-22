@@ -14,19 +14,12 @@ use function lcfirst;
  *
  * For example, if a Post table has a FK to User, then User has an inverse hasMany relation to Post.
  */
-final class InverseRelation
+final class InverseRelation extends AbstractRelation
 {
     public function __construct(
         private readonly ForeignKey $foreignKey,
         private readonly string $foreignTableName,
     ) {
-    }
-
-    public function getName(): string
-    {
-        $relatedModel = $this->getRelatedModel();
-
-        return lcfirst($relatedModel);
     }
 
     public function getRelatedModel(): string
@@ -54,49 +47,5 @@ final class InverseRelation
     public function getInverseOf(): string
     {
         return lcfirst((new Inflector())->tableToClass($this->foreignKey->foreignTableName));
-    }
-
-    /**
-     * Returns the method name for the relation query (e.g., "getPostsQuery" or "getProfileQuery").
-     */
-    public function getQueryMethodName(): string
-    {
-        return 'get' . $this->getRelatedModel() . 'Query';
-    }
-
-    /**
-     * Returns the method name for the relation getter (e.g., "getPosts" or "getProfile").
-     */
-    public function getGetterMethodName(): string
-    {
-        return 'get' . $this->getRelatedModel();
-    }
-
-    /**
-     * Returns true if this is a hasOne relation.
-     */
-    public function isHasOne(): bool
-    {
-        return true;
-    }
-
-    /**
-     * Returns true if this is a hasMany relation.
-     */
-    public function isHasMany(): bool
-    {
-        return false;
-    }
-
-    /**
-     * Returns the return type for the getter method.
-     */
-    public function getGetterReturnType(): string
-    {
-        if ($this->isHasMany()) {
-            return 'array';
-        }
-
-        return '?' . $this->getRelatedModel();
     }
 }
