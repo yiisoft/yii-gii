@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 use Yiisoft\Strings\StringHelper;
 use Yiisoft\VarDumper\VarDumper;
-use Yiisoft\Yii\Gii\Generator\ActiveRecord\AbstractRelation;
+use Yiisoft\Yii\Gii\Generator\ActiveRecord\Relation;
 use Yiisoft\Yii\Gii\Generator\ActiveRecord\Property;
 use Yiisoft\Yii\Gii\Generator\ActiveRecord\Command;
 
 /**
  * @var Command $command
  * @var array<string, Property> $properties
- * @var array<string, AbstractRelation> $relations
+ * @var array<string, Relation> $relations
  */
 
 $needsConstructor = false;
@@ -128,7 +128,7 @@ final class <?= $command->getModelName(); ?> extends <?= StringHelper::baseName(
 
     public function <?= $relation->getQueryMethodName() ?>(): ActiveQueryInterface
     {
-        return $this-><?= $relation->isHasOne() ? 'hasOne' : 'hasMany' ?>(<?= $relation->getRelatedModel() ?>::class, <?= VarDumper::create($relation->getLink())->export(false) ?>)<?= "->inverseOf('" . $relation->getInverseOf() . "')" ?>;
+        return $this-><?= $relation->getRelationMethod() ?>(<?= $relation->getRelatedModel() ?>::class, <?= VarDumper::create($relation->getLink())->export(false) ?>)<?= "->inverseOf('" . $relation->getInverseOf() . "')" ?>;
     }
 <?php endforeach; ?>
 <?php endif; ?>

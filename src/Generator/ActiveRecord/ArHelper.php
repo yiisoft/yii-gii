@@ -10,8 +10,10 @@ use function implode;
 use function in_array;
 use function preg_match;
 use function strlen;
+use function strrpos;
 use function strtolower;
 use function substr;
+use function trim;
 
 final class ArHelper
 {
@@ -24,10 +26,11 @@ final class ArHelper
      * @param string[] $columnNames the column names.
      * @param string $defaultName the default relation name to use if a column name is an identity field name
      * (e.g. id, uuid, key, code). It can be a related table name or a related model name.
+     * @param bool $isSingular whether the relation name should be singular.
      *
      * @return string
      */
-    public static function getRelationName(array $columnNames, string $defaultName): string
+    public static function getRelationName(array $columnNames, string $defaultName, bool $isSingular = true): string
     {
         $names = [];
 
@@ -49,7 +52,29 @@ final class ArHelper
         $name = implode(' ', $names);
         $name = $inflector->toWords($name);
         $name = strtolower($name);
+        $name = self::changeLastWordForm($name, $isSingular);
 
         return $inflector->toCamelCase($name);
+    }
+
+    private static function changeLastWordForm(string $string, bool $isSingular): string
+    {
+        $lastSpacePos = strrpos($string, ' ');
+
+        if ($lastSpacePos !== false) {
+            $lastWord = substr($string, $lastSpacePos + 1);
+            $string = substr($string, 0, $lastSpacePos);
+        } else {
+            $lastWord = $string;
+            $string = '';
+        }
+
+        $inflector = new Inflector();
+
+        $string .= $isSingular
+            ? ' ' . $inflector->toSingular($lastWord)
+            : ' ' . $inflector->toPlural($lastWord);
+
+        return trim($string);
     }
 }

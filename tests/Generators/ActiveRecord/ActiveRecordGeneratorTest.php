@@ -356,6 +356,7 @@ final class ActiveRecordGeneratorTest extends TestCase
                 {
                     return match ($name) {
                         'profile' => $this->getProfileQuery(),
+                        'posts' => $this->getPostsQuery(),
                         default => parent::relationQuery($name),
                     };
                 }
@@ -419,9 +420,60 @@ final class ActiveRecordGeneratorTest extends TestCase
         $files = $generator->generate($command);
         $content = reset($files)->getContent();
 
-        $this->assertStringContainsString('public function getUser()', $content);
-        $this->assertStringContainsString('public function getUserQuery(): ActiveQueryInterface', $content);
-        $this->assertStringContainsString("return \$this->hasOne(User::class, ['profile_id' => 'id'])->inverseOf('profile');", $content);
+        $this->assertStringContainsStringIgnoringLineEndings(
+            <<<'PHP'
+                public function getUser(): ?User
+                {
+                    return $this->relation('user');
+                }
+            PHP,
+            $content,
+        );
+
+        $this->assertStringContainsStringIgnoringLineEndings(
+            <<<'PHP'
+                public function getUserQuery(): ActiveQueryInterface
+                {
+                    return $this->hasOne(User::class, ['profile_id' => 'id'])->inverseOf('profile');
+                }
+            PHP,
+            $content,
+        );
+    }
+
+    public function testGenerateInverseHasManyRelation(): void
+    {
+        $generator = $this->createGenerator();
+        $command = new Command(
+            table: 'user',
+            namespace: 'Yiisoft\\Yii\\Gii\\Tests\\Model',
+        );
+
+        $files = $generator->generate($command);
+        $content = reset($files)->getContent();
+
+        $this->assertStringContainsStringIgnoringLineEndings(
+            <<<'PHP'
+                public function getPosts(): array
+                {
+                    return $this->relation('posts');
+                }
+            PHP,
+            $content,
+        );
+
+        $this->assertStringContainsStringIgnoringLineEndings(
+            <<<'PHP'
+                public function getPostsQuery(): ActiveQueryInterface
+                {
+                    return $this->hasMany(Post::class, ['created_by' => 'id'])->inverseOf('createdBy');
+                }
+            PHP,
+            $content,
+        );
+
+        // Verify the relationQuery method includes the posts relation
+        $this->assertStringContainsString("'posts' => \$this->getPostsQuery(),", $content);
     }
 
     private function createGenerator(...$params): Generator
