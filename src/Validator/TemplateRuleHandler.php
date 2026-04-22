@@ -22,8 +22,7 @@ final class TemplateRuleHandler implements RuleHandlerInterface
         private readonly Aliases $aliases,
         private readonly GiiInterface $gii,
         private readonly ParametersProvider $parametersProvider,
-    ) {
-    }
+    ) {}
 
     /**
      * Validates the template selection.
