@@ -15,7 +15,6 @@ if (!empty($command->getBaseClass())) {
 }
 $classDefinition = implode(' ', $classDefinitionParts) . \PHP_EOL;
 
-
 echo "<?php\n";
 ?>
 

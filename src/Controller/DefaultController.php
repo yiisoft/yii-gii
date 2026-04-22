@@ -31,8 +31,7 @@ final class DefaultController
     public function __construct(
         private readonly DataResponseFactoryInterface $responseFactory,
         private readonly ParametersProvider $parametersProvider,
-    ) {
-    }
+    ) {}
 
     public function list(GiiInterface $gii): ResponseInterface
     {

@@ -14,6 +14,8 @@ use Yiisoft\Yii\Gii\GiiInterface;
 use Yiisoft\Yii\Gii\Tests\TestCase;
 use stdClass;
 
+use stdClass;
+
 use function file_exists;
 
 final class ActiveRecordCommandTest extends TestCase

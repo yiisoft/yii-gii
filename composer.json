@@ -63,6 +63,7 @@
         "spatie/phpunit-watcher": "^1.24.4",
         "vimeo/psalm": "^5.26.1 || ^6.12",
         "yiisoft/cache": "^3.2",
+        "yiisoft/code-style": "^1.0",
         "yiisoft/db-sqlite": "^2.0.0",
         "yiisoft/di": "^1.4.1",
         "yiisoft/dummy-provider": "^1.1.0",
