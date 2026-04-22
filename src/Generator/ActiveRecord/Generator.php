@@ -164,10 +164,7 @@ final class Generator extends AbstractGenerator
 
                 foreach ($tableSchema->getForeignKeys() as $foreignKey) {
                     if ($foreignKey->foreignTableName === $currentTable) {
-                        $inverseRelations[] = new InverseRelation(
-                            $foreignKey,
-                            $tableName,
-                        );
+                        $inverseRelations[] = new InverseRelation($foreignKey, $tableName);
                     }
                 }
             } catch (Throwable) {
