@@ -19,7 +19,8 @@ final class InverseRelation extends AbstractRelation
     public function __construct(
         private readonly ForeignKey $foreignKey,
         private readonly string $foreignTableName,
-    ) {}
+    ) {
+    }
 
     public function getRelatedModel(): string
     {
