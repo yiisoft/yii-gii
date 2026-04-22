@@ -22,11 +22,6 @@ final class Relation extends AbstractRelation
         return (new Inflector())->tableToClass($foreignTableName);
     }
 
-    /**
-     * Build link array [foreign_column => local_column]
-     *
-     * @return array<string, string>
-     */
     public function getLink(): array
     {
         $link = [];

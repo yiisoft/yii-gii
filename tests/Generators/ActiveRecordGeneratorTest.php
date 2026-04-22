@@ -415,7 +415,6 @@ final class ActiveRecordGeneratorTest extends TestCase
         $files = $generator->generate($command);
         $content = reset($files)->getContent();
 
-        // UserProfile should have outgoing hasOne to User (via id FK)
         $this->assertStringContainsString('public function getUser()', $content);
         $this->assertStringContainsString('public function getUserQuery(): ActiveQueryInterface', $content);
         $this->assertStringContainsString("return \$this->hasOne(User::class, ['profile_id' => 'id'])->inverseOf('userProfile');", $content);

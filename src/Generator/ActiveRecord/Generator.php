@@ -67,7 +67,7 @@ final class Generator extends AbstractGenerator
 
         $properties = [];
         $relations = [];
-        $schema = $this->connection->getTableSchema($command->table, true);
+        $schema = $this->connection->getTableSchema($command->table);
 
         if ($schema !== null) {
             foreach ($schema->getColumns() as $columnName => $column) {
@@ -145,14 +145,14 @@ final class Generator extends AbstractGenerator
     private function findInverseRelations(string $currentTable): array
     {
         $inverseRelations = [];
-        $allTableNames = $this->connection->getSchema()->getTableNames(refresh: true);
+        $allTableNames = $this->connection->getSchema()->getTableNames();
 
         foreach ($allTableNames as $tableName) {
             if ($tableName === $currentTable) {
                 continue;
             }
 
-            $tableSchema = $this->connection->getTableSchema($tableName, true);
+            $tableSchema = $this->connection->getTableSchema($tableName);
             if ($tableSchema === null) {
                 continue;
             }

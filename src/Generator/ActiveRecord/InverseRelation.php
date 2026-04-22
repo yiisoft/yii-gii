@@ -18,20 +18,14 @@ final class InverseRelation extends AbstractRelation
 {
     public function __construct(
         private readonly ForeignKey $foreignKey,
-        private readonly string $foreignTableName,
+        private readonly string $relatedTableName,
     ) {}
 
     public function getRelatedModel(): string
     {
-        return (new Inflector())->tableToClass($this->foreignTableName);
+        return (new Inflector())->tableToClass($this->relatedTableName);
     }
 
-    /**
-     * Build link array [local_column => foreign_column]
-     * For inverse relations, the link is reversed from the FK direction.
-     *
-     * @return array<string, string>
-     */
     public function getLink(): array
     {
         $link = [];

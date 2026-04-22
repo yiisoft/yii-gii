@@ -10,7 +10,7 @@ use Yiisoft\Yii\Gii\Generator\ActiveRecord\Property;
 /**
  * @var Yiisoft\Yii\Gii\Generator\ActiveRecord\Command $command
  * @var array<string, Property> $properties
- * @var list<AbstractRelation> $relations
+ * @var array<string, AbstractRelation> $relations
  */
 
 

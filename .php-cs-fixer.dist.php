@@ -4,25 +4,32 @@ declare(strict_types=1);
 
 use PhpCsFixer\Config;
 use PhpCsFixer\Finder;
+use PhpCsFixer\Runner\Parallel\ParallelConfigFactory;
+
+$finder = (new Finder())->in([
+    __DIR__ . '/config',
+    __DIR__ . '/src',
+    __DIR__ . '/tests',
+]);
 
 return (new Config())
-    ->setRiskyAllowed(false)
+    ->setRiskyAllowed(true)
+    ->setParallelConfig(ParallelConfigFactory::detect())
     ->setRules([
-        '@auto' => true
+        '@PER-CS3.0' => true,
+        'no_unused_imports' => true,
+        'ordered_class_elements' => true,
+        'class_attributes_separation' => ['elements' => ['method' => 'one']],
+        'declare_strict_types' => true,
+        'native_function_invocation' => true,
+        'native_constant_invocation' => true,
+        'fully_qualified_strict_types' => [
+            'import_symbols' => true
+        ],
+        'global_namespace_import' => [
+            'import_classes' => true,
+            'import_constants' => true,
+            'import_functions' => true,
+        ],
     ])
-    // 💡 by default, Fixer looks for `*.php` files excluding `./vendor/` - here, you can groom this config
-    ->setFinder(
-        (new Finder())
-            // 💡 root folder to check
-            ->in(__DIR__)
-            // 💡 additional files, eg bin entry file
-            // ->append([__DIR__.'/bin-entry-file'])
-            // 💡 folders to exclude, if any
-            // ->exclude([/* ... */])
-            // 💡 path patterns to exclude, if any
-            // ->notPath([/* ... */])
-            // 💡 extra configs
-            // ->ignoreDotFiles(false) // true by default in v3, false in v4 or future mode
-            // ->ignoreVCS(true) // true by default
-    )
-;
+    ->setFinder($finder);
