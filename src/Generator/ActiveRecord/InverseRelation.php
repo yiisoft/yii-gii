@@ -19,20 +19,12 @@ final class InverseRelation
     public function __construct(
         private readonly ForeignKey $foreignKey,
         private readonly string $foreignTableName,
-        private readonly string $modelName,
-        private readonly bool $isUnique,
     ) {
     }
 
     public function getName(): string
     {
         $relatedModel = $this->getRelatedModel();
-
-        // For hasMany relations, pluralize the name
-        if ($this->isHasMany()) {
-            $inflector = new Inflector();
-            return lcfirst($inflector->toPlural($relatedModel));
-        }
 
         return lcfirst($relatedModel);
     }
@@ -53,9 +45,7 @@ final class InverseRelation
         $link = [];
 
         foreach ($this->foreignKey->columnNames as $index => $columnName) {
-            $foreignColumnName = $this->foreignKey->foreignColumnNames[$index] ?? 'id';
-            // Inverse link: map our column to their FK column
-            $link[$columnName] = $foreignColumnName;
+            $link[$columnName] = $this->foreignKey->foreignColumnNames[$index];
         }
 
         return $link;
@@ -63,7 +53,7 @@ final class InverseRelation
 
     public function getInverseOf(): string
     {
-        return lcfirst($this->modelName);
+        return lcfirst((new Inflector())->tableToClass($this->foreignKey->foreignTableName));
     }
 
     /**
@@ -71,14 +61,7 @@ final class InverseRelation
      */
     public function getQueryMethodName(): string
     {
-        $relatedModel = $this->getRelatedModel();
-
-        if ($this->isHasMany()) {
-            $inflector = new Inflector();
-            $relatedModel = $inflector->toPlural($relatedModel);
-        }
-
-        return 'get' . $relatedModel . 'Query';
+        return 'get' . $this->getRelatedModel() . 'Query';
     }
 
     /**
@@ -86,14 +69,7 @@ final class InverseRelation
      */
     public function getGetterMethodName(): string
     {
-        $relatedModel = $this->getRelatedModel();
-
-        if ($this->isHasMany()) {
-            $inflector = new Inflector();
-            $relatedModel = $inflector->toPlural($relatedModel);
-        }
-
-        return 'get' . $relatedModel;
+        return 'get' . $this->getRelatedModel();
     }
 
     /**
@@ -101,7 +77,7 @@ final class InverseRelation
      */
     public function isHasOne(): bool
     {
-        return $this->isUnique;
+        return true;
     }
 
     /**
@@ -109,7 +85,7 @@ final class InverseRelation
      */
     public function isHasMany(): bool
     {
-        return !$this->isUnique;
+        return false;
     }
 
     /**

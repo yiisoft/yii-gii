@@ -38,7 +38,7 @@ final class Relation
         $link = [];
 
         foreach ($this->foreignKey->columnNames as $index => $columnName) {
-            $foreignColumnName = $this->foreignKey->foreignColumnNames[$index] ?? 'id';
+            $foreignColumnName = $this->foreignKey->foreignColumnNames[$index];
             $link[$foreignColumnName] = $columnName;
         }
 
