@@ -8,7 +8,9 @@ use Yiisoft\Yii\Gii\GeneratorCommandInterface;
 
 final class CommandHydrator
 {
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 
     /**
      * @psalm-param class-string<GeneratorCommandInterface> $commandClass
