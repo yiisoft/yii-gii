@@ -156,19 +156,15 @@ final class Generator extends AbstractGenerator
                 continue;
             }
 
-            try {
-                $tableSchema = $this->connection->getTableSchema($tableName);
-                if ($tableSchema === null) {
-                    continue;
-                }
-
-                foreach ($tableSchema->getForeignKeys() as $foreignKey) {
-                    if ($foreignKey->foreignTableName === $currentTable) {
-                        $inverseRelations[] = new InverseRelation($foreignKey, $tableName);
-                    }
-                }
-            } catch (Throwable) {
+            $tableSchema = $this->connection->getTableSchema($tableName);
+            if ($tableSchema === null) {
                 continue;
+            }
+
+            foreach ($tableSchema->getForeignKeys() as $foreignKey) {
+                if ($foreignKey->foreignTableName === $currentTable) {
+                    $inverseRelations[] = new InverseRelation($foreignKey, $tableName);
+                }
             }
         }
 
