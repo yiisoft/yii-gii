@@ -41,4 +41,9 @@ final class InverseRelation extends AbstractRelation
     {
         return lcfirst((new Inflector())->tableToClass($this->foreignKey->foreignTableName));
     }
+
+    public function getLocalColumns(): array
+    {
+        return $this->foreignKey->foreignColumnNames;
+    }
 }

@@ -8,6 +8,8 @@ use function lcfirst;
 
 abstract class AbstractRelation
 {
+    private ?string $uniqueName = null;
+
     abstract public function getRelatedModel(): string;
 
     /**
@@ -19,9 +21,30 @@ abstract class AbstractRelation
 
     abstract public function getInverseOf(): string;
 
+    /**
+     * Get the local column names used in the relation link.
+     * For outgoing relations (Relation), this returns the FK columns in the current table.
+     * For inverse relations (InverseRelation), this returns the referenced columns in the current table.
+     *
+     * @return list<string>
+     */
+    abstract public function getLocalColumns(): array;
+
     public function getName(): string
     {
+        if ($this->uniqueName !== null) {
+            return $this->uniqueName;
+        }
+
         return lcfirst($this->getRelatedModel());
+    }
+
+    /**
+     * Set a unique name for this relation to avoid collisions.
+     */
+    public function setUniqueName(string $name): void
+    {
+        $this->uniqueName = $name;
     }
 
     /**

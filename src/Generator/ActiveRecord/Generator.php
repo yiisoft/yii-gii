@@ -95,6 +95,9 @@ final class Generator extends AbstractGenerator
                     $relations[$inverseRelationName] = $inverseRelation;
                 }
 
+                // Resolve name collisions by making relation names unique
+                $relations = $this->resolveRelationNameCollisions($relations);
+
                 // Mark columns used in relations
                 foreach ($relations as $relation) {
                     foreach ($relation->getLink() as $columnName) {
@@ -167,5 +170,51 @@ final class Generator extends AbstractGenerator
         }
 
         return $inverseRelations;
+    }
+
+    /**
+     * Resolve relation name collisions by making names unique.
+     * When multiple relations would have the same name, append the local column name(s) to make them unique.
+     *
+     * @param array<string, AbstractRelation> $relations
+     * @return array<string, AbstractRelation>
+     */
+    private function resolveRelationNameCollisions(array $relations): array
+    {
+        // Group relations by their base name
+        $nameGroups = [];
+        foreach ($relations as $relation) {
+            $baseName = $relation->getName();
+            $nameGroups[$baseName][] = $relation;
+        }
+
+        // For each group with collisions, make names unique
+        $uniqueRelations = [];
+        foreach ($nameGroups as $baseName => $relationsGroup) {
+            if (count($relationsGroup) === 1) {
+                // No collision, keep the original name
+                $uniqueRelations[$baseName] = $relationsGroup[0];
+            } else {
+                // Collision detected, make names unique by appending column names
+                foreach ($relationsGroup as $relation) {
+                    $localColumns = $relation->getLocalColumns();
+
+                    // Convert column names to camelCase (e.g., created_by -> CreatedBy)
+                    $columnParts = [];
+                    foreach ($localColumns as $columnName) {
+                        // Split by underscore and capitalize each part
+                        $parts = explode('_', $columnName);
+                        $columnParts[] = implode('', array_map('ucfirst', $parts));
+                    }
+
+                    // Create unique name: baseName + By + ColumnName (e.g., userByCreatedBy)
+                    $uniqueName = $baseName . 'By' . implode('And', $columnParts);
+                    $relation->setUniqueName($uniqueName);
+                    $uniqueRelations[$uniqueName] = $relation;
+                }
+            }
+        }
+
+        return $uniqueRelations;
     }
 }

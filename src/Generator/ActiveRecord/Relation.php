@@ -38,4 +38,9 @@ final class Relation extends AbstractRelation
     {
         return lcfirst($this->modelName);
     }
+
+    public function getLocalColumns(): array
+    {
+        return $this->foreignKey->columnNames;
+    }
 }

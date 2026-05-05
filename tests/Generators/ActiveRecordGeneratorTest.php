@@ -424,6 +424,34 @@ final class ActiveRecordGeneratorTest extends TestCase
         $this->assertStringContainsString("return \$this->hasOne(User::class, ['profile_id' => 'id'])->inverseOf('userProfile');", $content);
     }
 
+    public function testGenerateRelationsWithNameCollisions(): void
+    {
+        $generator = $this->createGenerator();
+        $command = new Command(
+            table: 'post',
+            namespace: 'Yiisoft\\Yii\\Gii\\Tests\\Model',
+        );
+
+        $files = $generator->generate($command);
+        $content = reset($files)->getContent();
+
+        // Should have unique relation names for both created_by and updated_by
+        $this->assertStringContainsString("'userByCreatedBy' => \$this->getUserByCreatedByQuery()", $content);
+        $this->assertStringContainsString("'userByUpdatedBy' => \$this->getUserByUpdatedByQuery()", $content);
+
+        // Should have getter methods with unique names
+        $this->assertStringContainsString('public function getUserByCreatedBy()', $content);
+        $this->assertStringContainsString('public function getUserByUpdatedBy()', $content);
+
+        // Should have query methods with unique names
+        $this->assertStringContainsString('public function getUserByCreatedByQuery(): ActiveQueryInterface', $content);
+        $this->assertStringContainsString('public function getUserByUpdatedByQuery(): ActiveQueryInterface', $content);
+
+        // Should use the correct foreign key columns
+        $this->assertStringContainsString("return \$this->hasOne(User::class, ['id' => 'created_by'])", $content);
+        $this->assertStringContainsString("return \$this->hasOne(User::class, ['id' => 'updated_by'])", $content);
+    }
+
     private function createGenerator(...$params): Generator
     {
         $injector = new Injector(
