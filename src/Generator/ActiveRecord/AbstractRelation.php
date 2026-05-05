@@ -52,7 +52,9 @@ abstract class AbstractRelation
      */
     public function getQueryMethodName(): string
     {
-        return 'get' . $this->getRelatedModel() . 'Query';
+        // Use the unique name if set, otherwise use the related model name
+        $name = $this->uniqueName ?? $this->getRelatedModel();
+        return 'get' . ucfirst($name) . 'Query';
     }
 
     /**
@@ -60,7 +62,9 @@ abstract class AbstractRelation
      */
     public function getGetterMethodName(): string
     {
-        return 'get' . $this->getRelatedModel();
+        // Use the unique name if set, otherwise use the related model name
+        $name = $this->uniqueName ?? $this->getRelatedModel();
+        return 'get' . ucfirst($name);
     }
 
     /**
