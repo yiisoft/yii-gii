@@ -9,17 +9,21 @@ use Yiisoft\Strings\Inflector;
 
 use function lcfirst;
 
-final class Relation extends AbstractRelation
+/**
+ * Represents an inverse relation (incoming foreign key from another table).
+ *
+ * For example, if a Post table has a FK to User, then User has an inverse hasMany relation to Post.
+ */
+final class InverseRelation extends AbstractRelation
 {
     public function __construct(
         private readonly ForeignKey $foreignKey,
-        private readonly string $modelName,
+        private readonly string $relatedTableName,
     ) {}
 
     public function getRelatedModel(): string
     {
-        $foreignTableName = $this->foreignKey->foreignTableName;
-        return (new Inflector())->tableToClass($foreignTableName);
+        return (new Inflector())->tableToClass($this->relatedTableName);
     }
 
     public function getLink(): array
@@ -27,8 +31,7 @@ final class Relation extends AbstractRelation
         $link = [];
 
         foreach ($this->foreignKey->columnNames as $index => $columnName) {
-            $foreignColumnName = $this->foreignKey->foreignColumnNames[$index];
-            $link[$foreignColumnName] = $columnName;
+            $link[$columnName] = $this->foreignKey->foreignColumnNames[$index];
         }
 
         return $link;
@@ -36,6 +39,6 @@ final class Relation extends AbstractRelation
 
     public function getInverseOf(): string
     {
-        return lcfirst($this->modelName);
+        return lcfirst((new Inflector())->tableToClass($this->foreignKey->foreignTableName));
     }
 }

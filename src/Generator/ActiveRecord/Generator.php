@@ -69,7 +69,7 @@ final class Generator extends AbstractGenerator
 
         $properties = [];
         $relations = [];
-        $schema = $this->connection->getTableSchema($command->table, true);
+        $schema = $this->connection->getTableSchema($command->table);
 
         if ($schema !== null) {
             foreach ($schema->getColumns() as $columnName => $column) {
@@ -77,8 +77,22 @@ final class Generator extends AbstractGenerator
             }
 
             if ($command->generateRelations) {
+                // Generate outgoing relations (this table's FKs to other tables)
                 foreach ($schema->getForeignKeys() as $foreignKey) {
-                    $relations[] = new Relation($foreignKey, $command->getModelName());
+                    $relation = new Relation($foreignKey, $command->getModelName());
+                    $relations[$relation->getName()] = $relation;
+                }
+
+                // Generate inverse relations (other tables' FKs to this table)
+                $inverseRelations = $this->findInverseRelations($command->table);
+                foreach ($inverseRelations as $inverseRelation) {
+                    $inverseRelationName = $inverseRelation->getName();
+
+                    if (isset($relations[$inverseRelationName])) {
+                        continue;
+                    }
+
+                    $relations[$inverseRelationName] = $inverseRelation;
                 }
 
                 // Mark columns used in relations
@@ -123,5 +137,35 @@ final class Generator extends AbstractGenerator
                 ),
             ),
         );
+    }
+
+    /**
+     * Find inverse relations by scanning other tables for FKs that reference the current table.
+     *
+     * @return list<InverseRelation>
+     */
+    private function findInverseRelations(string $currentTable): array
+    {
+        $inverseRelations = [];
+        $allTableNames = $this->connection->getSchema()->getTableNames();
+
+        foreach ($allTableNames as $tableName) {
+            if ($tableName === $currentTable) {
+                continue;
+            }
+
+            $tableSchema = $this->connection->getTableSchema($tableName);
+            if ($tableSchema === null) {
+                continue;
+            }
+
+            foreach ($tableSchema->getForeignKeys() as $foreignKey) {
+                if ($foreignKey->foreignTableName === $currentTable) {
+                    $inverseRelations[] = new InverseRelation($foreignKey, $tableName);
+                }
+            }
+        }
+
+        return $inverseRelations;
     }
 }

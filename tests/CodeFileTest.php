@@ -29,19 +29,19 @@ final class CodeFileTest extends TestCase
             [
                 '@src/Controllers/EmptyController.php',
                 <<<PHP
-                 <?php
+                <?php
 
-                 declare(strict_types=1);
+                declare(strict_types=1);
 
-                 namespace Yiisoft\Yii\Gii\Tests\Controllers;
+                namespace Yiisoft\Yii\Gii\Tests\Controllers;
 
-                 class EmptyController
-                 {
-                    public function customMethod() {
+                class EmptyController
+                {
+                   public function customMethod() {
 
-                    }
-                 }
-                 PHP,
+                   }
+                }
+                PHP,
                 <<<HTML
                 <table class="Differences DifferencesInline">
                     <thead>
@@ -84,19 +84,19 @@ final class CodeFileTest extends TestCase
             [
                 '',
                 <<<PHP
-                 <?php
+                <?php
 
-                 declare(strict_types=1);
+                declare(strict_types=1);
 
-                 namespace Yiisoft\Yii\Gii\Tests\Controllers;
+                namespace Yiisoft\Yii\Gii\Tests\Controllers;
 
-                 class EmptyController
-                 {
-                    public function customMethod() {
+                class EmptyController
+                {
+                   public function customMethod() {
 
-                    }
-                 }
-                 PHP,
+                   }
+                }
+                PHP,
                 '',
             ],
             [
@@ -107,19 +107,19 @@ final class CodeFileTest extends TestCase
             [
                 '@src/Controllers/NonExistController.php',
                 <<<PHP
-                 <?php
+                <?php
 
-                 declare(strict_types=1);
+                declare(strict_types=1);
 
-                 namespace Yiisoft\Yii\Gii\Tests\Controllers;
+                namespace Yiisoft\Yii\Gii\Tests\Controllers;
 
-                 class EmptyController
-                 {
-                    public function customMethod() {
+                class EmptyController
+                {
+                   public function customMethod() {
 
-                    }
-                 }
-                 PHP,
+                   }
+                }
+                PHP,
                 '',
             ],
             [

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 use Yiisoft\Strings\StringHelper;
 use Yiisoft\VarDumper\VarDumper;
+use Yiisoft\Yii\Gii\Generator\ActiveRecord\AbstractRelation;
 use Yiisoft\Yii\Gii\Generator\ActiveRecord\Property;
-use Yiisoft\Yii\Gii\Generator\ActiveRecord\Relation;
 use Yiisoft\Yii\Gii\Generator\ActiveRecord\Command;
 
 /**
  * @var Command $command
  * @var array<string, Property> $properties
- * @var list<Relation> $relations
+ * @var array<string, AbstractRelation> $relations
  */
 
 $needsConstructor = false;

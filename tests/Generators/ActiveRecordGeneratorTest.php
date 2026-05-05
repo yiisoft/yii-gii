@@ -408,6 +408,22 @@ final class ActiveRecordGeneratorTest extends TestCase
         );
     }
 
+    public function testGenerateInverseHasOneRelation(): void
+    {
+        $generator = $this->createGenerator();
+        $command = new Command(
+            table: 'user_profile',
+            namespace: 'Yiisoft\\Yii\\Gii\\Tests\\Model',
+        );
+
+        $files = $generator->generate($command);
+        $content = reset($files)->getContent();
+
+        $this->assertStringContainsString('public function getUser()', $content);
+        $this->assertStringContainsString('public function getUserQuery(): ActiveQueryInterface', $content);
+        $this->assertStringContainsString("return \$this->hasOne(User::class, ['profile_id' => 'id'])->inverseOf('userProfile');", $content);
+    }
+
     private function createGenerator(...$params): Generator
     {
         $injector = new Injector(
