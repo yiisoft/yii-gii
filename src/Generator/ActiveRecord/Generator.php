@@ -78,20 +78,20 @@ final class Generator extends AbstractGenerator
 
             if ($command->generateRelations) {
                 // Generate outgoing relations (this table's FKs to other tables)
-                $fkRelations = [];
+                $outgoingRelations = [];
                 foreach ($schema->getForeignKeys() as $foreignKey) {
-                    $fkRelations[] = new Relation($foreignKey, $command->getModelName());
+                    $outgoingRelations[] = new Relation($foreignKey, $command->getModelName());
                 }
 
                 // Detect and resolve outgoing relation name collisions.
                 // When multiple FK columns normalize to the same name (e.g. `user_id` and `user_uuid`
                 // both become `user`), fall back to the unambiguous full column name (e.g. `userId`, `userUuid`).
                 $nameCount = [];
-                foreach ($fkRelations as $relation) {
+                foreach ($outgoingRelations as $relation) {
                     $name = $relation->getName();
                     $nameCount[$name] = ($nameCount[$name] ?? 0) + 1;
                 }
-                foreach ($fkRelations as $relation) {
+                foreach ($outgoingRelations as $relation) {
                     $name = $relation->getName();
                     if ($nameCount[$name] > 1) {
                         $relation = $relation->withName($relation->getUnambiguousName());

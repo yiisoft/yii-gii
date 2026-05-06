@@ -31,6 +31,9 @@ final class InverseRelation extends AbstractRelation
     {
         // Combine the related table name with FK source column names to ensure a unique name.
         // E.g. for a FK `post.user_id -> user.id`, this gives `postUserId` instead of `post`.
+        // Note: in the unlikely scenario where two different (tableName, columnName) pairs produce
+        // the same concatenation (e.g. `user_profile` + `data` vs `user` + `profile_data`),
+        // the resolved names would collide. This is an extremely rare edge case in practice.
         $combinedNames = array_map(
             fn(string $col) => $this->relatedTableName . '_' . $col,
             $this->foreignKey->columnNames,
