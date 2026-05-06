@@ -8,8 +8,6 @@ use function ucfirst;
 
 abstract class AbstractRelation
 {
-    private ?string $resolvedName = null;
-
     abstract public function getRelatedModel(): string;
 
     /**
@@ -21,35 +19,7 @@ abstract class AbstractRelation
 
     abstract public function getInverseOf(): string;
 
-    /**
-     * Computes the default relation name from FK column names and default name.
-     * Override this in concrete classes.
-     */
-    abstract protected function computeName(): string;
-
-    /**
-     * Returns the relation name, using a resolved name if one was set via {@see withName()}.
-     */
-    final public function getName(): string
-    {
-        return $this->resolvedName ?? $this->computeName();
-    }
-
-    /**
-     * Returns an unambiguous relation name that does not strip identity suffixes.
-     * Used to resolve collisions when multiple FK columns normalize to the same base name.
-     */
-    abstract public function getUnambiguousName(): string;
-
-    /**
-     * Returns a new instance with the given resolved name, used for collision resolution.
-     */
-    public function withName(string $name): static
-    {
-        $new = clone $this;
-        $new->resolvedName = $name;
-        return $new;
-    }
+    abstract public function getName(): string;
 
     /**
      * Returns the method name for the relation getter (e.g., "getProfile").

@@ -14,20 +14,11 @@ final class Relation extends AbstractRelation
         private readonly string $modelName,
     ) {}
 
-    protected function computeName(): string
+    public function getName(): string
     {
         return ArHelper::getRelationName(
             $this->foreignKey->columnNames,
             $this->foreignKey->foreignTableName,
-        );
-    }
-
-    public function getUnambiguousName(): string
-    {
-        return ArHelper::getRelationName(
-            $this->foreignKey->columnNames,
-            $this->foreignKey->foreignTableName,
-            false,
         );
     }
 

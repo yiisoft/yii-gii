@@ -424,29 +424,6 @@ final class ActiveRecordGeneratorTest extends TestCase
         $this->assertStringContainsString("return \$this->hasOne(User::class, ['profile_id' => 'id'])->inverseOf('profile');", $content);
     }
 
-    public function testGenerateWithCollisionResolution(): void
-    {
-        $generator = $this->createGenerator();
-        $command = new Command(
-            table: 'document',
-            namespace: 'Yiisoft\\Yii\\Gii\\Tests\\Model',
-        );
-
-        $files = $generator->generate($command);
-        $content = reset($files)->getContent();
-
-        // Both `user_id` and `user_uuid` normalize to `user` which causes a name collision.
-        // The generator should resolve this by falling back to the full column name (no suffix stripping).
-        // `user_id` => `userId`, `user_uuid` => `userUuid`
-        $this->assertStringContainsString('public function getUserId()', $content);
-        $this->assertStringContainsString('public function getUserUuid()', $content);
-        $this->assertStringContainsString("'userId' => \$this->getUserIdQuery()", $content);
-        $this->assertStringContainsString("'userUuid' => \$this->getUserUuidQuery()", $content);
-
-        // The original (colliding) name `user` should NOT appear as a relation
-        $this->assertStringNotContainsString("'user' => \$this->getUserQuery()", $content);
-    }
-
     private function createGenerator(...$params): Generator
     {
         $injector = new Injector(

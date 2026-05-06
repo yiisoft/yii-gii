@@ -47,33 +47,4 @@ final class ArHelperTest extends TestCase
     {
         $this->assertSame($expected, ArHelper::getRelationName($columnNames, $defaultName));
     }
-
-    public static function getRelationNameNoStripProvider(): array
-    {
-        return [
-            // Identity field names are NOT replaced when $stripIdentitySuffix = false
-            'id no-strip' => [['id'], 'user', 'id'],
-            'uuid no-strip' => [['uuid'], 'Profile', 'uuid'],
-
-            // Identity suffixes are NOT removed when $stripIdentitySuffix = false
-            '_id no-strip' => [['user_id'], 'post', 'userId'],
-            '_uuid no-strip' => [['user_uuid'], 'post', 'userUuid'],
-            '_key no-strip' => [['option_key'], 'post', 'optionKey'],
-            '_code no-strip' => [['lang_code'], 'post', 'langCode'],
-
-            // Regular columns are camelCased as usual
-            'snake_case no-strip' => [['first_name'], 'user', 'firstName'],
-            'plain no-strip' => [['username'], 'user', 'username'],
-
-            // Collision-resolution use case: two colliding FKs get distinct names
-            'user_id collision' => [['user_id'], 'user', 'userId'],
-            'user_uuid collision' => [['user_uuid'], 'user', 'userUuid'],
-        ];
-    }
-
-    #[DataProvider('getRelationNameNoStripProvider')]
-    public function testGetRelationNameNoStrip(array $columnNames, string $defaultName, string $expected): void
-    {
-        $this->assertSame($expected, ArHelper::getRelationName($columnNames, $defaultName, false));
-    }
 }
