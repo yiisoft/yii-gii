@@ -78,14 +78,41 @@ final class Generator extends AbstractGenerator
 
             if ($command->generateRelations) {
                 // Generate outgoing relations (this table's FKs to other tables)
+                $fkRelations = [];
                 foreach ($schema->getForeignKeys() as $foreignKey) {
-                    $relation = new Relation($foreignKey, $command->getModelName());
+                    $fkRelations[] = new Relation($foreignKey, $command->getModelName());
+                }
+
+                // Detect and resolve outgoing relation name collisions.
+                // When multiple FK columns normalize to the same name (e.g. `user_id` and `user_uuid`
+                // both become `user`), fall back to the unambiguous full column name (e.g. `userId`, `userUuid`).
+                $nameCount = [];
+                foreach ($fkRelations as $relation) {
+                    $name = $relation->getName();
+                    $nameCount[$name] = ($nameCount[$name] ?? 0) + 1;
+                }
+                foreach ($fkRelations as $relation) {
+                    $name = $relation->getName();
+                    if ($nameCount[$name] > 1) {
+                        $relation = $relation->withName($relation->getUnambiguousName());
+                    }
                     $relations[$relation->getName()] = $relation;
                 }
 
                 // Generate inverse relations (other tables' FKs to this table)
                 $inverseRelations = $this->findInverseRelations($command->table);
+
+                // Detect and resolve inverse relation name collisions.
+                $inverseNameCount = [];
                 foreach ($inverseRelations as $inverseRelation) {
+                    $name = $inverseRelation->getName();
+                    $inverseNameCount[$name] = ($inverseNameCount[$name] ?? 0) + 1;
+                }
+                foreach ($inverseRelations as $inverseRelation) {
+                    $name = $inverseRelation->getName();
+                    if ($inverseNameCount[$name] > 1) {
+                        $inverseRelation = $inverseRelation->withName($inverseRelation->getUnambiguousName());
+                    }
                     $inverseRelationName = $inverseRelation->getName();
 
                     if (isset($relations[$inverseRelationName])) {

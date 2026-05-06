@@ -19,12 +19,24 @@ final class InverseRelation extends AbstractRelation
         private readonly string $relatedTableName,
     ) {}
 
-    public function getName(): string
+    protected function computeName(): string
     {
         return ArHelper::getRelationName(
             $this->foreignKey->foreignColumnNames,
             $this->relatedTableName,
         );
+    }
+
+    public function getUnambiguousName(): string
+    {
+        // Combine the related table name with FK source column names to ensure a unique name.
+        // E.g. for a FK `post.user_id -> user.id`, this gives `postUserId` instead of `post`.
+        $combinedNames = array_map(
+            fn(string $col) => $this->relatedTableName . '_' . $col,
+            $this->foreignKey->columnNames,
+        );
+
+        return ArHelper::getRelationName($combinedNames, $this->relatedTableName, false);
     }
 
     public function getRelatedModel(): string
