@@ -314,7 +314,7 @@ final class ActiveRecordGeneratorTest extends TestCase
 
         $files = $generator->generate($command);
         $this->assertNotEmpty($files);
-        $this->assertMatchesRegularExpression('/final custom class/', reset($files)->getContent());
+        $this->assertStringContainsString("\nfinal custom class User", reset($files)->getContent());
     }
 
     public function testGenerateConstructor(): void
@@ -355,7 +355,7 @@ final class ActiveRecordGeneratorTest extends TestCase
                 public function relationQuery(string $name): ActiveQueryInterface
                 {
                     return match ($name) {
-                        'userProfile' => $this->getUserProfileQuery(),
+                        'profile' => $this->getProfileQuery(),
                         default => parent::relationQuery($name),
                     };
                 }
@@ -377,9 +377,9 @@ final class ActiveRecordGeneratorTest extends TestCase
 
         $this->assertStringContainsStringIgnoringLineEndings(
             <<<'PHP'
-                public function getUserProfile(): ?UserProfile
+                public function getProfile(): ?UserProfile
                 {
-                    return $this->relation('userProfile');
+                    return $this->relation('profile');
                 }
             PHP,
             $content,
@@ -399,7 +399,7 @@ final class ActiveRecordGeneratorTest extends TestCase
 
         $this->assertStringContainsStringIgnoringLineEndings(
             <<<'PHP'
-                public function getUserProfileQuery(): ActiveQueryInterface
+                public function getProfileQuery(): ActiveQueryInterface
                 {
                     return $this->hasOne(UserProfile::class, ['id' => 'profile_id'])->inverseOf('user');
                 }
@@ -421,7 +421,7 @@ final class ActiveRecordGeneratorTest extends TestCase
 
         $this->assertStringContainsString('public function getUser()', $content);
         $this->assertStringContainsString('public function getUserQuery(): ActiveQueryInterface', $content);
-        $this->assertStringContainsString("return \$this->hasOne(User::class, ['profile_id' => 'id'])->inverseOf('userProfile');", $content);
+        $this->assertStringContainsString("return \$this->hasOne(User::class, ['profile_id' => 'id'])->inverseOf('profile');", $content);
     }
 
     private function createGenerator(...$params): Generator

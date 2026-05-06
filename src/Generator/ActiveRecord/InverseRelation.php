@@ -21,6 +21,14 @@ final class InverseRelation extends AbstractRelation
         private readonly string $relatedTableName,
     ) {}
 
+    public function getName(): string
+    {
+        return ArHelper::getRelationName(
+            $this->foreignKey->foreignColumnNames,
+            $this->relatedTableName,
+        );
+    }
+
     public function getRelatedModel(): string
     {
         return (new Inflector())->tableToClass($this->relatedTableName);
@@ -39,6 +47,9 @@ final class InverseRelation extends AbstractRelation
 
     public function getInverseOf(): string
     {
-        return lcfirst((new Inflector())->tableToClass($this->foreignKey->foreignTableName));
+        return ArHelper::getRelationName(
+            $this->foreignKey->columnNames,
+            $this->foreignKey->foreignTableName,
+        );
     }
 }

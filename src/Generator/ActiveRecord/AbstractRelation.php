@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii\Generator\ActiveRecord;
 
-use function lcfirst;
+use function ucfirst;
 
 abstract class AbstractRelation
 {
@@ -19,9 +19,14 @@ abstract class AbstractRelation
 
     abstract public function getInverseOf(): string;
 
-    public function getName(): string
+    abstract public function getName(): string;
+
+    /**
+     * Returns the method name for the relation getter (e.g., "getProfile").
+     */
+    public function getGetterMethodName(): string
     {
-        return lcfirst($this->getRelatedModel());
+        return 'get' . ucfirst($this->getName());
     }
 
     /**
@@ -29,15 +34,7 @@ abstract class AbstractRelation
      */
     public function getQueryMethodName(): string
     {
-        return 'get' . $this->getRelatedModel() . 'Query';
-    }
-
-    /**
-     * Returns the method name for the relation getter (e.g., "getProfile").
-     */
-    public function getGetterMethodName(): string
-    {
-        return 'get' . $this->getRelatedModel();
+        return $this->getGetterMethodName() . 'Query';
     }
 
     /**
