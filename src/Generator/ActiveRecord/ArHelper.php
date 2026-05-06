@@ -21,7 +21,7 @@ final class ArHelper
     /**
      * Returns the relation name for the given column names.
      *
-     * @param string[] $columnNames the column names of the related table.
+     * @param string[] $columnNames the column names.
      * @param string $defaultName the default relation name to use if a column name is an identity field name
      * (e.g. id, uuid, key, code). It can be a related table name or a related model name.
      *

@@ -7,8 +7,6 @@ namespace Yiisoft\Yii\Gii\Generator\ActiveRecord;
 use Yiisoft\Db\Constraint\ForeignKey;
 use Yiisoft\Strings\Inflector;
 
-use function lcfirst;
-
 /**
  * Represents an inverse relation (incoming foreign key from another table).
  *
