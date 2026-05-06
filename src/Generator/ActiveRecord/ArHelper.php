@@ -16,7 +16,7 @@ use function substr;
 final class ArHelper
 {
     private const IDENTITY_FIELD_NAMES = ['id', 'uuid', 'key', 'code'];
-    private const IDENTITY_ENDING_PATTERN = '/_(?:id|uuid|key|code)$/';
+    private const IDENTITY_ENDING_PATTERN = '/_(?:id|uuid|key|code)$/i';
 
     /**
      * Returns the relation name for the given column names.
@@ -32,23 +32,24 @@ final class ArHelper
         $names = [];
 
         foreach ($columnNames as $columnName) {
-            $name = strtolower($columnName);
-
-            if (in_array($name, self::IDENTITY_FIELD_NAMES, true)) {
+            if (in_array(strtolower($columnName), self::IDENTITY_FIELD_NAMES, true)) {
                 $names[] = $defaultName;
                 continue;
             }
 
-            if (preg_match(self::IDENTITY_ENDING_PATTERN, $name, $matches) === 1) {
-                $names[] = substr($name, 0, -strlen($matches[0]));
+            if (preg_match(self::IDENTITY_ENDING_PATTERN, $columnName, $matches) === 1) {
+                $names[] = substr($columnName, 0, -strlen($matches[0]));
                 continue;
             }
 
-            $names[] = $name;
+            $names[] = $columnName;
         }
 
-        $name = implode('_', $names);
+        $inflector = new Inflector();
+        $name = implode(' ', $names);
+        $name = $inflector->toWords($name);
+        $name = strtolower($name);
 
-        return (new Inflector())->toCamelCase($name);
+        return $inflector->toCamelCase($name);
     }
 }

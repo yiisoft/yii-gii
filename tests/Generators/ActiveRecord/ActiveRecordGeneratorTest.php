@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\Gii\Tests\Generators;
+namespace Yiisoft\Yii\Gii\Tests\Generators\ActiveRecord;
 
+use stdClass;
+use Yiisoft\ActiveRecord\ActiveRecord;
 use Yiisoft\Injector\Injector;
 use Yiisoft\Yii\Gii\Exception\InvalidGeneratorCommandException;
 use Yiisoft\Yii\Gii\Generator\ActiveRecord\Command;
 use Yiisoft\Yii\Gii\Generator\ActiveRecord\Generator;
 use Yiisoft\Yii\Gii\ParametersProvider;
 use Yiisoft\Yii\Gii\Tests\TestCase;
-use Yiisoft\ActiveRecord\ActiveRecord;
-use stdClass;
 
 use function dirname;
 
