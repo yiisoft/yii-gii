@@ -7,8 +7,6 @@ namespace Yiisoft\Yii\Gii\Generator\ActiveRecord;
 use Yiisoft\Db\Constraint\ForeignKey;
 use Yiisoft\Strings\Inflector;
 
-use function lcfirst;
-
 /**
  * Represents an inverse relation (incoming foreign key from another table).
  *
@@ -20,6 +18,14 @@ final class InverseRelation extends AbstractRelation
         private readonly ForeignKey $foreignKey,
         private readonly string $relatedTableName,
     ) {}
+
+    public function getName(): string
+    {
+        return ArHelper::getRelationName(
+            $this->foreignKey->foreignColumnNames,
+            $this->relatedTableName,
+        );
+    }
 
     public function getRelatedModel(): string
     {
@@ -39,6 +45,9 @@ final class InverseRelation extends AbstractRelation
 
     public function getInverseOf(): string
     {
-        return lcfirst((new Inflector())->tableToClass($this->foreignKey->foreignTableName));
+        return ArHelper::getRelationName(
+            $this->foreignKey->columnNames,
+            $this->foreignKey->foreignTableName,
+        );
     }
 }
