@@ -35,6 +35,10 @@ return [
                 'class' => Generators\ActiveRecord\Generator::class,
                 'parameters' => [],
             ],
+            [
+                'class' => Generators\CRUD\Generator::class,
+                'parameters' => [],
+            ],
         ],
         'parameters' => [
             'templates' => [],
