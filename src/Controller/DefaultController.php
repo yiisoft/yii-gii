@@ -7,8 +7,7 @@ namespace Yiisoft\Yii\Gii\Controller;
 use Psr\Http\Message\ResponseInterface;
 use ReflectionClass;
 use ReflectionParameter;
-use Yiisoft\DataResponse\DataResponse;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\Http\Status;
 use Yiisoft\Input\Http\Attribute\Parameter\Query;
 use Yiisoft\Validator\Helper\RulesDumper;
@@ -144,7 +143,7 @@ final class DefaultController
         );
     }
 
-    private function createErrorResponse(InvalidGeneratorCommandException $e): DataResponse
+    private function createErrorResponse(InvalidGeneratorCommandException $e): ResponseInterface
     {
         return $this->responseFactory->createResponse(
             ['errors' => $e->getResult()->getErrorMessagesIndexedByProperty()],
@@ -188,7 +187,7 @@ final class DefaultController
             $reflectionProperty = $reflection->getProperty($attributeName);
             $defaultValue = $reflectionProperty->hasDefaultValue()
                 ? $reflectionProperty->getDefaultValue()
-                : $this->findReflectionParameter($attributeName, $constructorParameters)?->getDefaultValue();
+                : $this->findReflectionParameterDefaultValue($attributeName, $constructorParameters);
             $attributesResult[$attributeName] = [
                 'defaultValue' => $defaultValue,
                 'hint' => $hints[$attributeName] ?? null,
@@ -210,11 +209,11 @@ final class DefaultController
     /**
      * @param ReflectionParameter[] $constructorParameters
      */
-    private function findReflectionParameter(string $name, array $constructorParameters): ?ReflectionParameter
+    private function findReflectionParameterDefaultValue(string $name, array $constructorParameters): mixed
     {
         foreach ($constructorParameters as $parameter) {
             if ($parameter->getName() === $name) {
-                return $parameter;
+                return $parameter->isDefaultValueAvailable() ? $parameter->getDefaultValue() : null;
             }
         }
         return null;

@@ -9,7 +9,7 @@ declare(strict_types=1);
 use HttpSoft\Basis\Middleware\BodyParamsMiddleware;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Yiisoft\Csrf\CsrfMiddleware;
-use Yiisoft\DataResponse\Middleware\FormatDataResponseAsJson;
+use Yiisoft\DataResponse\Middleware\JsonDataResponseMiddleware;
 use Yiisoft\RequestProvider\RequestCatcherMiddleware;
 use Yiisoft\Router\Group;
 use Yiisoft\Router\Route;
@@ -34,7 +34,7 @@ return [
                     ipRanges: $params['yiisoft/yii-gii']['allowedIPs'],
                 ),
         )
-        ->middleware(FormatDataResponseAsJson::class)
+        ->middleware(JsonDataResponseMiddleware::class)
         ->namePrefix('gii/api/')
         ->routes(
             Group::create('/generator')
