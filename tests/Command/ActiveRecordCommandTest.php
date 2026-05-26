@@ -98,7 +98,7 @@ final class ActiveRecordCommandTest extends TestCase
             [
                 'table' => 'user',
                 '--namespace' => 'Yiisoft\\Yii\\Gii\\Tests\\Model',
-                '--private' => true,
+                '--visibility' => 'private',
             ],
             ['interactive' => false],
         );

@@ -52,7 +52,7 @@ final class ActiveRecordCommand extends BaseGenerateCommand
             table: (string) $input->getArgument('table'),
             namespace: (string) $input->getOption('namespace'),
             parentClass: (string) $input->getOption('parent'),
-            propertyVisibility: $input->getOption('public') ? 'public' : ($input->getOption('private') ? 'private' : 'protected'),
+            propertyVisibility: (string) $input->getOption('visibility'),
             generateGettersSetters: !$input->getOption('no-get-set'),
             generateRelations: !$input->getOption('no-relations'),
             useRepositoryTrait: (bool) $input->getOption('repository'),

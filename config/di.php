@@ -15,6 +15,8 @@ use Yiisoft\Yii\Gii\ParametersProvider;
  * @var array $params
  */
 
+$params ??= require __DIR__ . '/params.php';
+
 return [
     GiiInterface::class => function (Injector $injector) use ($params): GiiInterface {
         $proxies = [];
