@@ -26,47 +26,28 @@ Gii includes JSON API endpoints and console commands for generating application 
 
 ## Installation
 
-Install the package with [Composer](https://getcomposer.org) if your application already has a Yii DB driver:
+Install the package with [Composer](https://getcomposer.org):
 
 ```shell
 composer require --dev yiisoft/yii-gii
 ```
 
-Gii requires a configured [Yii DB](https://github.com/yiisoft/db) connection. In a new `yiisoft/app` project, install
-Gii together with a concrete database driver:
+In an application using `yiisoft/config`, Gii configuration is added automatically by the Composer config plugin.
+
+The Active Record generator is optional. To use it, install
+[`yiisoft/active-record`](https://github.com/yiisoft/active-record), a concrete [Yii DB](https://github.com/yiisoft/db)
+driver, and configure `Yiisoft\Db\Connection\ConnectionInterface`. For SQLite:
 
 ```shell
-composer require --dev yiisoft/yii-gii yiisoft/db-sqlite
+composer require yiisoft/active-record yiisoft/db-sqlite
 ```
 
 Use the driver package that matches your database, such as `yiisoft/db-mysql`, `yiisoft/db-pgsql`, or
 `yiisoft/db-sqlite`, and make sure the matching PDO extension is installed.
 
-In an application using `yiisoft/config`, Gii configuration is added automatically by the Composer config plugin.
-You still need to define `Yiisoft\Db\Connection\ConnectionInterface` in your application if it is not already defined.
-For example, a minimal SQLite configuration for `yiisoft/app` can be placed in `config/common/di/db.php`:
-
-```php
-<?php
-
-declare(strict_types=1);
-
-use Yiisoft\Cache\ArrayCache;
-use Yiisoft\Db\Cache\SchemaCache;
-use Yiisoft\Db\Connection\ConnectionInterface;
-use Yiisoft\Db\Sqlite\Connection;
-use Yiisoft\Db\Sqlite\Driver;
-
-return [
-    ConnectionInterface::class => [
-        'class' => Connection::class,
-        '__construct()' => [
-            'driver' => new Driver('sqlite:' . dirname(__DIR__, 2) . '/runtime/app.db'),
-            'schemaCache' => new SchemaCache(new ArrayCache()),
-        ],
-    ],
-];
-```
+You need to define `Yiisoft\Db\Connection\ConnectionInterface` in your application if it is not already defined. See the
+[Yii DB SQLite connection guide](https://github.com/yiisoft/db/blob/master/docs/guide/en/connection/sqlite.md) for a
+SQLite configuration example.
 
 ## General usage
 

@@ -35,11 +35,9 @@
         "phpspec/php-diff": "^1.1.3",
         "psr/http-message": "^1.0 || ^2.0",
         "symfony/console": "^6.4.36 || ^7.0",
-        "yiisoft/active-record": "^1.0.2",
         "yiisoft/aliases": "^3.1.1",
         "yiisoft/csrf": "^2.2.3",
         "yiisoft/data-response": "^2.2",
-        "yiisoft/db": "^2.0.1",
         "yiisoft/di": "^1.4.1",
         "yiisoft/friendly-exception": "^1.2",
         "yiisoft/http": "^1.3",
@@ -63,6 +61,7 @@
         "roave/infection-static-analysis-plugin": "^1.35",
         "spatie/phpunit-watcher": "^1.24.4",
         "vimeo/psalm": "^5.26.1 || ^6.12",
+        "yiisoft/active-record": "^1.0.2",
         "yiisoft/cache": "^3.2",
         "yiisoft/code-style": "^1.0",
         "yiisoft/db-sqlite": "^2.0.0",
@@ -71,6 +70,14 @@
         "yiisoft/files": "^2.1",
         "yiisoft/log": "^2.2.1",
         "yiisoft/translator": "^3.2.1"
+    },
+    "suggest": {
+        "yiisoft/active-record": "Required to use the Active Record generator.",
+        "yiisoft/db-mssql": "Required to use the Active Record generator with MSSQL.",
+        "yiisoft/db-mysql": "Required to use the Active Record generator with MySQL.",
+        "yiisoft/db-oracle": "Required to use the Active Record generator with Oracle.",
+        "yiisoft/db-pgsql": "Required to use the Active Record generator with PostgreSQL.",
+        "yiisoft/db-sqlite": "Required to use the Active Record generator with SQLite."
     },
     "autoload": {
         "psr-4": {
