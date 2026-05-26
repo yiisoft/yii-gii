@@ -13,6 +13,8 @@ use Yiisoft\Yii\Gii\Generator\AbstractGenerator;
 use Yiisoft\Yii\Gii\GeneratorCommandInterface;
 use Yiisoft\Yii\Gii\ParametersProvider;
 
+use function sprintf;
+
 /**
  * This generator will generate a controller and one or a few action view files.
  */
@@ -83,6 +85,11 @@ final class Generator extends AbstractGenerator
         return $files;
     }
 
+    public static function getCommandClass(): string
+    {
+        return Command::class;
+    }
+
     /**
      * @return string the controller class file path
      */
@@ -101,10 +108,5 @@ final class Generator extends AbstractGenerator
                 ),
             ),
         );
-    }
-
-    public static function getCommandClass(): string
-    {
-        return Command::class;
     }
 }
