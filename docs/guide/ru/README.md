@@ -1,20 +1,11 @@
-���������� Gii ��� Yii 2
-========================
+Gii Extension for Yii
+=====================
 
-Gii - ��� ���-���������� ��� ������������� ���� � ����������� Yii2.
-Gii ��������� ��� ������ ������������� ������, �����, ������, CRUD, � �.�.
+This translation has not been updated for the current Yii 3 package.
 
-Gii ������������� ���-��������� ��� �������������� �������� ����. ��� ���������� �����
-������������� ���������� ��������� ������ ��� ���, ��� � �������� ������������ �������� � �������.
+Use the English guide:
 
-��������
----------------
-
-* [���������](installation.md)
-* [�������� �������������](basic-usage.md)
-
-�������������� ����
------------------
-
-* [�������� ����������� ��������](topics-creating-your-own-templates.md)
-* [�������� ����������� �����������](topics-creating-your-own-generators.md)
+* [Installation](../en/installation.md)
+* [Basic Usage](../en/basic-usage.md)
+* [Creating your own templates](../en/topics-creating-your-own-templates.md)
+* [Creating your own generators](../en/topics-creating-your-own-generators.md)

@@ -1,21 +1,11 @@
-Yii 2 Gii エクステンション
-==========================
+Gii Extension for Yii
+=====================
 
-このエクステンションは、Yii 2 アプリケーションのために、Gii と呼ばれるウェブ・ベースのコード・ジェネレータを提供します。
-Gii を使うと、モデル、フォーム、モジュール、CRUD などを素早く生成することが出来ます。
+This translation has not been updated for the current Yii 3 package.
 
-Gii はウェブ・ベースのインタフェイスを提供しており、あなたの望みのコードを対話的に生成することが出来ます。
-Gii は、また、ほとんどの時間はコンソール・ウィンドウで仕事をすることを好む人たちのために、コマンドラインのインタフェイスも提供しています。
+Use the English guide:
 
-
-始めよう
----------------
-
-* [インストール](installation.md)
-* [基本的な使用方法](basic-usage.md)
-
-追加のトピック
---------------
-
-* [あなた自身のテンプレートを作成する](topics-creating-your-own-templates.md)
-* [あなた自身のジェネレータを作成する](topics-creating-your-own-generators.md)
+* [Installation](../en/installation.md)
+* [Basic Usage](../en/basic-usage.md)
+* [Creating your own templates](../en/topics-creating-your-own-templates.md)
+* [Creating your own generators](../en/topics-creating-your-own-generators.md)

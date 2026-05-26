@@ -1,19 +1,11 @@
-基于 Yii 2 的 Gii 扩展 
-========================
+Gii Extension for Yii
+=====================
 
-此扩展为Yii 2应用程序提供了一个基于Web的代码生成器（称为Gii）。
-可以使用Gii快速生成模型，表单，模块，CRUD等。
+This translation has not been updated for the current Yii 3 package.
 
-Gii提供了一个基于Web的界面，让您以交互方式生成所需的代码。 它还为喜欢使用控制台窗口的人们提供命令行界面。
+Use the English guide:
 
-起步
----------------
-
-* [安装](installation.md)
-* [基本用法](basic-usage.md)
-
-其他
------------------
-
-* [创建自定义模版](topics-creating-your-own-templates.md)
-* [创建自定义代码生成器](topics-creating-your-own-generators.md)
+* [Installation](../en/installation.md)
+* [Basic Usage](../en/basic-usage.md)
+* [Creating your own templates](../en/topics-creating-your-own-templates.md)
+* [Creating your own generators](../en/topics-creating-your-own-generators.md)

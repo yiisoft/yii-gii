@@ -38,7 +38,7 @@ final class ActiveRecordCommand extends BaseGenerateCommand
             ->addArgument('table', InputArgument::REQUIRED, 'Name of the database table')
             ->addOption('namespace', 'ns', InputOption::VALUE_OPTIONAL, 'Model namespace', 'App\\Model')
             ->addOption('parent', 'p', InputOption::VALUE_OPTIONAL, 'Model parent class', ActiveRecord::class)
-            ->addOption('visibility', 'v', InputOption::VALUE_OPTIONAL, 'Property visibility (private, protected, public)', 'protected')
+            ->addOption('visibility', null, InputOption::VALUE_OPTIONAL, 'Property visibility (private, protected, public)', 'protected')
             ->addOption('no-get-set', 'nogs', InputOption::VALUE_NONE, 'Do not generate getters and setters')
             ->addOption('no-relations', 'norel', InputOption::VALUE_NONE, 'Do not generate relations')
             ->addOption('repository', 'repo', InputOption::VALUE_NONE, 'Use RepositoryTrait');

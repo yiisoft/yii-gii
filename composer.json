@@ -92,6 +92,7 @@
         "config-plugin": {
             "params": "params.php",
             "di": "di.php",
+            "di-providers": "di-providers.php",
             "routes": "routes.php"
         }
     },
