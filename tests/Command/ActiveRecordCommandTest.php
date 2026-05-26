@@ -98,7 +98,7 @@ final class ActiveRecordCommandTest extends TestCase
             [
                 'table' => 'user',
                 '--namespace' => 'Yiisoft\\Yii\\Gii\\Tests\\Model',
-                '--visibility' => 'private',
+                '--private' => true,
             ],
             ['interactive' => false],
         );
@@ -149,7 +149,6 @@ final class ActiveRecordCommandTest extends TestCase
                 'table' => 'user',
                 '--namespace' => 'Yiisoft\\Yii\\Gii\\Tests\\Model',
                 '--parent' => ActiveRecord::class,
-                '--visibility' => 'protected',
                 '--no-get-set' => true,
                 '--no-relations' => true,
                 '--repository' => true,
