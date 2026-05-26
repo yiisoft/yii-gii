@@ -34,7 +34,6 @@ return [
         return new Gii($proxies, []);
     },
     ParametersProvider::class => [
-        'class' => ParametersProvider::class,
         '__construct()' => [
             'templates' => $params['yiisoft/yii-gii']['parameters']['templates'],
         ],

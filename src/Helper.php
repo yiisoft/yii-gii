@@ -48,6 +48,6 @@ final class Helper
             }
         }
 
-        throw new LogicException("Invalid namespace: \"$namespace\".");
+        throw new LogicException("Invalid namespace \"$namespace\"");
     }
 }
