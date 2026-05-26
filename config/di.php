@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use Yiisoft\Injector\Injector;
+use Yiisoft\Validator\RuleHandlerResolver\RuleHandlerContainer;
+use Yiisoft\Validator\RuleHandlerResolverInterface;
 use Yiisoft\Yii\Gii\GeneratorInterface;
 use Yiisoft\Yii\Gii\GeneratorProxy;
 use Yiisoft\Yii\Gii\Gii;
@@ -37,4 +39,5 @@ return [
             'templates' => $params['yiisoft/yii-gii']['parameters']['templates'],
         ],
     ],
+    RuleHandlerResolverInterface::class => RuleHandlerContainer::class,
 ];
