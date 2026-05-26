@@ -36,12 +36,13 @@ final class ActiveRecordCommand extends BaseGenerateCommand
     {
         $this->setDescription('Gii ActiveRecord model generator')
             ->addArgument('table', InputArgument::REQUIRED, 'Name of the database table')
-            ->addOption('namespace', 'ns', InputOption::VALUE_OPTIONAL, 'Model namespace', 'App\\Model')
+            ->addOption('namespace', 's', InputOption::VALUE_OPTIONAL, 'Model namespace', 'App\\Model')
             ->addOption('parent', 'p', InputOption::VALUE_OPTIONAL, 'Model parent class', ActiveRecord::class)
-            ->addOption('visibility', 'v', InputOption::VALUE_OPTIONAL, 'Property visibility (private, protected, public)', 'protected')
-            ->addOption('no-get-set', 'nogs', InputOption::VALUE_NONE, 'Do not generate getters and setters')
-            ->addOption('no-relations', 'norel', InputOption::VALUE_NONE, 'Do not generate relations')
-            ->addOption('repository', 'repo', InputOption::VALUE_NONE, 'Use RepositoryTrait');
+            ->addOption('public', null, InputOption::VALUE_NONE, 'Public property visibility')
+            ->addOption('private', null, InputOption::VALUE_NONE, 'Private property visibility')
+            ->addOption('no-get-set', null, InputOption::VALUE_NONE, 'Do not generate getters and setters')
+            ->addOption('no-relations', null, InputOption::VALUE_NONE, 'Do not generate relations')
+            ->addOption('repository', null, InputOption::VALUE_NONE, 'Use RepositoryTrait');
 
         parent::configure();
     }
@@ -52,7 +53,7 @@ final class ActiveRecordCommand extends BaseGenerateCommand
             table: (string) $input->getArgument('table'),
             namespace: (string) $input->getOption('namespace'),
             parentClass: (string) $input->getOption('parent'),
-            propertyVisibility: (string) $input->getOption('visibility'),
+            propertyVisibility: $input->getOption('public') ? 'public' : ($input->getOption('private') ? 'private' : 'protected'),
             generateGettersSetters: !$input->getOption('no-get-set'),
             generateRelations: !$input->getOption('no-relations'),
             useRepositoryTrait: (bool) $input->getOption('repository'),
