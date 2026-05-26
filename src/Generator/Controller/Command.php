@@ -21,7 +21,7 @@ final class Command extends AbstractGeneratorCommand
     #[Each([
         new Regex(
             pattern: '/^[a-z][a-z0-9]*$/',
-            message: 'Only a-z, 0-9, dashes (-), spaces and commas are allowed.'
+            message: 'Only a-z, 0-9, dashes (-), spaces and commas are allowed.',
         ),
     ])]
     private readonly array $actions;
@@ -33,13 +33,13 @@ final class Command extends AbstractGeneratorCommand
         #[Required]
         #[Regex(
             pattern: '/^(?:[a-z][a-z0-9]*)(?:\\\\[a-z][a-z0-9]*)*$/i',
-            message: 'Invalid namespace'
+            message: 'Invalid namespace "{value}"',
         )]
         private readonly string $controllerNamespace = 'App\\Controller',
         #[Required]
         #[Regex(
             pattern: '/^[A-Z][a-zA-Z0-9]*Controller$/',
-            message: 'Only word characters are allowed, and the class name must start with a capital letter and end with "Controller".'
+            message: 'Only word characters are allowed, and the class name must start with a capital letter and end with "Controller".',
         )]
         #[NewClassRule]
         private readonly string $controllerClass = 'IndexController',

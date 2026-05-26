@@ -9,6 +9,12 @@ use Yiisoft\Validator\Result;
 use Yiisoft\Validator\RuleHandlerInterface;
 use Yiisoft\Validator\ValidationContext;
 
+use function class_exists;
+use function gettype;
+use function is_string;
+use function is_subclass_of;
+use function sprintf;
+
 /**
  * An inline validator that checks if the attribute value refers to an existing class name.
  */
@@ -22,12 +28,17 @@ final class ClassExistsHandler implements RuleHandlerInterface
 
         $result = new Result();
         if (!is_string($value)) {
-            $result->addError(sprintf('Value must be a string, %s given.".', gettype($value)));
+            $result->addError(sprintf('Value must be a string, "%s" given.', gettype($value)));
             return $result;
         }
 
         if (!class_exists($value)) {
             $result->addError("Class '$value' does not exist or has syntax error.");
+            return $result;
+        }
+
+        if ($rule->parent !== null && !is_subclass_of($value, $rule->parent)) {
+            $result->addError("Class '$value' is not a subclass of '$rule->parent'.");
         }
 
         return $result;

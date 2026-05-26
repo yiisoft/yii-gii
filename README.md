@@ -8,77 +8,82 @@
 
 [![Latest Stable Version](https://poser.pugx.org/yiisoft/yii-gii/v)](https://packagist.org/packages/yiisoft/yii-gii)
 [![Total Downloads](https://poser.pugx.org/yiisoft/yii-gii/downloads)](https://packagist.org/packages/yiisoft/yii-gii)
-[![Monthly Downloads](https://poser.pugx.org/yiisoft/yii-gii/d/monthly)](https://packagist.org/packages/rossaddison/yii-auth-client)
-[![Daily Downloads](https://poser.pugx.org/yiisoft/yii-gii/d/daily)](https://packagist.org/packages/rossaddison/yii-auth-client)
+[![Monthly Downloads](https://poser.pugx.org/yiisoft/yii-gii/d/monthly)](https://packagist.org/packages/yiisoft/yii-gii)
+[![Daily Downloads](https://poser.pugx.org/yiisoft/yii-gii/d/daily)](https://packagist.org/packages/yiisoft/yii-gii)
 [![Build status](https://github.com/yiisoft/yii-gii/actions/workflows/build.yml/badge.svg)](https://github.com/yiisoft/yii-gii/actions/workflows/build.yml)
 [![Code coverage](https://codecov.io/gh/yiisoft/yii-gii/graph/badge.svg?token=JWRONWSQ5P)](https://codecov.io/gh/yiisoft/yii-gii)
 [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fyiisoft%2Fyii-gii%2Fmaster)](https://dashboard.stryker-mutator.io/reports/github.com/yiisoft/yii-gii/master)
 [![static analysis](https://github.com/yiisoft/yii-gii/workflows/static%20analysis/badge.svg)](https://github.com/yiisoft/yii-gii/actions?query=workflow%3A%22static+analysis%22)
 
-This extension provides a Web-based code generator, called Gii, for [Yii framework](https://www.yiiframework.com) applications.
-You can use Gii to quickly generate models, forms, modules, CRUD, etc.
+This extension provides code generation tools, called Gii, for [Yii framework](https://www.yiiframework.com)
+applications.
+
+Gii includes JSON API endpoints and console commands for generating application code.
 
 ## Requirements
 
-- PHP 8.1 or higher.
+- PHP 8.1 - 8.5.
 
 ## Installation
 
-The package could be installed with [Composer](https://getcomposer.org):
+Install the package with [Composer](https://getcomposer.org):
 
 ```shell
-composer require yiisoft/yii-gii
+composer require --dev yiisoft/yii-gii
 ```
+
+In an application using `yiisoft/config`, Gii configuration is added automatically by the Composer config plugin.
+
+The Active Record generator is optional. To use it, install
+[`yiisoft/active-record`](https://github.com/yiisoft/active-record), a concrete [Yii DB](https://github.com/yiisoft/db)
+driver, and configure `Yiisoft\Db\Connection\ConnectionInterface`. For SQLite:
+
+```shell
+composer require yiisoft/active-record yiisoft/db-sqlite
+```
+
+Use the driver package that matches your database, such as `yiisoft/db-mysql`, `yiisoft/db-pgsql`, or
+`yiisoft/db-sqlite`, and make sure the matching PDO extension is installed.
+
+You need to define `Yiisoft\Db\Connection\ConnectionInterface` in your application if it is not already defined. See the
+[Yii DB SQLite connection guide](https://github.com/yiisoft/db/blob/master/docs/guide/en/connection/sqlite.md) for a
+SQLite configuration example.
 
 ## General usage
 
-Once the extension is installed, simply modify your application configuration as follows:
+Gii registers JSON API routes under `/gii/api` when `yiisoft/yii-gii.enabled` is `true`.
+
+```text
+GET  /gii/api/generator
+GET  /gii/api/generator/{generator}
+POST /gii/api/generator/{generator}/preview
+POST /gii/api/generator/{generator}/generate
+POST /gii/api/generator/{generator}/diff
+```
+
+By default, only localhost is allowed:
 
 ```php
-return [
-    'bootstrap' => ['gii'],
-    'modules' => [
-        'gii' => [
-            'class' => Yiisoft\Yii\Gii\Gii::class,
-        ],
-        // ...
-    ],
-    // ...
-];
+'yiisoft/yii-gii' => [
+    'allowedIPs' => ['127.0.0.1', '::1'],
+],
 ```
 
-You can then access Gii through the following URL:
-
-```text
-http://localhost/path/to/index.php?r=gii
-```
-
-or if you have enabled pretty URLs, you may use the following URL:
-
-```text
-http://localhost/path/to/index.php/gii
-```
-
-Using the same configuration for your console application, you will also be able to access Gii via
-command line as follows,
+Console commands are registered automatically:
 
 ```shell
-# change path to your application's base path
-cd path/to/AppBasePath
+./yii help gii:controller
+./yii gii:controller SampleController --actions=index --viewsPath=@runtime/gii-views --no-interaction
 
-# show help information about Gii
-yii help gii
-
-# show help information about the model generator in Gii
-yii help gii/model
-
-# generate City model from city table
-yii gii/model --tableName=city --modelClass=City
+./yii help gii:active-record
+./yii gii:active-record city --namespace=App\\Model --no-interaction
 ```
+
+The Active Record command requires the table to exist in the configured database.
 
 ## Documentation
 
-- Guide: [English](docs/guide/en/README.md), [Português - Brasil](docs/guide/pt-BR/README.md), [Русский](docs/guide/ru/README.md), [日本語](docs/guide/ja/README.md), [中国人](docs/guide/zh-CN/README.md)
+- Guide: [English](docs/guide/en/README.md)
 - [Internals](docs/internals.md)
 
 If you need help or have a question, the [Yii Forum](https://forum.yiiframework.com/c/yii-3-0/63) is a good place for that.

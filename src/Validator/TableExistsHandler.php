@@ -9,6 +9,11 @@ use Yiisoft\Validator\Exception\UnexpectedRuleException;
 use Yiisoft\Validator\Result;
 use Yiisoft\Validator\RuleHandlerInterface;
 use Yiisoft\Validator\ValidationContext;
+use Yiisoft\Db\Exception\Exception;
+
+use function gettype;
+use function is_string;
+use function sprintf;
 
 /**
  * An inline validator that checks if the attribute value refers to an existing class name.
@@ -16,9 +21,8 @@ use Yiisoft\Validator\ValidationContext;
 final class TableExistsHandler implements RuleHandlerInterface
 {
     public function __construct(
-        private readonly ConnectionInterface $connection
-    ) {
-    }
+        private readonly ConnectionInterface $connection,
+    ) {}
 
     public function validate(mixed $value, object $rule, ValidationContext $context): Result
     {
@@ -34,7 +38,7 @@ final class TableExistsHandler implements RuleHandlerInterface
 
         try {
             $tableSchema = $this->connection->getTableSchema($value);
-        } catch (\Yiisoft\Db\Exception\Exception $e) {
+        } catch (Exception $e) {
             $result->addError(sprintf('The error occurred during fetching table schema: "%s".', $e));
             return $result;
         }

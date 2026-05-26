@@ -11,8 +11,8 @@ echo "<?php\n";
 
 declare(strict_types=1);
 
-namespace <?= $command->getNamespace() ?>;
+namespace <?= $command->namespace ?>;
 
-use <?= $command->getBaseClass() ?>;
+use <?= $command->parentClass ?>;
 
 final custom class <?= $command->getModelName(); ?>

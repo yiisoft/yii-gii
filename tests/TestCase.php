@@ -72,7 +72,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
                             '@views' => '@src/runtime',
                             '@view' => '@src/runtime',
                             '@root' => '@src/runtime',
-                        ]
+                        ],
                     ),
                     EventDispatcherInterface::class => Dispatcher::class,
                     ListenerProviderInterface::class => Provider::class,

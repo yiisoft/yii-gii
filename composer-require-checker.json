@@ -1,0 +1,12 @@
+{
+    "symbol-whitelist": [
+        "Composer\\Autoload\\ClassLoader",
+        "Yiisoft\\ActiveRecord\\ActiveRecord",
+        "Yiisoft\\ActiveRecord\\ActiveRecordInterface",
+        "Yiisoft\\Db\\Connection\\ConnectionInterface",
+        "Yiisoft\\Db\\Constraint\\ForeignKey",
+        "Yiisoft\\Db\\Exception\\Exception",
+        "Yiisoft\\Db\\Expression\\Expression",
+        "Yiisoft\\Db\\Schema\\Column\\ColumnInterface"
+    ]
+}

@@ -11,15 +11,17 @@ use Yiisoft\Yii\Gii\Generator\Controller\Generator;
 use Yiisoft\Yii\Gii\ParametersProvider;
 use Yiisoft\Yii\Gii\Tests\TestCase;
 
+use function dirname;
+
 final class ControllerGeneratorTest extends TestCase
 {
     public function testValidGenerator(): void
     {
         $generator = $this->createGenerator();
         $command = new Command(
+            template: 'default',
             controllerClass: 'TestController',
             actions: ['index', 'edit', 'view'],
-            template: 'default',
         );
 
         $files = $generator->generate($command);
@@ -35,19 +37,19 @@ final class ControllerGeneratorTest extends TestCase
             ],
         );
         $command = new Command(
+            template: 'test',
             controllerClass: 'Wr0ngContr0ller',
             actions: ['index', 'ed1t', 'view'],
-            template: 'test',
         );
 
         $this->expectException(InvalidGeneratorCommandException::class);
         $files = $generator->generate($command);
 
-//        $this->assertFalse($result->isValid(), print_r($result->getErrors(), true));
+        //        $this->assertFalse($result->isValid(), print_r($result->getErrors(), true));
 
         // TODO: fix test
         $this->markTestIncomplete('The template should be incomplete.'); // but why?
-//        $this->assertNotEmpty($result->getAttributeErrorMessages('template'));
+        //        $this->assertNotEmpty($result->getAttributeErrorMessages('template'));
         $this->assertNotEmpty($result->getAttributeErrorMessages('controllerClass'));
     }
 
@@ -61,9 +63,9 @@ final class ControllerGeneratorTest extends TestCase
             ],
         );
         $command = new Command(
+            template: 'custom',
             controllerClass: 'TestController',
             actions: ['index', 'edit', 'view'],
-            template: 'custom',
         );
 
         $files = $generator->generate($command);
@@ -78,7 +80,7 @@ final class ControllerGeneratorTest extends TestCase
         $injector = new Injector(
             $this->getContainer([
                 ParametersProvider::class => new ParametersProvider(...$params),
-            ])
+            ]),
         );
 
         return $injector->make(Generator::class);

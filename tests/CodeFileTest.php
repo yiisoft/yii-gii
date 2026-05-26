@@ -10,6 +10,8 @@ use Yiisoft\Yii\Gii\Component\CodeFile\CodeFile;
 use Yiisoft\Yii\Gii\Component\CodeFile\CodeFileWriteOperationEnum;
 use Yiisoft\Yii\Gii\Component\CodeFile\CodeFileWriteStatusEnum;
 
+use const DIRECTORY_SEPARATOR;
+
 final class CodeFileTest extends TestCase
 {
     private ?Aliases $aliases = null;
@@ -27,19 +29,19 @@ final class CodeFileTest extends TestCase
             [
                 '@src/Controllers/EmptyController.php',
                 <<<PHP
-                 <?php
+                <?php
 
-                 declare(strict_types=1);
+                declare(strict_types=1);
 
-                 namespace Yiisoft\Yii\Gii\Tests\Controllers;
+                namespace Yiisoft\Yii\Gii\Tests\Controllers;
 
-                 class EmptyController
-                 {
-                    public function customMethod() {
+                class EmptyController
+                {
+                   public function customMethod() {
 
-                    }
-                 }
-                 PHP,
+                   }
+                }
+                PHP,
                 <<<HTML
                 <table class="Differences DifferencesInline">
                     <thead>
@@ -82,19 +84,19 @@ final class CodeFileTest extends TestCase
             [
                 '',
                 <<<PHP
-                 <?php
+                <?php
 
-                 declare(strict_types=1);
+                declare(strict_types=1);
 
-                 namespace Yiisoft\Yii\Gii\Tests\Controllers;
+                namespace Yiisoft\Yii\Gii\Tests\Controllers;
 
-                 class EmptyController
-                 {
-                    public function customMethod() {
+                class EmptyController
+                {
+                   public function customMethod() {
 
-                    }
-                 }
-                 PHP,
+                   }
+                }
+                PHP,
                 '',
             ],
             [
@@ -105,19 +107,19 @@ final class CodeFileTest extends TestCase
             [
                 '@src/Controllers/NonExistController.php',
                 <<<PHP
-                 <?php
+                <?php
 
-                 declare(strict_types=1);
+                declare(strict_types=1);
 
-                 namespace Yiisoft\Yii\Gii\Tests\Controllers;
+                namespace Yiisoft\Yii\Gii\Tests\Controllers;
 
-                 class EmptyController
-                 {
-                    public function customMethod() {
+                class EmptyController
+                {
+                   public function customMethod() {
 
-                    }
-                 }
-                 PHP,
+                   }
+                }
+                PHP,
                 '',
             ],
             [
@@ -184,25 +186,25 @@ final class CodeFileTest extends TestCase
         $path = $this->aliases->get('@src/Controllers/EmptyController.php');
         $codeFile = new CodeFile(
             $path,
-            file_get_contents($path)
+            file_get_contents($path),
         );
         $this->assertEquals($codeFile->getOperation(), CodeFileWriteOperationEnum::SKIP);
     }
 
     // TODO: test \Yiisoft\Yii\Gii\Component\DiffRendererHtmlInline instead
-//    /** @dataProvider dataProviderDiff */
-//    public function testDiff(string $path, string $content, $result): void
-//    {
-//        $codeFile = new CodeFile($this->aliases->get($path), $content);
-//        $this->assertEquals($codeFile->diff(), $result);
-//    }
+    //    /** @dataProvider dataProviderDiff */
+    //    public function testDiff(string $path, string $content, $result): void
+    //    {
+    //        $codeFile = new CodeFile($this->aliases->get($path), $content);
+    //        $this->assertEquals($codeFile->diff(), $result);
+    //    }
 
     public function testDiffSameContent(): void
     {
         $path = $this->aliases->get('@src/Controllers/EmptyController.php');
         $codeFile = new CodeFile(
             $path,
-            file_get_contents($path)
+            file_get_contents($path),
         );
         $this->assertEquals($codeFile->diff(), '');
     }

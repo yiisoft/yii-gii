@@ -6,8 +6,8 @@ namespace Yiisoft\Yii\Gii\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
@@ -24,6 +24,7 @@ use Yiisoft\Yii\Gii\GeneratorInterface;
 use Yiisoft\Yii\Gii\GiiInterface;
 
 use function count;
+use function sprintf;
 
 abstract class BaseGenerateCommand extends Command
 {
@@ -36,8 +37,8 @@ abstract class BaseGenerateCommand extends Command
 
     protected function configure(): void
     {
-        $this->addOption('overwrite', 'o', InputArgument::OPTIONAL, '')
-            ->addOption('template', 't', InputArgument::OPTIONAL, '');
+        $this->addOption('overwrite', 'o', InputOption::VALUE_NONE, 'Overwrite existing files')
+            ->addOption('template', 't', InputOption::VALUE_OPTIONAL, 'Code template', 'default');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -73,14 +74,14 @@ abstract class BaseGenerateCommand extends Command
     protected function generateCode(
         array $files,
         InputInterface $input,
-        OutputInterface $output
+        OutputInterface $output,
     ): void {
         if (count($files) === 0) {
             $output->writeln('<fg=cyan>No code to be generated.</>');
             return;
         }
         $output->writeln("<fg=magenta>The following files will be generated</>:\n");
-        $skipAll = $input->isInteractive() ? null : !$input->getArgument('overwrite');
+        $skipAll = $input->isInteractive() ? null : !$input->getOption('overwrite');
         $answers = [];
         foreach ($files as $file) {
             $path = $file->getRelativePath();
@@ -100,7 +101,9 @@ abstract class BaseGenerateCommand extends Command
             } else {
                 $output->writeln("    <fg=$color>[changed]</>   <fg=blue>$path</>");
                 if ($skipAll !== null) {
-                    $answers[$file->getId()] = CodeFileWriteOperationEnum::SAVE->value;
+                    $answers[$file->getId()] = $skipAll
+                        ? CodeFileWriteOperationEnum::SKIP->value
+                        : CodeFileWriteOperationEnum::SAVE->value;
                 } else {
                     $answer = $this->choice($input, $output);
                     $answers[$file->getId()] = ($answer === 'y' || $answer === 'ya')
@@ -120,7 +123,7 @@ abstract class BaseGenerateCommand extends Command
             return;
         }
 
-        if (!$this->confirm($input, $output)) {
+        if ($input->isInteractive() && !$this->confirm($input, $output)) {
             $output->writeln("\n<fg=cyan>No file was generated.</>");
             return;
         }
@@ -142,15 +145,15 @@ abstract class BaseGenerateCommand extends Command
                     $color,
                     $result['status'],
                     $file->getRelativePath(),
-                )
+                ),
             );
             if (CodeFileWriteStatusEnum::ERROR->value === $result['status'] && $result['error'] !== null) {
                 $hasError = true;
                 $output->writeln(
                     sprintf(
                         '<fg=red>%s</>',
-                        $result['error']
-                    )
+                        $result['error'],
+                    ),
                 );
             }
         }
@@ -189,7 +192,7 @@ abstract class BaseGenerateCommand extends Command
                 'n' => 'Skip this file.',
                 'ya' => 'Overwrite this and the rest of the changed files.',
                 'na' => 'Skip this and the rest of the changed files.',
-            ]
+            ],
         );
         /**
          * @var QuestionHelper $helper
@@ -205,7 +208,7 @@ abstract class BaseGenerateCommand extends Command
     {
         return [] === array_filter(
             $answers,
-            fn ($answer) => CodeFileWriteOperationEnum::from($answer) !== CodeFileWriteOperationEnum::SKIP
+            fn($answer) => CodeFileWriteOperationEnum::from($answer) !== CodeFileWriteOperationEnum::SKIP,
         );
     }
 }

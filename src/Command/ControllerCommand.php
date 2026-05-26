@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\Gii\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Yiisoft\Yii\Gii\Generator\Controller\Generator;
 use Yiisoft\Yii\Gii\GeneratorCommandInterface;
 use Yiisoft\Yii\Gii\GeneratorInterface;
+use Yiisoft\Yii\Gii\Generator\Controller\Command;
 
 /**
  * This is the command line version of Gii - a code generator.
@@ -16,14 +18,17 @@ use Yiisoft\Yii\Gii\GeneratorInterface;
  * You can use this command to generate controllers, actions, etc. For example,
  * to generate a controller with some actions, you can run:
  *
- * ```
- * $ ./yii gii/controller OrderController --actions=index,view,edit
+ * ```shell
+ * $ ./yii gii:controller OrderController --actions=index,view,edit
  * ```
  */
+#[AsCommand(name: 'gii:controller')]
 final class ControllerCommand extends BaseGenerateCommand
 {
-    /** @psalm-suppress MissingPropertyType */
-    protected static $defaultName = 'gii/controller';
+    public function getGenerator(): GeneratorInterface
+    {
+        return $this->gii->getGenerator(Generator::getId());
+    }
 
     protected function configure(): void
     {
@@ -35,15 +40,10 @@ final class ControllerCommand extends BaseGenerateCommand
         parent::configure();
     }
 
-    public function getGenerator(): GeneratorInterface
-    {
-        return $this->gii->getGenerator(Generator::getId());
-    }
-
     protected function createGeneratorCommand(InputInterface $input): GeneratorCommandInterface
     {
         $actions = $input->getOption('actions');
-        $actions = $actions !== null ? explode(',', (string)$actions) : ['index'];
+        $actions = $actions !== null ? explode(',', (string) $actions) : ['index'];
 
         /**
          * @var string|null $template
@@ -51,10 +51,10 @@ final class ControllerCommand extends BaseGenerateCommand
         $template = $input->getOption('template');
         $template ??= 'default';
 
-        return new \Yiisoft\Yii\Gii\Generator\Controller\Command(
-            controllerClass: (string)$input->getArgument('controllerClass'),
-            viewsPath: (string)$input->getOption('viewsPath'),
-            baseClass: (string)$input->getOption('baseClass'),
+        return new Command(
+            controllerClass: (string) $input->getArgument('controllerClass'),
+            viewsPath: (string) $input->getOption('viewsPath'),
+            baseClass: (string) $input->getOption('baseClass'),
             actions: $actions,
             template: $template,
         );
