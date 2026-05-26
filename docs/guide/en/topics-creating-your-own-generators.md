@@ -1,49 +1,33 @@
-Creating your own generators
+Creating Your Own Generators
 ============================
 
-Open the folder of any generator and you will see two files `form.php` and `Generator.php`.
-One is the form, the second is the generator class. In order to create your own generator, you need to create or
-override these classes in any folder. Again as in the previous section customize the configuration:
+A generator consists of:
+
+* a command data object implementing `Yiisoft\Yii\Gii\GeneratorCommandInterface`;
+* a generator class implementing `Yiisoft\Yii\Gii\GeneratorInterface`;
+* optional template files used by the generator.
+
+The built-in generators in `src/Generator/Controller` and `src/Generator/ActiveRecord` are the best references for the
+current extension API.
+
+Register custom generators in application parameters:
 
 ```php
-//config/web.php for basic app
-//..
-if (YII_ENV_DEV) {    
-    $config['modules']['gii'] = [
-        'class' => Yiisoft\Yii\Gii\Gii::class,
-        'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'],  
-         'generators' => [
-            'myCrud' => [
-                'class' => app\myTemplates\crud\Generator::class,
-                'templates' => [
-                    'my' => '@app/myTemplates/crud/default',
-                ]
-            ]
+'yiisoft/yii-gii' => [
+    'generators' => [
+        [
+            'class' => App\Gii\Report\Generator::class,
+            'parameters' => [],
         ],
-    ];
-}
+    ],
+],
 ```
 
-```php
-<?php
-// @app/myTemplates/crud/Generator.php
+The generator ID is returned by `Generator::getId()`. After registration, it is available from the HTTP API:
 
-namespace app\myTemplates\crud;
-
-class Generator extends \Yiisoft\Yii\Gii\Generator
-{
-    public function getName()
-    {
-        return 'MY CRUD Generator';
-    }
-
-    public function getDescription()
-    {
-        return 'My crud generator. The same as a native, but he is mine...';
-    }
-    
-    // ...
-}
+```text
+GET /gii/api/generator/report
 ```
 
-Open Gii Module and you will see a new generator appears in it.
+If you also need a console command, create a Symfony console command for your generator and register it in
+`yiisoft/yii-console.commands`.

@@ -1,11 +1,8 @@
-Gii Extension for Yii 2
-========================
+Gii Extension for Yii
+=====================
 
-This extension provides a Web-based code generator, called Gii, for Yii 2 applications.
-You can use Gii to quickly generate models, forms, modules, CRUD, etc.
-
-Gii provides a Web-based interface for you to interactively generate the code you want. It also provides a
-command line interface for people who prefer to work with their console windows most of the time.
+Gii provides code generation tools for Yii applications. The package currently includes JSON API endpoints and console
+commands for generating controller and Active Record classes.
 
 Getting Started
 ---------------

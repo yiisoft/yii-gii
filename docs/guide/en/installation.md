@@ -1,59 +1,43 @@
 Installation
 ============
 
-## Getting Composer package
+Install Gii as a development dependency:
 
-The preferred way to install this extension is through [composer](https://getcomposer.org/download/).
-
-Either run
-
-```
+```shell
 composer require --dev yiisoft/yii-gii
 ```
 
-or add
+Applications using `yiisoft/config`, including `yiisoft/app`, receive Gii routes, console commands, parameters, and DI
+definitions automatically through the Composer config plugin.
 
-```
-"yiisoft/yii-gii": "^3.0@dev"
-```
+The Active Record generator is optional. To use it, the application must have `yiisoft/active-record`, a Yii DB driver
+package, and a `Yiisoft\Db\Connection\ConnectionInterface` definition. In a new `yiisoft/app` project, install the
+driver matching your database, for example SQLite:
 
-to the require-dev section of your `composer.json` file.
-
-You can then access Gii through the following URL:
-
-```
-http://localhost/path/to/index.php?r=gii
+```shell
+composer require yiisoft/active-record yiisoft/db-sqlite
 ```
 
-If you have enabled pretty URLs, you may use the following URL:
+Other driver packages include `yiisoft/db-mysql` and `yiisoft/db-pgsql`. Make sure the matching PDO extension is
+installed, for example `pdo_sqlite` for SQLite.
 
-```
-http://localhost/path/to/index.php/gii
-```
+If your application does not define a database connection yet, add one. See the
+[Yii DB SQLite connection guide](https://github.com/yiisoft/db/blob/master/docs/guide/en/connection/sqlite.md) for a
+SQLite configuration example.
 
-> Note: if you are accessing gii from an IP address other than localhost, access will be denied by default.
-> To circumvent that default, add the allowed IP addresses to the configuration:
->
+Gii is enabled by default and allows local requests only:
+
 ```php
-'gii' => [
-    'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'] // adjust this to your needs
-    //...
+'yiisoft/yii-gii' => [
+    'enabled' => true,
+    'allowedIPs' => ['127.0.0.1', '::1'],
 ],
 ```
 
-If you have configured Gii similarly in your console application configuration, you may also access Gii through
-command window like the following:
+Disable it in production or in any environment where code generation should not be exposed:
 
-```
-# change path to your application's base path
-cd path/to/AppBasePath
-
-# show help information about Gii
-yii help gii
-
-# show help information about the model generator in Gii
-yii help gii/model
-
-# generate City model from city table
-yii gii/model --tableName=city --modelClass=City
+```php
+'yiisoft/yii-gii' => [
+    'enabled' => false,
+],
 ```
