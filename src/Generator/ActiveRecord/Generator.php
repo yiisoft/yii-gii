@@ -81,7 +81,17 @@ final class Generator extends AbstractGenerator
                 // Generate outgoing relations (this table's FKs to other tables)
                 foreach ($tableSchema->getForeignKeys() as $foreignKey) {
                     $foreignTableSchema = $this->connection->getTableSchema($foreignKey->foreignTableName);
-                    $relation = new Relation($tableSchema, $foreignKey->columnNames, $foreignTableSchema, $foreignKey->foreignColumnNames);
+
+                    if ($foreignTableSchema === null) {
+                        continue;
+                    }
+
+                    $relation = new Relation(
+                        $tableSchema,
+                        $foreignKey->columnNames,
+                        $foreignTableSchema,
+                        $foreignKey->foreignColumnNames,
+                    );
                     $relations[$relation->getName()] = $relation;
                 }
 
