@@ -93,12 +93,12 @@ final class Relation
 
     private function isUniqueColumns(): bool
     {
-        return $this->checkUnique($this->tableSchema, $this->columnNames);
+        return self::checkUnique($this->tableSchema, $this->columnNames);
     }
 
     private function isUniqueForeignColumns(): bool
     {
-        return $this->isUniqueForeignColumns ??= $this->checkUnique($this->foreignTableSchema, $this->foreignColumnNames);
+        return $this->isUniqueForeignColumns ??= self::checkUnique($this->foreignTableSchema, $this->foreignColumnNames);
     }
 
     private static function checkUnique(TableSchemaInterface $tableSchema, array $columnNames): bool
