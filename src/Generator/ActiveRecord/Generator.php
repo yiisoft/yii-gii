@@ -7,6 +7,7 @@ namespace Yiisoft\Yii\Gii\Generator\ActiveRecord;
 use InvalidArgumentException;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Db\Connection\ConnectionInterface;
+use Yiisoft\Db\Schema\TableSchemaInterface;
 use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\Yii\Gii\Component\CodeFile\CodeFile;
 use Yiisoft\Yii\Gii\Generator\AbstractGenerator;
@@ -69,22 +70,33 @@ final class Generator extends AbstractGenerator
 
         $properties = [];
         $relations = [];
-        $schema = $this->connection->getTableSchema($command->table);
+        $tableSchema = $this->connection->getTableSchema($command->table);
 
-        if ($schema !== null) {
-            foreach ($schema->getColumns() as $columnName => $column) {
+        if ($tableSchema !== null) {
+            foreach ($tableSchema->getColumns() as $columnName => $column) {
                 $properties[$columnName] = new Property($column);
             }
 
             if ($command->generateRelations) {
                 // Generate outgoing relations (this table's FKs to other tables)
-                foreach ($schema->getForeignKeys() as $foreignKey) {
-                    $relation = new Relation($foreignKey, $command->getModelName());
+                foreach ($tableSchema->getForeignKeys() as $foreignKey) {
+                    $foreignTableSchema = $this->connection->getTableSchema($foreignKey->foreignTableName);
+
+                    if ($foreignTableSchema === null) {
+                        continue;
+                    }
+
+                    $relation = new Relation(
+                        $tableSchema,
+                        $foreignKey->columnNames,
+                        $foreignTableSchema,
+                        $foreignKey->foreignColumnNames,
+                    );
                     $relations[$relation->getName()] = $relation;
                 }
 
                 // Generate inverse relations (other tables' FKs to this table)
-                $inverseRelations = $this->findInverseRelations($command->table);
+                $inverseRelations = $this->findInverseRelations($tableSchema);
                 foreach ($inverseRelations as $inverseRelation) {
                     $inverseRelationName = $inverseRelation->getName();
 
@@ -142,26 +154,33 @@ final class Generator extends AbstractGenerator
     /**
      * Find inverse relations by scanning other tables for FKs that reference the current table.
      *
-     * @return list<InverseRelation>
+     * @return list<Relation>
      */
-    private function findInverseRelations(string $currentTable): array
+    private function findInverseRelations(TableSchemaInterface $currentTableSchema): array
     {
         $inverseRelations = [];
         $allTableNames = $this->connection->getSchema()->getTableNames();
+        $currentTableName = $currentTableSchema->getName();
 
         foreach ($allTableNames as $tableName) {
-            if ($tableName === $currentTable) {
+            if ($tableName === $currentTableName) {
                 continue;
             }
 
             $tableSchema = $this->connection->getTableSchema($tableName);
+
             if ($tableSchema === null) {
                 continue;
             }
 
             foreach ($tableSchema->getForeignKeys() as $foreignKey) {
-                if ($foreignKey->foreignTableName === $currentTable) {
-                    $inverseRelations[] = new InverseRelation($foreignKey, $tableName);
+                if ($foreignKey->foreignTableName === $currentTableName) {
+                    $inverseRelations[] = new Relation(
+                        $currentTableSchema,
+                        $foreignKey->foreignColumnNames,
+                        $tableSchema,
+                        $foreignKey->columnNames,
+                    );
                 }
             }
         }

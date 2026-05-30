@@ -47,4 +47,36 @@ final class ArHelperTest extends TestCase
     {
         $this->assertSame($expected, ArHelper::getRelationName($columnNames, $defaultName));
     }
+
+    public static function getRelationNameNonUniqueProvider(): array
+    {
+        return [
+            // Identity field names replaced by $defaultName and pluralized
+            'id' => [['id'], 'post', 'posts'],
+            'uuid' => [['uuid'], 'Profile', 'profiles'],
+            'key' => [['key'], 'CONFIG', 'configs'],
+            'code' => [['code'], 'country_region', 'countryRegions'],
+
+            // Identity suffixes removed and pluralized
+            '_id' => [['user_id'], 'post', 'users'],
+            '_uuid' => [['role_uuid'], 'post', 'roles'],
+            '_key' => [['option_key'], 'post', 'options'],
+            '_code' => [['lang_code'], 'post', 'langs'],
+
+            // Different naming conventions pluralized
+            'snake_case' => [['first_name'], 'user', 'firstNames'],
+            'PascalCase' => [['LastName'], 'user', 'lastNames'],
+            'SCREAMING_SNAKE_CASE' => [['FIRST_NAME'], 'user', 'firstNames'],
+
+            // Multiple columns - last one pluralized
+            'id + plain' => [['id', 'type'], 'user', 'userTypes'],
+            'two _id suffix columns' => [['user_id', 'role_id'], 'user', 'userRoles'],
+        ];
+    }
+
+    #[DataProvider('getRelationNameNonUniqueProvider')]
+    public function testGetRelationNameNonUnique(array $columnNames, string $defaultName, string $expected): void
+    {
+        $this->assertSame($expected, ArHelper::getRelationName($columnNames, $defaultName, false));
+    }
 }

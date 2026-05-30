@@ -7,6 +7,7 @@
         "Yiisoft\\Db\\Constraint\\ForeignKey",
         "Yiisoft\\Db\\Exception\\Exception",
         "Yiisoft\\Db\\Expression\\Expression",
-        "Yiisoft\\Db\\Schema\\Column\\ColumnInterface"
+        "Yiisoft\\Db\\Schema\\Column\\ColumnInterface",
+        "Yiisoft\\Db\\Schema\\TableSchemaInterface"
     ]
 }
