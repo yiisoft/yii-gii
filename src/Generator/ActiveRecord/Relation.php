@@ -9,9 +9,13 @@ use Yiisoft\Strings\Inflector;
 
 final class Relation
 {
-    private readonly string $name;
-    private readonly bool $isUniqueForeignColumns;
+    private ?string $name = null;
+    private ?bool $isUniqueForeignColumns = null;
 
+    /**
+     * @param string[] $columnNames
+     * @param string[] $foreignColumnNames
+     */
     public function __construct(
         private readonly TableSchemaInterface $tableSchema,
         private readonly array $columnNames,
@@ -43,6 +47,9 @@ final class Relation
         return (new Inflector())->tableToClass($foreignTableName);
     }
 
+    /**
+     * @return string[]
+     */
     public function getLink(): array
     {
         $link = [];
