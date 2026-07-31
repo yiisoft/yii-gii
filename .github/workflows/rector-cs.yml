@@ -11,7 +11,8 @@ on:
       - 'rector.php'
       - '.php-cs-fixer.dist.php'
 
-permissions: {}
+permissions:
+  contents: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -23,4 +24,4 @@ jobs:
       contents: write # Required to push Rector/PHP CS Fixer changes back to the PR branch.
     uses: yiisoft/actions/.github/workflows/rector-cs.yml@master
     with:
-      php: 8.1
+      php: '8.1'
