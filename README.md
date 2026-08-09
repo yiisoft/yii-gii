@@ -88,6 +88,15 @@ The Active Record command requires the table to exist in the configured database
 If you need help or have a question, the [Yii Forum](https://forum.yiiframework.com/c/yii-3-0/63) is a good place for that.
 You may also check out other [Yii Community Resources](https://www.yiiframework.com/community).
 
+## Dependencies
+
+Use [Composer Dependency Analyser](https://github.com/shipmonk-rnd/composer-dependency-analyser) to detect unknown,
+shadow, and unused [Composer](https://getcomposer.org) dependencies:
+
+```shell
+./vendor/bin/composer-dependency-analyser
+```
+
 ## License
 
 Gii: Yii3 code generator is free software. It's released under the terms of the BSD License.
