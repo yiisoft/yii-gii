@@ -2,4 +2,5 @@
 
 ## 1.0.0 under development
 
+- Enh: Support `symfony/console` `^8.0` (@rossaddison)
 - Initial release.
